@@ -13,6 +13,7 @@ using System.Collections.Generic;
 public class player : Character {
 
 	public GameObject projectile_prefab;
+	public GameObject controller_prefab;
 
 	Animator animator;
 	private MoveControlManager move_controller = null;
@@ -36,28 +37,13 @@ public class player : Character {
 
 	private const float CHECKSPHERE_RADIUS = 0.1f;	// radius of sphere to check player is on ground
 
-	public class DelayDirectionEvent : DelayEvent {
-		public delegate void DelayDelegate(Vector3 dir);
-
-		private DelayDelegate delay_func;
-		private Vector3 direction;
-
-		public DelayDirectionEvent(int frame, Vector3 dir, DelayDelegate func) : base(frame){
-			delay_func = func;
-			direction = dir;
-		}
-
-		public override void perform(){
-			if (!done && finished()) {
-				delay_func(direction);
-				done = true;
-			}
-		}
-	}
 
 	// Use this for initialization
 	void Start () 
 	{
+		GameObject controller_inst = Instantiate(controller_prefab) as GameObject;
+		controller = controller_inst.GetComponent<Controller>();
+
 		old_forward = transform.forward;
 		animator = GetComponent<Animator>();
 		locomotion = new Locomotion(animator);
@@ -73,15 +59,11 @@ public class player : Character {
 
 	void FixedUpdate(){
 		move_controller.update();
+		float horizontal = controller.keyHorizontal();
 
-		float h = Input.GetAxis ("Horizontal");
-		bool space_key_down = Input.GetKeyDown("space");
-		bool z_key_down = Input.GetKeyDown("z");
-		bool x_key_down = Input.GetKeyDown("x");
-		bool c_key_down = Input.GetKeyDown("c");
 		AnimatorStateInfo anim_state = animator.GetCurrentAnimatorStateInfo(0);
 
-		animator.SetFloat ("Speed", Mathf.Abs (h));
+		animator.SetFloat ("Speed", Mathf.Abs (horizontal));
 
 		float vx = rigidbody.velocity.x;
 		float vy = rigidbody.velocity.y;
@@ -95,17 +77,17 @@ public class player : Character {
 		}
 
 		if (!move_controller.isPlayerInputLocked()){
-			if (Mathf.Abs (h) >= 0.2 && h * vx < maxspeed) {
-				if (Mathf.Sign (h) != Mathf.Sign (vx) && Mathf.Abs(vx) > 0.1f) {
+			if (Mathf.Abs (horizontal) >= 0.2 && horizontal * vx < maxspeed) {
+				if (Mathf.Sign (horizontal) != Mathf.Sign (vx) && Mathf.Abs(vx) > 0.1f) {
 					// when player is turning, add low force
-					rigidbody.AddForce (h * moveF / 4.0f);
+					rigidbody.AddForce (horizontal * moveF / 4.0f);
 					if (isGrounded() && turn_dir_switched == false){
 						animator.CrossFade("PlantNTurnRight180",0.01f);
 						animator.SetBool ("Turn", true);
 					}
 				} else {
 					// accelerate
-					rigidbody.AddForce (h * moveF);
+					rigidbody.AddForce (horizontal * moveF);
 					animator.SetBool ("Turn", false);
 					turn_dir_switched = false;
 				}
@@ -115,7 +97,7 @@ public class player : Character {
 			}
 	
 	
-			if (Mathf.Abs(h) < 0.2 && Mathf.Abs(vx) > 0.2f) {
+			if (Mathf.Abs(horizontal) < 0.2 && Mathf.Abs(vx) > 0.2f) {
 				// brake down if no input
 				if (Mathf.Sign(fw.x) == Mathf.Sign(vx)) {
 					rigidbody.AddForce(fw * -20.0f);
@@ -130,12 +112,12 @@ public class player : Character {
 		}
 
 		
-		if (h > 0 && fw.x < 0) {
+		if (horizontal > 0 && fw.x < 0) {
 			// input right when player turns left
-			transform.rotation = Quaternion.LookRotation (new Vector3 (h, 0, 0.8f));
-		} else if (h < 0 && fw.x > 0) {
+			transform.rotation = Quaternion.LookRotation (new Vector3 (horizontal, 0, 0.8f));
+		} else if (horizontal < 0 && fw.x > 0) {
 			// input left when player turns right
-			transform.rotation = Quaternion.LookRotation (new Vector3 (h, 0, -0.8f));
+			transform.rotation = Quaternion.LookRotation (new Vector3 (horizontal, 0, -0.8f));
 		} else {
 			float newz_fw = fw.z;
 			if ( newz_fw > 0 ) {
@@ -153,7 +135,7 @@ public class player : Character {
 			transform.rotation = Quaternion.LookRotation (new Vector3 (fw.x, 0, newz_fw));
 		}
 
-		if (space_key_down && isGrounded()) {
+		if (controller.keyJump() && isGrounded()) {
 			// jump
 			jump_start_y = transform.position.y;
 			rigidbody.AddForce(new Vector3(0f, 1200.0f,0));
@@ -161,14 +143,14 @@ public class player : Character {
 			animator.SetBool("OnGround", false);
 		}
 
-		if (z_key_down && !animator.GetBool("Turn") && isGrounded()) {
+		if (controller.keySliding() && !animator.GetBool("Turn") && isGrounded()) {
 			// sliding
 			animator.CrossFade("Sliding", 0.001f);
 		}
 
-		if (x_key_down && !animator.GetBool("Turn") && isGrounded() && anim_state.nameHash != Animator.StringToHash("Base Layer.SpinKick")) {
+		if (controller.keyAttack() && !animator.GetBool("Turn") && isGrounded() && anim_state.nameHash != Animator.StringToHash("Base Layer.SpinKick")) {
 			// punch
-			Debug.Log ("x:" + x_key_down.ToString());
+			Debug.Log ("x:" + controller.keyAttack().ToString());
 			if (anim_state.nameHash == Animator.StringToHash("Base Layer.PunchL")) {
 				animator.Play("PunchR");
 			}
@@ -180,7 +162,7 @@ public class player : Character {
 			}		
 		}
 
-		if (c_key_down && !animator.GetBool("Turn") && isGrounded() && anim_state.nameHash != Animator.StringToHash("Base Layer.Hadouken") ) {
+		if (controller.keyProjectile() && !animator.GetBool("Turn") && isGrounded() && anim_state.nameHash != Animator.StringToHash("Base Layer.Hadouken") ) {
 			// hadouken
 			rigidbody.AddForce(fw * -50.0f);
 			animator.Play("Hadouken");

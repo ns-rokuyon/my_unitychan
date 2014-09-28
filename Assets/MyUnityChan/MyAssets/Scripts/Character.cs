@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Character : MonoBehaviour {
 
+	protected Controller controller;
+
 	public class FrameCounter {
 		private bool running = false;
 		private int start_frame = 0;
