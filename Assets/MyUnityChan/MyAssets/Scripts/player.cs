@@ -13,6 +13,8 @@ using System.Collections.Generic;
 public class player : Character {
 
 	public GameObject projectile_prefab;
+	public GameObject projectile_particle_prefab;
+	public GameObject jump_effect_prefab;
 	public GameObject controller_prefab;
 
 	Animator animator;
@@ -54,11 +56,11 @@ public class player : Character {
 
 	void Update()
 	{
+		move_controller.update();
 	}
 
 
 	void FixedUpdate(){
-		move_controller.update();
 		float horizontal = controller.keyHorizontal();
 
 		AnimatorStateInfo anim_state = animator.GetCurrentAnimatorStateInfo(0);
@@ -141,6 +143,10 @@ public class player : Character {
 			rigidbody.AddForce(new Vector3(0f, 1200.0f,0));
 			animator.CrossFade("Jump",0.001f);
 			animator.SetBool("OnGround", false);
+
+			GameObject effect = Instantiate(jump_effect_prefab) as GameObject;
+			ParticleEffect jump_effect = effect.GetComponent<ParticleEffect>();
+			jump_effect.init(transform.position);
 		}
 
 		if (controller.keySliding() && !animator.GetBool("Turn") && isGrounded()) {
@@ -176,8 +182,18 @@ public class player : Character {
 
 	void shootProjectile(Vector3 direction){
 		GameObject projectile = Instantiate(projectile_prefab) as GameObject;
+		GameObject projectile_particle = Instantiate(projectile_particle_prefab) as GameObject;
+
 		Projectile prjc = projectile.GetComponent<Projectile>();
+		Projectile particle = projectile_particle.GetComponent<Projectile>();
+
 		prjc.init(transform.position, direction);
+		particle.init(transform.position, direction, 0.001f);
+		if (transform.forward.x < 0.0f) {
+			particle.transform.Rotate(0.0f, 90.0f, 0.0f);
+		}else {
+			particle.transform.Rotate(0.0f, -90.0f, 0.0f);
+		}
 	}
 
 	void onTurnMiddle(){
