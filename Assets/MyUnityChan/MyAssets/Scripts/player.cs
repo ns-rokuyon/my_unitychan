@@ -10,27 +10,24 @@ using System.Collections.Generic;
 
 //Name of class must be name of file as well
 
-public class player : Character {
+public class Player : Character {
 
 	public GameObject projectile_prefab;
 	public GameObject projectile_particle_prefab;
 	public GameObject jump_effect_prefab;
 	public GameObject controller_prefab;
 
-	Animator animator;
+	private Animator animator;
 	private MoveControlManager move_controller = null;
+	private PlayerActionManager action_manager = null;
 
 	public Vector3 moveF = new Vector3(200f, 0, 0);
 	public float maxspeed = 20f;
 
 	private float speed = 0;
-	private float direction = 0;
 	private Locomotion locomotion = null;
-	private Vector3 moveDirection= Vector3.zero;
-	private Vector3 old_forward;
 	private Vector3 turn_slide_formard;
 	private int anim_turn_id;
-	private bool on_ground = true;
 	private float dist_to_ground;
 	private Vector3 dist_checksphere_center = new Vector3(0,0.2f,0);
 	private float anim_speed_default;
@@ -46,12 +43,12 @@ public class player : Character {
 		GameObject controller_inst = Instantiate(controller_prefab) as GameObject;
 		controller = controller_inst.GetComponent<Controller>();
 
-		old_forward = transform.forward;
 		animator = GetComponent<Animator>();
 		locomotion = new Locomotion(animator);
 		anim_speed_default = animator.speed * 1.2f;
 		dist_to_ground = GetComponent<CapsuleCollider>().height;
 		move_controller = new MoveControlManager();
+		action_manager = new PlayerActionManager(this);
 	}
 
 	void Update()
@@ -137,22 +134,11 @@ public class player : Character {
 			transform.rotation = Quaternion.LookRotation (new Vector3 (fw.x, 0, newz_fw));
 		}
 
-		if (controller.keyJump() && isGrounded()) {
-			// jump
-			jump_start_y = transform.position.y;
-			rigidbody.AddForce(new Vector3(0f, 1200.0f,0));
-			animator.CrossFade("Jump",0.001f);
-			animator.SetBool("OnGround", false);
+		// jump
+		action_manager.act(PlayerActionManager.ActionName.JUMP);
 
-			GameObject effect = Instantiate(jump_effect_prefab) as GameObject;
-			ParticleEffect jump_effect = effect.GetComponent<ParticleEffect>();
-			jump_effect.init(transform.position);
-		}
-
-		if (controller.keySliding() && !animator.GetBool("Turn") && isGrounded()) {
-			// sliding
-			animator.CrossFade("Sliding", 0.001f);
-		}
+		// sliding
+		action_manager.act(PlayerActionManager.ActionName.SLIDING);
 
 		if (controller.keyAttack() && !animator.GetBool("Turn") && isGrounded() && anim_state.nameHash != Animator.StringToHash("Base Layer.SpinKick")) {
 			// punch
@@ -168,33 +154,13 @@ public class player : Character {
 			}		
 		}
 
-		if (controller.keyProjectile() && !animator.GetBool("Turn") && isGrounded() && anim_state.nameHash != Animator.StringToHash("Base Layer.Hadouken") ) {
-			// hadouken
-			rigidbody.AddForce(fw * -50.0f);
-			animator.Play("Hadouken");
-			move_controller.register(new MoveLock(30));
-			move_controller.register(new DelayDirectionEvent(15, fw, shootProjectile));
-		}
-		
+		// hadouken
+		action_manager.act(PlayerActionManager.ActionName.PROJECTILE);
+
 		// gravity
 		rigidbody.AddForce(new Vector3(0f, -32.0f,0));	// -26
 	}
 
-	void shootProjectile(Vector3 direction){
-		GameObject projectile = Instantiate(projectile_prefab) as GameObject;
-		GameObject projectile_particle = Instantiate(projectile_particle_prefab) as GameObject;
-
-		Projectile prjc = projectile.GetComponent<Projectile>();
-		Projectile particle = projectile_particle.GetComponent<Projectile>();
-
-		prjc.init(transform.position, direction);
-		particle.init(transform.position, direction, 0.001f);
-		if (transform.forward.x < 0.0f) {
-			particle.transform.Rotate(0.0f, 90.0f, 0.0f);
-		}else {
-			particle.transform.Rotate(0.0f, -90.0f, 0.0f);
-		}
-	}
 
 	void onTurnMiddle(){
 		Debug.Log("on turn middle");
@@ -212,7 +178,7 @@ public class player : Character {
 		animator.speed = 0.2f;	// slow animation
 	}
 
-	bool isGrounded(){
+	public bool isGrounded(){
 		// check player is on ground with sphere under the foot
 		return Physics.CheckSphere(transform.position - dist_checksphere_center,  CHECKSPHERE_RADIUS);
 	}
@@ -220,6 +186,16 @@ public class player : Character {
 	void lockInput(){
 
 	}
+
+	public Animator getAnimator(){
+		return animator;
+	}
+
+	public MoveControlManager getMoveController(){
+		return move_controller;
+	}
+
+
 
 	void OnGUI()
 	{

@@ -5,6 +5,10 @@ public class Character : ObjectBase {
 
 	protected Controller controller;
 
+	public Controller getController(){
+		return controller;
+	}
+
 	public class FrameCounter {
 		private bool running = false;
 		private int start_frame = 0;
