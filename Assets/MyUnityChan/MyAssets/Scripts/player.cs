@@ -29,7 +29,7 @@ public class Player : Character {
 	private Vector3 turn_slide_formard;
 	private int anim_turn_id;
 	private float dist_to_ground;
-	private Vector3 dist_checksphere_center = new Vector3(0,0.2f,0);
+	private Vector3 dist_checksphere_center = new Vector3(0,0.3f,0);
 	private float anim_speed_default;
 	private float jump_start_y ;		// jump start point y
 	private bool turn_dir_switched = false;
@@ -72,7 +72,7 @@ public class Player : Character {
 			// landing
 			animator.SetBool("OnGround",true);
 			animator.speed = anim_speed_default;
-
+            animator.SetBool("Jump", false);
 		}
 
 		if (!move_controller.isPlayerInputLocked()){
@@ -80,10 +80,10 @@ public class Player : Character {
 				if (Mathf.Sign (horizontal) != Mathf.Sign (vx) && Mathf.Abs(vx) > 0.1f) {
 					// when player is turning, add low force
 					rigidbody.AddForce (horizontal * moveF / 4.0f);
-					if (isGrounded() && turn_dir_switched == false){
-						animator.CrossFade("PlantNTurnRight180",0.01f);
-						animator.SetBool ("Turn", true);
-					}
+//					if (isGrounded() && turn_dir_switched == false){
+//						animator.CrossFade("PlantNTurnRight180",0.01f);
+//						animator.SetBool ("Turn", true);
+//					}
 				} else {
 					// accelerate
 					rigidbody.AddForce (horizontal * moveF);
@@ -110,49 +110,18 @@ public class Player : Character {
 			rigidbody.velocity = new Vector3(Mathf.Sign(vx)* maxspeed, vy);
 		}
 
-		
-		if (horizontal > 0 && fw.x < 0) {
-			// input right when player turns left
-			transform.rotation = Quaternion.LookRotation (new Vector3 (horizontal, 0, 0.8f));
-		} else if (horizontal < 0 && fw.x > 0) {
-			// input left when player turns right
-			transform.rotation = Quaternion.LookRotation (new Vector3 (horizontal, 0, -0.8f));
-		} else {
-			float newz_fw = fw.z;
-			if ( newz_fw > 0 ) {
-				newz_fw -= 0.3f;
-				if (newz_fw < 0) {
-					newz_fw = 0;
-				}
-			}
-			else {
-				newz_fw += 0.3f;
-				if (newz_fw > 0) {
-					newz_fw = 0;
-				}
-			}
-			transform.rotation = Quaternion.LookRotation (new Vector3 (fw.x, 0, newz_fw));
-		}
+
+		// turn
+		action_manager.act(PlayerActionManager.ActionName.TURN);
 
 		// jump
-		action_manager.act(PlayerActionManager.ActionName.JUMP);
+		action_manager.act(PlayerActionManager.ActionName.AIR_JUMP);
 
 		// sliding
 		action_manager.act(PlayerActionManager.ActionName.SLIDING);
 
-		if (controller.keyAttack() && !animator.GetBool("Turn") && isGrounded() && anim_state.nameHash != Animator.StringToHash("Base Layer.SpinKick")) {
-			// punch
-			Debug.Log ("x:" + controller.keyAttack().ToString());
-			if (anim_state.nameHash == Animator.StringToHash("Base Layer.PunchL")) {
-				animator.Play("PunchR");
-			}
-			else if (anim_state.nameHash == Animator.StringToHash("Base Layer.PunchR")) {
-				animator.Play("SpinKick");
-			}
-			else {
-				animator.Play("PunchL");
-			}		
-		}
+		// atttack
+		action_manager.act(PlayerActionManager.ActionName.ATTACK);
 
 		// hadouken
 		action_manager.act(PlayerActionManager.ActionName.PROJECTILE);
@@ -183,8 +152,17 @@ public class Player : Character {
 		return Physics.CheckSphere(transform.position - dist_checksphere_center,  CHECKSPHERE_RADIUS);
 	}
 
+	public bool isTurnDirSwitched(){
+		return turn_dir_switched;
+	}
+
 	void lockInput(){
 
+	}
+
+	public bool isAnimState(string anim_name) {
+		AnimatorStateInfo anim_state = animator.GetCurrentAnimatorStateInfo(0);
+		return anim_state.nameHash == Animator.StringToHash(anim_name);
 	}
 
 	public Animator getAnimator(){
@@ -195,6 +173,9 @@ public class Player : Character {
 		return move_controller;
 	}
 
+    public void setAnimSpeedDefault() {
+        animator.speed = anim_speed_default;
+    }
 
 
 	void OnGUI()

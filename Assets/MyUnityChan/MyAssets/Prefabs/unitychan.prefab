@@ -4828,6 +4828,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectile_prefab: {fileID: 100000, guid: a7eb4c63b04001146b72a2748664ba76, type: 2}
+  projectile_particle_prefab: {fileID: 100000, guid: 8c6e9d9aa3016a24dbadde2dd0ae3968,
+    type: 2}
+  jump_effect_prefab: {fileID: 100000, guid: 74944944616d63e4b9602b0f8533a6b3, type: 2}
+  controller_prefab: {fileID: 100000, guid: 46fde649407247f429b9c9333e0c09b0, type: 2}
   moveF: {x: 200, y: 0, z: 0}
   maxspeed: 20
 --- !u!136 &13600000

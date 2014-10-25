@@ -17,6 +17,7 @@
 /*.userprefs
 /*.pidb
 /*.booproj
+/*.htm
 
 /Assets/Destroyed_city_FREE
 /Assets/ForesterSycamore
@@ -30,6 +31,7 @@
 /Assets/WebPlayerTemplates
 /Assets/MyAssets
 /Assets/UnityMaskMan
+/Assets/ProCore
 /Assets/*.meta
 /Assets/MyUnityChan/*.pdf
 /Assets/MyUnityChan/Amimators

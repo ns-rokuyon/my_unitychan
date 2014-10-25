@@ -26,24 +26,6 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: JumpHeight
-    m_Type: 1
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: GravityControl
-    m_Type: 1
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: GoForward
-    m_Type: 1
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
   - m_Name: Turn
     m_Type: 4
     m_DefaultFloat: 0
@@ -349,6 +331,10 @@ Transition:
     m_ConditionEvent: Speed
     m_EventTreshold: .100000001
     m_ExitTime: .769230783
+  - m_ConditionMode: 1
+    m_ConditionEvent: OnGround
+    m_EventTreshold: .100000001
+    m_ExitTime: .769230783
   m_Atomic: 1
   m_Solo: 0
   m_Mute: 0
@@ -403,7 +389,7 @@ Transition:
   m_SrcState: {fileID: 110274123}
   m_DstState: {fileID: 110288792}
   m_TransitionDuration: .230769217
-  m_TransitionOffset: 0
+  m_TransitionOffset: .0334448032
   m_Conditions:
   - m_ConditionMode: 1
     m_ConditionEvent: Jump
