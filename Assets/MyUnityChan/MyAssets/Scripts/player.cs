@@ -29,13 +29,13 @@ public class Player : Character {
 	private Vector3 turn_slide_formard;
 	private int anim_turn_id;
 	private float dist_to_ground;
-	private Vector3 dist_checksphere_center = new Vector3(0,0.3f,0);
+	private Vector3 dist_checksphere_center = new Vector3(0,0.6f,0);
 	private float anim_speed_default;
 	private float jump_start_y ;		// jump start point y
 	private bool turn_dir_switched = false;
 
 	private const float CHECKSPHERE_RADIUS = 0.1f;	// radius of sphere to check player is on ground
-
+    private GameObject sphere_ground_check = null;
 
 	// Use this for initialization
 	void Start () 
@@ -49,6 +49,7 @@ public class Player : Character {
 		dist_to_ground = GetComponent<CapsuleCollider>().height;
 		move_controller = new MoveControlManager();
 		action_manager = new PlayerActionManager(this);
+
 	}
 
 	void Update()
@@ -149,7 +150,9 @@ public class Player : Character {
 
 	public bool isGrounded(){
 		// check player is on ground with sphere under the foot
-		return Physics.CheckSphere(transform.position - dist_checksphere_center,  CHECKSPHERE_RADIUS);
+
+		//return Physics.CheckSphere(transform.position - dist_checksphere_center,  CHECKSPHERE_RADIUS);
+        return Physics.Raycast(transform.position + new Vector3(0,0.05f,0), Vector3.down, 0.5f);
 	}
 
 	public bool isTurnDirSwitched(){
