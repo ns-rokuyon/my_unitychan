@@ -2,31 +2,33 @@
 using System.Collections;
 
 public class PlayerJump : PlayerActionBase {
-	private float jump_start_y;
+	protected float jump_start_y;
+    protected Vector3 effect_offset = new Vector3(0.0f, 0.2f, 0.0f);
 
 	public PlayerJump(Character character) : base(character){
 	}
 
 	public override void perform(Character character) {
-		Player player = (Player)character;
 		jump_start_y = player.transform.position.y;
 		player.rigidbody.AddForce(new Vector3(0f, 1200.0f,0));
 		player.getAnimator().CrossFade("Jump",0.001f);
 		player.getAnimator().SetBool("OnGround", false);
-		
-		GameObject effect = UnityEngine.Object.Instantiate(player.jump_effect_prefab) as GameObject;
-		ParticleEffect jump_effect = effect.GetComponent<ParticleEffect>();
-		jump_effect.init(character.transform.position);
 	}
 
 	public override bool condition(Character character){
 		return controller.keyJump() && ((Player)character).isGrounded();
 	}
+
+    public override bool effect() {
+        GameObject effect = UnityEngine.Object.Instantiate(player.jump_effect_prefab) as GameObject;
+        ParticleEffect jump_effect = effect.GetComponent<ParticleEffect>();
+        jump_effect.init(player.transform.position + effect_offset);
+        return true;
+    }
 }
 
 
-public class PlayerAirJump : PlayerActionBase {
-    private float jump_start_y;
+public class PlayerAirJump : PlayerJump {
     private int jump_num;
     private int jump_max;
 
@@ -38,15 +40,11 @@ public class PlayerAirJump : PlayerActionBase {
     public override void perform(Character character) {
         jump_start_y = player.transform.position.y;
         player.rigidbody.AddForce(new Vector3(0f, 1200.0f, 0));
-        player.getAnimator().Play("Locomotion");
+        //player.getAnimator().Play("Locomotion");
         player.getAnimator().SetBool("Jump",true);
-        player.getAnimator().Play("Jump");
+        player.getAnimator().Play("Jump", -1, 0.0f);
         player.setAnimSpeedDefault();
         player.getAnimator().SetBool("OnGround", false);
-
-        GameObject effect = UnityEngine.Object.Instantiate(player.jump_effect_prefab) as GameObject;
-        ParticleEffect jump_effect = effect.GetComponent<ParticleEffect>();
-        jump_effect.init(character.transform.position);
     }
 
     public override bool condition(Character character) {
@@ -73,7 +71,7 @@ public class PlayerAirJump : PlayerActionBase {
         }
 
         float scvy = Mathf.Abs(player.rigidbody.velocity.y);
-        if ( scvy < 3.0f ) {
+        if ( scvy < 8.0f ) {
             return true;
         }
 

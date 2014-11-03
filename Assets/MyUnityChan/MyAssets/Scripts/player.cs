@@ -24,12 +24,14 @@ public class Player : Character {
 	public Vector3 moveF = new Vector3(200f, 0, 0);
 	public float maxspeed = 20f;
 
+    private float brake_power = 30.0f;
 	private float speed = 0;
 	private Locomotion locomotion = null;
 	private Vector3 turn_slide_formard;
 	private int anim_turn_id;
 	private float dist_to_ground;
 	private Vector3 dist_checksphere_center = new Vector3(0,0.6f,0);
+    private Vector3 ground_raycast_offset = new Vector3(0, 0.05f, 0);
 	private float anim_speed_default;
 	private float jump_start_y ;		// jump start point y
 	private bool turn_dir_switched = false;
@@ -61,70 +63,39 @@ public class Player : Character {
 	void FixedUpdate(){
 		float horizontal = controller.keyHorizontal();
 
-		AnimatorStateInfo anim_state = animator.GetCurrentAnimatorStateInfo(0);
-
 		animator.SetFloat ("Speed", Mathf.Abs (horizontal));
 
-		float vx = rigidbody.velocity.x;
 		float vy = rigidbody.velocity.y;
-		Vector3 fw = transform.forward;
 
-		if (vy < 0 && isGrounded()){
+		if (vy <= 0 && isGrounded()){
 			// landing
 			animator.SetBool("OnGround",true);
 			animator.speed = anim_speed_default;
             animator.SetBool("Jump", false);
 		}
 
-		if (!move_controller.isPlayerInputLocked()){
-			if (Mathf.Abs (horizontal) >= 0.2 && horizontal * vx < maxspeed) {
-				if (Mathf.Sign (horizontal) != Mathf.Sign (vx) && Mathf.Abs(vx) > 0.1f) {
-					// when player is turning, add low force
-					rigidbody.AddForce (horizontal * moveF / 4.0f);
-//					if (isGrounded() && turn_dir_switched == false){
-//						animator.CrossFade("PlantNTurnRight180",0.01f);
-//						animator.SetBool ("Turn", true);
-//					}
-				} else {
-					// accelerate
-					rigidbody.AddForce (horizontal * moveF);
-					animator.SetBool ("Turn", false);
-					turn_dir_switched = false;
-				}
-			} else {
-				animator.SetBool("Turn", false);
-				turn_dir_switched = false;
-			}
-	
-	
-			if (Mathf.Abs(horizontal) < 0.2 && Mathf.Abs(vx) > 0.2f) {
-				// brake down if no input
-				if (Mathf.Sign(fw.x) == Mathf.Sign(vx)) {
-					rigidbody.AddForce(fw * -20.0f);
-				} else {
-					rigidbody.AddForce(fw * 20.0f);
-				}
-			}
-		}
+        // accelerate player in response to input
+        action_manager.act(PlayerActionManager.ActionName.ACCEL);
 
-		if (Mathf.Abs (vx) > maxspeed) {
-			rigidbody.velocity = new Vector3(Mathf.Sign(vx)* maxspeed, vy);
-		}
+		// limit speed (maxspeed)
+        action_manager.act(PlayerActionManager.ActionName.LIMIT_SPEED);
 
+        // brake player unless there is input
+        action_manager.act(PlayerActionManager.ActionName.BRAKE);
 
 		// turn
 		action_manager.act(PlayerActionManager.ActionName.TURN);
 
-		// jump
+		// jump on ground or second jump in air
 		action_manager.act(PlayerActionManager.ActionName.AIR_JUMP);
 
 		// sliding
 		action_manager.act(PlayerActionManager.ActionName.SLIDING);
 
-		// atttack
+		// atttack (punchL -> punchR -> spinkick)
 		action_manager.act(PlayerActionManager.ActionName.ATTACK);
 
-		// hadouken
+		// hadouken (shoot a projectile)
 		action_manager.act(PlayerActionManager.ActionName.PROJECTILE);
 
 		// gravity
@@ -145,15 +116,26 @@ public class Player : Character {
 	void OnJumpAnimEnd(){
 		// end of jump motion
 		Debug.Log("on jump anim end");
-		animator.speed = 0.2f;	// slow animation
+        animator.SetBool("Jump", false);
+		//animator.speed = 0.0f;	// slow animation
 	}
 
 	public bool isGrounded(){
 		// check player is on ground with sphere under the foot
 
 		//return Physics.CheckSphere(transform.position - dist_checksphere_center,  CHECKSPHERE_RADIUS);
-        return Physics.Raycast(transform.position + new Vector3(0,0.05f,0), Vector3.down, 0.5f);
+
+        return Physics.Raycast(transform.position + ground_raycast_offset, Vector3.down, 0.5f) ||
+            Physics.Raycast(transform.position + ground_raycast_offset, new Vector3(1.0f, 0.0f, 0), 1.0f) ||
+            Physics.Raycast(transform.position + ground_raycast_offset, new Vector3(-1.0f, 0.0f, 0), 1.0f);
 	}
+
+    public bool isTouchedWall() {
+        // check player is in front of wall
+        CapsuleCollider capsule_collider = GetComponent<CapsuleCollider>();
+        return Physics.Raycast(transform.position + new Vector3(0, capsule_collider.bounds.size.y, 0), transform.forward, 2.0f) ||
+            Physics.Raycast(capsule_collider.bounds.center, transform.forward, 2.0f);
+    }
 
 	public bool isTurnDirSwitched(){
 		return turn_dir_switched;
@@ -180,6 +162,10 @@ public class Player : Character {
         animator.speed = anim_speed_default;
     }
 
+    public void setTurnDirSwitched(bool flag) {
+        turn_dir_switched = flag;
+    }
+
 
 	void OnGUI()
 	{
@@ -195,7 +181,7 @@ public class Player : Character {
 		GUI.Label(new Rect(Screen.width -245,70,250,30),"vy: " + vy);
 		GUI.Label(new Rect(Screen.width -245,90,250,30),"targetDirection: " + targetDirection);
 		GUI.Label(new Rect(Screen.width -245,110,250,30),"on_ground: " + isGrounded());
-		GUI.Label(new Rect(Screen.width -245,130,250,30),"dist_to_ground: " + dist_to_ground);
+		GUI.Label(new Rect(Screen.width -245,130,250,30),"touched_wall: " + isTouchedWall());
 		GUI.Label(new Rect(Screen.width -245,150,250,30),"(x,y,z): " + transform.position);
 		GUI.Label(new Rect(Screen.width -245,170,250,30),"capsule_center: " + cc.bounds.center);
 		GUI.Label(new Rect(Screen.width -245,190,250,30),"capsule_height: " + cc.height);

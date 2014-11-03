@@ -7,6 +7,7 @@ public class PlayerSliding : PlayerActionBase {
 	}
 
 	public override void perform(Character character) {
+        player.rigidbody.AddForce(player.transform.forward * 8000.0f);
 		((Player)character).getAnimator().CrossFade("Sliding", 0.001f);
 	}
 
