@@ -8,7 +8,7 @@ public class DefaultController : Controller {
 		inputs[(int)Movement.SLIDING] = Input.GetKeyDown("z");
 		inputs[(int)Movement.ATTACK] = Input.GetKeyDown("x");
 		inputs[(int)Movement.PROJECTILE] = Input.GetKeyDown("c");
-
+        inputs[(int)Movement.DASH] = Input.GetKey("v");
 	}
 
 }

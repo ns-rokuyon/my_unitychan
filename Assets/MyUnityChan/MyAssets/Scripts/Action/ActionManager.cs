@@ -17,6 +17,7 @@ public class PlayerActionManager : ActionManager{
 	public enum ActionName {
         BRAKE,
         ACCEL,
+        DASH,
         LIMIT_SPEED,
         AIR_JUMP,
 		SLIDING,
@@ -30,6 +31,7 @@ public class PlayerActionManager : ActionManager{
 		action_list = new List<ActionBase>();
         action_list.Add(new PlayerBrake(ch));
         action_list.Add(new PlayerAccel(ch));
+        action_list.Add(new PlayerDash(ch));
         action_list.Add(new PlayerLimitSpeed(ch));
         action_list.Add(new PlayerAirJump(ch));
 		action_list.Add(new PlayerSliding(ch));
@@ -43,30 +45,41 @@ public class PlayerActionManager : ActionManager{
 
         action.update();
 
-		if (action.condition(character)) {
+        if ( action.condition(character) ) {
             action.prepare();
-			action.perform(character);
+            action.perform(character);
             action.effect();
             action.end();
-		}
+        }
+        else {
+            action.perform_off();
+        }
 	}
 
 }
 
 public abstract class ActionBase {
 	public abstract void perform(Character character);
+
+    public virtual void perform_off() {
+    }
+
 	public virtual bool condition(Character character){
 		return true;
 	}
+
     public virtual bool prepare() {
         return true;
     }
+
     public virtual bool end() {
         return true;
     }
+
     public virtual bool update() {
         return true;
     }
+
     public virtual bool effect() {
         return true;
     }

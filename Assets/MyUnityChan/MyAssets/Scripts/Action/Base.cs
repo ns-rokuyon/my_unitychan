@@ -73,6 +73,36 @@ public class PlayerAccel : PlayerActionBase {
     }
 }
 
+public class PlayerDash : PlayerActionBase {
+    private bool dash;
+    private Vector3 moveF = new Vector3(200f, 0, 0);
+
+    public PlayerDash(Character character) : base(character){
+        dash = false;
+    }
+
+    public override void perform(Character character) {
+        float horizontal = controller.keyHorizontal();
+        dash = true;
+        player.getAnimator().speed = player.getAnimSpeedDefault() * 1.4f;
+        if ( !player.isTouchedWall() ) {
+            player.rigidbody.AddForce(horizontal * moveF);
+        }
+    }
+
+    public override void perform_off() {
+        player.getAnimator().speed = player.getAnimSpeedDefault();
+        if ( dash ) {
+            dash = false;
+            player.getAnimator().CrossFade("Locomotion", 0.01f);
+        }
+    }
+
+    public override bool condition(Character character) {
+        return controller.keyDash() && player.isGrounded();
+    }
+}
+
 
 public class PlayerLimitSpeed : PlayerActionBase {
    
@@ -82,10 +112,19 @@ public class PlayerLimitSpeed : PlayerActionBase {
     }
 
     public override void perform(Character character) {
+        if ( player.isAnimState("Base Layer.Dash") ) {
+            limitSpeed(player.dash_maxspeed);
+            return;
+        }
+
+        limitSpeed(player.maxspeed);
+    }
+
+    private void limitSpeed(float maxspeed) {
         float vx = player.rigidbody.velocity.x;
         float vy = player.rigidbody.velocity.y;
-        if ( Mathf.Abs(vx) > player.maxspeed ) {
-            player.rigidbody.velocity = new Vector3(Mathf.Sign(vx) * player.maxspeed, vy);
+        if ( Mathf.Abs(vx) > maxspeed ) {
+            player.rigidbody.velocity = new Vector3(Mathf.Sign(vx) * maxspeed, vy);
         }
     }
 

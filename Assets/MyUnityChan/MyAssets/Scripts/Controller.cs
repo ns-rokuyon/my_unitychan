@@ -7,6 +7,7 @@ public abstract class Controller : MonoBehaviour {
 		SLIDING,
 		ATTACK,
 		PROJECTILE,
+        DASH,
 		len
 	};
 
@@ -32,6 +33,7 @@ public abstract class Controller : MonoBehaviour {
 	public bool keySliding(){ return inputs[(int)Movement.SLIDING];}
 	public bool keyAttack(){ return inputs[(int)Movement.ATTACK];}
 	public bool keyProjectile(){ return inputs[(int)Movement.PROJECTILE];}
+    public bool keyDash() { return inputs[(int)Movement.DASH]; }
 	public float keyHorizontal(){ return horizontal_input;}
 	public float keyVertical(){ return vertical_input; }
 }

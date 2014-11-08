@@ -23,6 +23,7 @@ public class Player : Character {
 
 	public Vector3 moveF = new Vector3(200f, 0, 0);
 	public float maxspeed = 20f;
+    public float dash_maxspeed = 30.0f;
 
     private float brake_power = 30.0f;
 	private float speed = 0;
@@ -76,6 +77,9 @@ public class Player : Character {
 
         // accelerate player in response to input
         action_manager.act(PlayerActionManager.ActionName.ACCEL);
+
+        // dash
+        action_manager.act(PlayerActionManager.ActionName.DASH);
 
 		// limit speed (maxspeed)
         action_manager.act(PlayerActionManager.ActionName.LIMIT_SPEED);
@@ -166,6 +170,10 @@ public class Player : Character {
         turn_dir_switched = flag;
     }
 
+    public float getAnimSpeedDefault() {
+        return anim_speed_default;
+    }
+
 
 	void OnGUI()
 	{
@@ -186,6 +194,7 @@ public class Player : Character {
 		GUI.Label(new Rect(Screen.width -245,170,250,30),"capsule_center: " + cc.bounds.center);
 		GUI.Label(new Rect(Screen.width -245,190,250,30),"capsule_height: " + cc.height);
 		GUI.Label(new Rect(Screen.width -245,210,250,30),"x_key_down: " + Input.GetKeyDown("x").ToString());
+        GUI.Label(new Rect(Screen.width -245,230,250,30),"animspeed: " + animator.speed);
 	}
 }
 
