@@ -39,10 +39,17 @@ public class PlayerAirJump : PlayerJump {
 
     public override void perform(Character character) {
         jump_start_y = player.transform.position.y;
-        player.rigidbody.AddForce(new Vector3(0f, 1200.0f, 0));
-        //player.getAnimator().Play("Locomotion");
         player.getAnimator().SetBool("Jump",true);
-        player.getAnimator().Play("Jump", -1, 0.0f);
+        if (player.isDash()) {
+            // dashdump (ground jump)
+            player.rigidbody.AddForce(new Vector3(player.transform.forward.x * 800.0f, 800.0f, 0));
+            player.getAnimator().Play("DashJump", -1, 0.0f);
+        }
+        else {
+            // jump (ground jump or air jump)
+            player.rigidbody.AddForce(new Vector3(0f, 1200.0f, 0));
+            player.getAnimator().Play("Jump", -1, 0.0f);
+        }
         player.setAnimSpeedDefault();
         player.getAnimator().SetBool("OnGround", false);
     }

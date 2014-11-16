@@ -50,7 +50,12 @@ public class PlayerAccel : PlayerActionBase {
         if ( Mathf.Abs(horizontal) >= 0.2 && horizontal * vx < maxspeed ) {
             if ( Mathf.Sign(horizontal) != Mathf.Sign(vx) && Mathf.Abs(vx) > 0.1f ) {
                 // when player is turning, add low force
-                player.rigidbody.AddForce(horizontal * moveF / 4.0f);
+                if (player.isDash()) {
+                    player.rigidbody.AddForce(horizontal * moveF / 8.0f);
+                }
+                else {
+                    player.rigidbody.AddForce(horizontal * moveF / 4.0f);
+                }
             }
             else {
                 // accelerate
@@ -94,12 +99,19 @@ public class PlayerDash : PlayerActionBase {
         player.getAnimator().speed = player.getAnimSpeedDefault();
         if ( dash ) {
             dash = false;
+            if (player.getAnimator().GetBool("Jump")) {
+                return;
+            }
             player.getAnimator().CrossFade("Locomotion", 0.01f);
         }
     }
 
     public override bool condition(Character character) {
         return controller.keyDash() && player.isGrounded();
+    }
+
+    public bool isDash() {
+        return dash;
     }
 }
 
@@ -112,8 +124,12 @@ public class PlayerLimitSpeed : PlayerActionBase {
     }
 
     public override void perform(Character character) {
-        if ( player.isAnimState("Base Layer.Dash") ) {
+        if ( player.isDash() ) {
             limitSpeed(player.dash_maxspeed);
+            return;
+        }
+        if ( player.isAnimState("Base Layer.DashJump") ) {
+            limitSpeed(player.dashjump_maxspeed);
             return;
         }
 

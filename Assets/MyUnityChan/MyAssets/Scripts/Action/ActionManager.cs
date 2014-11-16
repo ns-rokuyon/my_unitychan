@@ -56,6 +56,10 @@ public class PlayerActionManager : ActionManager{
         }
 	}
 
+    public ActionBase getAction(ActionName action_name) {
+        return action_list[(int)action_name];
+    }
+
 }
 
 public abstract class ActionBase {
