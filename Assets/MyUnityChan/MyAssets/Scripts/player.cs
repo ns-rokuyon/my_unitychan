@@ -61,7 +61,7 @@ public class Player : Character {
 
 
     void FixedUpdate() {
-        float horizontal = controller.keyHorizontal();
+        float horizontal = ((PlayerController)controller).keyHorizontal();
 
         animator.SetFloat("Speed", Mathf.Abs(horizontal));
 
@@ -133,12 +133,6 @@ public class Player : Character {
             Physics.Raycast(transform.position + ground_raycast_offset, new Vector3(-1.0f, 0.0f, 0), 1.0f);
     }
 
-    public bool isTouchedWall() {
-        // check player is in front of wall
-        CapsuleCollider capsule_collider = GetComponent<CapsuleCollider>();
-        return Physics.Raycast(transform.position + new Vector3(0, capsule_collider.bounds.size.y, 0), transform.forward, 2.0f) ||
-            Physics.Raycast(capsule_collider.bounds.center, transform.forward, 2.0f);
-    }
 
     public bool isTurnDirSwitched() {
         return turn_dir_switched;

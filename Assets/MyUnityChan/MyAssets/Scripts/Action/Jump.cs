@@ -34,7 +34,7 @@ public class PlayerAirJump : PlayerJump {
 
     public PlayerAirJump(Character character) : base(character) {
         jump_num = 0;
-        jump_max = 100;
+        jump_max = 2;
     }
 
     public override void perform(Character character) {
@@ -78,7 +78,7 @@ public class PlayerAirJump : PlayerJump {
         }
 
         float scvy = Mathf.Abs(player.rigidbody.velocity.y);
-        if ( scvy < 8.0f ) {
+        if ( scvy < 16.0f ) {
             return true;
         }
 

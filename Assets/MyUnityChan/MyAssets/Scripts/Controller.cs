@@ -36,5 +36,13 @@ public abstract class Controller : MonoBehaviour {
     public bool keyDash() { return inputs[(int)Movement.DASH]; }
 	public float keyHorizontal(){ return horizontal_input;}
 	public float keyVertical(){ return vertical_input; }
+
+}
+
+public abstract class PlayerController : Controller {
+}
+
+public abstract class AIController : Controller {
+
 }
 

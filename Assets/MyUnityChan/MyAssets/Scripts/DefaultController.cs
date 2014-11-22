@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class DefaultController : Controller {
+public class DefaultController : PlayerController {
 	void Update(){
 		horizontal_input = Input.GetAxis ("Horizontal");
 		inputs[(int)Movement.JUMP] = Input.GetKeyDown("space");

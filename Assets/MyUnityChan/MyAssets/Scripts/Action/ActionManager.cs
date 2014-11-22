@@ -13,6 +13,34 @@ public class ActionManager {
 	}
 }
 
+public class EnemyActionManager : ActionManager {
+    protected Dictionary<string, ActionBase> actions;
+
+    public EnemyActionManager() {
+        actions = new Dictionary<string, ActionBase>();
+    }
+
+    public void registerAction(string key, ActionBase value) {
+        actions[key] = value;
+    }
+    
+	public void act(string action_name){
+		ActionBase action = actions[action_name];
+
+        action.update();
+
+        if ( action.condition(character) ) {
+            action.prepare();
+            action.perform(character);
+            action.effect();
+            action.end();
+        }
+        else {
+            action.perform_off();
+        }
+	}
+}
+
 public class PlayerActionManager : ActionManager{
 	public enum ActionName {
         BRAKE,
@@ -91,11 +119,22 @@ public abstract class ActionBase {
 
 public abstract class PlayerActionBase : ActionBase {
 	protected Player player;
-	protected Controller controller;
+	protected PlayerController controller;
 
 	public PlayerActionBase(Character character) {
 		player = (Player)character;
-		controller = player.getController();
+		controller = (PlayerController)player.getController();
+	}
+
+}
+
+public abstract class EnemyActionBase : ActionBase {
+	protected Enemy enemy;
+	protected AIController controller;
+
+	public EnemyActionBase(Character character) {
+		enemy = (Enemy)character;
+		controller = (AIController)enemy.getController();
 	}
 
 }
