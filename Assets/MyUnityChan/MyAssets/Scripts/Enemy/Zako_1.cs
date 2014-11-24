@@ -13,6 +13,7 @@ public class Zako_1 : Enemy {
 	
 	// Update is called once per frame
 	void Update () {
+        updateStunned();
 	}
 
     void FixedUpdate() {
@@ -42,5 +43,9 @@ public class EnemyWalk : EnemyActionBase {
         if ( Mathf.Abs(vx) > maxspeed ) {
             enemy.rigidbody.velocity = new Vector3(Mathf.Sign(vx) * maxspeed, vy);
         }
+    }
+
+    public override bool condition(Character character) {
+        return !enemy.isStunned();
     }
 }

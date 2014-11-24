@@ -10,6 +10,7 @@ public class PlayerAttack : PlayerActionBase {
 		left_punch = new PlayerPunchL(character);
 		right_punch = new PlayerPunchR(character);
 		spinkick = new PlayerSpinKick(character);
+
 	}
 
 	public override void perform(Character character) {
@@ -44,6 +45,7 @@ public class PlayerPunchL : PlayerActionBase {
 
 	public override void perform(Character character) {
 		player.getAnimator().Play("PunchL");
+        createHitbox();
 	}
 
 	public override bool condition(Character character){
@@ -53,6 +55,12 @@ public class PlayerPunchL : PlayerActionBase {
 			player.isGrounded();
 		return cond;
 	}
+
+    private void createHitbox() {
+        GameObject hitbox = GameObject.Instantiate(player.punch_hitbox_prefab) as GameObject;
+        PunchHitbox hitbox_script = hitbox.GetComponent<PunchHitbox>();
+        hitbox_script.create(player.transform.position, player.transform.forward, 3, 5);
+    }
 }
 
 public class PlayerPunchR : PlayerActionBase {
