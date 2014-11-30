@@ -13,22 +13,33 @@ public class ObjectBase : MonoBehaviour {
 	
 	}
 
+    // manual frame counter
+    // call update() per frame manually
 	public class FrameCounter {
 		private bool running = false;
 		private int start_frame = 0;
+        private int count = 0;
 		private int duration = 0;
 
 		public FrameCounter(int frame){
 			duration = frame;
 			start_frame = Time.frameCount;
 			running = true;
+            count = 0;
 		}
 
 		public void update(){
-			if (running && Time.frameCount - start_frame > duration) {
-				running = false;
-			}
+            if ( running ) {
+                count++;
+                if ( count >= duration ) {
+                    running = false;
+                }
+            }
 		}
+
+        public int now() {
+            return count;
+        }
 
 		public bool isRunning(){
 			return running;
@@ -42,5 +53,53 @@ public class ObjectBase : MonoBehaviour {
             return new FrameCounter(frame);
         }
 	
+	}
+
+	public abstract class DelayEvent : FrameCounter {
+		protected bool done;
+
+		public DelayEvent(int frame) : base(frame){}
+		public abstract void perform();
+
+		public bool isDone(){
+			return done;
+		}
+	}
+
+    // manual invoker
+	public class DelayNormalEvent : DelayEvent {
+		public delegate void DelayDelegate();
+
+		private DelayDelegate delay_func;
+
+		public DelayNormalEvent(int frame, DelayDelegate func) : base(frame){
+			delay_func = func;
+		}
+
+		public override void perform(){
+			if (!done && finished()) {
+				delay_func();
+				done = true;
+			}
+		}
+	}
+
+	public class DelayDirectionEvent : DelayEvent {
+		public delegate void DelayDelegate(Vector3 dir);
+
+		private DelayDelegate delay_func;
+		private Vector3 direction;
+
+		public DelayDirectionEvent(int frame, Vector3 dir, DelayDelegate func) : base(frame){
+			delay_func = func;
+			direction = dir;
+		}
+
+		public override void perform(){
+			if (!done && finished()) {
+				delay_func(direction);
+				done = true;
+			}
+		}
 	}
 }

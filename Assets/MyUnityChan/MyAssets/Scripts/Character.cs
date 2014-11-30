@@ -25,37 +25,9 @@ public class Character : ObjectBase {
 		}
 	};
 
-	public abstract class DelayEvent : FrameCounter {
-		protected bool done;
-
-		public DelayEvent(int frame) : base(frame){}
-		public abstract void perform();
-
-		public bool isDone(){
-			return done;
-		}
-	}
-
-	public class DelayDirectionEvent : DelayEvent {
-		public delegate void DelayDelegate(Vector3 dir);
-
-		private DelayDelegate delay_func;
-		private Vector3 direction;
-
-		public DelayDirectionEvent(int frame, Vector3 dir, DelayDelegate func) : base(frame){
-			delay_func = func;
-			direction = dir;
-		}
-
-		public override void perform(){
-			if (!done && finished()) {
-				delay_func(direction);
-				done = true;
-			}
-		}
-	}
 
 	public class MoveControlManager {
+        // TODO: change List<DelayEvent>
 		private MoveLock lock_control;
 		private DelayEvent delay_control;
 
