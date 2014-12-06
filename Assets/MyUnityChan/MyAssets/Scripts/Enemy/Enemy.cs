@@ -12,6 +12,8 @@ public class Enemy : NPCharacter {
     protected void loadAttachedAI() {
         GameObject controller_inst = Instantiate(controller_prefab) as GameObject;
         controller = controller_inst.GetComponent<Controller>();
+
+        ((AIController)controller).setSelf(this);
     }
 
     public void stun(int stun_power) {

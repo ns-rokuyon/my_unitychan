@@ -43,6 +43,11 @@ public abstract class PlayerController : Controller {
 }
 
 public abstract class AIController : Controller {
+    protected Character self;
+
+    public void setSelf(Character ch) {
+        self = ch;
+    }
 
 }
 

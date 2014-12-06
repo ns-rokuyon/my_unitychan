@@ -31,7 +31,6 @@ public class PlayerAttack : PlayerActionBase {
 		bool cond = 
 			controller.keyAttack() && 
 			!player.getAnimator().GetBool("Turn") && 
-			player.isGrounded() && 
 			!player.isAnimState("Base Layer.SpinKick");
 		return cond;
 	}
@@ -70,10 +69,9 @@ public class PlayerPunchL : PlayerActionBase {
 	}
 
 	public override bool condition(Character character){
-		bool cond = 
-			controller.keyAttack() && 
-			!player.getAnimator().GetBool("Turn") && 
-			player.isGrounded();
+        bool cond =
+            controller.keyAttack() &&
+            !player.getAnimator().GetBool("Turn");
 		return cond;
 	}
 
@@ -110,10 +108,9 @@ public class PlayerPunchR : PlayerActionBase {
 	}
 
 	public override bool condition(Character character){
-		bool cond = 
-			controller.keyAttack() && 
-			!player.getAnimator().GetBool("Turn") && 
-			player.isGrounded();
+        bool cond =
+            controller.keyAttack() &&
+            !player.getAnimator().GetBool("Turn");
 		return cond;
 	}
 
@@ -150,10 +147,9 @@ public class PlayerSpinKick : PlayerActionBase {
 	}
 
 	public override bool condition(Character character){
-		bool cond = 
-			controller.keyAttack() && 
-			!player.getAnimator().GetBool("Turn") && 
-			player.isGrounded();
+        bool cond =
+            controller.keyAttack() &&
+            !player.getAnimator().GetBool("Turn");
 		return cond;
 	}
 
