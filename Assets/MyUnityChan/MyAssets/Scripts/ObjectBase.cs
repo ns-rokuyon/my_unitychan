@@ -13,6 +13,18 @@ public class ObjectBase : MonoBehaviour {
 	
 	}
 
+    public void OnTriggerEnter(Collider other) {
+        if (other.tag == "MovingFloor" && transform.parent == null) {
+            transform.parent = other.gameObject.transform;
+        }
+    }
+
+    public void OnTriggerExit(Collider other) {
+        if ( other.tag == "MovingFloor" && transform.parent != null ) {
+            transform.parent = null;
+        }
+    }
+
     // manual frame counter
     // call update() per frame manually
 	public class FrameCounter {
