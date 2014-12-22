@@ -2,9 +2,23 @@
 using System.Collections;
 
 public class PlayerHadouken : PlayerActionBase {
+    public AttackSpec spec = null;
 
 	public PlayerHadouken(Character character) : base(character){
+        spec = new Spec();
 	}
+
+    public class Spec : AttackSpec {
+        public Spec() {
+            damage = 5;
+            stun = 50;
+            frame = 100;
+        }
+
+        public override void attack(Character character, Hitbox hitbox) {
+            ((Enemy)character).stun(stun);
+        }
+    }
 	
 	public override void perform(Character character) {
 		Vector3 fw = player.transform.forward;
@@ -34,6 +48,11 @@ public class PlayerHadouken : PlayerActionBase {
 		Projectile particle = projectile_particle.GetComponent<Projectile>();
 
 		prjc.init(player.transform.position, direction);
+       
+        // hitbox
+        createHitbox(projectile);
+
+        // particles
 		particle.init(player.transform.position, direction, 0.001f);
 		if (player.transform.forward.x < 0.0f) {
 			particle.transform.Rotate(0.0f, 90.0f, 0.0f);
@@ -41,5 +60,11 @@ public class PlayerHadouken : PlayerActionBase {
 			particle.transform.Rotate(0.0f, -90.0f, 0.0f);
 		}
 	}
+
+    private void createHitbox(GameObject proj) {
+        GameObject hitbox = GameObject.Instantiate(player.projectile_hitbox_prefab) as GameObject;
+        ProjectileHitbox hitbox_script = hitbox.GetComponent<ProjectileHitbox>();
+        hitbox_script.create(proj, spec);
+    }
 }
 

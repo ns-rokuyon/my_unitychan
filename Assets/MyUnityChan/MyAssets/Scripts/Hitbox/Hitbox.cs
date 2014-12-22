@@ -12,6 +12,14 @@ public class Hitbox : ObjectBase {
 
     // Update is called once per frame
     void Update() {
+        CommonUpdate();
+        UniqueUpdate(); 
+    }
+
+    protected virtual void UniqueUpdate() {
+    }
+
+    private void CommonUpdate(){
         if ( end_timer == null ) {
             end_timer = FrameCounter.startFrameCounter(time);
         }
@@ -23,7 +31,6 @@ public class Hitbox : ObjectBase {
         if ( end_timer != null ) {
             end_timer.update();
         }
-
     }
 
     public void OnTriggerEnter(Collider other) {

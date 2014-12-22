@@ -19,6 +19,7 @@ public class Player : Character {
 
     public GameObject punch_hitbox_prefab;
     public GameObject kick_hitbox_prefab;
+    public GameObject projectile_hitbox_prefab;
 
     private Animator animator;
     private MoveControlManager move_controller = null;

@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class PlayerBrake : PlayerActionBase {
-    private const float BRAKE_POWER_DEFAULT = 30.0f;
+    private const float BRAKE_POWER_DEFAULT = 40.0f;
     private float brake_power;
 
     public PlayerBrake(Character character) : base(character) {
