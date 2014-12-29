@@ -19,6 +19,14 @@
 /*.booproj
 /*.htm
 
+/Assets/Materials
+/Assets/Models
+/Assets/Prefabs
+/Assets/Scenes
+/Assets/Scripts
+/Assets/Textures
+/Assets/Shaders
+/Assets/_CompletedAssets
 /Assets/Destroyed_city_FREE
 /Assets/ForesterSycamore
 /Assets/Locomotion Setup

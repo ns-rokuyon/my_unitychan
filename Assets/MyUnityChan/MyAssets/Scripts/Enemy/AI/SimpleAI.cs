@@ -3,14 +3,24 @@ using System.Collections;
 
 public class SimpleAI : AIController {
 	private GameObject target;
+    private int target_update_time_span;
 
 	// Use this for initialization
 	void Start () {
-		target = GameObject.Find ("unitychan");
+        target_update_time_span = 10;
 	}
 
 	// Update is called once per frame
 	void Update () {
+        if ( Time.frameCount % target_update_time_span == 0 ) {
+            target = Enemy.findNearestPlayer(self.transform.position);
+        }
+
+        if ( target == null ) {
+            horizontal_input = 0.0f;
+            return;
+        }
+
         float target_x = target.transform.position.x;
         float self_x = self.transform.position.x;
 

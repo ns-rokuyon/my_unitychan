@@ -56,13 +56,13 @@ public class Player : Character {
         dist_to_ground = GetComponent<CapsuleCollider>().height;
         move_controller = new MoveControlManager();
         action_manager = new PlayerActionManager(this);
-
+        
+        NPCharacter.setPlayers();
     }
 
     void Update() {
         move_controller.update();
     }
-
 
     void FixedUpdate() {
         float horizontal = ((PlayerController)controller).keyHorizontal();
@@ -109,6 +109,9 @@ public class Player : Character {
         rigidbody.AddForce(new Vector3(0f, -32.0f, 0));	// -26
     }
 
+    public void damage() {
+        animator.SetTrigger("Damaged");
+    }
 
     void onTurnMiddle() {
         Debug.Log("on turn middle");

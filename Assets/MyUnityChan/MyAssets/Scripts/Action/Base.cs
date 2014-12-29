@@ -117,7 +117,6 @@ public class PlayerDash : PlayerActionBase {
 
 
 public class PlayerLimitSpeed : PlayerActionBase {
-   
 
     public PlayerLimitSpeed(Character character)
         : base(character) {
@@ -145,4 +144,3 @@ public class PlayerLimitSpeed : PlayerActionBase {
     }
 
 }
-

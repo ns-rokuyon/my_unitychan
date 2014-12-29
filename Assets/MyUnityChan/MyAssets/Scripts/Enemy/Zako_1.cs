@@ -2,18 +2,12 @@
 using System.Collections;
 
 public class Zako_1 : Enemy {
-    private EnemyActionManager action_manager;
 
-	// Use this for initialization
-	void Start () {
-        loadAttachedAI();
-        action_manager = new EnemyActionManager();
+	protected override void start () {
         action_manager.registerAction("WALK", new EnemyWalk(this));
 	}
 	
-	// Update is called once per frame
-	void Update () {
-        updateStunned();
+	protected override void update () {
 	}
 
     void FixedUpdate() {
