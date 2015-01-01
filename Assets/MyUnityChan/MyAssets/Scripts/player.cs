@@ -12,6 +12,8 @@ using System.Collections.Generic;
 
 public class Player : Character {
 
+    public string player_name = null;
+
     public GameObject projectile_prefab;
     public GameObject projectile_particle_prefab;
     public GameObject jump_effect_prefab;
@@ -21,6 +23,7 @@ public class Player : Character {
     public GameObject kick_hitbox_prefab;
     public GameObject projectile_hitbox_prefab;
 
+    private PlayerStatus status;
     private Animator animator;
     private MoveControlManager move_controller = null;
     private PlayerActionManager action_manager = null;
@@ -47,8 +50,12 @@ public class Player : Character {
 
     // Use this for initialization
     void Start() {
+        player_name = "player1";
+
         GameObject controller_inst = Instantiate(controller_prefab) as GameObject;
         controller = controller_inst.GetComponent<Controller>();
+
+        status = (Instantiate(status_prefab) as GameObject).GetComponent<PlayerStatus>();
 
         animator = GetComponent<Animator>();
         locomotion = new Locomotion(animator);
@@ -110,7 +117,10 @@ public class Player : Character {
     }
 
     public void damage() {
-        animator.SetTrigger("Damaged");
+        if ( !status.invincible.now() ) {
+            animator.SetTrigger("Damaged");
+            status.invincible.enable(60);
+        }
     }
 
     void onTurnMiddle() {

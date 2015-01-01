@@ -2,7 +2,10 @@
 using System.Collections;
 
 public class Character : ObjectBase {
+    // prefabs
+    public GameObject status_prefab;
 
+    // references to component
 	protected Controller controller;
 
 	public Controller getController(){

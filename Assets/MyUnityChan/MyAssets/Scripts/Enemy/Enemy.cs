@@ -3,11 +3,22 @@ using System.Collections.Generic;
 
 public class NPCharacter : Character {
     static protected List<GameObject> players = new List<GameObject>();
+    const int PLAYER_TOUCHING_FRAME_OFFSET = 10;
 
     static public void setPlayers() {
         foreach ( GameObject pl in GameObject.FindGameObjectsWithTag("Player") ) {
             players.Add(pl);
         }
+    }
+
+    static public GameObject findPlayerByName(string name) {
+        foreach ( GameObject player in players ) {
+            Player script = player.GetComponent<Player>();
+            if ( script.player_name == name ) {
+                return player;
+            }
+        }
+        throw new System.InvalidOperationException("not exists : " + name);
     }
 
     static public GameObject findNearestPlayer(Vector3 pos) {
@@ -32,8 +43,42 @@ public class NPCharacter : Character {
         return nearest;
     }
 
+    protected Dictionary<string, int> touching_players = new Dictionary<string, int>();
+
     protected virtual void start() { }
     protected virtual void update() { }
+
+    protected void checkPlayerTouched() {
+        foreach ( KeyValuePair<string, int> pair in touching_players ) {
+            if ( pair.Value > PLAYER_TOUCHING_FRAME_OFFSET ) {
+                GameObject player = findPlayerByName(pair.Key);
+                Player script = player.GetComponent<Player>();
+
+                script.damage();
+            }
+        }
+    }
+
+    public void OnCollisionStay(Collision collisionInfo) {
+        if ( collisionInfo.gameObject.tag == "Player" ) {
+            Player player_script = collisionInfo.gameObject.GetComponent<Player>();
+            string player_name = player_script.player_name;
+
+            if ( touching_players.ContainsKey(player_name) ) {
+                touching_players[player_name]++;
+            }
+            else {
+                touching_players[player_name] = 1;
+            }
+        }
+    }
+
+    public void OnCollisionExit(Collision collisionInfo) {
+        if ( collisionInfo.gameObject.tag == "Player" ) {
+            Player player_script = collisionInfo.gameObject.GetComponent<Player>();
+            touching_players[player_script.player_name] = 0;
+        }
+    }
 }
 
 public class Enemy : NPCharacter {
@@ -62,9 +107,6 @@ public class Enemy : NPCharacter {
         }
     }
 
-    protected void damageToPlayer() {
-
-    }
 
 	// Use this for initialization
 	void Start () {
@@ -76,8 +118,11 @@ public class Enemy : NPCharacter {
 	
 	// Update is called once per frame
 	void Update () {
-        updateStunned();	
+        updateStunned();
+        checkPlayerTouched();
 
         update();
 	}
+
+
 }
