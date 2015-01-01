@@ -12,17 +12,6 @@ public class TimerManager : SingletonObjectBase<TimerManager> {
         return !checkFinished(id);
     }
     
-    public static int createFrameTimer(int frame) {
-        GameObject timer_object = Instantiate(self().frame_timer_prefab) as GameObject;
-        FrameTimer timer = timer_object.GetComponent<FrameTimer>();
-        timer.setTimer(frame);
-
-        int id = timer_object.GetInstanceID();
-        self().add(id, timer);
-
-        return id;
-    }
-
     private Dictionary<int,Timer> timers;
 
     public GameObject frame_timer_prefab;
@@ -71,14 +60,25 @@ public class TimerManager : SingletonObjectBase<TimerManager> {
 
 }
 
-public class TimerContainer {
-    public int id = 0;       // id
+public abstract class TimerState {
+    protected int timer_id = 0;
 
-    public TimerContainer(int _id) {
-        set(_id);
+    public TimerState() {
+        createTimer(1);
     }
 
-    public void set(int _id) {
-        id = _id;
+    public int id() {
+        return timer_id;
     }
+
+    public bool isFinished() {
+        return TimerManager.checkFinished(timer_id);
+    }
+
+    public bool isRunning() {
+        return TimerManager.checkRunning(timer_id);
+    }
+
+    public abstract void createTimer(int time);
+    public abstract void createTimer(float time);
 }

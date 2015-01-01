@@ -31,3 +31,22 @@ public class FrameTimer : Timer {
         }
     }
 }
+
+public class FrameTimerState : TimerState {
+
+    public override void createTimer(int time) {
+        GameObject timer_object = GameObject.Instantiate(TimerManager.self().frame_timer_prefab) as GameObject;
+        FrameTimer timer = timer_object.GetComponent<FrameTimer>();
+        timer.setTimer(time);
+
+        int id = timer_object.GetInstanceID();
+        TimerManager.self().add(id, timer);
+
+        timer_id = id;
+    }
+
+    public override void createTimer(float time) {
+        createTimer((int)time);
+    }
+
+}

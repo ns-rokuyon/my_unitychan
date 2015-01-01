@@ -4,12 +4,12 @@ using System.Collections;
 public class Invincible : ObjectBase {
     public bool all_time = false;
 
-    private TimerContainer timer;
+    private TimerState timer;
     private bool is_invincible;
 
     // Use this for initialization
     void Start() {
-        timer = null;
+        timer = new FrameTimerState();
         is_invincible = false;
     }
 
@@ -20,12 +20,11 @@ public class Invincible : ObjectBase {
             return;
         }
 
-        if ( timer != null && TimerManager.checkRunning(timer.id) ) {
+        if ( timer != null && timer.isRunning() ) {
             is_invincible = true;
         }
         else {
             is_invincible = false;
-            timer = null;
         }
     }
 
@@ -34,7 +33,7 @@ public class Invincible : ObjectBase {
     }
 
     public void enable(int frame) {
-        timer = new TimerContainer(TimerManager.createFrameTimer(frame));
+        timer.createTimer(frame);
     }
 
     void OnGUI() {
@@ -47,7 +46,7 @@ public class Invincible : ObjectBase {
             GUI.Label(new Rect(10, 50, 250, 30), "TimerManager.is_invincible: " + is_invincible, gui_style);
         }
         else {
-            GUI.Label(new Rect(10, 30, 250, 30), "TimerManager.checkRunning: " + TimerManager.checkRunning(timer.id), gui_style);
+            GUI.Label(new Rect(10, 30, 250, 30), "TimerManager.checkRunning: " + timer.isRunning(), gui_style);
             GUI.Label(new Rect(10, 50, 250, 30), "TimerManager.is_invincible: " + is_invincible, gui_style);
         }
     }

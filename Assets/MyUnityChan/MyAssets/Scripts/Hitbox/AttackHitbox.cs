@@ -9,8 +9,8 @@ public class AttackHitbox : Hitbox {
         spec = atkspec;
 
         // timer
-        this.time = spec.frame;
-        end_timer = FrameCounter.startFrameCounter(time);
+        time = spec.frame;
+        end_timer.createTimer(time);
     }
 
     protected void initPosition(Vector3 pos, Vector3 fw, AttackSpec atkspec) {
@@ -22,8 +22,8 @@ public class AttackHitbox : Hitbox {
         spec = atkspec;
 
         // timer
-        this.time = spec.frame;
-        end_timer = FrameCounter.startFrameCounter(time);
+        time = spec.frame;
+        end_timer.createTimer(time);
     }
 
     public void OnTriggerEnter(Collider other) {

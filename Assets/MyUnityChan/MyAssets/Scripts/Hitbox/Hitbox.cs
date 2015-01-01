@@ -3,8 +3,12 @@ using System.Collections;
 
 public class Hitbox : ObjectBase {
     protected int time = 0;                         // active time
-    protected FrameCounter end_timer = null;
+    protected TimerState end_timer = null;
     public Vector3 forward { get; set; }
+
+    void Awake() {
+        end_timer = new FrameTimerState();
+    }
 
     // Use this for initialization
     void Start() {
@@ -21,15 +25,11 @@ public class Hitbox : ObjectBase {
 
     private void CommonUpdate(){
         if ( end_timer == null ) {
-            end_timer = FrameCounter.startFrameCounter(time);
+            end_timer.createTimer(time);
         }
-        else if ( end_timer.finished() ){
+        else if ( end_timer.isFinished() ){
             Destroy(this.gameObject);
             return;
-        }
-
-        if ( end_timer != null ) {
-            end_timer.update();
         }
     }
 
