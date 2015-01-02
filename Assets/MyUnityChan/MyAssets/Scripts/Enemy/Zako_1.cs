@@ -4,14 +4,16 @@ using System.Collections;
 public class Zako_1 : Enemy {
 
 	protected override void start () {
-        action_manager.registerAction("WALK", new EnemyWalk(this));
+        GameObject action_manager_inst = Instantiate(enemy_action_manager_prefab) as GameObject;
+        action_manager = action_manager_inst.GetComponent<EnemyActionManager>();
+
+        action_manager.registerAction(new EnemyWalk(this));
 	}
 	
 	protected override void update () {
 	}
 
     void FixedUpdate() {
-        action_manager.act("WALK");
     }
 }
 
@@ -19,11 +21,15 @@ public class EnemyWalk : EnemyActionBase {
     private float maxspeed = 2.0f;
     private Vector3 moveF = new Vector3(100f, 0, 0);
 
+    public override string name() {
+        return "WALK";
+    }
+
     public EnemyWalk(Character character)
         : base(character) {
     }
 
-    public override void perform(Character character) {
+    public override void perform() {
         float horizontal = controller.keyHorizontal();
         Vector3 fw = enemy.transform.forward;
 
@@ -39,7 +45,7 @@ public class EnemyWalk : EnemyActionBase {
         }
     }
 
-    public override bool condition(Character character) {
+    public override bool condition() {
         return !enemy.isStunned();
     }
 }

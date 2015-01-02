@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerBrake : PlayerActionBase {
+public class PlayerBrake : PlayerAction {
     private const float BRAKE_POWER_DEFAULT = 40.0f;
     private float brake_power;
 
@@ -9,7 +9,11 @@ public class PlayerBrake : PlayerActionBase {
         brake_power = BRAKE_POWER_DEFAULT;
     }
 
-    public override void perform(Character character) {
+    public override string name() {
+        return "BRAKE";
+    }
+
+    public override void perform() {
         if ( !player.getMoveController().isPlayerInputLocked() ) {
             float horizontal = controller.keyHorizontal();
             Vector3 fw = player.transform.forward;
@@ -28,12 +32,12 @@ public class PlayerBrake : PlayerActionBase {
         }
     }
 
-    public override bool condition(Character character) {
+    public override bool condition() {
         return player.isGrounded();
     }
 }
 
-public class PlayerAccel : PlayerActionBase {
+public class PlayerAccel : PlayerAction {
     private float maxspeed = 20.0f;
     private Vector3 moveF = new Vector3(200f, 0, 0);
 
@@ -41,7 +45,11 @@ public class PlayerAccel : PlayerActionBase {
         : base(character) {
     }
 
-    public override void perform(Character character) {
+    public override string name() {
+        return "ACCEL";
+    }
+
+    public override void perform() {
         float horizontal = controller.keyHorizontal();
         Vector3 fw = player.transform.forward;
         float vx = player.rigidbody.velocity.x;
@@ -73,12 +81,12 @@ public class PlayerAccel : PlayerActionBase {
 
     }
 
-    public override bool condition(Character character) {
+    public override bool condition() {
         return !player.getMoveController().isPlayerInputLocked();
     }
 }
 
-public class PlayerDash : PlayerActionBase {
+public class PlayerDash : PlayerAction {
     private bool dash;
     private Vector3 moveF = new Vector3(200f, 0, 0);
 
@@ -86,7 +94,11 @@ public class PlayerDash : PlayerActionBase {
         dash = false;
     }
 
-    public override void perform(Character character) {
+    public override string name() {
+        return "DASH";
+    }
+
+    public override void perform() {
         float horizontal = controller.keyHorizontal();
         dash = true;
         player.getAnimator().speed = player.getAnimSpeedDefault() * 1.4f;
@@ -106,7 +118,7 @@ public class PlayerDash : PlayerActionBase {
         }
     }
 
-    public override bool condition(Character character) {
+    public override bool condition() {
         return controller.keyDash() && player.isGrounded();
     }
 
@@ -116,13 +128,17 @@ public class PlayerDash : PlayerActionBase {
 }
 
 
-public class PlayerLimitSpeed : PlayerActionBase {
+public class PlayerLimitSpeed : PlayerAction {
 
     public PlayerLimitSpeed(Character character)
         : base(character) {
     }
 
-    public override void perform(Character character) {
+    public override string name() {
+        return "LIMIT_SPEED";
+    }
+
+    public override void perform() {
         if ( player.isDash() ) {
             limitSpeed(player.dash_maxspeed);
             return;

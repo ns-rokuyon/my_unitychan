@@ -18,6 +18,7 @@ public class Player : Character {
     public GameObject projectile_particle_prefab;
     public GameObject jump_effect_prefab;
     public GameObject controller_prefab;
+    public GameObject action_manager_prefab;
 
     public GameObject punch_hitbox_prefab;
     public GameObject kick_hitbox_prefab;
@@ -55,6 +56,9 @@ public class Player : Character {
         GameObject controller_inst = Instantiate(controller_prefab) as GameObject;
         controller = controller_inst.GetComponent<Controller>();
 
+        GameObject action_manager_inst = Instantiate(action_manager_prefab) as GameObject;
+        action_manager = action_manager_inst.GetComponent<PlayerActionManager>();
+
         status = (Instantiate(status_prefab) as GameObject).GetComponent<PlayerStatus>();
 
         animator = GetComponent<Animator>();
@@ -62,8 +66,8 @@ public class Player : Character {
         anim_speed_default = animator.speed * 1.2f;
         dist_to_ground = GetComponent<CapsuleCollider>().height;
         move_controller = new MoveControlManager();
-        action_manager = new PlayerActionManager(this);
-        
+
+        registerActions();
         NPCharacter.setPlayers();
     }
 
@@ -85,35 +89,21 @@ public class Player : Character {
             animator.SetBool("Jump", false);
         }
 
-        // accelerate player in response to input
-        action_manager.act(PlayerActionManager.ActionName.ACCEL);
-
-        // dash
-        action_manager.act(PlayerActionManager.ActionName.DASH);
-
-        // limit speed (maxspeed)
-        action_manager.act(PlayerActionManager.ActionName.LIMIT_SPEED);
-
-        // brake player unless there is input
-        action_manager.act(PlayerActionManager.ActionName.BRAKE);
-
-        // turn
-        action_manager.act(PlayerActionManager.ActionName.TURN);
-
-        // jump on ground or second jump in air
-        action_manager.act(PlayerActionManager.ActionName.AIR_JUMP);
-
-        // sliding
-        action_manager.act(PlayerActionManager.ActionName.SLIDING);
-
-        // atttack (punchL -> punchR -> spinkick)
-        action_manager.act(PlayerActionManager.ActionName.ATTACK);
-
-        // hadouken (shoot a projectile)
-        action_manager.act(PlayerActionManager.ActionName.PROJECTILE);
 
         // gravity
         rigidbody.AddForce(new Vector3(0f, -32.0f, 0));	// -26
+    }
+
+    private void registerActions() {
+        action_manager.registerAction(new PlayerBrake(this));
+        action_manager.registerAction(new PlayerAccel(this));
+        action_manager.registerAction(new PlayerDash(this));
+        action_manager.registerAction(new PlayerLimitSpeed(this));
+        action_manager.registerAction(new PlayerAirJump(this));
+        action_manager.registerAction(new PlayerSliding(this));
+        action_manager.registerAction(new PlayerHadouken(this));
+        action_manager.registerAction(new PlayerAttack(this));
+        action_manager.registerAction(new PlayerTurn(this));
     }
 
     public void damage() {
@@ -156,7 +146,7 @@ public class Player : Character {
     }
 
     public bool isDash() {
-        return ((PlayerDash)action_manager.getAction(PlayerActionManager.ActionName.DASH)).isDash();
+        return ((PlayerDash)action_manager.getAction("DASH")).isDash();
     }
 
     void lockInput() {

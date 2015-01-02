@@ -1,22 +1,26 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerJump : PlayerActionBase {
+public class PlayerJump : PlayerAction {
 	protected float jump_start_y;
     protected Vector3 effect_offset = new Vector3(0.0f, 0.2f, 0.0f);
 
 	public PlayerJump(Character character) : base(character){
 	}
 
-	public override void perform(Character character) {
+    public override string name() {
+        return "JUMP";
+    }
+
+	public override void perform() {
 		jump_start_y = player.transform.position.y;
 		player.rigidbody.AddForce(new Vector3(0f, 1200.0f,0));
 		player.getAnimator().CrossFade("Jump",0.001f);
 		player.getAnimator().SetBool("OnGround", false);
 	}
 
-	public override bool condition(Character character){
-		return controller.keyJump() && ((Player)character).isGrounded();
+	public override bool condition(){
+		return controller.keyJump() && player.isGrounded();
 	}
 
     public override bool effect() {
@@ -37,7 +41,11 @@ public class PlayerAirJump : PlayerJump {
         jump_max = 2;
     }
 
-    public override void perform(Character character) {
+    public override string name() {
+        return "AIR_JUMP";
+    }
+
+    public override void perform() {
         jump_start_y = player.transform.position.y;
         player.getAnimator().SetBool("Jump",true);
         if (player.isDash()) {
@@ -54,7 +62,7 @@ public class PlayerAirJump : PlayerJump {
         player.getAnimator().SetBool("OnGround", false);
     }
 
-    public override bool condition(Character character) {
+    public override bool condition() {
         return controller.keyJump() &&
             readyToJump() &&
             jump_num < jump_max ;

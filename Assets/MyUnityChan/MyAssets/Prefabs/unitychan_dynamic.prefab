@@ -6267,6 +6267,8 @@ MonoBehaviour:
     type: 2}
   jump_effect_prefab: {fileID: 100000, guid: f07d04a3cb25ac54796026a230ef668a, type: 2}
   controller_prefab: {fileID: 100000, guid: 46fde649407247f429b9c9333e0c09b0, type: 2}
+  action_manager_prefab: {fileID: 133910, guid: 73f4ab61abdaa77488a4bc9d162ffe66,
+    type: 2}
   punch_hitbox_prefab: {fileID: 0}
   kick_hitbox_prefab: {fileID: 0}
   projectile_hitbox_prefab: {fileID: 0}

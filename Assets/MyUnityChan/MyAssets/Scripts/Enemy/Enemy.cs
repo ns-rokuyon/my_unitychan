@@ -83,10 +83,13 @@ public class NPCharacter : Character {
 
 public class Enemy : NPCharacter {
     public GameObject controller_prefab;
-    protected EnemyActionManager action_manager;
+    public GameObject enemy_action_manager_prefab;
     protected int stunned = 0;
 
+    protected EnemyActionManager action_manager;
+
     protected void loadAttachedAI() {
+
         GameObject controller_inst = Instantiate(controller_prefab) as GameObject;
         controller = controller_inst.GetComponent<Controller>();
 

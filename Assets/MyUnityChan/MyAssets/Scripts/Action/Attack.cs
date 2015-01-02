@@ -1,10 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerAttack : PlayerActionBase {
+public class PlayerAttack : PlayerAction {
 	private PlayerPunchL left_punch;
 	private PlayerPunchR right_punch;
 	private PlayerSpinKick spinkick;
+
+    public override string name() {
+        return "ATTACK";
+    }
 
 	public PlayerAttack(Character character) : base(character){
 		left_punch = new PlayerPunchL(character);
@@ -13,21 +17,21 @@ public class PlayerAttack : PlayerActionBase {
 
 	}
 
-	public override void perform(Character character) {
-		if (player.isAnimState("Base Layer.PunchR") && spinkick.condition(character)) {
-			spinkick.perform(character);
+	public override void perform() {
+		if (player.isAnimState("Base Layer.PunchR") && spinkick.condition()) {
+			spinkick.perform();
 			return;
 		}
-		else if (player.isAnimState("Base Layer.PunchL") && right_punch.condition(character)) {
-			right_punch.perform(character);
+		else if (player.isAnimState("Base Layer.PunchL") && right_punch.condition()) {
+			right_punch.perform();
 			return;
 		}
 		else {
-			left_punch.perform(character);
+			left_punch.perform();
 		}
 	}
 
-	public override bool condition(Character character){
+	public override bool condition(){
 		bool cond = 
 			controller.keyAttack() && 
 			!player.getAnimator().GetBool("Turn") && 
@@ -43,7 +47,7 @@ public abstract class AttackSpec {
     public abstract void attack(Character character, Hitbox hitbox);
 }
 
-public class PlayerPunchL : PlayerActionBase {
+public class PlayerPunchL : PlayerAction {
     public class Spec : AttackSpec {
         public Spec() {
             damage = 10;
@@ -63,12 +67,16 @@ public class PlayerPunchL : PlayerActionBase {
         spec = new Spec();
 	}
 
-	public override void perform(Character character) {
+    public override string name() {
+        return "PUNCH_L";
+    }
+
+	public override void perform() {
 		player.getAnimator().Play("PunchL");
 		player.getMoveController().register(new Player.DelayNormalEvent(3, createHitbox));
 	}
 
-	public override bool condition(Character character){
+	public override bool condition(){
         bool cond =
             controller.keyAttack() &&
             !player.getAnimator().GetBool("Turn");
@@ -82,7 +90,7 @@ public class PlayerPunchL : PlayerActionBase {
     }
 }
 
-public class PlayerPunchR : PlayerActionBase {
+public class PlayerPunchR : PlayerAction {
     public class Spec : AttackSpec {
         public Spec() {
             damage = 20;
@@ -102,12 +110,16 @@ public class PlayerPunchR : PlayerActionBase {
         spec = new Spec();
 	}
 
-	public override void perform(Character character) {
+    public override string name() {
+        return "PUNCH_R";
+    }
+
+	public override void perform() {
 		player.getAnimator().Play("PunchR");
 		player.getMoveController().register(new Player.DelayNormalEvent(6, createHitbox));
 	}
 
-	public override bool condition(Character character){
+	public override bool condition(){
         bool cond =
             controller.keyAttack() &&
             !player.getAnimator().GetBool("Turn");
@@ -121,7 +133,7 @@ public class PlayerPunchR : PlayerActionBase {
     }
 }
 
-public class PlayerSpinKick : PlayerActionBase {
+public class PlayerSpinKick : PlayerAction {
     public class Spec : AttackSpec {
         public Spec() {
             damage = 20;
@@ -141,12 +153,16 @@ public class PlayerSpinKick : PlayerActionBase {
         spec = new Spec();
 	}
 
-	public override void perform(Character character) {
+    public override string name() {
+        return "SPIN_KICK";
+    }
+
+	public override void perform() {
 		player.getAnimator().Play("SpinKick");
 		player.getMoveController().register(new Player.DelayNormalEvent(20, createHitbox));
 	}
 
-	public override bool condition(Character character){
+	public override bool condition(){
         bool cond =
             controller.keyAttack() &&
             !player.getAnimator().GetBool("Turn");

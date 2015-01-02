@@ -85,7 +85,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c26880253ed3a8342bc046e42d5ddff4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  status_prefab: {fileID: 0}
   controller_prefab: {fileID: 100000, guid: 116a074f01a710849892f80d68714873, type: 2}
+  enemy_action_manager_prefab: {fileID: 117996, guid: 929701ca807501c4bac710898ded9e7f,
+    type: 2}
 --- !u!136 &13600000
 CapsuleCollider:
   m_ObjectHideFlags: 1

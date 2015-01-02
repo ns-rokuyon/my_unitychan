@@ -1,11 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerTurn : PlayerActionBase {
+public class PlayerTurn : PlayerAction {
 	public PlayerTurn(Character character) : base(character){
 	}
 
-	public override void perform(Character character) {
+    public override string name() {
+        return "TURN";
+    }
+
+	public override void perform() {
 		float vx = player.rigidbody.velocity.x;
 		float vy = player.rigidbody.velocity.y;
 		Vector3 fw = player.transform.forward;

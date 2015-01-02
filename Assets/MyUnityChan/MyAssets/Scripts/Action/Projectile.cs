@@ -1,12 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerHadouken : PlayerActionBase {
+public class PlayerHadouken : PlayerAction {
     public AttackSpec spec = null;
 
 	public PlayerHadouken(Character character) : base(character){
         spec = new Spec();
 	}
+
+    public override string name() {
+        return "HADOUKEN";
+    }
 
     public class Spec : AttackSpec {
         public Spec() {
@@ -20,7 +24,7 @@ public class PlayerHadouken : PlayerActionBase {
         }
     }
 	
-	public override void perform(Character character) {
+	public override void perform() {
 		Vector3 fw = player.transform.forward;
 		player.rigidbody.AddForce(fw * -50.0f);
 		player.getAnimator().Play("Hadouken");
@@ -28,7 +32,7 @@ public class PlayerHadouken : PlayerActionBase {
 		player.getMoveController().register(new Player.DelayDirectionEvent(15, fw, shootProjectile));
 	}
 	
-	public override bool condition(Character character){
+	public override bool condition(){
 		AnimatorStateInfo anim_state = player.getAnimator().GetCurrentAnimatorStateInfo(0);
 		
 		bool cond = 
