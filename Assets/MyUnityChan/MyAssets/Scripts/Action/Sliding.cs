@@ -10,10 +10,13 @@ public class PlayerSliding : PlayerAction {
         return "SLIDING";
     }
 
-	public override void perform() {
+	public override void performFixed() {
         player.rigidbody.AddForce(player.transform.forward * 8000.0f);
-		player.getAnimator().CrossFade("Sliding", 0.001f);
 	}
+
+    public override void perform() {
+		player.getAnimator().CrossFade("Sliding", 0.001f);
+    }
 
 	public override bool condition(){
 		return controller.keySliding() && !player.getAnimator().GetBool("Turn") && player.isGrounded();

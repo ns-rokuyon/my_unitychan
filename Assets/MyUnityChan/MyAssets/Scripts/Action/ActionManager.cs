@@ -17,27 +17,77 @@ public abstract class ActionManager : ObjectBase {
         start();
     }
 
+    void Update() {
+        foreach ( KeyValuePair<string,Action> pair in actions ) {
+            Action action = pair.Value;
+
+            // call action methods in Update() constantly
+            action.constant_perform();
+
+            if ( action.flag == null ) {
+                if ( action.condition() ) {
+                    action.perform();
+                }
+                else {
+                    action.off_perform();
+                }
+                continue;
+            }
+
+            if ( action.flag.condition == false && action.condition() ) {
+                // action start point
+                action.flag.setAll();
+
+                // call action methods in Update()
+                action.perform();
+
+                // ready_to_update flag : true -> false
+                action.flag.doneUpdate();
+            }
+            else {
+                action.off_perform();
+            }
+        }
+    }
+
     void FixedUpdate() {
         update();
 
         foreach ( KeyValuePair<string,Action> pair in actions ) {
             Action action = pair.Value;
-            act(action);
+
+            // call action methods in Update() constantly
+            action.constant_performFixed();
+
+            if ( action.flag == null ) {
+                if ( action.condition() ) {
+                    // call action methods in FixedUpdate()
+                    act(action);
+                }
+                else {
+                    action.off_performFixed();
+                }
+                continue;
+            }
+
+            if ( action.flag.ready_to_fixedupdate ) {
+                // call action methods in FixedUpdate()
+                act(action);
+
+                // ready_to_fixedupdate flag : true -> false
+                action.flag.doneFixedUpdate();
+            }
+            else {
+                action.off_performFixed();
+            }
         }
     }
 
     public void act(Action action) {
-        action.update();
-
-        if ( action.condition() ) {
-            action.prepare();
-            action.perform();
-            action.effect();
-            action.end();
-        }
-        else {
-            action.perform_off();
-        }
+        action.prepare();
+        action.performFixed();
+        action.effect();
+        action.end();
     }
 
 	public void act(string action_name){

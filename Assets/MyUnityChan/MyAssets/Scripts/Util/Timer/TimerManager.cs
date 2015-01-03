@@ -49,13 +49,6 @@ public class TimerManager : SingletonObjectBase<TimerManager> {
     }
 
     void OnGUI() {
-        GUIStyle gui_style = new GUIStyle();
-        GUIStyleState gui_stylestate = new GUIStyleState();
-        gui_stylestate.textColor = Color.green;
-        gui_style.normal = gui_stylestate;
-        if ( timers != null ) {
-            GUI.Label(new Rect(10, 70, 250, 30), "timers.keys.count: " + timers.Keys.Count, gui_style);
-        }
     }
 
 }

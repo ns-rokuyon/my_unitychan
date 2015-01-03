@@ -26,11 +26,15 @@ public class PlayerHadouken : PlayerAction {
 	
 	public override void perform() {
 		Vector3 fw = player.transform.forward;
-		player.rigidbody.AddForce(fw * -50.0f);
 		player.getAnimator().Play("Hadouken");
 		player.getMoveController().register(new Player.MoveLock(30));
 		player.getMoveController().register(new Player.DelayDirectionEvent(15, fw, shootProjectile));
 	}
+
+    public override void performFixed() {
+		Vector3 fw = player.transform.forward;
+		player.rigidbody.AddForce(fw * -50.0f);
+    }
 	
 	public override bool condition(){
 		AnimatorStateInfo anim_state = player.getAnimator().GetCurrentAnimatorStateInfo(0);

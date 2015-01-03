@@ -14,17 +14,26 @@ public class PlayerAttack : PlayerAction {
 		left_punch = new PlayerPunchL(character);
 		right_punch = new PlayerPunchR(character);
 		spinkick = new PlayerSpinKick(character);
+	}
 
+	public override void performFixed() {
+		if (player.isAnimState("Base Layer.PunchR")) {
+			spinkick.performFixed();
+		}
+		else if (player.isAnimState("Base Layer.PunchL")) {
+			right_punch.performFixed();
+		}
+		else {
+			left_punch.performFixed();
+		}
 	}
 
 	public override void perform() {
-		if (player.isAnimState("Base Layer.PunchR") && spinkick.condition()) {
+		if (player.isAnimState("Base Layer.PunchR")) {
 			spinkick.perform();
-			return;
 		}
-		else if (player.isAnimState("Base Layer.PunchL") && right_punch.condition()) {
+		else if (player.isAnimState("Base Layer.PunchL")) {
 			right_punch.perform();
-			return;
 		}
 		else {
 			left_punch.perform();
@@ -32,12 +41,22 @@ public class PlayerAttack : PlayerAction {
 	}
 
 	public override bool condition(){
-		bool cond = 
-			controller.keyAttack() && 
-			!player.getAnimator().GetBool("Turn") && 
-			!player.isAnimState("Base Layer.SpinKick");
-		return cond;
+        bool cond = false;
+        if ( player.isAnimState("Base Layer.PunchR") ) {
+            cond = spinkick.condition();
+		}
+        else if ( player.isAnimState("Base Layer.PunchL") ) {
+			cond = right_punch.condition();
+		}
+        else if ( player.isAnimState("Base Layer.SpinKick") ) {
+            cond = false;
+        }
+        else {
+            cond = left_punch.condition();
+        }
+        return cond;
 	}
+
 }
 
 public abstract class AttackSpec {
@@ -71,10 +90,10 @@ public class PlayerPunchL : PlayerAction {
         return "PUNCH_L";
     }
 
-	public override void perform() {
+    public override void perform() {
 		player.getAnimator().Play("PunchL");
 		player.getMoveController().register(new Player.DelayNormalEvent(3, createHitbox));
-	}
+    }
 
 	public override bool condition(){
         bool cond =
@@ -114,10 +133,10 @@ public class PlayerPunchR : PlayerAction {
         return "PUNCH_R";
     }
 
-	public override void perform() {
+    public override void perform() {
 		player.getAnimator().Play("PunchR");
 		player.getMoveController().register(new Player.DelayNormalEvent(6, createHitbox));
-	}
+    }
 
 	public override bool condition(){
         bool cond =
@@ -157,10 +176,10 @@ public class PlayerSpinKick : PlayerAction {
         return "SPIN_KICK";
     }
 
-	public override void perform() {
+    public override void perform() {
 		player.getAnimator().Play("SpinKick");
 		player.getMoveController().register(new Player.DelayNormalEvent(20, createHitbox));
-	}
+    }
 
 	public override bool condition(){
         bool cond =

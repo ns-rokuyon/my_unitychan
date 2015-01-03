@@ -9,7 +9,7 @@ public class PlayerTurn : PlayerAction {
         return "TURN";
     }
 
-	public override void perform() {
+	public override void performFixed() {
 		float vx = player.rigidbody.velocity.x;
 		float vy = player.rigidbody.velocity.y;
 		Vector3 fw = player.transform.forward;
@@ -44,8 +44,9 @@ public class PlayerTurn : PlayerAction {
 			}
 			player.transform.rotation = Quaternion.LookRotation (new Vector3 (fw.x, 0, newz_fw));
 		}
-
-
 	}
 
+    public override bool condition() {
+        return true;
+    }
 }

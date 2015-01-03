@@ -29,7 +29,7 @@ public class EnemyWalk : EnemyActionBase {
         : base(character) {
     }
 
-    public override void perform() {
+    public override void performFixed() {
         float horizontal = controller.keyHorizontal();
         Vector3 fw = enemy.transform.forward;
 
