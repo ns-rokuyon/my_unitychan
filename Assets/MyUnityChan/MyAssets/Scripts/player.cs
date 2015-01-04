@@ -8,8 +8,6 @@ using System.Collections.Generic;
 
 [RequireComponent(typeof(Animator))]
 
-//Name of class must be name of file as well
-
 public class Player : Character {
 
     public string player_name = null;
@@ -26,7 +24,6 @@ public class Player : Character {
 
     private PlayerStatus status;
     private Animator animator;
-    private MoveControlManager move_controller = null;
     private PlayerActionManager action_manager = null;
 
     public Vector3 moveF = new Vector3(200f, 0, 0);
@@ -65,14 +62,13 @@ public class Player : Character {
         locomotion = new Locomotion(animator);
         anim_speed_default = animator.speed * 1.2f;
         dist_to_ground = GetComponent<CapsuleCollider>().height;
-        move_controller = new MoveControlManager();
 
+        inputlock_timer = new FrameTimerState();
         registerActions();
         NPCharacter.setPlayers();
     }
 
     void Update() {
-        move_controller.update();
     }
 
     void FixedUpdate() {
@@ -160,10 +156,6 @@ public class Player : Character {
 
     public Animator getAnimator() {
         return animator;
-    }
-
-    public MoveControlManager getMoveController() {
-        return move_controller;
     }
 
     public void setAnimSpeedDefault() {

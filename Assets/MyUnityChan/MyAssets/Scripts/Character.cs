@@ -8,6 +8,9 @@ public class Character : ObjectBase {
     // references to component
 	protected Controller controller;
 
+    // vars
+    protected FrameTimerState inputlock_timer;
+
 	public Controller getController(){
 		return controller;
 	}
@@ -19,47 +22,14 @@ public class Character : ObjectBase {
             Physics.Raycast(capsule_collider.bounds.center, transform.forward, 2.0f);
     }
 
-	public class MoveLock : FrameCounter {
-		public MoveLock(int frame) : base(frame){
-		}
+    public void lockInput(int frame) {
+        // disable movement by inputs for N frames specified
+        inputlock_timer.createTimer(frame);
+    }
 
-		public bool isLocked(){
-			return base.isRunning();
-		}
-	};
+    public bool isInputLocked() {
+        // return true when inputs are locked
+        return inputlock_timer.isRunning();
+    }
 
-
-	public class MoveControlManager {
-        // TODO: change List<DelayEvent>
-		private MoveLock lock_control;
-		private DelayEvent delay_control;
-
-		public MoveControlManager(){
-		}
-
-		public void register(MoveLock mlock) {
-			lock_control = mlock;
-		}
-
-		public void register(DelayEvent devent) {
-			delay_control = devent;
-		}
-
-		public void update(){
-			if (lock_control != null && lock_control.isRunning()) {
-				lock_control.update();
-			}
-			if (delay_control != null && !delay_control.isDone()) {
-				delay_control.update();
-				delay_control.perform();
-			}
-		}
-
-		public bool isPlayerInputLocked(){
-			if (lock_control == null) {
-				return false;
-			}
-			return lock_control.isRunning();
-		}
-	}
 }

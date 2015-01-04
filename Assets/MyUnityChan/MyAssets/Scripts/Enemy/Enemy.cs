@@ -115,6 +115,7 @@ public class Enemy : NPCharacter {
 	void Start () {
         loadAttachedAI();
         action_manager = new EnemyActionManager();
+        inputlock_timer = new FrameTimerState();
 
         start();
 	}

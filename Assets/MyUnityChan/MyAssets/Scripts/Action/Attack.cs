@@ -92,7 +92,7 @@ public class PlayerPunchL : PlayerAction {
 
     public override void perform() {
 		player.getAnimator().Play("PunchL");
-		player.getMoveController().register(new Player.DelayNormalEvent(3, createHitbox));
+        InvokerManager.createFrameDelayInvoker(3, createHitbox);
     }
 
 	public override bool condition(){
@@ -135,7 +135,8 @@ public class PlayerPunchR : PlayerAction {
 
     public override void perform() {
 		player.getAnimator().Play("PunchR");
-		player.getMoveController().register(new Player.DelayNormalEvent(6, createHitbox));
+        InvokerManager.createFrameDelayInvoker(6, createHitbox);
+		//player.getMoveController().register(new Player.DelayNormalEvent(6, createHitbox));
     }
 
 	public override bool condition(){
@@ -178,7 +179,7 @@ public class PlayerSpinKick : PlayerAction {
 
     public override void perform() {
 		player.getAnimator().Play("SpinKick");
-		player.getMoveController().register(new Player.DelayNormalEvent(20, createHitbox));
+        InvokerManager.createFrameDelayInvoker(20, createHitbox);
     }
 
 	public override bool condition(){

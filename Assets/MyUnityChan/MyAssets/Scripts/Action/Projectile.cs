@@ -27,8 +27,8 @@ public class PlayerHadouken : PlayerAction {
 	public override void perform() {
 		Vector3 fw = player.transform.forward;
 		player.getAnimator().Play("Hadouken");
-		player.getMoveController().register(new Player.MoveLock(30));
-		player.getMoveController().register(new Player.DelayDirectionEvent(15, fw, shootProjectile));
+        player.lockInput(30);
+        InvokerManager.createFrameDelayVector3Invoker(15, fw, shootProjectile);
 	}
 
     public override void performFixed() {

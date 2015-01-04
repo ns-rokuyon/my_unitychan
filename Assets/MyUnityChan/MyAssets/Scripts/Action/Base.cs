@@ -31,7 +31,7 @@ public class PlayerBrake : PlayerAction {
         float horizontal = controller.keyHorizontal();
         float vx = player.rigidbody.velocity.x;
         return player.isGrounded() &&
-            !player.getMoveController().isPlayerInputLocked() &&
+            !player.isInputLocked() &&
             (Mathf.Abs(horizontal) < 0.2 && Mathf.Abs(vx) > 0.2f);
     }
 }
@@ -91,7 +91,7 @@ public class PlayerAccel : PlayerAction {
     }
 
     public override bool condition() {
-        return !player.getMoveController().isPlayerInputLocked();
+        return !player.isInputLocked();
     }
 }
 
