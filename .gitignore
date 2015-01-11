@@ -42,6 +42,7 @@
 /Assets/UnityMaskMan
 /Assets/ProCore
 /Assets/Raw Mocap Data
+/Assets/Skele
 /Assets/*.meta
 /Assets/MyUnityChan/*.pdf
 /Assets/MyUnityChan/Amimators
@@ -63,4 +64,3 @@
 /Assets/MyUnityChan/MyAssets/Animations/*
 /Assets/MyUnityChan/MyAssets/Others/*
 /Assets/MyUnityChan/MyAssets/*.meta
-

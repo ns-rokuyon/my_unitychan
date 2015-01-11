@@ -3,6 +3,12 @@ using System.Collections;
 
 public class DefaultController : PlayerController {
 	void Update(){
+        if ( self.isInputLocked() ) {
+            // ignore any inputs
+            clearAllInputs();
+            return;
+        }
+
 		horizontal_input = Input.GetAxis ("Horizontal");
 		inputs[(int)Movement.JUMP] = Input.GetKeyDown("space");
 		inputs[(int)Movement.SLIDING] = Input.GetKeyDown("z");

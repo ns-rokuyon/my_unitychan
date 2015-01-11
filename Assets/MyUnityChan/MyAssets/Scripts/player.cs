@@ -52,6 +52,7 @@ public class Player : Character {
 
         GameObject controller_inst = Instantiate(controller_prefab) as GameObject;
         controller = controller_inst.GetComponent<Controller>();
+        controller.setSelf(this);
 
         GameObject action_manager_inst = Instantiate(action_manager_prefab) as GameObject;
         action_manager = action_manager_inst.GetComponent<PlayerActionManager>();
@@ -143,10 +144,6 @@ public class Player : Character {
 
     public bool isDash() {
         return ((PlayerDash)action_manager.getAction("DASH")).isDash();
-    }
-
-    void lockInput() {
-
     }
 
     public bool isAnimState(string anim_name) {

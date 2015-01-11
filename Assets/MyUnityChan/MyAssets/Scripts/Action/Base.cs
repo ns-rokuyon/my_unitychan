@@ -122,11 +122,11 @@ public class PlayerDash : PlayerAction {
     public override void off_perform() {
         player.getAnimator().speed = player.getAnimSpeedDefault();
         if ( dash ) {
-            dash = false;
+            InvokerManager.createFrameDelayInvoker(3, offDash);
             if (player.getAnimator().GetBool("Jump")) {
                 return;
             }
-            player.getAnimator().CrossFade("Locomotion", 0.01f);
+            //player.getAnimator().CrossFade("Locomotion", 0.01f);
         }
     }
 
@@ -136,6 +136,10 @@ public class PlayerDash : PlayerAction {
 
     public bool isDash() {
         return dash;
+    }
+
+    public void offDash() {
+        dash = false;
     }
 }
 

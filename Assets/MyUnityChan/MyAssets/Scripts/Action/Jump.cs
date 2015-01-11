@@ -71,6 +71,7 @@ public class PlayerAirJump : PlayerJump {
         }
         player.setAnimSpeedDefault();
         player.getAnimator().SetBool("OnGround", false);
+        player.lockInput(2);
     }
 
     public override bool condition() {

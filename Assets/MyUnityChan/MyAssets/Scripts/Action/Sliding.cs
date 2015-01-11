@@ -16,6 +16,7 @@ public class PlayerSliding : PlayerAction {
 
     public override void perform() {
 		player.getAnimator().CrossFade("Sliding", 0.001f);
+        player.lockInput(40);
     }
 
 	public override bool condition(){

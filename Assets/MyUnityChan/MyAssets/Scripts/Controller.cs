@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public abstract class Controller : MonoBehaviour {
+public abstract class Controller : ObjectBase {
 	public enum Movement {
 		JUMP = 0,
 		SLIDING,
@@ -10,6 +10,8 @@ public abstract class Controller : MonoBehaviour {
         DASH,
 		len
 	};
+
+    protected Character self;
 
 	protected List<bool> inputs;
 	protected float horizontal_input;
@@ -29,6 +31,17 @@ public abstract class Controller : MonoBehaviour {
 	void Update(){
 	}
 
+
+    public void setSelf(Character ch) {
+        self = ch;
+    }
+
+    protected void clearAllInputs() {
+		for (int i=0; i<inputs.Count; i++) {
+            inputs[i] = false;
+		}
+    }
+
 	public bool keyJump(){ return inputs[(int)Movement.JUMP];}
 	public bool keySliding(){ return inputs[(int)Movement.SLIDING];}
 	public bool keyAttack(){ return inputs[(int)Movement.ATTACK];}
@@ -43,11 +56,5 @@ public abstract class PlayerController : Controller {
 }
 
 public abstract class AIController : Controller {
-    protected Character self;
-
-    public void setSelf(Character ch) {
-        self = ch;
-    }
-
 }
 
