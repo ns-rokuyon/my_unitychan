@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerStatus : CharacterStatus {
+namespace MyUnityChan {
+    public class PlayerStatus : CharacterStatus {
 
+    }
 }

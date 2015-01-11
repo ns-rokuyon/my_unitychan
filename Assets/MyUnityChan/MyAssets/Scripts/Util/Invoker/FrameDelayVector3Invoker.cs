@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FrameDelayVector3Invoker : FrameDelayParamInvoker<Vector3> {
+namespace MyUnityChan {
+    public class FrameDelayVector3Invoker : FrameDelayParamInvoker<Vector3> {
+    }
 }
