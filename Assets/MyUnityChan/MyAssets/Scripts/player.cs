@@ -13,6 +13,7 @@ namespace MyUnityChan {
 
         public string player_name = null;
 
+        public GameObject camera_prefab;
         public GameObject projectile_prefab;
         public GameObject projectile_particle_prefab;
         public GameObject jump_effect_prefab;
@@ -51,22 +52,34 @@ namespace MyUnityChan {
         void Start() {
             player_name = "player1";
 
+            // camera setup
+            (Instantiate(camera_prefab) as GameObject).GetComponent<PlayerCamera>().setPlayer(this.gameObject);
+
+            // controller setup
             GameObject controller_inst = Instantiate(controller_prefab) as GameObject;
             controller = controller_inst.GetComponent<Controller>();
             controller.setSelf(this);
 
+            // action manager setup
             GameObject action_manager_inst = Instantiate(action_manager_prefab) as GameObject;
             action_manager = action_manager_inst.GetComponent<PlayerActionManager>();
 
+            // player status setup
             status = (Instantiate(status_prefab) as GameObject).GetComponent<PlayerStatus>();
 
+            // animation
             animator = GetComponent<Animator>();
             locomotion = new Locomotion(animator);
             anim_speed_default = animator.speed * 1.2f;
             dist_to_ground = GetComponent<CapsuleCollider>().height;
 
+            // init timer
             inputlock_timer = new FrameTimerState();
+
+            // init player actions
             registerActions();
+
+            // player infomation for NPC
             NPCharacter.setPlayers();
         }
 

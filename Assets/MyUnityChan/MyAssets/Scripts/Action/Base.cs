@@ -20,6 +20,12 @@ namespace MyUnityChan {
             Vector3 fw = player.transform.forward;
             float vx = player.rigidbody.velocity.x;
 
+            if ( vx < 0.001f ) {
+                player.rigidbody.angularVelocity = Vector3.zero;
+                player.rigidbody.velocity = Vector3.zero;
+                return;
+            }
+
             // brake down if no input
             if ( Mathf.Sign(fw.x) == Mathf.Sign(vx) ) {
                 player.rigidbody.AddForce(fw * -1 * brake_power);

@@ -2710,8 +2710,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
   m_LocalRotation: {x: 0, y: .707106829, z: 0, w: .707106829}
-  m_LocalPosition: {x: 37, y: 22, z: 85}
-  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_LocalPosition: {x: 0, y: 5, z: 4}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 400266}
   - {fileID: 400028}
@@ -5013,7 +5013,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a38e39ada51aaba4db6d352ce218849e, type: 3}
   m_Name: 
@@ -6262,20 +6262,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   status_prefab: {fileID: 118060, guid: 8f9973dce7507054cbf9fb53f6dd4e6a, type: 2}
   player_name: 
-  projectile_prefab: {fileID: 100000, guid: a7eb4c63b04001146b72a2748664ba76, type: 2}
-  projectile_particle_prefab: {fileID: 100000, guid: 8c6e9d9aa3016a24dbadde2dd0ae3968,
+  camera_prefab: {fileID: 189416, guid: d6bbf42959be81b48beb03cb79c6c5d4, type: 2}
+  projectile_prefab: {fileID: 150030, guid: 20a679c02aad6984b9b0a46bc484bac8, type: 2}
+  projectile_particle_prefab: {fileID: 138950, guid: 8c6e9d9aa3016a24dbadde2dd0ae3968,
     type: 2}
   jump_effect_prefab: {fileID: 100000, guid: f07d04a3cb25ac54796026a230ef668a, type: 2}
   controller_prefab: {fileID: 100000, guid: 46fde649407247f429b9c9333e0c09b0, type: 2}
   action_manager_prefab: {fileID: 133910, guid: 73f4ab61abdaa77488a4bc9d162ffe66,
     type: 2}
-  punch_hitbox_prefab: {fileID: 0}
-  kick_hitbox_prefab: {fileID: 0}
-  projectile_hitbox_prefab: {fileID: 0}
-  moveF: {x: 200, y: 0, z: 0}
-  maxspeed: 20
-  dash_maxspeed: 30
-  dashjump_maxspeed: 50
+  punch_hitbox_prefab: {fileID: 130760, guid: 250c641bc9b587b4f985a27943701391, type: 2}
+  kick_hitbox_prefab: {fileID: 135076, guid: 39a49303797b2474da0918019569c7b9, type: 2}
+  projectile_hitbox_prefab: {fileID: 100000, guid: 1d8f286c648399548b8d718b0b8455d2,
+    type: 2}
+  moveF: {x: 40, y: 0, z: 0}
+  maxspeed: 4
+  dash_maxspeed: 6
+  dashjump_maxspeed: 10
 --- !u!136 &13600000
 CapsuleCollider:
   m_ObjectHideFlags: 1

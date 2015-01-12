@@ -13,7 +13,7 @@ namespace MyUnityChan {
         void Start() {
             distance_moved = 0.0f;
             max_range = 80.0f;
-            speed = 1.0f;
+            speed = 0.2f;
         }
 
         // Update is called once per frame
@@ -27,7 +27,7 @@ namespace MyUnityChan {
 
         public void init(Vector3 start_pos, Vector3 dir, float sp = 1.0f) {
             target_dir = dir;
-            transform.position = start_pos + target_dir * 2.0f + Vector3.up * 4.0f;
+            transform.position = start_pos + target_dir * 0.4f + Vector3.up * 0.8f;
             start_position = transform.position;
             speed = sp;
         }

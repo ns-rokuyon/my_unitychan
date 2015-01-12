@@ -153,7 +153,7 @@ namespace MyUnityChan {
         private void createHitbox() {
             GameObject hitbox = GameObject.Instantiate(player.punch_hitbox_prefab) as GameObject;
             PunchHitbox hitbox_script = hitbox.GetComponent<PunchHitbox>();
-            hitbox_script.create(player.transform.position + player.transform.forward * 1.3f, player.transform.forward, spec);
+            hitbox_script.create(player.transform.position + player.transform.forward * 0.2f, player.transform.forward, spec);
         }
     }
 
@@ -197,7 +197,7 @@ namespace MyUnityChan {
         private void createHitbox() {
             GameObject hitbox = GameObject.Instantiate(player.kick_hitbox_prefab) as GameObject;
             KickHitbox hitbox_script = hitbox.GetComponent<KickHitbox>();
-            hitbox_script.create(player.transform.position + player.transform.forward * 1.3f, player.transform.forward, spec);
+            hitbox_script.create(player.transform.position + player.transform.forward * 0.2f, player.transform.forward, spec);
         }
     }
 }
