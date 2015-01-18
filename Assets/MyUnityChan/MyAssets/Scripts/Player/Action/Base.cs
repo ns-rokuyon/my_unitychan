@@ -46,7 +46,7 @@ namespace MyUnityChan {
 
     public class PlayerAccel : PlayerAction {
         private float maxspeed = 20.0f;
-        private Vector3 moveF = new Vector3(200f, 0, 0);
+        private Vector3 moveF = new Vector3(120f, 0, 0);
 
         public PlayerAccel(Character character)
             : base(character) {
@@ -118,7 +118,7 @@ namespace MyUnityChan {
 
         public override void perform() {
             dash = true;
-            player.getAnimator().speed = player.getAnimSpeedDefault() * 1.4f;
+            player.getAnimator().speed = player.getAnimSpeedDefault() * 1.2f;
         }
 
         public override void performFixed() {

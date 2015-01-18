@@ -58,7 +58,12 @@ namespace MyUnityChan {
             }
             else {
                 // jump (ground jump or air jump)
-                player.rigidbody.AddForce(new Vector3(0f, 1000.0f, 0));
+                if ( player.isGrounded() ) {
+                    player.rigidbody.AddForce(new Vector3(0f, 800.0f, 0));
+                }
+                else {
+                    player.rigidbody.AddForce(new Vector3(0f, 1000.0f, 0));
+                }
             }
         }
 

@@ -84,25 +84,21 @@ namespace MyUnityChan {
         }
 
         void Update() {
-        }
-
-        void FixedUpdate() {
             float horizontal = ((PlayerController)controller).keyHorizontal();
-
-            animator.SetFloat("Speed", Mathf.Abs(horizontal));
-
             float vy = rigidbody.velocity.y;
 
+            animator.SetFloat("Speed", Mathf.Abs(horizontal));
             if ( vy <= 0 && isGrounded() ) {
                 // landing
                 animator.SetBool("OnGround", true);
                 animator.speed = anim_speed_default;
                 animator.SetBool("Jump", false);
             }
+        }
 
-
+        void FixedUpdate() {
             // gravity
-            rigidbody.AddForce(new Vector3(0f, -32.0f, 0));	// -26
+            rigidbody.AddForce(new Vector3(0f, -32.0f, 0));	// -32
         }
 
         private void registerActions() {
@@ -142,15 +138,18 @@ namespace MyUnityChan {
         }
 
         public bool isGrounded() {
-            // check player is on ground with sphere under the foot
-
-            //return Physics.CheckSphere(transform.position - dist_checksphere_center,  CHECKSPHERE_RADIUS);
-
             return Physics.Raycast(transform.position + ground_raycast_offset, Vector3.down, 0.5f) ||
                 Physics.Raycast(transform.position + ground_raycast_offset, new Vector3(1.0f, 0.0f, 0), 1.0f) ||
                 Physics.Raycast(transform.position + ground_raycast_offset, new Vector3(-1.0f, 0.0f, 0), 1.0f);
         }
 
+        public bool isLookAhead() {
+            return transform.forward.x >= 1.0f;
+        }
+
+        public bool isLookBack() {
+            return transform.forward.x <= -1.0f;
+        }
 
         public bool isTurnDirSwitched() {
             return turn_dir_switched;

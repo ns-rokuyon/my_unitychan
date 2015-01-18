@@ -721,6 +721,10 @@ Transition:
     m_ConditionEvent: Speed
     m_EventTreshold: 0
     m_ExitTime: .866666675
+  - m_ConditionMode: 1
+    m_ConditionEvent: OnGround
+    m_EventTreshold: 0
+    m_ExitTime: .866666675
   m_Atomic: 1
   m_Solo: 0
   m_Mute: 0

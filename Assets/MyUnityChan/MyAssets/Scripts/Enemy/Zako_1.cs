@@ -19,8 +19,8 @@ namespace MyUnityChan {
     }
 
     public class EnemyWalk : EnemyActionBase {
-        private float maxspeed = 2.0f;
-        private Vector3 moveF = new Vector3(100f, 0, 0);
+        private float maxspeed = 1.0f;
+        private Vector3 moveF = new Vector3(20f, 0, 0);
 
         public override string name() {
             return "WALK";

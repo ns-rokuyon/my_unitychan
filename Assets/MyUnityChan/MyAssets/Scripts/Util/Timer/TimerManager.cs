@@ -17,9 +17,12 @@ namespace MyUnityChan {
 
         public GameObject frame_timer_prefab;
 
+        void Awake() {
+            timers = new Dictionary<int, Timer>();
+        }
+
         // Use this for initialization
         void Start() {
-            timers = new Dictionary<int, Timer>();
         }
 
         // Update is called once per frame

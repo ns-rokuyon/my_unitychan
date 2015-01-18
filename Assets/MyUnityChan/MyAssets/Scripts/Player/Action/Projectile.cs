@@ -45,6 +45,7 @@ namespace MyUnityChan {
                 controller.keyProjectile() &&
                 !player.getAnimator().GetBool("Turn") &&
                 player.isGrounded() &&
+                (player.isLookAhead() || player.isLookBack()) &&
                 anim_state.nameHash != Animator.StringToHash("Base Layer.Hadouken");
 
             return cond;
