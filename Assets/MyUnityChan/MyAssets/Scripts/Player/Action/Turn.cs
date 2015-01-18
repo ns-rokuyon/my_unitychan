@@ -11,7 +11,7 @@ namespace MyUnityChan {
             return "TURN";
         }
 
-        public override void performFixed() {
+        public override void perform() {
             float vx = player.rigidbody.velocity.x;
             float vy = player.rigidbody.velocity.y;
             Vector3 fw = player.transform.forward;

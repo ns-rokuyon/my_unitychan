@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace MyUnityChan {
     public class PlayerBrake : PlayerAction {
-        private const float BRAKE_POWER_DEFAULT = 100.0f;
+        private const float BRAKE_POWER_DEFAULT = 500.0f;
         private float brake_power;
 
         public PlayerBrake(Character character)
@@ -20,7 +20,7 @@ namespace MyUnityChan {
             Vector3 fw = player.transform.forward;
             float vx = player.rigidbody.velocity.x;
 
-            if ( vx < 0.001f ) {
+            if ( Mathf.Abs(vx) < 0.001f ) {
                 player.rigidbody.angularVelocity = Vector3.zero;
                 player.rigidbody.velocity = Vector3.zero;
                 return;
@@ -46,7 +46,7 @@ namespace MyUnityChan {
 
     public class PlayerAccel : PlayerAction {
         private float maxspeed = 20.0f;
-        private Vector3 moveF = new Vector3(120f, 0, 0);
+        private Vector3 moveF = new Vector3(2000f, 0, 0);
 
         public PlayerAccel(Character character)
             : base(character) {
@@ -62,7 +62,7 @@ namespace MyUnityChan {
             float vx = player.rigidbody.velocity.x;
 
             if ( Mathf.Abs(horizontal) >= 0.2 && horizontal * vx < maxspeed ) {
-                if ( Mathf.Sign(horizontal) != Mathf.Sign(vx) && Mathf.Abs(vx) > 0.1f ) {
+                if ( player.isGrounded() && Mathf.Sign(horizontal) != Mathf.Sign(vx) && Mathf.Abs(vx) > 0.1f ) {
                     // when player is turning, add low force
                     if ( player.isDash() ) {
                         player.rigidbody.AddForce(horizontal * moveF / 8.0f);
@@ -70,6 +70,7 @@ namespace MyUnityChan {
                     else {
                         player.rigidbody.AddForce(horizontal * moveF / 4.0f);
                     }
+                    Debug.Log("hoge");
                 }
                 else {
                     // accelerate

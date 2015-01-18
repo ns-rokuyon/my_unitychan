@@ -98,7 +98,7 @@ namespace MyUnityChan {
 
         void FixedUpdate() {
             // gravity
-            rigidbody.AddForce(new Vector3(0f, -32.0f, 0));	// -32
+            //rigidbody.AddForce(new Vector3(0f, -32.0f, 0));	// -32
         }
 
         private void registerActions() {
@@ -230,4 +230,11 @@ Animator setting
     Apply root motion : false
     Update Mode : Normal
     Culling Mode : Based on renderers
+*/
+
+/*
+ Rigidbody
+    Mass: 30
+    Drag: 0.2
+    AngularDrag: 0.05
 */
