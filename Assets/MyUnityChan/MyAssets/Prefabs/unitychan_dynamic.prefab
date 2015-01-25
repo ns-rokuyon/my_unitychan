@@ -6270,6 +6270,7 @@ MonoBehaviour:
   controller_prefab: {fileID: 100000, guid: 46fde649407247f429b9c9333e0c09b0, type: 2}
   action_manager_prefab: {fileID: 133910, guid: 73f4ab61abdaa77488a4bc9d162ffe66,
     type: 2}
+  hpgauge_prefab: {fileID: 120262, guid: bac3f37cbb8bddf4788bc3aa1560860d, type: 2}
   punch_hitbox_prefab: {fileID: 130760, guid: 250c641bc9b587b4f985a27943701391, type: 2}
   kick_hitbox_prefab: {fileID: 135076, guid: 39a49303797b2474da0918019569c7b9, type: 2}
   projectile_hitbox_prefab: {fileID: 100000, guid: 1d8f286c648399548b8d718b0b8455d2,

@@ -3,6 +3,9 @@ using System.Collections;
 
 namespace MyUnityChan {
     public class CharacterStatus : Status {
+        // values
+        public int hp { get; set; }
+
         // prefabs
         public GameObject invincible_prefab;
 
@@ -11,6 +14,7 @@ namespace MyUnityChan {
 
         protected override void awake() {
             invincible = (Instantiate(invincible_prefab) as GameObject).GetComponent<Invincible>();
+            hp = 100;
         }
 
         protected override void start() {

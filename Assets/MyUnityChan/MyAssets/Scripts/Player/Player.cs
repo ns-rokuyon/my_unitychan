@@ -19,6 +19,7 @@ namespace MyUnityChan {
         public GameObject jump_effect_prefab;
         public GameObject controller_prefab;
         public GameObject action_manager_prefab;
+        public GameObject hpgauge_prefab;
 
         public GameObject punch_hitbox_prefab;
         public GameObject kick_hitbox_prefab;
@@ -27,6 +28,7 @@ namespace MyUnityChan {
         private PlayerStatus status;
         private Animator animator;
         private PlayerActionManager action_manager = null;
+        private HpGauge hpgauge;
 
         public Vector3 moveF = new Vector3(200f, 0, 0);
         public float maxspeed = 20f;
@@ -66,6 +68,11 @@ namespace MyUnityChan {
 
             // player status setup
             status = (Instantiate(status_prefab) as GameObject).GetComponent<PlayerStatus>();
+
+            // HP gauge setup
+            hpgauge = (Instantiate(hpgauge_prefab) as GameObject).GetComponent<HpGauge>();
+            hpgauge.setCharacter(this);
+            hpgauge.transform.SetParent(HpGauge.getCanvas().transform, false);
 
             // animation
             animator = GetComponent<Animator>();
@@ -111,12 +118,14 @@ namespace MyUnityChan {
             action_manager.registerAction(new PlayerHadouken(this));
             action_manager.registerAction(new PlayerAttack(this));
             action_manager.registerAction(new PlayerTurn(this));
+            action_manager.registerAction(new PlayerDown(this));
         }
 
         public void damage() {
             if ( !status.invincible.now() ) {
                 animator.SetTrigger("Damaged");
                 status.invincible.enable(60);
+                status.hp -= 50;    // TODO
             }
         }
 
@@ -178,6 +187,10 @@ namespace MyUnityChan {
 
         public float getAnimSpeedDefault() {
             return anim_speed_default;
+        }
+
+        public override int getHP() {
+            return status.hp;
         }
 
 

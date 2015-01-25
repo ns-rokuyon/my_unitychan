@@ -23,8 +23,13 @@ namespace MyUnityChan {
                 Physics.Raycast(capsule_collider.bounds.center, transform.forward, 0.4f);
         }
 
+        public virtual int getHP() {
+            return -1;
+        }
+
         public void lockInput(int frame) {
             // disable movement by inputs for N frames specified
+            inputlock_timer.destroy();
             inputlock_timer.createTimer(frame);
         }
 

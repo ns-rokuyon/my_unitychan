@@ -13,6 +13,13 @@ namespace MyUnityChan {
             return !checkFinished(id);
         }
 
+        public static void destroy(int id) {
+            Timer timer = self().timers[id];
+            if ( timer ) {
+                timer.destroy();
+            }
+        }
+
         private Dictionary<int, Timer> timers;
 
         public GameObject frame_timer_prefab;
@@ -52,6 +59,7 @@ namespace MyUnityChan {
             return false;
         }
 
+
         void OnGUI() {
         }
 
@@ -74,6 +82,12 @@ namespace MyUnityChan {
 
         public bool isRunning() {
             return TimerManager.checkRunning(timer_id);
+        }
+
+        public void destroy() {
+            if ( isRunning() ) {
+                TimerManager.destroy(timer_id);
+            }
         }
 
         public abstract void createTimer(int time);
