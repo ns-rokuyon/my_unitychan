@@ -4,6 +4,7 @@ using System.Collections;
 namespace MyUnityChan {
     public class CharacterStatus : Status {
         // values
+        public bool freeze { get; set; }
         public int hp { get; set; }
 
         // prefabs
@@ -14,6 +15,7 @@ namespace MyUnityChan {
 
         protected override void awake() {
             invincible = (Instantiate(invincible_prefab) as GameObject).GetComponent<Invincible>();
+            freeze = false;
             hp = 100;
         }
 

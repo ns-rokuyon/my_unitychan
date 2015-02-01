@@ -25,7 +25,6 @@ namespace MyUnityChan {
         public GameObject kick_hitbox_prefab;
         public GameObject projectile_hitbox_prefab;
 
-        private PlayerStatus status;
         private Animator animator;
         private PlayerActionManager action_manager = null;
         private HpGauge hpgauge;
@@ -129,6 +128,14 @@ namespace MyUnityChan {
             }
         }
 
+        public void freeze() {
+            status.freeze = true;
+        }
+
+        public void respawn() {
+            Application.LoadLevel("testplay");
+        }
+
         void onTurnMiddle() {
             Debug.Log("on turn middle");
             turn_dir_switched = true;
@@ -189,9 +196,6 @@ namespace MyUnityChan {
             return anim_speed_default;
         }
 
-        public override int getHP() {
-            return status.hp;
-        }
 
 
         void OnGUI() {

@@ -7,9 +7,14 @@ namespace MyUnityChan {
         const int PLAYER_TOUCHING_FRAME_OFFSET = 10;
 
         static public void setPlayers() {
+            removeNullPlayers();
             foreach ( GameObject pl in GameObject.FindGameObjectsWithTag("Player") ) {
                 players.Add(pl);
             }
+        }
+
+        static public void removeNullPlayers() {
+            players.RemoveAll(pl => pl == null);
         }
 
         static public GameObject findPlayerByName(string name) {
@@ -117,6 +122,9 @@ namespace MyUnityChan {
             loadAttachedAI();
             action_manager = new EnemyActionManager();
             inputlock_timer = new FrameTimerState();
+
+            // enemy status setup
+            status = (Instantiate(status_prefab) as GameObject).GetComponent<EnemyStatus>();
 
             start();
         }

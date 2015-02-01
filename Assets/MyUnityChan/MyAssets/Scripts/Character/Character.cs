@@ -11,6 +11,7 @@ namespace MyUnityChan {
 
         // vars
         protected FrameTimerState inputlock_timer;
+        protected CharacterStatus status;
 
         public Controller getController() {
             return controller;
@@ -23,8 +24,12 @@ namespace MyUnityChan {
                 Physics.Raycast(capsule_collider.bounds.center, transform.forward, 0.4f);
         }
 
-        public virtual int getHP() {
-            return -1;
+        public int getHP() {
+            return status.hp;
+        }
+
+        public bool isFrozen() {
+            return status.freeze;
         }
 
         public void lockInput(int frame) {
@@ -37,6 +42,7 @@ namespace MyUnityChan {
             // return true when inputs are locked
             return inputlock_timer.isRunning();
         }
+
 
     }
 }

@@ -15,6 +15,10 @@ namespace MyUnityChan {
         public override void perform() {
             player.getAnimator().CrossFade("Down", 0.001f);
             player.lockInput(150);
+            if ( !player.isFrozen() ) {
+                InvokerManager.createFrameDelayInvoker(64, player.respawn);
+            }
+            player.freeze();
         }
 
         public override bool condition() {
