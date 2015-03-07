@@ -19,6 +19,7 @@
 /*.booproj
 /*.htm
 
+/Assets/Editor
 /Assets/Materials
 /Assets/Models
 /Assets/Prefabs

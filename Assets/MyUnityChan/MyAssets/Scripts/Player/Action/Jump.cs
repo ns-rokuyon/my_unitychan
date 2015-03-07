@@ -16,7 +16,7 @@ namespace MyUnityChan {
 
         public override void performFixed() {
             jump_start_y = player.transform.position.y;
-            player.rigidbody.AddForce(new Vector3(0f, 1200.0f, 0));
+            player.GetComponent<Rigidbody>().AddForce(new Vector3(0f, 1200.0f, 0));
         }
 
         public override void perform() {
@@ -54,15 +54,15 @@ namespace MyUnityChan {
             jump_start_y = player.transform.position.y;
             if ( player.isDash() ) {
                 // dashdump (ground jump)
-                player.rigidbody.AddForce(new Vector3(player.transform.forward.x * 100.0f, 100.0f, 0), ForceMode.Impulse);
+                player.GetComponent<Rigidbody>().AddForce(new Vector3(player.transform.forward.x * 100.0f, 100.0f, 0), ForceMode.Impulse);
             }
             else {
                 // jump (ground jump or air jump)
                 if ( player.isGrounded() ) {
-                    player.rigidbody.AddForce(new Vector3(0f, 250.0f, 0), ForceMode.Impulse);
+                    player.GetComponent<Rigidbody>().AddForce(new Vector3(0f, 250.0f, 0), ForceMode.Impulse);
                 }
                 else {
-                    player.rigidbody.AddForce(new Vector3(0f, 270.0f, 0), ForceMode.Impulse);
+                    player.GetComponent<Rigidbody>().AddForce(new Vector3(0f, 270.0f, 0), ForceMode.Impulse);
                 }
             }
         }
@@ -103,7 +103,7 @@ namespace MyUnityChan {
                 return true;
             }
 
-            float scvy = Mathf.Abs(player.rigidbody.velocity.y);
+            float scvy = Mathf.Abs(player.GetComponent<Rigidbody>().velocity.y);
             if ( scvy < 16.0f ) {
                 return true;
             }

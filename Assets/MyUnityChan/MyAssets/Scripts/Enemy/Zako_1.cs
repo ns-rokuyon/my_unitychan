@@ -36,13 +36,13 @@ namespace MyUnityChan {
 
             // accelerate
             if ( !enemy.isTouchedWall() ) {
-                enemy.rigidbody.AddForce(horizontal * moveF);
+                enemy.GetComponent<Rigidbody>().AddForce(horizontal * moveF);
             }
 
-            float vx = enemy.rigidbody.velocity.x;
-            float vy = enemy.rigidbody.velocity.y;
+            float vx = enemy.GetComponent<Rigidbody>().velocity.x;
+            float vy = enemy.GetComponent<Rigidbody>().velocity.y;
             if ( Mathf.Abs(vx) > maxspeed ) {
-                enemy.rigidbody.velocity = new Vector3(Mathf.Sign(vx) * maxspeed, vy);
+                enemy.GetComponent<Rigidbody>().velocity = new Vector3(Mathf.Sign(vx) * maxspeed, vy);
             }
         }
 

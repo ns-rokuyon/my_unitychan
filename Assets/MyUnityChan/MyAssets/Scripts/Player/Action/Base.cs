@@ -18,26 +18,26 @@ namespace MyUnityChan {
 
         public override void performFixed() {
             Vector3 fw = player.transform.forward;
-            float vx = player.rigidbody.velocity.x;
+            float vx = player.GetComponent<Rigidbody>().velocity.x;
 
             if ( Mathf.Abs(vx) < 0.001f ) {
-                player.rigidbody.angularVelocity = Vector3.zero;
-                player.rigidbody.velocity = Vector3.zero;
+                player.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+                player.GetComponent<Rigidbody>().velocity = Vector3.zero;
                 return;
             }
 
             // brake down if no input
             if ( Mathf.Sign(fw.x) == Mathf.Sign(vx) ) {
-                player.rigidbody.AddForce(fw * -1 * brake_power);
+                player.GetComponent<Rigidbody>().AddForce(fw * -1 * brake_power);
             }
             else {
-                player.rigidbody.AddForce(fw * brake_power);
+                player.GetComponent<Rigidbody>().AddForce(fw * brake_power);
             }
         }
 
         public override bool condition() {
             float horizontal = controller.keyHorizontal();
-            float vx = player.rigidbody.velocity.x;
+            float vx = player.GetComponent<Rigidbody>().velocity.x;
             return player.isGrounded() &&
                 !player.isInputLocked() &&
                 (Mathf.Abs(horizontal) < 0.2 && Mathf.Abs(vx) > 0.2f);
@@ -59,23 +59,23 @@ namespace MyUnityChan {
         public override void performFixed() {
             float horizontal = controller.keyHorizontal();
             Vector3 fw = player.transform.forward;
-            float vx = player.rigidbody.velocity.x;
+            float vx = player.GetComponent<Rigidbody>().velocity.x;
 
             if ( Mathf.Abs(horizontal) >= 0.2 && horizontal * vx < maxspeed ) {
                 if ( player.isGrounded() && Mathf.Sign(horizontal) != Mathf.Sign(vx) && Mathf.Abs(vx) > 0.1f ) {
                     // when player is turning, add low force
                     if ( player.isDash() ) {
-                        player.rigidbody.AddForce(horizontal * moveF / 8.0f);
+                        player.GetComponent<Rigidbody>().AddForce(horizontal * moveF / 8.0f);
                     }
                     else {
-                        player.rigidbody.AddForce(horizontal * moveF / 4.0f);
+                        player.GetComponent<Rigidbody>().AddForce(horizontal * moveF / 4.0f);
                     }
                     Debug.Log("hoge");
                 }
                 else {
                     // accelerate
                     if ( !player.isTouchedWall() ) {
-                        player.rigidbody.AddForce(horizontal * moveF);
+                        player.GetComponent<Rigidbody>().AddForce(horizontal * moveF);
                     }
                 }
             }
@@ -83,7 +83,7 @@ namespace MyUnityChan {
 
         public override void perform() {
             float horizontal = controller.keyHorizontal();
-            float vx = player.rigidbody.velocity.x;
+            float vx = player.GetComponent<Rigidbody>().velocity.x;
 
             if ( Mathf.Abs(horizontal) >= 0.2 && horizontal * vx < maxspeed ) {
                 if ( Mathf.Sign(horizontal) != Mathf.Sign(vx) && Mathf.Abs(vx) > 0.1f ) {
@@ -125,7 +125,7 @@ namespace MyUnityChan {
         public override void performFixed() {
             float horizontal = controller.keyHorizontal();
             if ( !player.isTouchedWall() ) {
-                player.rigidbody.AddForce(horizontal * moveF);
+                player.GetComponent<Rigidbody>().AddForce(horizontal * moveF);
             }
         }
 
@@ -179,10 +179,10 @@ namespace MyUnityChan {
         }
 
         private void limitSpeed(float maxspeed) {
-            float vx = player.rigidbody.velocity.x;
-            float vy = player.rigidbody.velocity.y;
+            float vx = player.GetComponent<Rigidbody>().velocity.x;
+            float vy = player.GetComponent<Rigidbody>().velocity.y;
             if ( Mathf.Abs(vx) > maxspeed ) {
-                player.rigidbody.velocity = new Vector3(Mathf.Sign(vx) * maxspeed, vy);
+                player.GetComponent<Rigidbody>().velocity = new Vector3(Mathf.Sign(vx) * maxspeed, vy);
             }
         }
 

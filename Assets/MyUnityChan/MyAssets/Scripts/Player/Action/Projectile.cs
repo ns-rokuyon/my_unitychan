@@ -35,7 +35,7 @@ namespace MyUnityChan {
 
         public override void performFixed() {
             Vector3 fw = player.transform.forward;
-            player.rigidbody.AddForce(fw * -50.0f);
+            player.GetComponent<Rigidbody>().AddForce(fw * -50.0f);
         }
 
         public override bool condition() {

@@ -12,8 +12,8 @@ namespace MyUnityChan {
         }
 
         public override void perform() {
-            float vx = player.rigidbody.velocity.x;
-            float vy = player.rigidbody.velocity.y;
+            float vx = player.GetComponent<Rigidbody>().velocity.x;
+            float vy = player.GetComponent<Rigidbody>().velocity.y;
             Vector3 fw = player.transform.forward;
             float input_horizontal = controller.keyHorizontal();
 

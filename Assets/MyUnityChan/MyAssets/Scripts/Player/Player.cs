@@ -91,7 +91,7 @@ namespace MyUnityChan {
 
         void Update() {
             float horizontal = ((PlayerController)controller).keyHorizontal();
-            float vy = rigidbody.velocity.y;
+            float vy = GetComponent<Rigidbody>().velocity.y;
 
             animator.SetFloat("Speed", Mathf.Abs(horizontal));
             if ( vy <= 0 && isGrounded() ) {
@@ -202,8 +202,8 @@ namespace MyUnityChan {
             Vector3 fw = transform.forward;
             Quaternion rot = transform.rotation;
             Vector3 targetDirection = new Vector3(Input.GetAxis("Horizontal"), 0, 0);
-            float vx = rigidbody.velocity.x;
-            float vy = rigidbody.velocity.y;
+            float vx = GetComponent<Rigidbody>().velocity.x;
+            float vy = GetComponent<Rigidbody>().velocity.y;
             CapsuleCollider cc = GetComponent<CapsuleCollider>();
             GUI.Box(new Rect(Screen.width - 260, 10, 250, 250), "Interaction");
             GUI.Label(new Rect(Screen.width - 245, 30, 250, 30), "forward: " + fw);

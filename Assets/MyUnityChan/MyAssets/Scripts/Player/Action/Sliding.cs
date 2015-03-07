@@ -14,7 +14,7 @@ namespace MyUnityChan {
         }
 
         public override void performFixed() {
-            player.rigidbody.AddForce(player.transform.forward * 10.0f, ForceMode.VelocityChange);
+            player.GetComponent<Rigidbody>().AddForce(player.transform.forward * 10.0f, ForceMode.VelocityChange);
         }
 
         public override void perform() {
