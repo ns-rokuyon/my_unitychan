@@ -36,7 +36,7 @@ namespace MyUnityChan {
 
         private float brake_power = 30.0f;
         private float speed = 0;
-        private Locomotion locomotion = null;
+        //private Locomotion locomotion = null;
         private Vector3 turn_slide_formard;
         private int anim_turn_id;
         private float dist_to_ground;
@@ -75,7 +75,7 @@ namespace MyUnityChan {
 
             // animation
             animator = GetComponent<Animator>();
-            locomotion = new Locomotion(animator);
+            //locomotion = new Locomotion(animator);
             anim_speed_default = animator.speed * 1.2f;
             dist_to_ground = GetComponent<CapsuleCollider>().height;
 
