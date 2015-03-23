@@ -12,7 +12,7 @@ namespace MyUnityChan {
         // Update is called once per frame
         void Update() {
             if ( player ) {
-                transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 1.5f, player.transform.position.z - 4.0f);
+                transform.position = new Vector3(player.transform.position.x, player.transform.position.y + 1.5f, player.transform.position.z - 5.0f);
             }
         }
 
