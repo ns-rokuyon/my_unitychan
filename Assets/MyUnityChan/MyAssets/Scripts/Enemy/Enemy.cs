@@ -65,6 +65,11 @@ namespace MyUnityChan {
             }
         }
 
+        protected void faceForward() {
+            float dir_x = controller.keyHorizontal();
+            gameObject.transform.LookAt(new Vector3(gameObject.transform.position.x + dir_x * 100.0f, gameObject.transform.position.y, transform.position.z));
+        }
+
         public void OnCollisionStay(Collision collisionInfo) {
             if ( collisionInfo.gameObject.tag == "Player" ) {
                 Player player_script = collisionInfo.gameObject.GetComponent<Player>();
@@ -117,6 +122,7 @@ namespace MyUnityChan {
         }
 
 
+
         // Use this for initialization
         void Start() {
             loadAttachedAI();
@@ -133,6 +139,7 @@ namespace MyUnityChan {
         void Update() {
             updateStunned();
             checkPlayerTouched();
+            faceForward();
 
             update();
         }
