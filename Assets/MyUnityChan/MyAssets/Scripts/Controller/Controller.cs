@@ -9,6 +9,7 @@ namespace MyUnityChan {
             ATTACK,
             PROJECTILE,
             DASH,
+            TEST,
             len
         };
 
@@ -48,6 +49,7 @@ namespace MyUnityChan {
         public bool keyAttack() { return inputs[(int)Movement.ATTACK]; }
         public bool keyProjectile() { return inputs[(int)Movement.PROJECTILE]; }
         public bool keyDash() { return inputs[(int)Movement.DASH]; }
+        public bool keyTest() { return inputs[(int)Movement.TEST]; }
         public float keyHorizontal() { return horizontal_input; }
         public float keyVertical() { return vertical_input; }
 

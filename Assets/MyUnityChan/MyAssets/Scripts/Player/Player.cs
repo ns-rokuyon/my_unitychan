@@ -100,6 +100,13 @@ namespace MyUnityChan {
                 animator.speed = anim_speed_default;
                 animator.SetBool("Jump", false);
             }
+
+        }
+
+        void LateUpdate() {
+            if ( ((PlayerController)controller).keyTest() ) {
+                performTest();
+            }
         }
 
         void FixedUpdate() {
@@ -196,6 +203,13 @@ namespace MyUnityChan {
             return anim_speed_default;
         }
 
+        private void performTest() {
+            Debug.Log("performTest");
+            Transform bone = GameObject.Find("Character1_LeftArm").GetComponent<Transform>();
+            Debug.Log(bone.localEulerAngles);
+            Quaternion qua = Quaternion.AngleAxis(90.0f, new Vector3(0,0,-45));
+            bone.localRotation = qua;
+        }
 
 
         void OnGUI() {

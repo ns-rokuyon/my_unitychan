@@ -16,6 +16,7 @@ namespace MyUnityChan {
             inputs[(int)Movement.ATTACK] = Input.GetKeyDown("x");
             inputs[(int)Movement.PROJECTILE] = Input.GetKeyDown("c");
             inputs[(int)Movement.DASH] = Input.GetKey("v");
+            inputs[(int)Movement.TEST] = Input.GetKey("t");
         }
 
     }
