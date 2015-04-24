@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using System.Collections;
 
 [ExecuteInEditMode]
@@ -17,6 +19,7 @@ public class TwoPointsPath : Path {
 	
 	}
 
+#if UNITY_EDITOR
     public override void sceneGUI() {
         Handles.color = Color.magenta;
         Vector3[] points = new Vector3[] { left_point, right_point };
@@ -24,6 +27,10 @@ public class TwoPointsPath : Path {
         left_point = Handles.PositionHandle(left_point, Quaternion.identity);
         right_point = Handles.PositionHandle(right_point, Quaternion.identity);
     }
+#else
+    public override void sceneGUI() {
+    }
+#endif
 
     public override void inspectorGUI() {
         // freeze position z
