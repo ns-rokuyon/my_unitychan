@@ -20,6 +20,8 @@ namespace MyUnityChan {
         public virtual void constant_perform() { }          // action method in Update() constantly (update)
         public virtual void constant_performFixed() { }     // action method in FixedUpdate() constantly 
 
+        public virtual void performLate() { }       // action method in LateUpdate()
+
         public virtual void prepare() { }
         public virtual void end() { }
         public virtual void effect() { }

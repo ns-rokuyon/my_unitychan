@@ -103,11 +103,6 @@ namespace MyUnityChan {
 
         }
 
-        void LateUpdate() {
-            if ( ((PlayerController)controller).keyTest() ) {
-                performTest();
-            }
-        }
 
         void FixedUpdate() {
             // gravity
@@ -125,6 +120,7 @@ namespace MyUnityChan {
             action_manager.registerAction(new PlayerAttack(this));
             action_manager.registerAction(new PlayerTurn(this));
             action_manager.registerAction(new PlayerDown(this));
+            action_manager.registerAction(new PlayerBeam(this));
         }
 
         public void damage() {
@@ -205,10 +201,6 @@ namespace MyUnityChan {
 
         private void performTest() {
             Debug.Log("performTest");
-            Transform bone = GameObject.Find("Character1_LeftArm").GetComponent<Transform>();
-            Debug.Log(bone.localEulerAngles);
-            Quaternion qua = Quaternion.AngleAxis(90.0f, new Vector3(0,0,-45));
-            bone.localRotation = qua;
         }
 
 

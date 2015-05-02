@@ -84,6 +84,15 @@ namespace MyUnityChan {
             }
         }
 
+        void LateUpdate() {
+            foreach ( KeyValuePair<string, Action> pair in actions ) {
+                Action action = pair.Value;
+                if ( action.condition() ) {
+                    action.performLate();
+                }
+            }
+        }
+
         public void act(Action action) {
             action.prepare();
             action.performFixed();
