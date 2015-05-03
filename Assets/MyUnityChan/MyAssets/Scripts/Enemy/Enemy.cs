@@ -102,6 +102,7 @@ namespace MyUnityChan {
         protected void loadAttachedAI() {
 
             GameObject controller_inst = Instantiate(controller_prefab) as GameObject;
+            controller_inst.setParent(transform.root);
             controller = controller_inst.GetComponent<Controller>();
 
             ((AIController)controller).setSelf(this);
@@ -130,7 +131,7 @@ namespace MyUnityChan {
             inputlock_timer = new FrameTimerState();
 
             // enemy status setup
-            status = (Instantiate(status_prefab) as GameObject).GetComponent<EnemyStatus>();
+            status = (Instantiate(status_prefab) as GameObject).setParent(transform.root).GetComponent<EnemyStatus>();
 
             start();
         }

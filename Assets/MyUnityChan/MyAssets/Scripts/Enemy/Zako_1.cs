@@ -5,9 +5,7 @@ namespace MyUnityChan {
     public class Zako_1 : Enemy {
 
         protected override void start() {
-            GameObject action_manager_inst = Instantiate(enemy_action_manager_prefab) as GameObject;
-            action_manager = action_manager_inst.GetComponent<EnemyActionManager>();
-
+            action_manager = (Instantiate(enemy_action_manager_prefab) as GameObject).setParent(transform.root).GetComponent<EnemyActionManager>();
             action_manager.registerAction(new EnemyWalk(this));
         }
 

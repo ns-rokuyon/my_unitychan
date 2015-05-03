@@ -14,7 +14,7 @@ namespace MyUnityChan {
         public Invincible invincible { get; private set; }
 
         protected override void awake() {
-            invincible = (Instantiate(invincible_prefab) as GameObject).GetComponent<Invincible>();
+            invincible = (Instantiate(invincible_prefab) as GameObject).setParent(this).GetComponent<Invincible>();
             freeze = false;
             hp = 100;
         }

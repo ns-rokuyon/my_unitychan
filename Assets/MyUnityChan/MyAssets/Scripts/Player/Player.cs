@@ -25,6 +25,7 @@ namespace MyUnityChan {
         public GameObject kick_hitbox_prefab;
         public GameObject projectile_hitbox_prefab;
 
+        private GameObject player_root;
         private Animator animator;
         private PlayerActionManager action_manager = null;
         private HpGauge hpgauge;
@@ -52,26 +53,25 @@ namespace MyUnityChan {
         // Use this for initialization
         void Start() {
             player_name = "player1";
+            player_root = transform.parent.gameObject;
 
             // camera setup
             (Instantiate(camera_prefab) as GameObject).GetComponent<PlayerCamera>().setPlayer(this.gameObject);
 
             // controller setup
-            GameObject controller_inst = Instantiate(controller_prefab) as GameObject;
-            controller = controller_inst.GetComponent<Controller>();
+            controller = (Instantiate(controller_prefab) as GameObject).setParent(player_root).GetComponent<Controller>();
             controller.setSelf(this);
 
             // action manager setup
-            GameObject action_manager_inst = Instantiate(action_manager_prefab) as GameObject;
-            action_manager = action_manager_inst.GetComponent<PlayerActionManager>();
+            action_manager = (Instantiate(action_manager_prefab) as GameObject).setParent(player_root).GetComponent<PlayerActionManager>();
 
             // player status setup
-            status = (Instantiate(status_prefab) as GameObject).GetComponent<PlayerStatus>();
+            status = (Instantiate(status_prefab) as GameObject).setParent(player_root).GetComponent<PlayerStatus>();
 
             // HP gauge setup
-            hpgauge = (Instantiate(hpgauge_prefab) as GameObject).GetComponent<HpGauge>();
+            hpgauge = (Instantiate(hpgauge_prefab) as GameObject).setParent(HpGauge.getCanvas()).GetComponent<HpGauge>();
             hpgauge.setCharacter(this);
-            hpgauge.transform.SetParent(HpGauge.getCanvas().transform, false);
+            //hpgauge.transform.SetParent(HpGauge.getCanvas().transform, false);
 
             // animation
             animator = GetComponent<Animator>();
