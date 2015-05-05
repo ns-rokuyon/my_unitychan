@@ -199,6 +199,10 @@ namespace MyUnityChan {
             return anim_speed_default;
         }
 
+        public PlayerActionManager getActionManager() {
+            return action_manager;
+        }
+
         private void performTest() {
             Debug.Log("performTest");
         }

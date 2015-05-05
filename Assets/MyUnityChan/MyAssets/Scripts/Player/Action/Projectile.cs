@@ -52,8 +52,11 @@ namespace MyUnityChan {
         }
 
         void shootProjectile(Vector3 direction) {
-            GameObject projectile = UnityEngine.Object.Instantiate(player.projectile_prefab) as GameObject;
+            GameObject projectile = (UnityEngine.Object.Instantiate(player.projectile_prefab) as GameObject);
             GameObject projectile_particle = UnityEngine.Object.Instantiate(player.projectile_particle_prefab) as GameObject;
+
+            projectile.setParent(Hierarchy.Layout.PROJECTILE);
+            projectile_particle.setParent(Hierarchy.Layout.PARTICLE);
 
             Projectile prjc = projectile.GetComponent<Projectile>();
             Projectile particle = projectile_particle.GetComponent<Projectile>();

@@ -59,7 +59,6 @@ namespace MyUnityChan {
             return false;
         }
 
-
         void OnGUI() {
         }
 

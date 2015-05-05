@@ -37,6 +37,7 @@ namespace MyUnityChan {
 
         public override void createTimer(int time) {
             GameObject timer_object = GameObject.Instantiate(TimerManager.self().frame_timer_prefab) as GameObject;
+            timer_object.setParent(Hierarchy.Layout.TIMER);
             FrameTimer timer = timer_object.GetComponent<FrameTimer>();
             timer.setTimer(time);
 
