@@ -52,28 +52,17 @@ namespace MyUnityChan {
         }
 
         void shootProjectile(Vector3 direction) {
-            GameObject projectile = (UnityEngine.Object.Instantiate(player.projectile_prefab) as GameObject);
-            GameObject projectile_particle = UnityEngine.Object.Instantiate(player.projectile_particle_prefab) as GameObject;
-
+            GameObject projectile = ObjectPoolManager.getGameObject(Hadouken.resource_path);
             projectile.setParent(Hierarchy.Layout.PROJECTILE);
-            projectile_particle.setParent(Hierarchy.Layout.PARTICLE);
 
-            Projectile prjc = projectile.GetComponent<Projectile>();
-            Projectile particle = projectile_particle.GetComponent<Projectile>();
+            Hadouken prjc = projectile.GetComponent<Hadouken>();
 
-            prjc.init(player.transform.position, direction);
+            prjc.setDir(direction);
+            prjc.setStartPosition(player.transform.position);
 
             // hitbox
             createHitbox(projectile);
 
-            // particles
-            particle.init(player.transform.position, direction, 0.001f);
-            if ( player.transform.forward.x < 0.0f ) {
-                particle.transform.Rotate(0.0f, 90.0f, 0.0f);
-            }
-            else {
-                particle.transform.Rotate(0.0f, -90.0f, 0.0f);
-            }
         }
 
         private void createHitbox(GameObject proj) {

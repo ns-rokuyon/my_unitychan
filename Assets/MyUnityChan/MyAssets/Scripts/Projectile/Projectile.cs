@@ -2,34 +2,20 @@
 using System.Collections;
 
 namespace MyUnityChan {
-    public class Projectile : ObjectBase {
-        private Vector3 target_dir;
-        private Vector3 start_position;
-        private float distance_moved;
-        private float max_range;
-        private float speed;
+    public abstract class Projectile : PoolObjectBase {
+        protected Vector3 target_dir;
+        protected Vector3 start_position;
+        protected float distance_moved;
+        protected float max_range;
+        protected float speed;
 
-        // Use this for initialization
-        void Start() {
-            distance_moved = 0.0f;
-            max_range = 80.0f;
-            speed = 0.2f;
-        }
-
-        // Update is called once per frame
-        void Update() {
-            transform.Translate(target_dir * speed, Space.World);
-            distance_moved = Mathf.Abs(transform.position.x - start_position.x);
-            if ( distance_moved > max_range ) {
-                Destroy(this.gameObject);
-            }
-        }
-
-        public void init(Vector3 start_pos, Vector3 dir, float sp = 1.0f) {
+        public virtual void setDir(Vector3 dir) {
             target_dir = dir;
-            transform.position = start_pos + target_dir * 0.4f + Vector3.up * 0.8f;
-            start_position = transform.position;
-            speed = sp;
+        }
+
+        public virtual void setStartPosition(Vector3 pos) {
+            transform.position = pos;
+            start_position = pos;
         }
     }
 }
