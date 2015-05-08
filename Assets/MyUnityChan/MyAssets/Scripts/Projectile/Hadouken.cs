@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace MyUnityChan {
     public class Hadouken : Projectile {
-        public static readonly string resource_path = "Projectiles/Hadouken";
+        public static readonly string resource_path = "Prefabs/Projectiles/Hadouken";
 
         // Use this for initialization
         void Start() {
