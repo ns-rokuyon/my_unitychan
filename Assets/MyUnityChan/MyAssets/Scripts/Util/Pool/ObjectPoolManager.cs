@@ -15,6 +15,7 @@ namespace MyUnityChan {
             // To manage object using ObjectPool, add calling addPool method here
             addPool(Beam.resource_path);
             addPool(Hadouken.resource_path);
+            addPool(PlayerHadouken.hitbox_resource_path);
         }
 
         public static void releaseGameObject(GameObject go, string resource_path) {

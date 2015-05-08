@@ -5,7 +5,7 @@ namespace MyUnityChan {
     public class ProjectileHitbox : AttackHitbox {
         GameObject projectile;
 
-        public void create(GameObject proj_, AttackSpec atkspec) {
+        public override void ready(GameObject proj_, AttackSpec atkspec) {
             projectile = proj_;
             initPosition(atkspec);
 
@@ -18,6 +18,10 @@ namespace MyUnityChan {
                     transform.position = projectile.transform.position;
                 }
                 else {
+                    if ( use_objectpool ) {
+                        ObjectPoolManager.releaseGameObject(this.gameObject, resource_path);
+                        return;
+                    }
                     Destroy(this.gameObject);
                 }
             }

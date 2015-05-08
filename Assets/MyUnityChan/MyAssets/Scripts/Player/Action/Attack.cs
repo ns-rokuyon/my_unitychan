@@ -83,6 +83,7 @@ namespace MyUnityChan {
         }
 
         public AttackSpec spec = null;
+        private static readonly string hitbox_resource_path = "Prefabs/Hitbox/Punch_Hitbox";
 
         public PlayerPunchL(Character character)
             : base(character) {
@@ -105,10 +106,10 @@ namespace MyUnityChan {
             return cond;
         }
 
-        void createHitbox() {
-            GameObject hitbox = GameObject.Instantiate(player.punch_hitbox_prefab) as GameObject;
-            PunchHitbox hitbox_script = hitbox.GetComponent<PunchHitbox>();
-            hitbox_script.create(player.transform.position, player.transform.forward, spec);
+        private void createHitbox() {
+            Vector3 fw = player.transform.forward;
+            HitboxManager.self().createHitbox<MeleeAttackHitbox>(hitbox_resource_path).ready(
+                player.transform.position, fw, new Vector3(0.4f * fw.x, 1.0f, 0.0f), spec);
         }
     }
 
@@ -127,6 +128,7 @@ namespace MyUnityChan {
         }
 
         public AttackSpec spec = null;
+        private static readonly string hitbox_resource_path = "Prefabs/Hitbox/Punch_Hitbox";
 
         public PlayerPunchR(Character character)
             : base(character) {
@@ -151,9 +153,9 @@ namespace MyUnityChan {
         }
 
         private void createHitbox() {
-            GameObject hitbox = GameObject.Instantiate(player.punch_hitbox_prefab) as GameObject;
-            PunchHitbox hitbox_script = hitbox.GetComponent<PunchHitbox>();
-            hitbox_script.create(player.transform.position + player.transform.forward * 0.2f, player.transform.forward, spec);
+            Vector3 fw = player.transform.forward;
+            HitboxManager.self().createHitbox<MeleeAttackHitbox>(hitbox_resource_path).ready(
+                player.transform.position, fw, new Vector3(0.6f * fw.x, 1.0f, 0.0f), spec);
         }
     }
 
@@ -172,6 +174,7 @@ namespace MyUnityChan {
         }
 
         public AttackSpec spec = null;
+        private static readonly string hitbox_resource_path = "Prefabs/Hitbox/Kick_Hitbox";
 
         public PlayerSpinKick(Character character)
             : base(character) {
@@ -195,9 +198,9 @@ namespace MyUnityChan {
         }
 
         private void createHitbox() {
-            GameObject hitbox = GameObject.Instantiate(player.kick_hitbox_prefab) as GameObject;
-            KickHitbox hitbox_script = hitbox.GetComponent<KickHitbox>();
-            hitbox_script.create(player.transform.position + player.transform.forward * 0.2f, player.transform.forward, spec);
+            Vector3 fw = player.transform.forward;
+            HitboxManager.self().createHitbox<MeleeAttackHitbox>(hitbox_resource_path).ready(
+                player.transform.position, fw, new Vector3(0.6f * fw.x, 0.8f, 0.0f), spec);
         }
     }
 }

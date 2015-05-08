@@ -81,11 +81,5 @@ namespace MyUnityChan {
 
         }
 
-        private void createHitbox(GameObject proj) {
-            GameObject hitbox = GameObject.Instantiate(player.projectile_hitbox_prefab) as GameObject;
-            ProjectileHitbox hitbox_script = hitbox.GetComponent<ProjectileHitbox>();
-            hitbox_script.create(proj, spec);
-        }
-
     }
 }

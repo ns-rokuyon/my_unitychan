@@ -3,6 +3,7 @@ using System.Collections;
 
 namespace MyUnityChan {
     public class PlayerHadouken : PlayerAction {
+        public static readonly string hitbox_resource_path = "Prefabs/Hitbox/Projectile_Hitbox";
         public AttackSpec spec = null;
 
         public PlayerHadouken(Character character)
@@ -61,14 +62,7 @@ namespace MyUnityChan {
             prjc.setStartPosition(player.transform.position);
 
             // hitbox
-            createHitbox(projectile);
-
-        }
-
-        private void createHitbox(GameObject proj) {
-            GameObject hitbox = GameObject.Instantiate(player.projectile_hitbox_prefab) as GameObject;
-            ProjectileHitbox hitbox_script = hitbox.GetComponent<ProjectileHitbox>();
-            hitbox_script.create(proj, spec);
+            HitboxManager.self().createHitbox<ProjectileHitbox>(hitbox_resource_path, use_objectpool:true).ready(projectile, spec);
         }
     }
 }
