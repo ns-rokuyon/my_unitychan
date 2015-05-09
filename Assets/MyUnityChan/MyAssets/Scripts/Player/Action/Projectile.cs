@@ -62,7 +62,7 @@ namespace MyUnityChan {
             prjc.setStartPosition(player.transform.position);
 
             // hitbox
-            HitboxManager.self().createHitbox<ProjectileHitbox>(hitbox_resource_path, use_objectpool:true).ready(projectile, spec);
+            HitboxManager.self().create<ProjectileHitbox>(hitbox_resource_path, use_objectpool:true).ready(projectile, spec);
         }
     }
 }

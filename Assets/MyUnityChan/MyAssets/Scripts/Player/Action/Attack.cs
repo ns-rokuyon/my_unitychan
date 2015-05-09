@@ -108,7 +108,7 @@ namespace MyUnityChan {
 
         private void createHitbox() {
             Vector3 fw = player.transform.forward;
-            HitboxManager.self().createHitbox<MeleeAttackHitbox>(hitbox_resource_path).ready(
+            HitboxManager.self().create<MeleeAttackHitbox>(hitbox_resource_path).ready(
                 player.transform.position, fw, new Vector3(0.4f * fw.x, 1.0f, 0.0f), spec);
         }
     }
@@ -154,7 +154,7 @@ namespace MyUnityChan {
 
         private void createHitbox() {
             Vector3 fw = player.transform.forward;
-            HitboxManager.self().createHitbox<MeleeAttackHitbox>(hitbox_resource_path).ready(
+            HitboxManager.self().create<MeleeAttackHitbox>(hitbox_resource_path).ready(
                 player.transform.position, fw, new Vector3(0.6f * fw.x, 1.0f, 0.0f), spec);
         }
     }
@@ -199,7 +199,7 @@ namespace MyUnityChan {
 
         private void createHitbox() {
             Vector3 fw = player.transform.forward;
-            HitboxManager.self().createHitbox<MeleeAttackHitbox>(hitbox_resource_path).ready(
+            HitboxManager.self().create<MeleeAttackHitbox>(hitbox_resource_path).ready(
                 player.transform.position, fw, new Vector3(0.6f * fw.x, 0.8f, 0.0f), spec);
         }
     }
