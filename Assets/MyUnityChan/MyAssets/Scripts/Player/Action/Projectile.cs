@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace MyUnityChan {
     public class PlayerHadouken : PlayerAction {
-        public static readonly string hitbox_resource_path = "Prefabs/Hitbox/Projectile_Hitbox";
+        public static readonly string hitbox_resource_path = Const.Prefab.Hitbox.PROJECTILE;
         public AttackSpec spec = null;
 
         public PlayerHadouken(Character character)
@@ -24,6 +24,7 @@ namespace MyUnityChan {
 
             public override void attack(Character character, Hitbox hitbox) {
                 ((Enemy)character).stun(stun);
+                ((Enemy)character).damage(damage);
             }
         }
 

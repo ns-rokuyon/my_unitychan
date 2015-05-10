@@ -13,9 +13,10 @@ namespace MyUnityChan {
         // Use this for initialization
         void Start() {
             // To manage object using ObjectPool, add calling addPool method here
-            addPool(Beam.resource_path);
-            addPool(Hadouken.resource_path);
-            addPool(PlayerHadouken.hitbox_resource_path);
+            addPool(Const.Prefab.Projectile.BEAM);
+            addPool(Const.Prefab.Projectile.HADOUKEN);
+            addPool(Const.Prefab.Hitbox.PROJECTILE);
+            addPool(Const.Prefab.Effect.BLACK_EXPLOSION);
         }
 
         public static void releaseGameObject(GameObject go, string resource_path) {

@@ -53,6 +53,7 @@ namespace MyUnityChan {
 
         protected virtual void start() { }
         protected virtual void update() { }
+        protected virtual void die() { }
 
         protected void checkPlayerTouched() {
             foreach ( KeyValuePair<string, int> pair in touching_players ) {
@@ -92,17 +93,17 @@ namespace MyUnityChan {
         }
     }
 
-    public class Enemy : NPCharacter {
+    public abstract class Enemy : NPCharacter {
         public GameObject controller_prefab;
         public GameObject enemy_action_manager_prefab;
-        protected int stunned = 0;
 
+        protected int stunned = 0;
         protected EnemyActionManager action_manager;
 
         protected void loadAttachedAI() {
 
             GameObject controller_inst = Instantiate(controller_prefab) as GameObject;
-            controller_inst.setParent(transform.root);
+            controller_inst.setParent(gameObject);
             controller = controller_inst.GetComponent<Controller>();
 
             ((AIController)controller).setSelf(this);
@@ -110,6 +111,13 @@ namespace MyUnityChan {
 
         public void stun(int stun_power) {
             stunned = stun_power;
+        }
+
+        public void damage(int dam) {
+            if ( !status.invincible.now() ) {
+                status.invincible.enable(30);
+                status.hp -= dam;
+            }
         }
 
         public bool isStunned() {
@@ -122,8 +130,6 @@ namespace MyUnityChan {
             }
         }
 
-
-
         // Use this for initialization
         void Start() {
             loadAttachedAI();
@@ -131,7 +137,7 @@ namespace MyUnityChan {
             inputlock_timer = new FrameTimerState();
 
             // enemy status setup
-            status = (Instantiate(status_prefab) as GameObject).setParent(transform.root).GetComponent<EnemyStatus>();
+            status = (Instantiate(status_prefab) as GameObject).setParent(gameObject).GetComponent<EnemyStatus>();
 
             start();
         }

@@ -28,6 +28,10 @@ namespace MyUnityChan {
             return status.hp;
         }
 
+        public void setHP(int _hp) {
+            status.hp = _hp;
+        }
+
         public bool isFrozen() {
             return status.freeze;
         }

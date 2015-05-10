@@ -2,20 +2,23 @@
 using System.Collections;
 
 namespace MyUnityChan {
-    public class EffectBase : ObjectBase {
+    public abstract class EffectBase : PoolObjectBase {
+        protected string resource_path = null;
 
         // Use this for initialization
         void Start() {
-
         }
 
         // Update is called once per frame
         void Update() {
-
         }
 
-        public void init(Vector3 pos) {
-            transform.position = pos;
+        public override void initialize() {
+            throw new System.NotImplementedException();
+        }
+
+        public override void finalize() {
+            throw new System.NotImplementedException();
         }
     }
 }

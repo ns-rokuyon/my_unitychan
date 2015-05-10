@@ -28,10 +28,11 @@ namespace MyUnityChan {
             return controller.keyJump() && player.isGrounded();
         }
 
+        // TODO
         public override void effect() {
-            GameObject effect = UnityEngine.Object.Instantiate(player.jump_effect_prefab) as GameObject;
-            ParticleEffect jump_effect = effect.GetComponent<ParticleEffect>();
-            jump_effect.init(player.transform.position + effect_offset);
+            //GameObject effect = UnityEngine.Object.Instantiate(player.jump_effect_prefab) as GameObject;
+            //Effect jump_effect = effect.GetComponent<Effect>();
+            //jump_effect.ready(player.transform.position + effect_offset, 60, "Prefabs/Effects/");
         }
     }
 
