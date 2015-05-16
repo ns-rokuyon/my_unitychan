@@ -17,7 +17,7 @@ namespace MyUnityChan {
 
         public class Spec : AttackSpec {
             public Spec() {
-                damage = 5;
+                damage = 50;
                 stun = 50;
                 frame = 100;
             }

@@ -77,8 +77,9 @@ namespace MyUnityChan {
             }
 
             public override void attack(Character character, Hitbox hitbox) {
-                ((Enemy)character).stun(stun);
                 character.GetComponent<Rigidbody>().AddForce(new Vector3(hitbox.forward.x * 5.0f, 5.0f, 0.0f), ForceMode.Impulse);
+                ((Enemy)character).stun(stun);
+                ((Enemy)character).damage(damage);
             }
         }
 
@@ -116,14 +117,15 @@ namespace MyUnityChan {
     public class PlayerPunchR : PlayerAction {
         public class Spec : AttackSpec {
             public Spec() {
-                damage = 20;
+                damage = 30;
                 stun = 120;
                 frame = 5;
             }
 
             public override void attack(Character character, Hitbox hitbox) {
-                ((Enemy)character).stun(stun);
                 character.GetComponent<Rigidbody>().AddForce(new Vector3(hitbox.forward.x * 2.0f, 7.0f, 0.0f), ForceMode.Impulse);
+                ((Enemy)character).stun(stun);
+                ((Enemy)character).damage(damage);
             }
         }
 
@@ -162,14 +164,15 @@ namespace MyUnityChan {
     public class PlayerSpinKick : PlayerAction {
         public class Spec : AttackSpec {
             public Spec() {
-                damage = 20;
+                damage = 70;
                 stun = 120;
                 frame = 12;
             }
 
             public override void attack(Character character, Hitbox hitbox) {
-                ((Enemy)character).stun(stun);
                 character.GetComponent<Rigidbody>().AddForce(new Vector3(hitbox.forward.x * 2.0f, 7.0f, 0.0f), ForceMode.Impulse);
+                ((Enemy)character).stun(stun);
+                ((Enemy)character).damage(damage);
             }
         }
 
