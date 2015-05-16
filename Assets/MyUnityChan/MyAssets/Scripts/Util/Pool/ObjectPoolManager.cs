@@ -16,6 +16,7 @@ namespace MyUnityChan {
             addPool(Const.Prefab.Projectile.BEAM);
             addPool(Const.Prefab.Projectile.HADOUKEN);
             addPool(Const.Prefab.Hitbox.PROJECTILE);
+            addPool(Const.Prefab.Hitbox.BEAM);
             addPool(Const.Prefab.Effect.BLACK_EXPLOSION);
         }
 

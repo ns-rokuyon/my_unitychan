@@ -4,6 +4,7 @@ using System.Collections;
 namespace MyUnityChan {
     public class PlayerBeam : PlayerAction {
         public AttackSpec spec = null;
+        public static readonly string hitbox_resource_path = Const.Prefab.Hitbox.BEAM;
 
         private string left_shoulder_path = 
             "Character1_Reference/Character1_Hips/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/";
@@ -30,13 +31,14 @@ namespace MyUnityChan {
 
         public class Spec : AttackSpec {
             public Spec() {
-                damage = 5;
+                damage = 20;
                 stun = 50;
                 frame = 100;
             }
 
             public override void attack(Character character, Hitbox hitbox) {
                 ((Enemy)character).stun(stun);
+                ((Enemy)character).damage(damage);
             }
         }
 
@@ -76,9 +78,7 @@ namespace MyUnityChan {
             prjc.setStartPosition(player.transform.position);
 
             // hitbox
-            //createHitbox(beam);
-            // TODO
-
+            HitboxManager.self().create<ProjectileHitbox>(hitbox_resource_path, use_objectpool:true).ready(beam, spec);
         }
 
     }
