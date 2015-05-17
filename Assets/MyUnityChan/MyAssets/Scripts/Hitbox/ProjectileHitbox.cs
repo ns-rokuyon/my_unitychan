@@ -10,11 +10,12 @@ namespace MyUnityChan {
             initPosition(atkspec);
 
             transform.position = projectile.transform.position;
+            Debug.Log("hitbox");
         }
 
         protected override void UniqueUpdate() {
             if ( spec != null ) {
-                if ( projectile != null ) {
+                if ( projectile != null && projectile.activeSelf ) {
                     transform.position = projectile.transform.position;
                 }
                 else {

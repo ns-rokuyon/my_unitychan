@@ -33,7 +33,7 @@ namespace MyUnityChan {
             public Spec() {
                 damage = 20;
                 stun = 50;
-                frame = 100;
+                frame = 9999;
             }
 
             public override void attack(Character character, Hitbox hitbox) {
@@ -49,7 +49,8 @@ namespace MyUnityChan {
         public override void perform() {
             if ( timer != null && timer.isFinished() ) {
                 Vector3 fw = player.transform.forward;
-                InvokerManager.createFrameDelayVector3Invoker(1, fw, shootProjectile);
+                //InvokerManager.createFrameDelayVector3Invoker(0, fw, shootProjectile);
+                shootProjectile(fw);
                 timer.createTimer(beam_interval);
             }
         }

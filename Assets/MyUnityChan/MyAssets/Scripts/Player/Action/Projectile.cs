@@ -19,7 +19,7 @@ namespace MyUnityChan {
             public Spec() {
                 damage = 50;
                 stun = 50;
-                frame = 100;
+                frame = 9999;
             }
 
             public override void attack(Character character, Hitbox hitbox) {
