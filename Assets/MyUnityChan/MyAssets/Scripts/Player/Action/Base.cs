@@ -70,7 +70,6 @@ namespace MyUnityChan {
                     else {
                         player.GetComponent<Rigidbody>().AddForce(horizontal * moveF / 4.0f);
                     }
-                    Debug.Log("hoge");
                 }
                 else {
                     // accelerate

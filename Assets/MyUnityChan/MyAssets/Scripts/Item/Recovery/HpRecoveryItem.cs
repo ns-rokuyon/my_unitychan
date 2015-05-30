@@ -6,7 +6,6 @@ namespace MyUnityChan {
         public int heal;
 
         public override void perform(Player player) {
-            Debug.Log("healing");
             player.setHP(player.getHP() + heal);
         }
 
