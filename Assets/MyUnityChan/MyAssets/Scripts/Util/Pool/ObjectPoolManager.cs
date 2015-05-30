@@ -13,11 +13,11 @@ namespace MyUnityChan {
         // Use this for initialization
         void Start() {
             // To manage object using ObjectPool, add calling addPool method here
-            addPool(Const.Prefab.Projectile.BEAM);
-            addPool(Const.Prefab.Projectile.HADOUKEN);
-            addPool(Const.Prefab.Hitbox.PROJECTILE);
-            addPool(Const.Prefab.Hitbox.BEAM);
-            addPool(Const.Prefab.Effect.BLACK_EXPLOSION);
+            addPool(Const.Prefab.Projectile["BEAM"]);
+            addPool(Const.Prefab.Projectile["HADOUKEN"]);
+            addPool(Const.Prefab.Hitbox["PROJECTILE"]);
+            addPool(Const.Prefab.Hitbox["BEAM"]);
+            addPool(Const.Prefab.Effect["BLACK_EXPLOSION"]);
             addPool(Const.Prefab.Item["HP_RECOVERY"]);
         }
 

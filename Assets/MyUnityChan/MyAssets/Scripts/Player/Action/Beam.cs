@@ -4,7 +4,7 @@ using System.Collections;
 namespace MyUnityChan {
     public class PlayerBeam : PlayerAction {
         public AttackSpec spec = null;
-        public static readonly string hitbox_resource_path = Const.Prefab.Hitbox.BEAM;
+        public static readonly string hitbox_resource_path = Const.Prefab.Hitbox["BEAM"];
 
         private string left_shoulder_path = 
             "Character1_Reference/Character1_Hips/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/";

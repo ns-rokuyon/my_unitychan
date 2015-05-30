@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace MyUnityChan {
     public class PlayerHadouken : PlayerAction {
-        public static readonly string hitbox_resource_path = Const.Prefab.Hitbox.PROJECTILE;
+        public static readonly string hitbox_resource_path = Const.Prefab.Hitbox["PROJECTILE"];
         public AttackSpec spec = null;
 
         public PlayerHadouken(Character character)

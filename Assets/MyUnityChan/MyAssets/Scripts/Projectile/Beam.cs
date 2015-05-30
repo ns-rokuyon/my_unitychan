@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace MyUnityChan {
     public class Beam : Projectile  {
-        public static readonly string resource_path = Const.Prefab.Projectile.BEAM;
+        public static readonly string resource_path = Const.Prefab.Projectile["BEAM"];
 
         // Use this for initialization
         void Start() {
