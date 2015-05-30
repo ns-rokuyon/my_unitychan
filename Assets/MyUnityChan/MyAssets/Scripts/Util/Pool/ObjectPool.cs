@@ -4,8 +4,18 @@ using System.Collections.Generic;
 namespace MyUnityChan {
 
     public abstract class PoolObjectBase : ObjectBase {
+        private bool pooled = false;
+
         public abstract void initialize();
         public abstract void finalize();
+
+        public void setPooled(bool flag) {
+            pooled = flag;
+        }
+
+        public bool isPooledObject() {
+            return pooled;
+        }
     }
 
 
@@ -47,11 +57,14 @@ namespace MyUnityChan {
         }
 
         private void initializeObject(GameObject go) {
-            go.GetComponent<PoolObjectBase>().initialize();
+            PoolObjectBase comp = go.GetComponent<PoolObjectBase>();
+            comp.setPooled(true);
+            comp.initialize();
         }
 
         private void finalizeObject(GameObject go) {
-            go.GetComponent<PoolObjectBase>().finalize();
+            PoolObjectBase comp = go.GetComponent<PoolObjectBase>();
+            comp.finalize();
         }
     }
 }

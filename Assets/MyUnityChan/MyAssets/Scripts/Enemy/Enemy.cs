@@ -130,6 +130,7 @@ namespace MyUnityChan {
             }
         }
 
+
         // Use this for initialization
         void Start() {
             loadAttachedAI();

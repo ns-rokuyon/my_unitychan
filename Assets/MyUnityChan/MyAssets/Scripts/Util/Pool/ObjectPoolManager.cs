@@ -18,6 +18,7 @@ namespace MyUnityChan {
             addPool(Const.Prefab.Hitbox.PROJECTILE);
             addPool(Const.Prefab.Hitbox.BEAM);
             addPool(Const.Prefab.Effect.BLACK_EXPLOSION);
+            addPool(Const.Prefab.Item["HP_RECOVERY"]);
         }
 
         public static void releaseGameObject(GameObject go, string resource_path) {
