@@ -131,8 +131,8 @@ namespace MyUnityChan {
             }
         }
 
-        public void freeze() {
-            status.freeze = true;
+        public void freeze(bool flag=true) {
+            status.freeze = flag;
         }
 
         public void respawn() {

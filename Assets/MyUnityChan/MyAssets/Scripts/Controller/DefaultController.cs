@@ -10,7 +10,14 @@ namespace MyUnityChan {
                 return;
             }
 
+            if ( self.isFrozen() ) {
+                // ignore any inputs
+                clearAllInputs();
+                return;
+            }
+
             horizontal_input = Input.GetAxis("Horizontal");
+            vertical_input = Input.GetAxis("Vertical");
             inputs[(int)Movement.JUMP] = Input.GetKeyDown("space");
             inputs[(int)Movement.SLIDING] = Input.GetKeyDown("z");
             inputs[(int)Movement.ATTACK] = Input.GetKeyDown("x");

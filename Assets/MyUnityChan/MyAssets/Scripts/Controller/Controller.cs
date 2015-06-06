@@ -40,6 +40,8 @@ namespace MyUnityChan {
 
         protected void clearAllInputs() {
             for ( int i = 0; i < inputs.Count; i++ ) {
+                horizontal_input = 0.0f;
+                vertical_input = 0.0f;
                 inputs[i] = false;
             }
         }
