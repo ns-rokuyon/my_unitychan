@@ -23,4 +23,9 @@ namespace MyUnityChan {
         void Update() {
         }
     }
+
+    public abstract class Door : ObjectBase {
+        public abstract void open();
+        public abstract void close();
+    }
 }

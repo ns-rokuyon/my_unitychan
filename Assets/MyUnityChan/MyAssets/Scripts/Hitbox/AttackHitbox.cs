@@ -32,6 +32,10 @@ namespace MyUnityChan {
                 Enemy enemy = ((Enemy)other.gameObject.GetComponent<Enemy>());
                 spec.attack(enemy, this);
             }
+            else if ( other.tag == "Door" ) {
+                Door door = ((Door)other.gameObject.GetComponent<Door>());
+                door.open();
+            }
         }
     }
 
