@@ -2,21 +2,10 @@
 using System.Collections;
 
 namespace MyUnityChan {
-    public class WarpDoor : Warp {
-
-        // Use this for initialization
-        void Start() {
-
-        }
-
-        // Update is called once per frame
-        void Update() {
-
-        }
+    public class WarpCollision : Warp {
 
         public override bool condition(Player player) {
-            float vertical = player.getController().keyVertical();
-            return !player.isFrozen() && vertical > 0;
+            return !player.isFrozen();
         }
 
         public override void warp(Player player) {
@@ -25,6 +14,5 @@ namespace MyUnityChan {
             player.lookAtDirectionX(warp_to.GetComponent<Warp>().dst_direction);
             player.freeze(false);
         }
-
     }
 }

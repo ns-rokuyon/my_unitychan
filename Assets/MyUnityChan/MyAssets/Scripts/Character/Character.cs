@@ -36,6 +36,17 @@ namespace MyUnityChan {
             return status.freeze;
         }
 
+        // xdir = 1.0f | -1.0f
+        public void lookAtDirectionX(float xdir) {
+            transform.LookAt(
+                new Vector3(
+                    transform.position.x + xdir * 100.0f, 
+                    transform.position.y, 
+                    transform.position.z
+                )
+            );
+        }
+
         public void lockInput(int frame) {
             // disable movement by inputs for N frames specified
             inputlock_timer.destroy();

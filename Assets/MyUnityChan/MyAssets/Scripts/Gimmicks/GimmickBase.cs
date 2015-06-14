@@ -12,15 +12,23 @@ namespace MyUnityChan {
         }
     }
 
-    public class Warp : ObjectBase {
+    public abstract class Warp : ObjectBase {
         public GameObject warp_to;
+        public float dst_direction;
 
-        // Use this for initialization
-        void Start() {
-        }
+        public abstract bool condition(Player player);
+        public abstract void warp(Player player);
 
-        // Update is called once per frame
-        void Update() {
+        public void OnTriggerStay(Collider colliderInfo) {
+            if ( colliderInfo.gameObject.tag == "Player" ) {
+                Player player = colliderInfo.gameObject.GetComponent<Player>();
+                if ( condition(player) ) {
+                    player.freeze();    // moving lock
+                    CameraFade.StartAlphaFade(Color.black, false, 1f, 0f, () => {
+                        warp(player);
+                    });
+                }
+            }
         }
     }
 
