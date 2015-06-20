@@ -13,7 +13,6 @@ namespace MyUnityChan {
 
         public string player_name = null;
 
-        public GameObject camera_prefab;
         public GameObject projectile_prefab;
         public GameObject projectile_particle_prefab;
         public GameObject jump_effect_prefab;
@@ -56,7 +55,7 @@ namespace MyUnityChan {
             player_root = transform.parent.gameObject;
 
             // camera setup
-            (Instantiate(camera_prefab) as GameObject).GetComponent<PlayerCamera>().setPlayer(this.gameObject);
+            PrefabInstantiater.createAndGetComponent<PlayerCamera>(Const.Prefab.Camera["PLAYER_CAMERA"], Hierarchy.Layout.CAMERA).setPlayer(this.gameObject);
 
             // controller setup
             controller = (Instantiate(controller_prefab) as GameObject).setParent(player_root).GetComponent<Controller>();

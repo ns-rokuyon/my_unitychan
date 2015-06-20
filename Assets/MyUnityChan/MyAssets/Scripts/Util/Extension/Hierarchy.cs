@@ -33,6 +33,7 @@ public static class Hierarchy {
     }
 
     public static class Layout {
+        public static readonly string CAMERA = "Camera";
         public static readonly string TIMER = "System/Timer";
         public static readonly string INVOKER = "System/Invoker";
         public static readonly string OBJECT_POOL = "System/ObjectPool";
