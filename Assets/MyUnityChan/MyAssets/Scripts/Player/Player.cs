@@ -49,6 +49,8 @@ namespace MyUnityChan {
         private const float CHECKSPHERE_RADIUS = 0.1f;	// radius of sphere to check player is on ground
         private GameObject sphere_ground_check = null;
 
+        private string area_name = null;
+
         // Use this for initialization
         void Start() {
             player_name = "player1";
@@ -202,6 +204,14 @@ namespace MyUnityChan {
             return action_manager;
         }
 
+        public void setAreaName(string name) {
+            area_name = name;
+        }
+
+        public string getAreaName() {
+            return area_name;
+        }
+
         private void performTest() {
             Debug.Log("performTest");
         }
@@ -224,7 +234,7 @@ namespace MyUnityChan {
             GUI.Label(new Rect(Screen.width - 245, 150, 250, 30), "(x,y,z): " + transform.position);
             GUI.Label(new Rect(Screen.width - 245, 170, 250, 30), "capsule_center: " + cc.bounds.center);
             GUI.Label(new Rect(Screen.width - 245, 190, 250, 30), "capsule_height: " + cc.height);
-            GUI.Label(new Rect(Screen.width - 245, 210, 250, 30), "x_key_down: " + Input.GetKeyDown("x").ToString());
+            GUI.Label(new Rect(Screen.width - 245, 210, 250, 30), "areaname: " + area_name);
             GUI.Label(new Rect(Screen.width - 245, 230, 250, 30), "animspeed: " + animator.speed);
         }
     }
