@@ -18,9 +18,6 @@ namespace MyUnityChan {
             Bounds bounds = gameObject.GetComponent<MeshRenderer>().bounds;
             x_harf = (float)(bounds.size.x / 2.0);
             y_harf = (float)(bounds.size.y / 2.0);
-            Debug.Log("xharf: " + x_harf);
-            Debug.Log("yharf: " + y_harf);
-            
         }
 
         public bool isIn(string name) {

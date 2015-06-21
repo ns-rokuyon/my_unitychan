@@ -19,19 +19,15 @@ namespace MyUnityChan {
                 Vector3 newpos = new Vector3(player.transform.position.x, player.transform.position.y + 1.5f, player.transform.position.z - 5.0f);
                 if ( area ) {
                     if ( area.right_wall && newpos.x + area_limit_offset >= area.limitRight() ) {
-                        Debug.Log("right");
                         newpos.x = transform.position.x;    // no update
                     }
                     if ( area.left_wall && newpos.x - area_limit_offset <= area.limitLeft() ) {
-                        Debug.Log("left");
                         newpos.x = transform.position.x;    // no update
                     }
                     if ( area.roof && newpos.y + area_limit_offset >= area.limitRoof() ) {
-                        Debug.Log("roof");
                         newpos.y = transform.position.y;    // no update
                     }
                     if ( area.floor && newpos.y - area_limit_offset <= area.limitFloor() ) {
-                        Debug.Log("floor");
                         newpos.y = transform.position.y;    // no update
                     }
                 }
