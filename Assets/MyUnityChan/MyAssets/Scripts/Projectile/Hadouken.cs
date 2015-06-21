@@ -14,11 +14,7 @@ namespace MyUnityChan {
 
         // Update is called once per frame
         void Update() {
-            transform.Translate(target_dir * speed, Space.World);
-            distance_moved = Mathf.Abs(transform.position.x - start_position.x);
-            if ( distance_moved > max_range ) {
-                ObjectPoolManager.releaseGameObject(gameObject, resource_path);
-            }
+            commonUpdate(resource_path);
         }
 
         public override void setStartPosition(Vector3 pos) {
