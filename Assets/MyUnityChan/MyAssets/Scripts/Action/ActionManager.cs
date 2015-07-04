@@ -22,6 +22,10 @@ namespace MyUnityChan {
             foreach ( KeyValuePair<string, Action> pair in actions ) {
                 Action action = pair.Value;
 
+                if ( !action.activation ) {
+                    continue;
+                }
+
                 // call action methods in Update() constantly
                 action.constant_perform();
 
@@ -107,6 +111,10 @@ namespace MyUnityChan {
 
         public void registerAction(Action action) {
             actions[action.name()] = action;
+        }
+
+        public void disableAction(string name) {
+            actions[name].disable();
         }
 
         public Action getAction(string name) {

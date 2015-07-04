@@ -7,6 +7,8 @@ namespace MyUnityChan {
         // if flag is null, action is run by checking condition() only.
         public ActionFlag flag = new ActionFlag();
 
+        public bool activation = true;
+
         // define action name
         public abstract string name();
         public abstract bool condition();           // return whether or not the action manager calls perform()
@@ -25,6 +27,14 @@ namespace MyUnityChan {
         public virtual void prepare() { }
         public virtual void end() { }
         public virtual void effect() { }
+
+        public void enable() {
+            activation = true;
+        }
+
+        public void disable() {
+            activation = false;
+        }
     }
 
     public class ActionFlag {

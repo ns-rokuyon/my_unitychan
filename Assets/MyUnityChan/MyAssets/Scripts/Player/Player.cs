@@ -115,7 +115,8 @@ namespace MyUnityChan {
             action_manager.registerAction(new PlayerAccel(this));
             action_manager.registerAction(new PlayerDash(this));
             action_manager.registerAction(new PlayerLimitSpeed(this));
-            action_manager.registerAction(new PlayerAirJump(this));
+            action_manager.registerAction(new PlayerJump(this));
+            //action_manager.registerAction(new PlayerDoubleJump(this));
             action_manager.registerAction(new PlayerSliding(this));
             action_manager.registerAction(new PlayerHadouken(this));
             action_manager.registerAction(new PlayerAttack(this));

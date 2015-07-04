@@ -16,12 +16,29 @@ namespace MyUnityChan {
 
         public override void performFixed() {
             jump_start_y = player.transform.position.y;
-            player.GetComponent<Rigidbody>().AddForce(new Vector3(0f, 1200.0f, 0));
+            if ( player.isDash() ) {
+                // dashdump (ground jump)
+                player.GetComponent<Rigidbody>().AddForce(new Vector3(player.transform.forward.x * 100.0f, 100.0f, 0), ForceMode.Impulse);
+            }
+            else {
+                // jump (ground jump or air jump)
+                player.GetComponent<Rigidbody>().AddForce(new Vector3(0f, 250.0f, 0), ForceMode.Impulse);
+            }
         }
 
         public override void perform() {
-            player.getAnimator().CrossFade("Jump", 0.001f);
+            player.getAnimator().SetBool("Jump", true);
+            if ( player.isDash() ) {
+                // dashdump (ground jump)
+                player.getAnimator().Play("DashJump", -1, 0.0f);
+            }
+            else {
+                // jump (ground jump or air jump)
+                player.getAnimator().Play("Jump", -1, 0.0f);
+            }
+            player.setAnimSpeedDefault();
             player.getAnimator().SetBool("OnGround", false);
+            player.lockInput(2);
         }
 
         public override bool condition() {
@@ -37,14 +54,12 @@ namespace MyUnityChan {
     }
 
 
-    public class PlayerAirJump : PlayerJump {
-        private int jump_num;
-        private int jump_max;
+    public class PlayerDoubleJump : PlayerJump {
+        private bool air_jumped;
 
-        public PlayerAirJump(Character character)
+        public PlayerDoubleJump(Character character)
             : base(character) {
-            jump_num = 0;
-            jump_max = 2;
+                air_jumped = false;
         }
 
         public override string name() {
@@ -85,17 +100,18 @@ namespace MyUnityChan {
 
         public override bool condition() {
             return controller.keyJump() &&
-                readyToJump() &&
-                jump_num < jump_max;
+                readyToJump() && !air_jumped;
         }
 
         public override void end() {
-            jump_num++;
+            if ( !player.isGrounded() ) {
+                air_jumped = true;
+            }
         }
 
         public override void constant_perform() {
             if ( player.isGrounded() ) {
-                jump_num = 0;
+                air_jumped = false;
             }
         }
 
