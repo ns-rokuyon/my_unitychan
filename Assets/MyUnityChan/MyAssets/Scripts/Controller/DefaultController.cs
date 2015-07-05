@@ -4,6 +4,14 @@ using System.Collections;
 namespace MyUnityChan {
     public class DefaultController : PlayerController {
         void Update() {
+            if ( PauseManager.isPausing() ) {
+                if ( Input.GetKeyDown("space") ) {
+                    // finish pause
+                    PauseManager.Instance.pause(false);
+                }
+                return;
+            }
+
             if ( self.isInputLocked() ) {
                 // ignore any inputs
                 clearAllInputs();
