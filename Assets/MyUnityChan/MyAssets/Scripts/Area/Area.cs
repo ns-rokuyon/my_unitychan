@@ -9,6 +9,8 @@ namespace MyUnityChan {
         public bool left_wall;
         public bool right_wall;
 
+        public GameObject[] spawnable_enemies;
+
         private Dictionary<string, bool> ins;
         private float x_harf;
         private float y_harf;
@@ -60,6 +62,12 @@ namespace MyUnityChan {
                 string name = player.gameObject.name;
                 register(name);
                 ins[name] = true;
+
+                for ( int i = 0; i < spawnable_enemies.Length; i++ ) {
+                    if ( !spawnable_enemies[i].activeSelf ) {
+                        spawnable_enemies[i].GetComponent<Enemy>().spawn();
+                    }
+                }
             }
         }
 

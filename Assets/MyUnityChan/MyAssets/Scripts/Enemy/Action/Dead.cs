@@ -22,7 +22,8 @@ namespace MyUnityChan {
             dead_callback();
             GameObject obj = ObjectPoolManager.getGameObject(effect_path);
             obj.setParent(Hierarchy.Layout.EFFECT).GetComponent<Effect>().ready(enemy.transform.position, 60, effect_path);
-            GameObject.Destroy(enemy.gameObject);
+            //GameObject.Destroy(enemy.gameObject);
+            enemy.gameObject.SetActive(false);
         }
 
         public override bool condition() {

@@ -116,7 +116,6 @@ namespace MyUnityChan {
             action_manager.registerAction(new PlayerDash(this));
             action_manager.registerAction(new PlayerLimitSpeed(this));
             action_manager.registerAction(new PlayerJump(this));
-            //action_manager.registerAction(new PlayerDoubleJump(this));
             action_manager.registerAction(new PlayerSliding(this));
             action_manager.registerAction(new PlayerHadouken(this));
             action_manager.registerAction(new PlayerAttack(this));
@@ -130,6 +129,7 @@ namespace MyUnityChan {
                 animator.SetTrigger("Damaged");
                 status.invincible.enable(60);
                 status.hp -= 50;    // TODO
+                Debug.Log("damaged!");
             }
         }
 

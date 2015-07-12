@@ -8,7 +8,9 @@ namespace MyUnityChan {
             action_manager = (Instantiate(enemy_action_manager_prefab) as GameObject).setParent(gameObject).GetComponent<EnemyActionManager>();
             action_manager.registerAction(new EnemyWalk(this));
             action_manager.registerAction(new EnemyDead(this, Const.Prefab.Effect["BLACK_EXPLOSION"], onDead));
-            setHP(100);
+
+            max_hp = 100;
+            setHP(max_hp);
         }
 
         // callback when enemy is dying

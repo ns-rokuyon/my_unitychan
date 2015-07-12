@@ -97,6 +97,8 @@ namespace MyUnityChan {
         public GameObject controller_prefab;
         public GameObject enemy_action_manager_prefab;
 
+        protected int max_hp;
+
         protected int stunned = 0;
         protected EnemyActionManager action_manager;
 
@@ -128,6 +130,12 @@ namespace MyUnityChan {
             if ( stunned > 0 ) {
                 stunned--;
             }
+        }
+
+        public virtual void spawn() {
+            touching_players.Clear();
+            setHP(max_hp);
+            this.gameObject.SetActive(true);
         }
 
 
