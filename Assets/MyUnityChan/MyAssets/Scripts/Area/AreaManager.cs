@@ -29,5 +29,18 @@ namespace MyUnityChan {
         public Area getArea(string name) {
             return areas[name];
         }
+
+        public string getAreaNameFromObject(GameObject obj) {
+            foreach ( KeyValuePair<string, Area> pair in areas ) {
+                if ( pair.Value.isIn(obj.transform.position) ) {
+                    return pair.Key;
+                }
+            }
+            return null;
+        }
+
+        public bool isInArea(GameObject obj, string name) {
+            return areas[name].isIn(obj.transform.position);
+        }
     }
 }

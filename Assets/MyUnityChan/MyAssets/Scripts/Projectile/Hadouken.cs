@@ -20,6 +20,8 @@ namespace MyUnityChan {
         public override void setStartPosition(Vector3 pos) {
             transform.position = pos + target_dir * 0.4f + Vector3.up * 0.8f;
             start_position = transform.position;
+
+            commonSetStartPosition();
         }
 
         public override void initialize() {

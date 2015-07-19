@@ -9,19 +9,25 @@ namespace MyUnityChan {
         protected float max_range;
         protected float speed;
         protected string area;
+        protected string area_name;
         protected Player player;
 
         public virtual void setDir(Vector3 dir) {
             target_dir = dir;
         }
 
+        protected void commonSetStartPosition() {
+            area_name = AreaManager.Instance.getAreaNameFromObject(this.gameObject);
+        }
+
         public virtual void setStartPosition(Vector3 pos) {
             transform.position = pos;
             start_position = pos;
+
+            commonSetStartPosition();
         }
 
         public void setPlayerInfo(Player _player) {
-            area = _player.getAreaName();
             player = _player;
         }
 
@@ -31,7 +37,7 @@ namespace MyUnityChan {
             if ( distance_moved > max_range ) {
                 ObjectPoolManager.releaseGameObject(gameObject, resource_path);
             }
-            if ( area != player.getAreaName() ) {
+            if ( area_name == null || !AreaManager.Instance.isInArea(this.gameObject, area_name) ) {
                 ObjectPoolManager.releaseGameObject(gameObject, resource_path);
             }
         }

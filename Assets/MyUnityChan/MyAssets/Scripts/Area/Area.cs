@@ -14,12 +14,14 @@ namespace MyUnityChan {
         private Dictionary<string, bool> ins;
         private float x_harf;
         private float y_harf;
+        private float z_harf;
 
         void Awake() {
             ins = new Dictionary<string, bool>();
             Bounds bounds = gameObject.GetComponent<MeshRenderer>().bounds;
             x_harf = (float)(bounds.size.x / 2.0);
             y_harf = (float)(bounds.size.y / 2.0);
+            z_harf = (float)(bounds.size.z / 2.0);
         }
 
         public bool isIn(string name) {
@@ -31,6 +33,20 @@ namespace MyUnityChan {
 
         public bool isIn(Player player) {
             return isIn(player.gameObject.name);
+        }
+
+        public bool isIn(Vector3 pos) {
+            Vector3 area_center = transform.position;
+            if ( area_center.x - x_harf > pos.x || area_center.x + x_harf < pos.x ) {
+                return false;
+            }
+            if ( area_center.y - y_harf > pos.y || area_center.y + y_harf < pos.y ) {
+                return false;
+            }
+            if ( area_center.z - z_harf > pos.z || area_center.z + z_harf < pos.z ) {
+                return false;
+            }
+            return true;
         }
 
         public float limitLeft() {
