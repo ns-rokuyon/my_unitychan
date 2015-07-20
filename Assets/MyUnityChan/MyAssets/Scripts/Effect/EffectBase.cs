@@ -20,5 +20,9 @@ namespace MyUnityChan {
         public override void finalize() {
             throw new System.NotImplementedException();
         }
+
+        public virtual void enablePool(string _resource_path) {
+            resource_path = _resource_path;
+        }
     }
 }

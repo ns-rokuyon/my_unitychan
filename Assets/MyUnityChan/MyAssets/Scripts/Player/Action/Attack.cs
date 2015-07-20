@@ -61,12 +61,6 @@ namespace MyUnityChan {
 
     }
 
-    public abstract class AttackSpec {
-        public int damage { get; set; }
-        public int stun { get; set; }       // time enemy is stuned
-        public int frame { get; set; }      // time hitbox enabled
-        public abstract void attack(Character character, Hitbox hitbox);
-    }
 
     public class PlayerPunchL : PlayerAction {
         public class Spec : AttackSpec {
@@ -74,12 +68,15 @@ namespace MyUnityChan {
                 damage = 10;
                 stun = 60;
                 frame = 5;
+                effect_name = "HIT_01";
             }
 
             public override void attack(Character character, Hitbox hitbox) {
                 character.GetComponent<Rigidbody>().AddForce(new Vector3(hitbox.forward.x * 5.0f, 5.0f, 0.0f), ForceMode.Impulse);
                 ((Enemy)character).stun(stun);
                 ((Enemy)character).damage(damage);
+                (EffectManager.Instance as EffectManager).createEffect(Const.Prefab.Effect[effect_name],
+                    hitbox.gameObject.transform.position, 60, true);
             }
         }
 
@@ -120,12 +117,15 @@ namespace MyUnityChan {
                 damage = 30;
                 stun = 120;
                 frame = 5;
+                effect_name = "HIT_01";
             }
 
             public override void attack(Character character, Hitbox hitbox) {
                 character.GetComponent<Rigidbody>().AddForce(new Vector3(hitbox.forward.x * 2.0f, 7.0f, 0.0f), ForceMode.Impulse);
                 ((Enemy)character).stun(stun);
                 ((Enemy)character).damage(damage);
+                (EffectManager.Instance as EffectManager).createEffect(Const.Prefab.Effect[effect_name],
+                    hitbox.gameObject.transform.position, 60, true);
             }
         }
 
@@ -167,12 +167,15 @@ namespace MyUnityChan {
                 damage = 70;
                 stun = 120;
                 frame = 12;
+                effect_name = "HIT_01";
             }
 
             public override void attack(Character character, Hitbox hitbox) {
                 character.GetComponent<Rigidbody>().AddForce(new Vector3(hitbox.forward.x * 2.0f, 7.0f, 0.0f), ForceMode.Impulse);
                 ((Enemy)character).stun(stun);
                 ((Enemy)character).damage(damage);
+                (EffectManager.Instance as EffectManager).createEffect(Const.Prefab.Effect[effect_name],
+                    hitbox.gameObject.transform.position, 60, true);
             }
         }
 

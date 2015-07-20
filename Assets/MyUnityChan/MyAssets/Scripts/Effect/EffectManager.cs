@@ -7,10 +7,23 @@ namespace MyUnityChan {
         public override T create<T>(string resource_path, bool use_objectpool=false) {
             if ( use_objectpool ) {
                 T effect = ObjectPoolManager.getGameObject(resource_path).setParent(Hierarchy.Layout.EFFECT).GetComponent<T>();
-                (effect as Hitbox).enablePool(resource_path);
+                (effect as EffectBase).enablePool(resource_path);
                 return effect;
             }
             return instantiatePrefab(resource_path, Hierarchy.Layout.EFFECT).GetComponent<T>();
+        }
+
+        // [Usage]
+        // (EffectManager.Instance as EffectManager).createEffect(
+        //      resource_path,   : path to prefab
+        //      pos,             : effect position (XYZ)
+        //      frame,           : effect lifetime (frame)
+        //      use_objectpool   : if you use object pool for this effect object, set true
+        // )
+        public GameObject createEffect(string resource_path, Vector3 pos, int frame, bool use_objectpool = false) {
+            Effect effect = create<Effect>(resource_path, use_objectpool);
+            effect.ready(pos, frame, resource_path);
+            return effect.gameObject;
         }
     }
 }

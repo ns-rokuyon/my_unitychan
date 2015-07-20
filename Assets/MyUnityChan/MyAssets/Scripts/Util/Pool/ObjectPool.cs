@@ -16,6 +16,7 @@ namespace MyUnityChan {
         public bool isPooledObject() {
             return pooled;
         }
+
     }
 
 
