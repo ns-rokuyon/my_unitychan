@@ -5,6 +5,7 @@ namespace MyUnityChan {
     public class PlayerJump : PlayerAction {
         protected float jump_start_y;
         protected Vector3 effect_offset = new Vector3(0.0f, 0.2f, 0.0f);
+        protected string effect_name = "JUMP_SMOKE_PUFF";
 
         public PlayerJump(Character character)
             : base(character) {
@@ -45,11 +46,9 @@ namespace MyUnityChan {
             return controller.keyJump() && player.isGrounded();
         }
 
-        // TODO
         public override void effect() {
-            //GameObject effect = UnityEngine.Object.Instantiate(player.jump_effect_prefab) as GameObject;
-            //Effect jump_effect = effect.GetComponent<Effect>();
-            //jump_effect.ready(player.transform.position + effect_offset, 60, "Prefabs/Effects/");
+            EffectManager.self().createEffect(Const.Prefab.Effect[effect_name],
+                player.transform.position + effect_offset, 60, true);
         }
     }
 
@@ -126,6 +125,9 @@ namespace MyUnityChan {
             }
 
             return false;
+        }
+
+        public override void effect() {
         }
     }
 }

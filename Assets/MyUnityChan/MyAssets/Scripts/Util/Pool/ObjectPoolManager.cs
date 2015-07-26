@@ -19,6 +19,8 @@ namespace MyUnityChan {
             addPool(Const.Prefab.Hitbox["BEAM"]);
             addPool(Const.Prefab.Effect["BLACK_EXPLOSION"]);
             addPool(Const.Prefab.Effect["HIT_01"]);
+            addPool(Const.Prefab.Effect["HIT_02"]);
+            addPool(Const.Prefab.Effect["JUMP_SMOKE_PUFF"]);
             addPool(Const.Prefab.Item["HP_RECOVERY"]);
         }
 

@@ -13,6 +13,10 @@ namespace MyUnityChan {
             return instantiatePrefab(resource_path, Hierarchy.Layout.EFFECT).GetComponent<T>();
         }
 
+        public static EffectManager self() {
+            return Instance.GetComponent<EffectManager>();
+        }
+
         // [Usage]
         // (EffectManager.Instance as EffectManager).createEffect(
         //      resource_path,   : path to prefab

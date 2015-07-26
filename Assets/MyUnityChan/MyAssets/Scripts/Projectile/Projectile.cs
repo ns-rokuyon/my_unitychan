@@ -11,12 +11,19 @@ namespace MyUnityChan {
         protected string area;
         protected string area_name;
         protected Player player;
+        protected bool penetration;
+        protected int hit_num = 0;
 
         public virtual void setDir(Vector3 dir) {
             target_dir = dir;
         }
 
+        public bool isPenetration() {
+            return penetration;
+        }
+
         protected void commonSetStartPosition() {
+            hit_num = 0;
             area_name = AreaManager.Instance.getAreaNameFromObject(this.gameObject);
         }
 
@@ -40,6 +47,17 @@ namespace MyUnityChan {
             if ( area_name == null || !AreaManager.Instance.isInArea(this.gameObject, area_name) ) {
                 ObjectPoolManager.releaseGameObject(gameObject, resource_path);
             }
+            if ( !penetration && hit_num > 0 ) {
+                ObjectPoolManager.releaseGameObject(gameObject, resource_path);
+            }
+        }
+
+        public void countHit() {
+            hit_num++;
+        }
+
+        public int getHitNum() {
+            return hit_num;
         }
 
     }

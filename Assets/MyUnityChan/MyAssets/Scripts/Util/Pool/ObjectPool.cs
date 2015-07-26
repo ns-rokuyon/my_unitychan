@@ -59,6 +59,9 @@ namespace MyUnityChan {
 
         private void initializeObject(GameObject go) {
             PoolObjectBase comp = go.GetComponent<PoolObjectBase>();
+            if ( comp == null ) {
+                Debug.LogError("Effect script is not found in effect prefab");
+            }
             comp.setPooled(true);
             comp.initialize();
         }
