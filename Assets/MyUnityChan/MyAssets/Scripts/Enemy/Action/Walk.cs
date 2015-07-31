@@ -3,15 +3,17 @@ using System.Collections;
 
 namespace MyUnityChan {
     public class EnemyWalk : EnemyActionBase {
-        private float maxspeed = 1.0f;
-        private Vector3 moveF = new Vector3(20f, 0, 0);
+        private float maxspeed;
+        private Vector3 moveF;
 
         public override string name() {
             return "WALK";
         }
 
-        public EnemyWalk(Character character)
+        public EnemyWalk(Character character, Vector3 f, float maxsp)
             : base(character) {
+                moveF = f;
+                maxspeed = maxsp;
         }
 
         public override void performFixed() {
