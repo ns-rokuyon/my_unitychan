@@ -63,6 +63,7 @@ namespace MyUnityChan {
         // static hitbox
         public virtual void ready(Vector3 pos, Vector3 fw, Vector3 offset, AttackSpec spec) { }
 
+
         // PoolObject callbacks
         public override void initialize() {
             end_timer = new FrameTimerState();

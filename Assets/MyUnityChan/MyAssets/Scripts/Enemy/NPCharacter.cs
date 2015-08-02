@@ -7,6 +7,8 @@ namespace MyUnityChan {
         static protected List<GameObject> players = new List<GameObject>();
         const int PLAYER_TOUCHING_FRAME_OFFSET = 10;
 
+        protected int player_hit_damage = 10;
+
         static public void setPlayers() {
             removeNullPlayers();
             foreach ( GameObject pl in GameObject.FindGameObjectsWithTag("Player") ) {
@@ -62,7 +64,7 @@ namespace MyUnityChan {
                     GameObject player = findPlayerByName(pair.Key);
                     Player script = player.GetComponent<Player>();
 
-                    script.damage();
+                    script.damage(player_hit_damage);
                 }
             }
         }

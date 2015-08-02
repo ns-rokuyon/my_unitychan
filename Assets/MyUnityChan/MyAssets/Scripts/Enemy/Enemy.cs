@@ -25,12 +25,6 @@ namespace MyUnityChan {
             stunned = stun_power;
         }
 
-        public void damage(int dam) {
-            if ( !status.invincible.now() ) {
-                status.invincible.enable(30);
-                status.hp -= dam;
-            }
-        }
 
         public bool isStunned() {
             return stunned > 0 ? true : false;

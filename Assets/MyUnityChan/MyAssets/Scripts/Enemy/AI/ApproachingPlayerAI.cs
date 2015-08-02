@@ -25,7 +25,6 @@ namespace MyUnityChan {
             }
 
             if ( target.GetComponent<Player>().getAreaName() != area_name ) {
-                Debug.Log("area_name:" + area_name + ", player_area:" + target.GetComponent<Player>().getAreaName());
                 return;
             }
 

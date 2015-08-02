@@ -36,6 +36,13 @@ namespace MyUnityChan {
             return status.freeze;
         }
 
+        public virtual void damage(int dam) {
+            if ( !status.invincible.now() ) {
+                status.invincible.enable(30);
+                status.hp -= dam;
+            }
+        }
+
         // xdir = 1.0f | -1.0f
         public void lookAtDirectionX(float xdir) {
             transform.LookAt(

@@ -8,20 +8,22 @@ namespace MyUnityChan {
 
         void Awake() {
             pools = new Dictionary<string, ObjectPool>();
-        }
-
-        // Use this for initialization
-        void Start() {
             // To manage object using ObjectPool, add calling addPool method here
             addPool(Const.Prefab.Projectile["BEAM"]);
             addPool(Const.Prefab.Projectile["HADOUKEN"]);
             addPool(Const.Prefab.Hitbox["PROJECTILE"]);
             addPool(Const.Prefab.Hitbox["BEAM"]);
+            addPool(Const.Prefab.Hitbox["FLAME"]);
             addPool(Const.Prefab.Effect["BLACK_EXPLOSION"]);
             addPool(Const.Prefab.Effect["HIT_01"]);
             addPool(Const.Prefab.Effect["HIT_02"]);
             addPool(Const.Prefab.Effect["JUMP_SMOKE_PUFF"]);
             addPool(Const.Prefab.Item["HP_RECOVERY"]);
+            addPool(Const.Prefab.Phenomenon["FLAME"]);
+        }
+
+        // Use this for initialization
+        void Start() {
         }
 
         public static void releaseGameObject(GameObject go, string resource_path) {

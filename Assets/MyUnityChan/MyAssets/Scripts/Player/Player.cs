@@ -124,11 +124,11 @@ namespace MyUnityChan {
             action_manager.registerAction(new PlayerBeam(this));
         }
 
-        public void damage() {
+        public override void damage(int dam) {
             if ( !status.invincible.now() ) {
                 animator.SetTrigger("Damaged");
                 status.invincible.enable(60);
-                status.hp -= 50;    // TODO
+                status.hp -= dam;
                 Debug.Log("damaged!");
             }
         }
