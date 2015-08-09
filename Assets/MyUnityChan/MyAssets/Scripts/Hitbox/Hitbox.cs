@@ -5,6 +5,7 @@ namespace MyUnityChan {
     public class Hitbox : PoolObjectBase {
         public static readonly bool RENDER_HITBOX = true;
 
+        protected GameObject owner = null;
         protected bool use_objectpool = false;
         protected string resource_path = null;
         protected int time = 0;                         // active time
@@ -63,6 +64,13 @@ namespace MyUnityChan {
         // static hitbox
         public virtual void ready(Vector3 pos, Vector3 fw, Vector3 offset, AttackSpec spec) { }
 
+        public void setOwner(GameObject go) {
+            owner = go;
+        }
+
+        public GameObject getOwner() {
+            return owner;
+        }
 
         // PoolObject callbacks
         public override void initialize() {

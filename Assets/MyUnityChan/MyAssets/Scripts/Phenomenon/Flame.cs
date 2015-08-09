@@ -4,14 +4,19 @@ using System.Collections;
 namespace MyUnityChan {
     public class Flame : PhenomenonBase {
         private TimerState lifetime = null;
+        private DamageObjectHitbox hitbox = null;
 
         public class Spec : AttackSpec {
             public Spec() {
-                damage = 1000;
+                damage = 10;
                 frame = 9999;
             }
 
-            public override void attack(Character character, Hitbox hitbox) {
+            public override void attack(Character character, Hitbox _hitbox) {
+                GameObject owner = _hitbox.getOwner();
+                if ( owner == null || owner == character.gameObject ) {
+                    return;
+                }
                 character.damage(damage);
             }
         }
@@ -32,15 +37,19 @@ namespace MyUnityChan {
         public override void initialize() {
             createHitbox();
             lifetime = new FrameTimerState();
-            lifetime.createTimer(10000);
+            lifetime.createTimer(180);
         }
 
         public override void finalize() {
         }
 
         private void createHitbox() {
-            DamageObjectHitbox hitbox = HitboxManager.self().create<DamageObjectHitbox>(Const.Prefab.Hitbox["FLAME"], true);
+            hitbox = HitboxManager.self().create<DamageObjectHitbox>(Const.Prefab.Hitbox["FLAME"], true);
             hitbox.ready(this.gameObject, new Spec());
+        }
+
+        public DamageObjectHitbox getHitbox() {
+            return hitbox;
         }
 
     }
