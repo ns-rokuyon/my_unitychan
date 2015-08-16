@@ -13,6 +13,10 @@ namespace MyUnityChan {
             return !checkFinished(id);
         }
 
+        public static Timer get(int id) {
+            return self().timers[id];
+        }
+
         public static void destroy(int id) {
             Timer timer = self().timers[id];
             if ( timer ) {
@@ -48,6 +52,7 @@ namespace MyUnityChan {
             timers.Add(id, timer_component);
         }
 
+
         public bool finished(int id) {
             if ( !timers.ContainsKey(id) ) {
                 throw new System.InvalidOperationException("not exists: " + id);
@@ -81,6 +86,10 @@ namespace MyUnityChan {
 
         public bool isRunning() {
             return TimerManager.checkRunning(timer_id);
+        }
+
+        public Timer getTimer() {
+            return TimerManager.get(timer_id);
         }
 
         public void destroy() {
