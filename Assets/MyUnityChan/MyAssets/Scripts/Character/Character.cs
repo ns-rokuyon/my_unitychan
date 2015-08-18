@@ -19,7 +19,8 @@ namespace MyUnityChan {
 
         public virtual bool isTouchedWall() {
             // check character is in front of wall
-            CapsuleCollider capsule_collider = GetComponent<CapsuleCollider>();
+            //CapsuleCollider capsule_collider = GetComponent<CapsuleCollider>();
+            Collider capsule_collider = GetComponent<Collider>();
             return Physics.Raycast(transform.position + new Vector3(0, capsule_collider.bounds.size.y, 0), transform.forward, 0.4f) ||
                 Physics.Raycast(capsule_collider.bounds.center, transform.forward, 0.4f);
         }
