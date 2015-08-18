@@ -33,6 +33,10 @@ namespace MyUnityChan {
             GameObject go = null;
 
             for ( int i = 0; i < objects.Count; i++ ) {
+                if ( objects[i] == null ) {
+                    continue;
+                }
+
                 go = objects[i].gameObject;
                 if ( !go.activeInHierarchy ) {
                     initializeObject(go);
