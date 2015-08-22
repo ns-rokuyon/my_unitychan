@@ -3,14 +3,10 @@ using UnityEngine.UI;
 using System.Collections;
 
 namespace MyUnityChan {
-    public class HpGauge : ObjectBase {
-        public static string canvas_name = "Canvas";
-        public static GameObject getCanvas() {
-            return GameObject.Find(canvas_name);
-        }
+    public class HpGauge : GUIObjectBase {
 
-        Slider slider;
-        Character character;
+        private Slider slider;
+        private Character character;
 
         void Awake() {
             slider = GetComponent<Slider>();
@@ -26,6 +22,10 @@ namespace MyUnityChan {
 
         public void setCharacter(Character ch) {
             character = ch;
+        }
+
+        public void setPosition(Vector3 pos) {
+            GetComponent<RectTransform>().anchoredPosition = pos;
         }
     }
 }

@@ -11,6 +11,12 @@ namespace MyUnityChan {
             return obj;
         }
 
+        public static GameObject create(string resource_path, GameObject parent) {
+            GameObject obj = (Instantiate(Resources.Load(resource_path)) as GameObject);
+            obj.setParent(parent);
+            return obj;
+        }
+
         public static T createAndGetComponent<T>(string resource_path, string parent = null) {
             return create(resource_path, parent).GetComponent<T>();
         }

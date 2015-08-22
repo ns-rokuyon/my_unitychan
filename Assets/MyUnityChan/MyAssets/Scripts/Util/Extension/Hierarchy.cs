@@ -19,7 +19,6 @@ public static class Hierarchy {
     }
 
     // Method Extension
-    [System.Obsolete("Deprecated")]
     public static GameObject setParent(this GameObject self, GameObject parent) {
         self.transform.SetParent(parent.transform);
         return self;

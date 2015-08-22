@@ -18,7 +18,6 @@ namespace MyUnityChan {
         public GameObject jump_effect_prefab;
         public GameObject controller_prefab;
         public GameObject action_manager_prefab;
-        public GameObject hpgauge_prefab;
 
         public GameObject punch_hitbox_prefab;
         public GameObject kick_hitbox_prefab;
@@ -70,8 +69,9 @@ namespace MyUnityChan {
             status = (Instantiate(status_prefab) as GameObject).setParent(player_root).GetComponent<PlayerStatus>();
 
             // HP gauge setup
-            hpgauge = (Instantiate(hpgauge_prefab) as GameObject).setParent(HpGauge.getCanvas()).GetComponent<HpGauge>();
+            hpgauge = PrefabInstantiater.create(Const.Prefab.UI["PLAYER_HP_GAUGE"], HpGauge.getCanvas()).GetComponent<HpGauge>();
             hpgauge.setCharacter(this);
+            hpgauge.setPosition(new Vector3(200, -24, 10));
             //hpgauge.transform.SetParent(HpGauge.getCanvas().transform, false);
 
             // animation
