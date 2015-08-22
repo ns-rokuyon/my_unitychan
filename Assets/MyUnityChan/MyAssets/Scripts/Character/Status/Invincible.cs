@@ -37,19 +37,5 @@ namespace MyUnityChan {
             timer.createTimer(frame);
         }
 
-        void OnGUI() {
-            GUIStyle gui_style = new GUIStyle();
-            GUIStyleState gui_stylestate = new GUIStyleState();
-            gui_stylestate.textColor = Color.green;
-            gui_style.normal = gui_stylestate;
-            if ( timer == null ) {
-                GUI.Label(new Rect(10, 30, 250, 30), "TimerManager.checkRunning: timer = null", gui_style);
-                GUI.Label(new Rect(10, 50, 250, 30), "TimerManager.is_invincible: " + is_invincible, gui_style);
-            }
-            else {
-                GUI.Label(new Rect(10, 30, 250, 30), "TimerManager.checkRunning: " + timer.isRunning(), gui_style);
-                GUI.Label(new Rect(10, 50, 250, 30), "TimerManager.is_invincible: " + is_invincible, gui_style);
-            }
-        }
     }
 }
