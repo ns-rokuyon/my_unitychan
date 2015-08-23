@@ -6,7 +6,7 @@ namespace MyUnityChan {
 
         // Use this for initialization
         void Start() {
-
+            AreaManager.self().registerAreaConnectionInfo(this.gameObject, warp_to);
         }
 
         // Update is called once per frame

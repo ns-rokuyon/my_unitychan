@@ -12,12 +12,15 @@ namespace MyUnityChan {
         public GameObject[] spawnable_enemies;
 
         private Dictionary<string, bool> ins;
+        List<AreaConnection> connections;
+
         private float x_harf;
         private float y_harf;
         private float z_harf;
 
         void Awake() {
             ins = new Dictionary<string, bool>();
+            connections = new List<AreaConnection>();
             Bounds bounds = gameObject.GetComponent<MeshRenderer>().bounds;
             x_harf = (float)(bounds.size.x / 2.0);
             y_harf = (float)(bounds.size.y / 2.0);
@@ -69,6 +72,16 @@ namespace MyUnityChan {
             if ( !ins.ContainsKey(name) ) {
                 ins[name] = false;
             }
+        }
+
+        public List<AreaConnection> getAreaConnections() {
+            return connections;
+        }
+
+        public void addAreaConnections(GameObject from, GameObject to) {
+            AreaConnection conn = new AreaConnection(from, to);
+            connections.Add(conn);
+            AreaConnection.mergeUndirectedConnection(connections, conn);
         }
 
         public void OnTriggerEnter(Collider colliderInfo) {

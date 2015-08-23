@@ -12,6 +12,10 @@ namespace MyUnityChan {
             transform.FindChild("GateStart").gameObject.GetComponent<Warp>().warp_to = dst;
         }
 
+        void Start() {
+            AreaManager.self().registerAreaConnectionInfo(this.gameObject, gate_pair);
+        }
+
         // Update is called once per frame
         void Update() {
 
