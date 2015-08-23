@@ -10,6 +10,7 @@ namespace MyUnityChan {
 
         // Use this for initialization
         void Start() {
+            GameObject.Find("Canvas").GetComponent<Canvas>().worldCamera = this.gameObject.GetComponent<Camera>();
         }
 
         // Update is called once per frame
