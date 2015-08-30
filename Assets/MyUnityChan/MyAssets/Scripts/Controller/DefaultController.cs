@@ -8,8 +8,8 @@ namespace MyUnityChan {
                 if ( Input.GetKeyDown("space") ) {
                     // finish pause
                     PauseManager.Instance.pause(false);
+                    return;
                 }
-                return;
             }
 
             if ( self.isInputLocked() ) {
@@ -26,12 +26,13 @@ namespace MyUnityChan {
 
             horizontal_input = Input.GetAxis("Horizontal");
             vertical_input = Input.GetAxis("Vertical");
-            inputs[(int)Movement.JUMP] = Input.GetKeyDown("space");
-            inputs[(int)Movement.SLIDING] = Input.GetKeyDown("z");
-            inputs[(int)Movement.ATTACK] = Input.GetKeyDown("x");
-            inputs[(int)Movement.PROJECTILE] = Input.GetKeyDown("c");
-            inputs[(int)Movement.DASH] = Input.GetKey("v");
-            inputs[(int)Movement.TEST] = Input.GetKey("t");
+            inputs[(int)InputCode.JUMP] = Input.GetKeyDown("space");
+            inputs[(int)InputCode.SLIDING] = Input.GetKeyDown("z");
+            inputs[(int)InputCode.ATTACK] = Input.GetKeyDown("x");
+            inputs[(int)InputCode.PROJECTILE] = Input.GetKeyDown("c");
+            inputs[(int)InputCode.DASH] = Input.GetKey("v");
+            inputs[(int)InputCode.PAUSE] = Input.GetKeyDown("p");
+            inputs[(int)InputCode.TEST] = Input.GetKey("t");
         }
 
     }

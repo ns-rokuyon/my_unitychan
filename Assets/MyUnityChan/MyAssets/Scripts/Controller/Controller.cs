@@ -3,12 +3,13 @@ using System.Collections.Generic;
 
 namespace MyUnityChan {
     public abstract class Controller : ObjectBase {
-        public enum Movement {
+        public enum InputCode {
             JUMP = 0,
             SLIDING,
             ATTACK,
             PROJECTILE,
             DASH,
+            PAUSE,
             TEST,
             len
         };
@@ -22,7 +23,7 @@ namespace MyUnityChan {
         // Use this for initialization
         void Awake() {
             inputs = new List<bool>();
-            for ( int i = 0; i < (int)Movement.len; i++ ) {
+            for ( int i = 0; i < (int)InputCode.len; i++ ) {
                 inputs.Add(false);
             }
             horizontal_input = 0.0f;
@@ -46,12 +47,13 @@ namespace MyUnityChan {
             }
         }
 
-        public bool keyJump() { return inputs[(int)Movement.JUMP]; }
-        public bool keySliding() { return inputs[(int)Movement.SLIDING]; }
-        public bool keyAttack() { return inputs[(int)Movement.ATTACK]; }
-        public bool keyProjectile() { return inputs[(int)Movement.PROJECTILE]; }
-        public bool keyDash() { return inputs[(int)Movement.DASH]; }
-        public bool keyTest() { return inputs[(int)Movement.TEST]; }
+        public bool keyJump() { return inputs[(int)InputCode.JUMP]; }
+        public bool keySliding() { return inputs[(int)InputCode.SLIDING]; }
+        public bool keyAttack() { return inputs[(int)InputCode.ATTACK]; }
+        public bool keyProjectile() { return inputs[(int)InputCode.PROJECTILE]; }
+        public bool keyDash() { return inputs[(int)InputCode.DASH]; }
+        public bool keyPause() { return inputs[(int)InputCode.PAUSE]; }
+        public bool keyTest() { return inputs[(int)InputCode.TEST]; }
         public float keyHorizontal() { return horizontal_input; }
         public float keyVertical() { return vertical_input; }
 
