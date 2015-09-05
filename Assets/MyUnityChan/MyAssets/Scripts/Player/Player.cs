@@ -24,6 +24,7 @@ namespace MyUnityChan {
         public GameObject projectile_hitbox_prefab;
 
         private GameObject player_root;
+        private PlayerCamera camera;
         private Animator animator;
         private PlayerActionManager action_manager = null;
         private HpGauge hpgauge;
@@ -50,13 +51,16 @@ namespace MyUnityChan {
 
         private string area_name = null;
 
+        protected static GameObject player;
+
         // Use this for initialization
         void Start() {
             player_name = "player1";
             player_root = transform.parent.gameObject;
 
             // camera setup
-            PrefabInstantiater.createAndGetComponent<PlayerCamera>(Const.Prefab.Camera["PLAYER_CAMERA"], Hierarchy.Layout.CAMERA).setPlayer(this.gameObject);
+            camera = PrefabInstantiater.createAndGetComponent<PlayerCamera>(Const.Prefab.Camera["PLAYER_CAMERA"], Hierarchy.Layout.CAMERA);
+            camera.setPlayer(this.gameObject);
 
             // controller setup
             controller = (Instantiate(controller_prefab) as GameObject).setParent(player_root).GetComponent<Controller>();
@@ -69,7 +73,7 @@ namespace MyUnityChan {
             status = (Instantiate(status_prefab) as GameObject).setParent(player_root).GetComponent<PlayerStatus>();
 
             // HP gauge setup
-            hpgauge = PrefabInstantiater.create(Const.Prefab.UI["PLAYER_HP_GAUGE"], HpGauge.getCanvas()).GetComponent<HpGauge>();
+            hpgauge = PrefabInstantiater.create(Const.Prefab.UI["PLAYER_HP_GAUGE"], HpGauge.getCanvas("Canvas")).GetComponent<HpGauge>();
             hpgauge.setCharacter(this);
             hpgauge.setPosition(new Vector3(200, -24, 10));
             //hpgauge.transform.SetParent(HpGauge.getCanvas().transform, false);
@@ -88,6 +92,8 @@ namespace MyUnityChan {
 
             // player infomation for NPC
             NPCharacter.setPlayers();
+
+            player = gameObject;
         }
 
         void Update() {
@@ -108,6 +114,10 @@ namespace MyUnityChan {
         void FixedUpdate() {
             // gravity
             //rigidbody.AddForce(new Vector3(0f, -32.0f, 0));	// -32
+        }
+
+        public static GameObject getPlayer() {
+            return player;
         }
 
         private void registerActions() {
@@ -183,6 +193,10 @@ namespace MyUnityChan {
         public bool isAnimState(string anim_name) {
             AnimatorStateInfo anim_state = animator.GetCurrentAnimatorStateInfo(0);
             return anim_state.nameHash == Animator.StringToHash(anim_name);
+        }
+
+        public PlayerCamera getPlayerCamera() {
+            return camera;
         }
 
         public Animator getAnimator() {

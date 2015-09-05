@@ -18,6 +18,9 @@ namespace MyUnityChan {
         private float y_harf;
         private float z_harf;
 
+        // Area Status
+        public bool passed;
+
         void Awake() {
             ins = new Dictionary<string, bool>();
             connections = new List<AreaConnection>();
@@ -25,6 +28,8 @@ namespace MyUnityChan {
             x_harf = (float)(bounds.size.x / 2.0);
             y_harf = (float)(bounds.size.y / 2.0);
             z_harf = (float)(bounds.size.z / 2.0);
+
+            passed = false;
         }
 
         public bool isIn(string name) {
@@ -50,6 +55,10 @@ namespace MyUnityChan {
                 return false;
             }
             return true;
+        }
+
+        public bool isPassed() {
+            return passed;
         }
 
         public float limitLeft() {
@@ -91,6 +100,7 @@ namespace MyUnityChan {
                 string name = player.gameObject.name;
                 register(name);
                 ins[name] = true;
+                passed = true;
 
                 for ( int i = 0; i < spawnable_enemies.Length; i++ ) {
                     if ( !spawnable_enemies[i].activeSelf ) {

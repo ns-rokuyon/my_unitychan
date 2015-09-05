@@ -9,8 +9,9 @@ namespace MyUnityChan {
         private float area_limit_offset = 1.0f;
 
         // Use this for initialization
-        void Start() {
-            GameObject.Find("Canvas").GetComponent<Canvas>().worldCamera = this.gameObject.GetComponent<Camera>();
+        void Awake() {
+            GameObject.Find(Const.Canvas.GAME_CAMERA_CANVAS).GetComponent<Canvas>().worldCamera = this.gameObject.GetComponent<Camera>();
+            GameObject.Find(Const.Canvas.MAP_VIEWER_CANVAS).GetComponent<Canvas>().worldCamera = this.gameObject.GetComponent<Camera>();
         }
 
         // Update is called once per frame

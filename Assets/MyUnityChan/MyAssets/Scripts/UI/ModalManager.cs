@@ -10,7 +10,7 @@ namespace MyUnityChan {
         public Text modal_desc;
 
         void Start() {
-            canvas = FindObjectOfType<Canvas>().gameObject;
+            canvas = GUIObjectBase.getCanvas(Const.Canvas.GAME_CAMERA_CANVAS);
             modal = canvas.transform.FindChild("ModalPanel").gameObject;
             modal_title = modal.transform.FindChild("Title").gameObject.GetComponent<Text>();
             modal_desc = modal.transform.FindChild("Description").gameObject.GetComponent<Text>();

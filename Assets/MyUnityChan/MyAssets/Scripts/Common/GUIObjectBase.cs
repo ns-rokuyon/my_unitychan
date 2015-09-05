@@ -3,9 +3,7 @@ using System.Collections;
 
 namespace MyUnityChan {
     public class GUIObjectBase : ObjectBase {
-        public static string canvas_name = "Canvas";
-
-        public static GameObject getCanvas() {
+        public static GameObject getCanvas(string canvas_name) {
             return GameObject.Find(canvas_name);
         }
     }
