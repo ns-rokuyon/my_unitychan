@@ -22,6 +22,7 @@ namespace MyUnityChan {
                 obj.AddComponent<MapAreaElement>();
                 obj.GetComponent<MapAreaElement>().setAreaRef(area);
                 obj.GetComponent<MeshRenderer>().enabled = true;
+                obj.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/MapAreaElementMat");
             }
             map.transform.localScale = new Vector3(0.005f, 0.005f, 0.005f);
             map.SetActive(false);
