@@ -5,11 +5,8 @@ namespace MyUnityChan {
     public class DefaultController : PlayerController {
         void Update() {
             if ( PauseManager.isPausing() ) {
-                if ( Input.GetKeyDown("space") ) {
-                    // finish pause
-                    PauseManager.Instance.pause(false);
-                    return;
-                }
+                PauseManager.controlOnPause();
+                return;
             }
 
             if ( self.isInputLocked() ) {

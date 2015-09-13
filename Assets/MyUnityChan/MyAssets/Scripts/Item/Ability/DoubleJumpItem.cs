@@ -11,7 +11,7 @@ namespace MyUnityChan {
 
         public override void destroy(Player player) {
             ModalManager.Instance.show("DoubleJump", "You can jump in the air");
-            PauseManager.Instance.pause(true, () => { ModalManager.Instance.hide(); });
+            PauseManager.Instance.pause(true, ModalManager.Instance.control, () => { ModalManager.Instance.hide(); });
             Destroy(this.gameObject);
         }
     }

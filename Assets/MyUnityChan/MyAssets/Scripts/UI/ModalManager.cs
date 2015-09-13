@@ -28,5 +28,11 @@ namespace MyUnityChan {
             modal.SetActive(false);
         }
 
+        public void control() {
+            if ( Input.GetKeyDown("space") ) {
+                PauseManager.Instance.pause(false);
+            }
+        }
+
     }
 }

@@ -4,9 +4,11 @@ using System.Collections;
 namespace MyUnityChan {
     public class MapViewer : SingletonObjectBase<MapViewer> {
         private Player player;
-        private bool on;
+        public bool on;
         private GameObject canvas;
         private GameObject map;
+
+        private int downtime_count = 2;
 
         void Awake() {
             player = null;
@@ -37,17 +39,26 @@ namespace MyUnityChan {
                 return;
             }
 
-            if ( player.getController().keyPause() ) {
-                if ( on ) {
-                    PauseManager.Instance.pause(false);
-                    on = false;
-                    hide();
-                }
-                else {
-                    PauseManager.Instance.pause(true);
+            if ( downtime_count == 0 && player.getController().keyPause() ) {
+                if ( !on ) {
+                    PauseManager.Instance.pause(true, control);
                     on = true;
                     show();
                 }
+            }
+
+            downtime_count--;
+            if ( downtime_count < 0 ) {
+                downtime_count = 0;
+            }
+        }
+
+        public void control() {
+            if ( Input.GetKeyDown("p") ) {
+                PauseManager.Instance.pause(false);
+                on = false;
+                downtime_count = 2;
+                hide();
             }
         }
 
