@@ -1,7 +1,7 @@
 ﻿Shader "Custom/MyUnityChan/MapAreaElement" {
 	Properties {
 		_Color ("Color", Color) = (1,1,1,0.5)
-		_LineWidth ("Line width", float) = 0.01
+		_LineWidth ("Line width", float) = 0.05
 	}
 	SubShader {
 		Tags { "Queue"="Transparent" "RenderType"="Opaque" }
