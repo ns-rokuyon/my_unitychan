@@ -31,15 +31,35 @@ namespace MyUnityChan {
 
                 List<AreaConnection> connections = area.getAreaConnections();
                 foreach ( AreaConnection conn in connections ) {
+                    // Create area joint point into mapviewer
                     GameObject pointA = PrefabInstantiater.create(Const.Prefab.UI["MAP_CONNECTION_POINT"], map);
                     GameObject pointB = PrefabInstantiater.create(Const.Prefab.UI["MAP_CONNECTION_POINT"], map);
                     pointA.transform.position = conn.pointA;
                     pointB.transform.position = conn.pointB;
-                    map_areaconnections.Add(new Tuple<GameObject, GameObject>(pointA, pointB));
+
+                    // Create area connection edge into mapviewer
+                    GameObject connection_edge = PrefabInstantiater.create(Const.Prefab.UI["MAP_CONNECTION_LINE"], map);
+                    Mesh mesh = new Mesh();
+                    Vector3[] vertices = new Vector3[] {
+                        conn.pointA + Vector3.down, conn.pointB + Vector3.down, conn.pointA + Vector3.up, conn.pointB + Vector3.up
+                    };      // 4 vertices as plane
+                    Vector2[] uv = new Vector2[] {
+                        Vector2.zero, Vector2.right, Vector2.up, Vector2.one
+                    };
+                    int[] triangles = new int[] {
+                        0, 1, 2,
+                        3, 2, 1
+                    };
+                    mesh.vertices = vertices;
+                    mesh.uv = uv;
+                    mesh.triangles = triangles;
+                    mesh.RecalculateNormals();
+                    mesh.RecalculateBounds();
+                    connection_edge.GetComponent<MeshFilter>().sharedMesh = mesh;
                 }
             }
-            map.transform.localScale = new Vector3(0.005f, 0.005f, 0.005f);
 
+            map.transform.localScale = new Vector3(0.005f, 0.005f, 0.005f);
             map.SetActive(false);
         }
 
