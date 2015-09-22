@@ -39,6 +39,8 @@ namespace MyUnityChan {
         }
 
         protected void commonUpdate(string resource_path) {
+            if ( PauseManager.isPausing() ) return;
+
             transform.Translate(target_dir * speed, Space.World);
             distance_moved = Mathf.Abs(transform.position.x - start_position.x);
             if ( distance_moved > max_range ) {

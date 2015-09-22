@@ -3,9 +3,9 @@ using System.Collections;
 
 namespace MyUnityChan {
     public class FrameTimer : Timer {
-        private int start_frame = 0;
-        private int count = 0;
-        private int duration = 0;
+        public int start_frame = 0;
+        public int count = 0;
+        public int duration = 0;
 
         public void setTimer(int time) {
             start_frame = Time.frameCount;
@@ -24,6 +24,9 @@ namespace MyUnityChan {
 
         // Update is called once per frame
         void Update() {
+            if ( PauseManager.isPausing() ) {
+                return;
+            }
             if ( running ) {
                 count++;
                 if ( count >= duration ) {

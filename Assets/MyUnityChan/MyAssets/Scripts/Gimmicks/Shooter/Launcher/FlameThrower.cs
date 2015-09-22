@@ -18,6 +18,7 @@ namespace MyUnityChan {
         // Update is called once per frame
         void Update() {
             if ( !on ) return;
+            if ( PauseManager.isPausing() ) return;
 
             if ( sleep ) {
                 if ( Time.frameCount - sleep_start_frame >= interval_frame ) {
