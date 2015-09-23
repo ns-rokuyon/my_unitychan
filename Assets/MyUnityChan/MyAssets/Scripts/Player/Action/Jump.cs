@@ -77,7 +77,10 @@ namespace MyUnityChan {
                     player.GetComponent<Rigidbody>().AddForce(new Vector3(0f, 250.0f, 0), ForceMode.Impulse);
                 }
                 else {
-                    player.GetComponent<Rigidbody>().AddForce(new Vector3(0f, 270.0f, 0), ForceMode.Impulse);
+                    Rigidbody rigidbody = player.GetComponent<Rigidbody>();
+                    rigidbody.velocity = Vector3.zero;
+                    rigidbody.angularVelocity = Vector3.zero;
+                    rigidbody.AddForce(new Vector3(0f, 270.0f, 0), ForceMode.Impulse);
                 }
             }
         }
