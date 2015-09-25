@@ -7,7 +7,8 @@ namespace MyUnityChan {
     public class MenuButton : GUIObjectBase, ISelectHandler {
 
         public void OnSelect(BaseEventData event_data) {
-            iTween.ShakeRotation(this.gameObject, iTween.Hash("z", 10, "time", 0.4f));
+            iTween.ScaleTo(this.gameObject, iTween.Hash("x", 1.05f, "y", 1.05f, "z", 1.05f, "time", 0.05f));
+            iTween.ScaleTo(this.gameObject, iTween.Hash("x", 1.0f, "y", 1.0f, "z", 1.0f, "time", 0.05f, "delay", 0.1f));
         }
     }
 }
