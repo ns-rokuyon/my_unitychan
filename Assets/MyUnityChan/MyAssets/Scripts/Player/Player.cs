@@ -93,6 +93,9 @@ namespace MyUnityChan {
             // player infomation for NPC
             NPCharacter.setPlayers();
 
+            // set player to GameStateManager
+            GameStateManager.self().player = this;
+
             player = gameObject;
         }
 

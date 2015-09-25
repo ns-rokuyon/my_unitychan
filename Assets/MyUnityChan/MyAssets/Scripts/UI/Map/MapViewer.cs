@@ -14,6 +14,7 @@ namespace MyUnityChan {
         void Awake() {
             player = null;
             canvas = GUIObjectBase.getCanvas(Const.Canvas.MAP_VIEWER_CANVAS);
+            canvas.transform.FindChild("BackGround").gameObject.SetActive(true);
             map = GameObject.Find("MapView");
         }
 
@@ -72,7 +73,7 @@ namespace MyUnityChan {
                 return;
             }
 
-            if ( downtime_count == 0 && player.getController().keyPause() ) {
+            if ( downtime_count == 0 && GameStateManager.now() == GameStateManager.GameState.MAP ) {
                 if ( !on ) {
                     PauseManager.Instance.pause(true, control);
                     on = true;
