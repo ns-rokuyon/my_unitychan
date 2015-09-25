@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Linq;
 using System.Collections.Generic;
 
 namespace MyUnityChan {
@@ -59,6 +60,10 @@ namespace MyUnityChan {
 
         public void setPrefab(GameObject _prefab) {
             prefab = _prefab;
+        }
+
+        public int getObjectIndex(GameObject go) {
+            return objects.Select((obj, index) => new { o = obj, i = index}).Where(v => v.o.gameObject == go).Select(v => v.i).FirstOrDefault();
         }
 
         private void initializeObject(GameObject go) {

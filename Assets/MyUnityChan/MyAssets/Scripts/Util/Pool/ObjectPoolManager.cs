@@ -20,6 +20,7 @@ namespace MyUnityChan {
             addPool(Const.Prefab.Effect["JUMP_SMOKE_PUFF"]);
             addPool(Const.Prefab.Item["HP_RECOVERY"]);
             addPool(Const.Prefab.Phenomenon["FLAME"]);
+            addPool(Const.Prefab.Timer["FRAME_TIMER"]);
         }
 
         // Use this for initialization
@@ -32,6 +33,10 @@ namespace MyUnityChan {
 
         public static GameObject getGameObject(string resource_path) {
             return self().pools[resource_path].getGameObject();
+        }
+
+        public static int getObjectIndex(GameObject go, string resource_path) {
+            return self().pools[resource_path].getObjectIndex(go);
         }
 
         // add new object pool for prefab in resource_path

@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 
 namespace MyUnityChan {
-    public class TimerManager : SingletonObjectBase<TimerManager> {
+    public class TimerManager : PrefabManagerBase<TimerManager> {
+        private Dictionary<int, Timer> timers;
+        
+        public static TimerManager self() {
+            return Instance.GetComponent<TimerManager>();
+        }
 
         // check timer is running or finish
         public static bool checkFinished(int id) {
-            return self().finished(id);
+            return (self() as TimerManager).finished(id);
         }
 
         public static bool checkRunning(int id) {
@@ -14,21 +19,32 @@ namespace MyUnityChan {
         }
 
         public static Timer get(int id) {
-            return self().timers[id];
+            return (self() as TimerManager).timers[id];
         }
 
         public static void destroy(int id) {
-            Timer timer = self().timers[id];
+            Timer timer = (self() as TimerManager).timers[id];
             if ( timer ) {
                 timer.destroy();
+                self().timers[id] = null;
             }
         }
 
-        private Dictionary<int, Timer> timers;
+        public static int getPooledObjectIndex(GameObject go, string resource_path) {
+            return ObjectPoolManager.getObjectIndex(go, resource_path);
+        }
 
-        public GameObject frame_timer_prefab;
+        public override T create<T>(string resource_path, bool use_objectpool=false) {
+            if ( use_objectpool ) {
+                T timer = ObjectPoolManager.getGameObject(resource_path).setParent(Hierarchy.Layout.TIMER).GetComponent<T>();
+                (timer as Timer).enablePool(resource_path);
+                return timer;
+            }
+            return instantiatePrefab(resource_path, Hierarchy.Layout.TIMER).GetComponent<T>();
+        }
 
         void Awake() {
+            prefabs = new Dictionary<string, GameObject>();
             timers = new Dictionary<int, Timer>();
         }
 
@@ -49,7 +65,18 @@ namespace MyUnityChan {
         }
 
         public void add(int id, Timer timer_component) {
+            if ( timers.ContainsKey(id) ) {
+                timers[id] = timer_component;
+            }
+            else {
+                timers.Add(id, timer_component);
+            }
+        }
+
+        public int add(Timer timer_component) {
+            int id = timers.Count;
             timers.Add(id, timer_component);
+            return id;
         }
 
 
@@ -58,7 +85,7 @@ namespace MyUnityChan {
                 throw new System.InvalidOperationException("not exists: " + id);
             }
 
-            if ( timers[id] == null || timers[id].finished() ) {
+            if ( timers[id] == null || !timers[id].gameObject.activeSelf || timers[id].finished() ) {
                 return true;
             }
             return false;
@@ -70,7 +97,7 @@ namespace MyUnityChan {
     }
 
     public abstract class TimerState {
-        protected int timer_id = 0;
+        public int timer_id = 0;
 
         public TimerState() {
             createTimer(1);

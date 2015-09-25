@@ -33,17 +33,8 @@ namespace MyUnityChan {
         }
 
         private void CommonUpdate() {
-            if ( end_timer == null ) {
-                end_timer.createTimer(time);
-            }
-            else if ( end_timer.isFinished() ) {
-                if ( use_objectpool ) {
-                    ObjectPoolManager.releaseGameObject(this.gameObject, resource_path);
-                }
-                else {
-                    Destroy(this.gameObject);
-                }
-                return;
+            if ( end_timer != null && end_timer.isFinished() ) {
+                destroy();
             }
         }
 
@@ -72,10 +63,23 @@ namespace MyUnityChan {
             return owner;
         }
 
+        protected void destroy() {
+            end_timer.destroy();
+            end_timer = null;
+            if ( use_objectpool ) {
+                ObjectPoolManager.releaseGameObject(this.gameObject, resource_path);
+            }
+            else {
+                Destroy(this.gameObject);
+            }
+            return;
+        }
+
         // PoolObject callbacks
         public override void initialize() {
             end_timer = new FrameTimerState();
         }
+
         public override void finalize() {
             end_timer = null;            
         }

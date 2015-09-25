@@ -11,11 +11,7 @@ namespace MyUnityChan {
                     transform.position = obj.transform.position;
                 }
                 else {
-                    if ( use_objectpool ) {
-                        ObjectPoolManager.releaseGameObject(this.gameObject, resource_path);
-                        return;
-                    }
-                    Destroy(this.gameObject);
+                    destroy();
                 }
             }
         }

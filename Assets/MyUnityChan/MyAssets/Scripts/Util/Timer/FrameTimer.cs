@@ -34,18 +34,26 @@ namespace MyUnityChan {
                 }
             }
         }
+
+        public override void initialize() {
+            start_frame = 0;
+            count = 0;
+            duration = 0;
+        }
+
+        public override void finalize() {
+            running = false;
+        }
     }
 
     public class FrameTimerState : TimerState {
 
         public override void createTimer(int time) {
-            GameObject timer_object = GameObject.Instantiate(TimerManager.self().frame_timer_prefab) as GameObject;
-            timer_object.setParent(Hierarchy.Layout.TIMER);
-            FrameTimer timer = timer_object.GetComponent<FrameTimer>();
+            FrameTimer timer = TimerManager.self().create<FrameTimer>(Const.Prefab.Timer["FRAME_TIMER"], true);
+            timer.gameObject.setParent(Hierarchy.Layout.TIMER);
             timer.setTimer(time);
 
-            int id = timer_object.GetInstanceID();
-            TimerManager.self().add(id, timer);
+            int id = TimerManager.self().add(timer);
 
             timer_id = id;
         }

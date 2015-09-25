@@ -2,8 +2,10 @@
 using System.Collections;
 
 namespace MyUnityChan {
-    public class Timer : ObjectBase {
+    public abstract class Timer : PoolObjectBase {
+        protected bool use_objectpool;
         protected bool running = false;
+        protected string resource_path = null;
 
         public bool isRunning() {
             return running;
@@ -14,7 +16,17 @@ namespace MyUnityChan {
         }
 
         public void destroy() {
-            Destroy(this.gameObject);
+            if ( use_objectpool ) {
+                ObjectPoolManager.releaseGameObject(this.gameObject, resource_path);
+            }
+            else {
+                Destroy(this.gameObject);
+            }
+        }
+
+        public virtual void enablePool(string _resource_path) {
+            resource_path = _resource_path;
+            use_objectpool = true;
         }
     }
 }
