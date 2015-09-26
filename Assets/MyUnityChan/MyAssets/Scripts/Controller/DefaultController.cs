@@ -8,8 +8,7 @@ namespace MyUnityChan {
          */
 
         void Update() {
-
-            if ( self.isInputLocked() ) {
+            if ( self.isInputLocked() && !PauseManager.isPausing() ) {
                 // ignore any inputs
                 clearAllInputs();
                 return;
@@ -36,6 +35,7 @@ namespace MyUnityChan {
             inputs[(int)InputCode.DASH] = Input.GetKey("v");
             inputs[(int)InputCode.PAUSE] = Input.GetKeyDown("p");
             inputs[(int)InputCode.TEST] = Input.GetKey("t");
+            inputs[(int)InputCode.CANCEL] = Input.GetKey("b");
 
             if ( PauseManager.isPausing() ) {
                 PauseManager.controlOnPause();

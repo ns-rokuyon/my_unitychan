@@ -38,12 +38,35 @@ namespace MyUnityChan {
             switch ( state ) { 
                 case GameState.MAIN: 
                     if ( controller.keyPause() ) {
+                        /* 
+                         * State: MAIN -> MENU 
+                         * Trigger: pause key was pressed
+                         */
                         state = GameState.MENU;
+                        PauseManager.Instance.pause(true);
+                        MenuManager.Instance.enter();
                     }
                     break;
                 case GameState.MENU:
                     if ( controller.keyPause() ) {
+                        /*
+                         * State: MENU -> MAIN
+                         * Trigger: pause key was pressed
+                         */ 
                         state = GameState.MAIN;
+                        MenuManager.Instance.quit();
+                        PauseManager.Instance.pause(false);
+                    }
+                    break;
+                case GameState.MAP:
+                    if ( controller.keyCancel() ) {
+                        /*
+                         * State: MAP -> MENU
+                         * Trigger: cancel key was pressed
+                         */ 
+                        state = GameState.MENU;
+                        MapViewer.Instance.quit();
+                        MenuManager.Instance.enter();
                     }
                     break;
                 default:

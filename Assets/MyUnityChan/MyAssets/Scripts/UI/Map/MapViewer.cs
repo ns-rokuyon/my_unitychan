@@ -75,7 +75,6 @@ namespace MyUnityChan {
 
             if ( downtime_count == 0 && GameStateManager.now() == GameStateManager.GameState.MAP ) {
                 if ( !on ) {
-                    PauseManager.Instance.pause(true, control);
                     on = true;
                     show();
                 }
@@ -88,14 +87,6 @@ namespace MyUnityChan {
         }
 
         public void control() {
-            if ( player.getController().keyPause() ) {
-                // If key 'p' is pressed, close mapviewer
-                PauseManager.Instance.pause(false);
-                on = false;
-                downtime_count = 10;
-                hide();
-                return;
-            }
 
             int h = (int)player.getController().keyHorizontal();
             int v = (int)player.getController().keyVertical();
@@ -103,6 +94,12 @@ namespace MyUnityChan {
             if ( Mathf.Abs(h) > 0 || Mathf.Abs(v) > 0 ) {
                 map.transform.position += (h * Vector3.right + v * Vector3.up) * 0.01f;
             }
+        }
+
+        public void quit() {
+            on = false;
+            downtime_count = 10;
+            hide();
         }
 
         private void hide() {

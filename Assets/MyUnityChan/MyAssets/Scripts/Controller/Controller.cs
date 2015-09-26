@@ -11,6 +11,7 @@ namespace MyUnityChan {
             DASH,
             PAUSE,
             TEST,
+            CANCEL,
             len
         };
 
@@ -47,6 +48,7 @@ namespace MyUnityChan {
             }
         }
 
+        public bool keyCancel() { return inputs[(int)InputCode.CANCEL]; }
         public bool keyJump() { return inputs[(int)InputCode.JUMP]; }
         public bool keySliding() { return inputs[(int)InputCode.SLIDING]; }
         public bool keyAttack() { return inputs[(int)InputCode.ATTACK]; }
