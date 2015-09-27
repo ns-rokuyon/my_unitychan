@@ -50,5 +50,11 @@ namespace MyUnityChan {
             GameStateManager.change(GameStateManager.GameState.MAP);
             PauseManager.setPauseControlMethod(MapViewer.Instance.control);
         }
+
+        public void doSettings() {
+            quit();
+            GameStateManager.change(GameStateManager.GameState.SETTINGS);
+            SettingManager.Instance.enter();
+        }
     }
 }

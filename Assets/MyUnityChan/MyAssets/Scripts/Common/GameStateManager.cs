@@ -7,6 +7,7 @@ namespace MyUnityChan {
             NO_SET,
             MAIN,
             MENU,
+            SETTINGS,
             MAP
         };
 
@@ -66,6 +67,17 @@ namespace MyUnityChan {
                          */ 
                         state = GameState.MENU;
                         MapViewer.Instance.quit();
+                        MenuManager.Instance.enter();
+                    }
+                    break;
+                case GameState.SETTINGS:
+                    if ( controller.keyCancel() ) {
+                        /*
+                         * State: SETTINGS -> MENU
+                         * Trigger: cancel key was pressed
+                         */
+                        state = GameState.MENU;
+                        SettingManager.Instance.quit();
                         MenuManager.Instance.enter();
                     }
                     break;
