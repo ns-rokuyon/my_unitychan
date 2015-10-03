@@ -236,6 +236,10 @@ namespace MyUnityChan {
 
 
         void OnGUI() {
+            if ( !SettingManager.Instance.get(Settings.Flag.SHOW_DEBUG_WINDOW) ) {
+                return;
+            }
+
             Vector3 fw = transform.forward;
             Quaternion rot = transform.rotation;
             Vector3 targetDirection = new Vector3(Input.GetAxis("Horizontal"), 0, 0);
