@@ -4,13 +4,18 @@ using UnityEngine.EventSystems;
 using System.Collections;
 
 namespace MyUnityChan {
-    public class MenuToggle : GUIObjectBase, ISelectHandler {
+    public class MenuToggle : GUIObjectBase, ISelectHandler, IDeselectHandler {
 
         private Toggle toggle;
+        private Image frame;
         private Settings.Flag flag_key;
 
         void Awake() {
             toggle = gameObject.GetComponent<Toggle>();
+            frame = gameObject.GetComponentInChildren<Image>();
+        }
+
+        void Update() {
         }
 
         public void setFlagKey(Settings.Flag k) {
@@ -18,8 +23,11 @@ namespace MyUnityChan {
         }
 
         public void OnSelect(BaseEventData event_data) {
-            iTween.ScaleTo(this.gameObject, iTween.Hash("x", 1.05f, "y", 1.05f, "z", 1.05f, "time", 0.05f));
-            iTween.ScaleTo(this.gameObject, iTween.Hash("x", 1.0f, "y", 1.0f, "z", 1.0f, "time", 0.05f, "delay", 0.1f));
+            frame.color = Color.green;
+        }
+
+        public void OnDeselect(BaseEventData event_data) {
+            frame.color = Color.white;
         }
 
         public void changeSetting(bool b) {
