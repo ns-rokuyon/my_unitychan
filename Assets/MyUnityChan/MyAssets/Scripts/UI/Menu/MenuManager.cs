@@ -10,6 +10,7 @@ namespace MyUnityChan {
 
         private EventSystem es;
         private List<Selectable> selectables;
+        private readonly int initial_position_x = 160;
 
         void Awake() {
             es = EventSystem.current;
@@ -37,6 +38,10 @@ namespace MyUnityChan {
         public void quit() {
             es.SetSelectedGameObject(null); // unfocus current selected button
             canvas_object.SetActive(false);
+        }
+
+        public void suspend() {
+            selectables.ForEach(s => s.gameObject.GetComponent<RectTransform>().position += Vector3.left * 100);
         }
 
         public void doQuit() {

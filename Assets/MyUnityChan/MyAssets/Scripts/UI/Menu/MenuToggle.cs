@@ -13,6 +13,7 @@ namespace MyUnityChan {
         void Awake() {
             toggle = gameObject.GetComponent<Toggle>();
             frame = gameObject.GetComponentInChildren<Image>();
+            setupSoundPlayer();
         }
 
         void Update() {
@@ -24,6 +25,7 @@ namespace MyUnityChan {
 
         public void OnSelect(BaseEventData event_data) {
             frame.color = Color.green;
+            sound.play(Const.Sound.SE.UI["BUTTON_SELECT"]);
         }
 
         public void OnDeselect(BaseEventData event_data) {

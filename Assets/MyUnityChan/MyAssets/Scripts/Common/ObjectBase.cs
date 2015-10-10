@@ -4,6 +4,8 @@ using System.Collections;
 namespace MyUnityChan {
     public class ObjectBase : MonoBehaviour {
 
+        protected SoundPlayer sound;
+
         // Use this for initialization
         void Start() {
 
@@ -12,6 +14,10 @@ namespace MyUnityChan {
         // Update is called once per frame
         void Update() {
 
+        }
+
+        protected void setupSoundPlayer() {
+            sound = gameObject.GetComponent<SoundPlayer>();
         }
 
         public void OnTriggerEnter(Collider other) {
