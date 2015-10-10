@@ -13,6 +13,10 @@ namespace MyUnityChan {
 
         // Update is called once per frame
         void Update() {
+            if ( isStopped ) {
+                return;
+            }
+
             if ( Time.frameCount % target_update_time_span == 0 ) {
                 target = Enemy.findNearestPlayer(self.transform.position);
             }

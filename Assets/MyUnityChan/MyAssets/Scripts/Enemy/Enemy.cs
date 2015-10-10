@@ -57,6 +57,12 @@ namespace MyUnityChan {
 
         // Update is called once per frame
         void Update() {
+            if ( SettingManager.Instance.get(Settings.Flag.ENEMY_STOP) ) {
+                (controller as AIController).isStopped = true;
+            }
+            else {
+                (controller as AIController).isStopped = false;
+            }
             updateStunned();
             checkPlayerTouched();
             faceForward();
