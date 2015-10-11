@@ -83,6 +83,9 @@ namespace MyUnityChan {
 
             // hitbox
             HitboxManager.self().create<ProjectileHitbox>(hitbox_resource_path, use_objectpool:true).ready(beam, spec);
+
+            // sound
+            player.getSoundPlayer().play(Const.Sound.SE.Projectile["PLAYER_BEAM_01"]);
         }
 
     }

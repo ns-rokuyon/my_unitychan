@@ -20,6 +20,10 @@ namespace MyUnityChan {
             sound = gameObject.GetComponent<SoundPlayer>();
         }
 
+        public SoundPlayer getSoundPlayer() {
+            return sound;
+        }
+
         public void OnTriggerEnter(Collider other) {
             if ( other.tag == "MovingFloor" && transform.parent == null ) {
                 transform.parent = other.gameObject.transform;

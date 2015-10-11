@@ -96,6 +96,9 @@ namespace MyUnityChan {
             // set player to GameStateManager
             GameStateManager.self().player = this;
 
+            // init sound player
+            setupSoundPlayer();
+
             player = gameObject;
         }
 
