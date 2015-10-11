@@ -74,6 +74,13 @@ namespace MyUnityChan {
             gameObject.transform.LookAt(new Vector3(gameObject.transform.position.x + dir_x * 100.0f, gameObject.transform.position.y, transform.position.z));
         }
 
+        public bool isGrounded() {
+            Vector3 ground_raycast_offset = new Vector3(0, 0.05f, 0);
+            return Physics.Raycast(transform.position + ground_raycast_offset, Vector3.down, 0.5f) ||
+                Physics.Raycast(transform.position + ground_raycast_offset, new Vector3(1.0f, 0.0f, 0), 1.0f) ||
+                Physics.Raycast(transform.position + ground_raycast_offset, new Vector3(-1.0f, 0.0f, 0), 1.0f);
+        }
+
         public void OnCollisionStay(Collision collisionInfo) {
             if ( collisionInfo.gameObject.tag == "Player" ) {
                 Player player_script = collisionInfo.gameObject.GetComponent<Player>();
