@@ -12,6 +12,7 @@ namespace MyUnityChan {
         // vars
         protected FrameTimerState inputlock_timer;
         protected CharacterStatus status;
+        protected RingBuffer<Vector3> position_history;
 
         public Controller getController() {
             return controller;
@@ -43,6 +44,36 @@ namespace MyUnityChan {
                 status.hp -= dam;
             }
         }
+
+        protected void recordPosition() {
+            position_history.add(transform.position);
+        }
+
+        public int getPositionHistoryCount() {
+            return position_history.count();
+        }
+
+        public void clearPositionHistory() {
+            position_history.clear();
+        }
+
+        public Vector3 getRecentTravelDistance() {
+            Vector3 travel = Vector3.zero;
+            Vector3 prev = Vector3.zero;
+            int index = 0;
+            foreach ( Vector3 pos in position_history ) {
+                if ( index == 0 ) {
+                    prev = pos;
+                    index++;
+                    continue;
+                }
+                travel = travel + new Vector3(Mathf.Abs(prev.x - pos.x), Mathf.Abs(prev.y - pos.y), 0.0f);
+                index++;
+                prev = pos;
+            }
+            return travel;
+        }
+
 
         // xdir = 1.0f | -1.0f
         public void lookAtDirectionX(float xdir) {

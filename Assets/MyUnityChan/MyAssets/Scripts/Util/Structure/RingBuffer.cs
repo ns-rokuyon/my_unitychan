@@ -24,6 +24,14 @@ namespace MyUnityChan {
             buffer[head] = item;
         }
 
+        public int count() {
+            return buffer.Count;
+        }
+
+        public void clear() {
+            buffer.Clear();
+        }
+
         public T getHead() {
             return buffer[head];
         }
@@ -49,7 +57,6 @@ namespace MyUnityChan {
             for ( int i = 0; i < buffer.Count; i++ ) {
                 yield return buffer[i];
             }
-
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {

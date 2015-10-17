@@ -10,7 +10,6 @@ namespace MyUnityChan {
         protected int max_hp;
 
         protected int stunned = 0;
-        protected RingBuffer<Vector3> position_history;
         protected EnemyActionManager action_manager;
 
         protected void loadAttachedAI() {
@@ -34,32 +33,15 @@ namespace MyUnityChan {
         protected void updateStunned() {
             if ( stunned > 0 ) {
                 stunned--;
+                clearPositionHistory();
             }
         }
 
         public virtual void spawn() {
             touching_players.Clear();
             setHP(max_hp);
+            clearPositionHistory();
             this.gameObject.SetActive(true);
-        }
-
-        protected void recordPosition() {
-            position_history.add(transform.position);
-        }
-
-        public Vector3 getRecentTravelDistance() {
-            Vector3 travel = Vector3.zero;
-            Vector3 prev = Vector3.zero;
-            int index = 0;
-            foreach ( Vector3 pos in position_history ) {
-                if ( index == 0 ) {
-                    prev = pos;
-                    index++;
-                    continue;
-                }
-                travel = travel + new Vector3(Mathf.Abs(prev.x - pos.x), Mathf.Abs(prev.y - pos.y), 0.0f);
-            }
-            return travel;
         }
 
 
@@ -68,7 +50,7 @@ namespace MyUnityChan {
             loadAttachedAI();
             action_manager = new EnemyActionManager();
             inputlock_timer = new FrameTimerState();
-            position_history = new RingBuffer<Vector3>(6);
+            position_history = new RingBuffer<Vector3>(10);
 
             // enemy status setup
             status = (Instantiate(status_prefab) as GameObject).setParent(gameObject).GetComponent<EnemyStatus>();
