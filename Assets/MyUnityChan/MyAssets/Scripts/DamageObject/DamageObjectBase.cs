@@ -2,7 +2,7 @@
 using System.Collections;
 
 namespace MyUnityChan {
-    public abstract class PhenomenonBase : PoolObjectBase {
+    public abstract class DamageObjectBase : PoolObjectBase {
 
         void Awake() {
             commonSetting();

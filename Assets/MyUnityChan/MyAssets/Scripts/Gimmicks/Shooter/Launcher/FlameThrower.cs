@@ -56,7 +56,7 @@ namespace MyUnityChan {
         }
 
         public void shoot() {
-            GameObject obj = ObjectPoolManager.getGameObject(Const.Prefab.Phenomenon["FLAME"]);
+            GameObject obj = ObjectPoolManager.getGameObject(Const.Prefab.DamageObject["FLAME"]);
             obj.GetComponent<Flame>().getHitbox().setOwner(this.gameObject);
             obj.setParent(Hierarchy.Layout.DAMAGE_OBJECT);
             obj.transform.position = this.gameObject.transform.position;

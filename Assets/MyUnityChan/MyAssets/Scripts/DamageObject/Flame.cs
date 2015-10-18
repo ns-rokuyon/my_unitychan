@@ -2,7 +2,7 @@
 using System.Collections;
 
 namespace MyUnityChan {
-    public class Flame : PhenomenonBase {
+    public class Flame : DamageObjectBase {
         private TimerState lifetime = null;
         private int lifetime_frame = 180;
         private DamageObjectHitbox hitbox = null;
@@ -34,7 +34,7 @@ namespace MyUnityChan {
         void Update() {
             if ( lifetime != null ) {
                 if ( lifetime.isFinished() ) {
-                    ObjectPoolManager.releaseGameObject(this.gameObject, Const.Prefab.Phenomenon["FLAME"]);
+                    ObjectPoolManager.releaseGameObject(this.gameObject, Const.Prefab.DamageObject["FLAME"]);
                 }
 
                 if ( lifetime.getTimer() != null && ((FrameTimer)lifetime.getTimer()).now() > 120 ) {
