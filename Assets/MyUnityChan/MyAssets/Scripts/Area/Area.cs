@@ -1,7 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace MyUnityChan {
+    [ExecuteInEditMode]
     public class Area : ObjectBase {
         // set true to limit player moving in this area
         public bool roof;
@@ -9,14 +13,16 @@ namespace MyUnityChan {
         public bool left_wall;
         public bool right_wall;
 
+        public float baselineZ = float.NaN;
+
         public GameObject[] spawnable_enemies;
 
         private Dictionary<string, bool> ins;
         List<AreaConnection> connections;
 
-        private float x_harf;
-        private float y_harf;
-        private float z_harf;
+        protected float x_harf;
+        protected float y_harf;
+        protected float z_harf;
 
         // Area Status
         public bool passed;
@@ -55,6 +61,14 @@ namespace MyUnityChan {
                 return false;
             }
             return true;
+        }
+
+        public float getBaselineZ() {
+            return baselineZ;
+        }
+
+        public bool isEmptyBaselineZ() {
+            return float.IsNaN(baselineZ);
         }
 
         public bool isPassed() {
@@ -117,5 +131,29 @@ namespace MyUnityChan {
                 ins[name] = false;
             }
         }
+
+    #if UNITY_EDITOR
+        public void sceneGUI() {
+            if ( !isEmptyBaselineZ() ) {
+                Vector3 area_center = transform.position;
+                Bounds bounds = gameObject.GetComponent<MeshRenderer>().bounds;
+                x_harf = (float)(bounds.size.x / 2.0);
+                y_harf = (float)(bounds.size.y / 2.0);
+                Vector3 left_point = new Vector3(area_center.x - x_harf, area_center.y, baselineZ);
+                Vector3 right_point = new Vector3(area_center.x + x_harf, area_center.y, baselineZ);
+                left_point = Handles.PositionHandle(left_point, Quaternion.identity);
+                right_point = Handles.PositionHandle(right_point, Quaternion.identity);
+                Vector3[] points = new Vector3[] { left_point, right_point };
+                Handles.color = Color.blue;
+                Handles.DrawAAPolyLine(10, points);
+            }
+        }
+    #else
+        public override void sceneGUI() {
+        }
+    #endif
+
+        public void inspectorGUI(){}
+
     }
 }

@@ -17,7 +17,8 @@ namespace MyUnityChan {
 
         // callback when enemy is dying
         private void onDead() {
-            DropItemManager.self().create<DropItem>(Const.Prefab.Item["HP_RECOVERY"], true).setPosition(transform.position + Vector3.up);
+            DropItem item = DropItemManager.self().create<DropItem>(Const.Prefab.Item["HP_RECOVERY"], true);
+            item.setPosition(transform.position + Vector3.up);
         }
 
         protected override void update() {

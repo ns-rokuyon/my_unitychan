@@ -10,6 +10,7 @@ namespace MyUnityChan {
 
         public void setPosition(Vector3 pos) {
             gameObject.transform.position = pos;
+            adjustZtoBaseline();
         }
 
         public void OnCollisionStay(Collision collisionInfo) {

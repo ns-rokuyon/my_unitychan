@@ -16,6 +16,18 @@ namespace MyUnityChan {
 
         }
 
+        public void adjustZtoBaseline() {
+            Area area = AreaManager.Instance.getAreaFromMemberObject(this.gameObject);
+            if ( !area.isEmptyBaselineZ() ) {
+                float z = area.getBaselineZ();
+                this.gameObject.transform.position = new Vector3(
+                    this.gameObject.transform.position.x,
+                    this.gameObject.transform.position.y,
+                    z
+                    );
+            }
+        }
+
         protected void setupSoundPlayer() {
             sound = gameObject.GetComponent<SoundPlayer>();
         }
