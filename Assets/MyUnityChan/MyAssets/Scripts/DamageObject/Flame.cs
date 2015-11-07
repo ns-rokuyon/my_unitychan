@@ -17,10 +17,7 @@ namespace MyUnityChan {
             }
 
             public override void attack(Character character, Hitbox _hitbox) {
-                GameObject owner = _hitbox.getOwner();
-                if ( owner == null || owner == character.gameObject ) {
-                    return;
-                }
+                if ( _hitbox.isOwner(character) ) return;
                 character.damage(damage);
             }
         }

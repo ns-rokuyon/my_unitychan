@@ -9,7 +9,6 @@ namespace MyUnityChan {
 
         protected int max_hp;
 
-        protected int stunned = 0;
         protected EnemyActionManager action_manager;
 
         protected void loadAttachedAI() {
@@ -21,29 +20,12 @@ namespace MyUnityChan {
             ((AIController)controller).setSelf(this);
         }
 
-        public void stun(int stun_power) {
-            stunned = stun_power;
-        }
-
-
-        public bool isStunned() {
-            return stunned > 0 ? true : false;
-        }
-
-        protected void updateStunned() {
-            if ( stunned > 0 ) {
-                stunned--;
-                clearPositionHistory();
-            }
-        }
-
         public virtual void spawn() {
             touching_players.Clear();
             setHP(max_hp);
             clearPositionHistory();
             this.gameObject.SetActive(true);
         }
-
 
         // Use this for initialization
         void Start() {

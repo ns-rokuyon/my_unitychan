@@ -14,6 +14,8 @@ namespace MyUnityChan {
         protected CharacterStatus status;
         protected RingBuffer<Vector3> position_history;
 
+        protected int stunned = 0;
+
         public Controller getController() {
             return controller;
         }
@@ -36,6 +38,21 @@ namespace MyUnityChan {
 
         public bool isFrozen() {
             return status.freeze;
+        }
+
+        public void stun(int stun_power) {
+            stunned = stun_power;
+        }
+
+        public bool isStunned() {
+            return stunned > 0 ? true : false;
+        }
+
+        protected void updateStunned() {
+            if ( stunned > 0 ) {
+                stunned--;
+                clearPositionHistory();
+            }
         }
 
         public virtual void damage(int dam) {

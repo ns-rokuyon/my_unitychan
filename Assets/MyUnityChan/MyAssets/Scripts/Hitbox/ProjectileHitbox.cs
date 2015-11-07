@@ -24,6 +24,19 @@ namespace MyUnityChan {
         }
 
         public void OnTriggerEnter(Collider other) {
+            if ( triggerPlayer(other) ) {
+                projectile.GetComponent<Projectile>().countHit();
+            }
+            if ( triggerEnemy(other) ) {
+                projectile.GetComponent<Projectile>().countHit();
+            }
+            if ( triggerDoor(other) ) {
+                projectile.GetComponent<Projectile>().countHit();
+            }
+        }
+
+        /*
+        public void OnTriggerEnter(Collider other) {
             if ( other.tag == "Enemy" ) {
                 Enemy enemy = ((Enemy)other.gameObject.GetComponent<Enemy>());
                 spec.attack(enemy, this);
@@ -35,5 +48,6 @@ namespace MyUnityChan {
                 projectile.GetComponent<Projectile>().countHit();
             }
         }
+        */
     }
 }

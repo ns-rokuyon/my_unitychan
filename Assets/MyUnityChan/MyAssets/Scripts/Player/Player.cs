@@ -114,6 +114,7 @@ namespace MyUnityChan {
                 animator.SetBool("Jump", false);
             }
 
+            updateStunned();
         }
 
 

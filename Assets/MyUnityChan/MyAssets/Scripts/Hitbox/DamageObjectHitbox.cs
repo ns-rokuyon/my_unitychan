@@ -23,11 +23,13 @@ namespace MyUnityChan {
             transform.position = obj.transform.position;
         }
 
+        /*
         public void OnTriggerEnter(Collider other) {
             if ( other.tag == "Enemy" || other.tag == "Player" ) {
                 Character character = ((Character)other.gameObject.GetComponent<Character>());
                 spec.attack(character, this);
             }
         }
+        */
     }
 }

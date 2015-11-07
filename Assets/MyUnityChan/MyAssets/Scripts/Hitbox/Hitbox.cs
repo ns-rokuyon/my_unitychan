@@ -63,6 +63,16 @@ namespace MyUnityChan {
             return owner;
         }
 
+        public bool isOwner(Character character) {
+            return isOwner(character.gameObject);
+        }
+
+        public bool isOwner(GameObject obj) {
+            if ( owner == null ) return false;
+            if ( owner == obj ) return true;
+            return false;
+        }
+
         protected void destroy() {
             end_timer.destroy();
             end_timer = null;
@@ -83,5 +93,6 @@ namespace MyUnityChan {
         public override void finalize() {
             end_timer = null;            
         }
+
     }
 }

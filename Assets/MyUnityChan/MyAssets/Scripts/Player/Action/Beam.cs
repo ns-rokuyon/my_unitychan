@@ -17,7 +17,7 @@ namespace MyUnityChan {
         
         public PlayerBeam(Character character)
             : base(character) {
-            spec = new Spec();
+            spec = new Beam.Spec();
             left_arm = player.transform.Find(left_shoulder_path + "Character1_LeftArm");
             left_fore_arm = player.transform.Find(left_shoulder_path + "Character1_LeftArm/Character1_LeftForeArm");
             left_hand = player.transform.Find(left_shoulder_path + "Character1_LeftArm/Character1_LeftForeArm/Character1_LeftHand");
@@ -29,20 +29,6 @@ namespace MyUnityChan {
             return "BEAM";
         }
 
-        public class Spec : AttackSpec {
-            public Spec() {
-                damage = 20;
-                stun = 50;
-                frame = 9999;
-            }
-
-            public override void attack(Character character, Hitbox hitbox) {
-                ((Enemy)character).stun(stun);
-                ((Enemy)character).damage(damage);
-                EffectManager.self().createEffect(Const.Prefab.Effect["HIT_02"],
-                    hitbox.gameObject.transform.position, 60, true);
-            }
-        }
 
         public override bool condition() {
             return controller.keyTest();
@@ -82,7 +68,9 @@ namespace MyUnityChan {
             prjc.setPlayerInfo(player);
 
             // hitbox
-            HitboxManager.self().create<ProjectileHitbox>(hitbox_resource_path, use_objectpool:true).ready(beam, spec);
+            ProjectileHitbox hitbox = HitboxManager.self().create<ProjectileHitbox>(hitbox_resource_path, use_objectpool:true);
+            hitbox.setOwner(player.gameObject);
+            hitbox.ready(beam, spec);
 
             // sound
             player.getSoundPlayer().play(Const.Sound.SE.Projectile["PLAYER_BEAM_01"]);

@@ -28,15 +28,42 @@ namespace MyUnityChan {
         }
 
         public void OnTriggerEnter(Collider other) {
+            triggerPlayer(other);
+            triggerEnemy(other);
+            triggerDoor(other);
+        }
+
+        protected bool triggerEnemy(Collider other) {
             if ( other.tag == "Enemy" ) {
+                if ( isOwner(other.gameObject) ) return false;
+
                 Enemy enemy = ((Enemy)other.gameObject.GetComponent<Enemy>());
                 spec.attack(enemy, this);
+                return true;
             }
-            else if ( other.tag == "Door" ) {
+            return false;
+        }
+
+        protected bool triggerPlayer(Collider other) {
+            if ( other.tag == "Player" ) {
+                if ( isOwner(other.gameObject) ) return false;
+
+                Player player = ((Player)other.gameObject.GetComponent<Player>());
+                spec.attack(player, this);
+                return true;
+            }
+            return false;
+        }
+
+        protected bool triggerDoor(Collider other) {
+            if ( other.tag == "Door" ) {
                 Door door = ((Door)other.gameObject.GetComponent<Door>());
                 door.open();
+                return true;
             }
+            return false;
         }
+
     }
 
 }

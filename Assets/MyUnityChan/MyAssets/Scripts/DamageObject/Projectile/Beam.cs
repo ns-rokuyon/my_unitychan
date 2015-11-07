@@ -5,6 +5,21 @@ namespace MyUnityChan {
     public class Beam : Projectile  {
         public static readonly string resource_path = Const.Prefab.Projectile["BEAM"];
 
+        public class Spec : AttackSpec {
+            public Spec() {
+                damage = 20;
+                stun = 50;
+                frame = 9999;
+            }
+
+            public override void attack(Character character, Hitbox hitbox) {
+                character.stun(stun);
+                character.damage(damage);
+                EffectManager.self().createEffect(Const.Prefab.Effect["HIT_02"],
+                    hitbox.gameObject.transform.position, 60, true);
+            }
+        }
+
         // Use this for initialization
         void Start() {
             initialize();
