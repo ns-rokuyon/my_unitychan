@@ -14,6 +14,8 @@ namespace MyUnityChan {
         protected bool penetration;
         protected int hit_num = 0;
 
+        public string resource_name;
+
         public virtual void setDir(Vector3 dir) {
             target_dir = dir;
         }

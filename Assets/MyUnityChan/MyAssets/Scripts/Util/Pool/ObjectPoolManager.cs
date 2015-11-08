@@ -9,8 +9,9 @@ namespace MyUnityChan {
         void Awake() {
             pools = new Dictionary<string, ObjectPool>();
             // To manage object using ObjectPool, add calling addPool method here
-            addPool(Const.Prefab.Projectile["BEAM"]);
+            addPool(Const.Prefab.Projectile["NORMAL_BEAM"]);
             addPool(Const.Prefab.Projectile["HADOUKEN"]);
+            addPool(Const.Prefab.Projectile["BEAM_01"]);
             addPool(Const.Prefab.Hitbox["PROJECTILE"]);
             addPool(Const.Prefab.Hitbox["BEAM"]);
             addPool(Const.Prefab.Hitbox["FLAME"]);

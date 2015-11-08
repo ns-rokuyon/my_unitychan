@@ -6,11 +6,14 @@ namespace MyUnityChan {
         public bool on = false;
         public int shooting_frame;
         public int interval_frame;
+        public string se_name;
 
         protected int start_frame;
         protected int frame_count;
         protected bool sleep;
         protected int sleep_start_frame;
+
+        protected SoundPlayer sound_player;
 
         void Start() {
             baseStart();
@@ -26,6 +29,19 @@ namespace MyUnityChan {
         }
 
         public virtual void shoot() { }
+
+        public virtual void sound() {
+            if ( se_name.Length == 0 ) {
+                return;
+            }
+            if ( sound_player == null ) {
+                sound_player = gameObject.GetComponent<SoundPlayer>();
+            }
+            if ( sound_player == null ) {
+                return;
+            }
+            sound_player.play(Const.Sound.SE.Projectile[se_name]);
+        }
 
 
         public void baseStart() {

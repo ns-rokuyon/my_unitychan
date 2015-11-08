@@ -4,14 +4,11 @@ using System.Collections;
 namespace MyUnityChan {
     public class BeamTurret : TurretBase {
         public Vector3 base_angle = new Vector3(1.0f, 0.0f, 0.0f);
-        public string beam_name = "BEAM";
-
-        private AttackSpec spec;
+        public string beam_name;
+        public string hitbox_name;
 
         void Start() {
             baseStart();
-            spec = new Beam.Spec();
-            spec.stun = 0;
         }
 
         public override Vector3 angle() {
@@ -20,17 +17,20 @@ namespace MyUnityChan {
         }
 
         public override void shoot() {
-            GameObject beam = ObjectPoolManager.getGameObject(Const.Prefab.Projectile[beam_name]);
-            beam.setParent(Hierarchy.Layout.PROJECTILE);
+            GameObject obj = ObjectPoolManager.getGameObject(Const.Prefab.Projectile[beam_name]);
+            obj.setParent(Hierarchy.Layout.PROJECTILE);
 
-            Beam prjc = beam.GetComponent<Beam>();
-            prjc.setDir(angle());
-            prjc.setStartPosition(this.gameObject.transform.position);
+            Beam beam = obj.GetComponent<Beam>();
+            beam.setDir(angle());
+            beam.setStartPosition(this.gameObject.transform.position);
 
             // hitbox
-            ProjectileHitbox hitbox = HitboxManager.self().create<ProjectileHitbox>(Const.Prefab.Hitbox["BEAM"], use_objectpool:true);
+            ProjectileHitbox hitbox = HitboxManager.self().create<ProjectileHitbox>(Const.Prefab.Hitbox[hitbox_name], use_objectpool:true);
             hitbox.setOwner(this.gameObject);
-            hitbox.ready(beam, spec);
+            hitbox.ready(obj, beam.spec);
+
+            // sound
+            sound();
         }
 
     }

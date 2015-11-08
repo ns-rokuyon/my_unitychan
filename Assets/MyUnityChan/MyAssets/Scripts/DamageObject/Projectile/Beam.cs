@@ -3,20 +3,18 @@ using System.Collections;
 
 namespace MyUnityChan {
     public class Beam : Projectile  {
-        public static readonly string resource_path = Const.Prefab.Projectile["BEAM"];
 
-        public class Spec : AttackSpec {
-            public Spec() {
-                damage = 20;
-                stun = 50;
-                frame = 9999;
-            }
+        [SerializeField] public BeamSpec spec;
 
+        [System.Serializable]
+        public class BeamSpec : AttackSpec {
             public override void attack(Character character, Hitbox hitbox) {
                 character.stun(stun);
                 character.damage(damage);
-                EffectManager.self().createEffect(Const.Prefab.Effect["HIT_02"],
-                    hitbox.gameObject.transform.position, 60, true);
+                if ( effect_name.Length != 0 ) {
+                    EffectManager.self().createEffect(Const.Prefab.Effect[effect_name],
+                        hitbox.gameObject.transform.position, 60, true);
+                }
             }
         }
 
@@ -27,7 +25,7 @@ namespace MyUnityChan {
 
         // Update is called once per frame
         void Update() {
-            projectileCommonUpdate(resource_path);
+            projectileCommonUpdate(Const.Prefab.Projectile[resource_name]);
         }
 
         public override void setStartPosition(Vector3 pos) {

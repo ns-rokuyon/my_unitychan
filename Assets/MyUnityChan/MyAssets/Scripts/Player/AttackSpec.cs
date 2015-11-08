@@ -2,11 +2,13 @@
 using System.Collections;
 
 namespace MyUnityChan {
+    [System.Serializable]
     public abstract class AttackSpec {
-        public int damage { get; set; }
-        public int stun { get; set; }       // time enemy is stuned
-        public int frame { get; set; }      // time hitbox enabled
-        public string effect_name { get; set; }
+        [SerializeField] public int damage;
+        [SerializeField] public int stun;      // time enemy is stuned
+        [SerializeField] public int frame;      // time hitbox enabled
+        [SerializeField] public string effect_name;
+
         public abstract void attack(Character character, Hitbox hitbox);
     }
 }
