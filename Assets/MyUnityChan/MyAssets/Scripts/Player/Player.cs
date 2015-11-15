@@ -13,15 +13,8 @@ namespace MyUnityChan {
 
         public string player_name = null;
 
-        public GameObject projectile_prefab;
-        public GameObject projectile_particle_prefab;
-        public GameObject jump_effect_prefab;
         public GameObject controller_prefab;
         public GameObject action_manager_prefab;
-
-        public GameObject punch_hitbox_prefab;
-        public GameObject kick_hitbox_prefab;
-        public GameObject projectile_hitbox_prefab;
 
         private GameObject player_root;
         private PlayerCamera camera;
@@ -29,21 +22,10 @@ namespace MyUnityChan {
         private PlayerActionManager action_manager = null;
         private HpGauge hpgauge;
 
-        public Vector3 moveF = new Vector3(200f, 0, 0);
-        public float maxspeed = 20f;
-        public float dash_maxspeed = 30.0f;
-        public float dashjump_maxspeed = 50.0f;
-
-        private float brake_power = 30.0f;
-        private float speed = 0;
-        //private Locomotion locomotion = null;
-        private Vector3 turn_slide_formard;
-        private int anim_turn_id;
         private float dist_to_ground;
         private Vector3 dist_checksphere_center = new Vector3(0, 0.6f, 0);
         private Vector3 ground_raycast_offset = new Vector3(0, 0.05f, 0);
         private float anim_speed_default;
-        private float jump_start_y;		// jump start point y
         private bool turn_dir_switched = false;
 
         private const float CHECKSPHERE_RADIUS = 0.1f;	// radius of sphere to check player is on ground

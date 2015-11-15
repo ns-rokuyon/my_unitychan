@@ -73,8 +73,8 @@ namespace MyUnityChan {
 
             public override void attack(Character character, Hitbox hitbox) {
                 character.GetComponent<Rigidbody>().AddForce(new Vector3(hitbox.forward.x * 5.0f, 5.0f, 0.0f), ForceMode.Impulse);
-                ((Enemy)character).stun(stun);
-                ((Enemy)character).damage(damage);
+                character.stun(stun);
+                character.damage(damage);
                 (EffectManager.Instance as EffectManager).createEffect(Const.Prefab.Effect[effect_name],
                     hitbox.gameObject.transform.position, 60, true);
             }
@@ -106,8 +106,9 @@ namespace MyUnityChan {
 
         private void createHitbox() {
             Vector3 fw = player.transform.forward;
-            HitboxManager.self().create<MeleeAttackHitbox>(hitbox_resource_path).ready(
-                player.transform.position, fw, new Vector3(0.4f * fw.x, 1.0f, 0.0f), spec);
+            MeleeAttackHitbox hitbox = HitboxManager.self().create<MeleeAttackHitbox>(hitbox_resource_path);
+            hitbox.ready( player.transform.position, fw, new Vector3(0.4f * fw.x, 1.0f, 0.0f), spec);
+            hitbox.setOwner(player.gameObject);
         }
     }
 
@@ -122,8 +123,8 @@ namespace MyUnityChan {
 
             public override void attack(Character character, Hitbox hitbox) {
                 character.GetComponent<Rigidbody>().AddForce(new Vector3(hitbox.forward.x * 2.0f, 7.0f, 0.0f), ForceMode.Impulse);
-                ((Enemy)character).stun(stun);
-                ((Enemy)character).damage(damage);
+                character.stun(stun);
+                character.damage(damage);
                 (EffectManager.Instance as EffectManager).createEffect(Const.Prefab.Effect[effect_name],
                     hitbox.gameObject.transform.position, 60, true);
             }
@@ -156,8 +157,9 @@ namespace MyUnityChan {
 
         private void createHitbox() {
             Vector3 fw = player.transform.forward;
-            HitboxManager.self().create<MeleeAttackHitbox>(hitbox_resource_path).ready(
-                player.transform.position, fw, new Vector3(0.6f * fw.x, 1.0f, 0.0f), spec);
+            MeleeAttackHitbox hitbox = HitboxManager.self().create<MeleeAttackHitbox>(hitbox_resource_path);
+            hitbox.ready(player.transform.position, fw, new Vector3(0.6f * fw.x, 1.0f, 0.0f), spec);
+            hitbox.setOwner(player.gameObject);
         }
     }
 
@@ -172,8 +174,8 @@ namespace MyUnityChan {
 
             public override void attack(Character character, Hitbox hitbox) {
                 character.GetComponent<Rigidbody>().AddForce(new Vector3(hitbox.forward.x * 2.0f, 7.0f, 0.0f), ForceMode.Impulse);
-                ((Enemy)character).stun(stun);
-                ((Enemy)character).damage(damage);
+                character.stun(stun);
+                character.damage(damage);
                 (EffectManager.Instance as EffectManager).createEffect(Const.Prefab.Effect[effect_name],
                     hitbox.gameObject.transform.position, 60, true);
             }
@@ -205,8 +207,9 @@ namespace MyUnityChan {
 
         private void createHitbox() {
             Vector3 fw = player.transform.forward;
-            HitboxManager.self().create<MeleeAttackHitbox>(hitbox_resource_path).ready(
-                player.transform.position, fw, new Vector3(0.6f * fw.x, 0.8f, 0.0f), spec);
+            MeleeAttackHitbox hitbox = HitboxManager.self().create<MeleeAttackHitbox>(hitbox_resource_path);
+            hitbox.ready(player.transform.position, fw, new Vector3(0.6f * fw.x, 0.8f, 0.0f), spec);
+            hitbox.setOwner(player.gameObject);
         }
     }
 }

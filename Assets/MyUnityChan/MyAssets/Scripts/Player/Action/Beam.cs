@@ -7,7 +7,7 @@ namespace MyUnityChan {
 
         // bone refs
         private string left_shoulder_path = 
-            "Character1_Reference/Character1_Hips/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/";
+            "unitychan_dynamic/Character1_Reference/Character1_Hips/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/";
         private Transform left_arm;
         private Transform left_fore_arm;
         private Transform left_hand;

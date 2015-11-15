@@ -12,6 +12,7 @@ namespace MyUnityChan {
         static public void setPlayers() {
             removeNullPlayers();
             foreach ( GameObject pl in GameObject.FindGameObjectsWithTag("Player") ) {
+                Debug.Log(pl.name);
                 players.Add(pl);
             }
         }

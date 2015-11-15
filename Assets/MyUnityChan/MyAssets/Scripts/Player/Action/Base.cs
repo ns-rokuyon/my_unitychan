@@ -45,7 +45,7 @@ namespace MyUnityChan {
     }
 
     public class PlayerAccel : PlayerAction {
-        private float maxspeed = 20.0f;
+        private float maxspeed = 5.0f;
         private Vector3 moveF = new Vector3(2000f, 0, 0);
 
         public PlayerAccel(Character character)
@@ -61,7 +61,8 @@ namespace MyUnityChan {
             Vector3 fw = player.transform.forward;
             float vx = player.GetComponent<Rigidbody>().velocity.x;
 
-            if ( Mathf.Abs(horizontal) >= 0.2 && horizontal * vx < maxspeed ) {
+            //if ( Mathf.Abs(horizontal) >= 0.2 && horizontal * vx < maxspeed ) {
+            if ( Mathf.Abs(horizontal) >= 0.2 ) {
                 if ( player.isGrounded() && Mathf.Sign(horizontal) != Mathf.Sign(vx) && Mathf.Abs(vx) > 0.1f ) {
                     // when player is turning, add low force
                     if ( player.isDash() ) {
@@ -84,7 +85,8 @@ namespace MyUnityChan {
             float horizontal = controller.keyHorizontal();
             float vx = player.GetComponent<Rigidbody>().velocity.x;
 
-            if ( Mathf.Abs(horizontal) >= 0.2 && horizontal * vx < maxspeed ) {
+            //if ( Mathf.Abs(horizontal) >= 0.2 && horizontal * vx < maxspeed ) {
+            if ( Mathf.Abs(horizontal) >= 0.2 ) {
                 if ( Mathf.Sign(horizontal) != Mathf.Sign(vx) && Mathf.Abs(vx) > 0.1f ) {
                 }
                 else {
@@ -105,7 +107,7 @@ namespace MyUnityChan {
 
     public class PlayerDash : PlayerAction {
         private bool dash;
-        private Vector3 moveF = new Vector3(200f, 0, 0);
+        private Vector3 moveF = new Vector3(200f, 100f, 0);
 
         public PlayerDash(Character character)
             : base(character) {
@@ -154,6 +156,9 @@ namespace MyUnityChan {
 
 
     public class PlayerLimitSpeed : PlayerAction {
+        public float maxspeed = 5.0f;
+        public float dash_maxspeed = 10.0f;
+        public float dashjump_maxspeed = 10.0f;
 
         public PlayerLimitSpeed(Character character)
             : base(character) {
@@ -166,22 +171,22 @@ namespace MyUnityChan {
 
         public override void performFixed() {
             if ( player.isDash() ) {
-                limitSpeed(player.dash_maxspeed);
+                limitSpeed(dash_maxspeed);
                 return;
             }
             if ( player.isAnimState("Base Layer.DashJump") ) {
-                limitSpeed(player.dashjump_maxspeed);
+                limitSpeed(dashjump_maxspeed);
                 return;
             }
 
-            limitSpeed(player.maxspeed);
+            limitSpeed(maxspeed);
         }
 
-        private void limitSpeed(float maxspeed) {
+        private void limitSpeed(float speed) {
             float vx = player.GetComponent<Rigidbody>().velocity.x;
             float vy = player.GetComponent<Rigidbody>().velocity.y;
-            if ( Mathf.Abs(vx) > maxspeed ) {
-                player.GetComponent<Rigidbody>().velocity = new Vector3(Mathf.Sign(vx) * maxspeed, vy);
+            if ( Mathf.Abs(vx) > speed ) {
+                player.GetComponent<Rigidbody>().velocity = new Vector3(Mathf.Sign(vx) * speed, vy);
             }
         }
 
