@@ -14,6 +14,8 @@ namespace MyUnityChan {
         protected int sleep_start_frame;
 
         protected SoundPlayer sound_player;
+        protected Character owner;
+
 
         void Start() {
             baseStart();
@@ -47,6 +49,7 @@ namespace MyUnityChan {
         public void baseStart() {
             sleep = false;
             frame_count = 0;
+            owner = GetComponent<Character>();
         }
 
         public void baseUpdate() {
@@ -61,11 +64,14 @@ namespace MyUnityChan {
                 return;
             }
 
+            if ( owner != null && ( owner.isFrozen() || owner.isStunned()) ) {
+                wait();
+                return;
+            }
+
             if ( frame_count > 0 ) {
                 if ( shooting_frame <= frame_count ) {
-                    frame_count = 0;
-                    sleep = true;
-                    sleep_start_frame = Time.frameCount;
+                    wait();
                     return;
                 }
                 shoot();
@@ -75,6 +81,12 @@ namespace MyUnityChan {
                 shoot();
                 frame_count = 1;
             }
+        }
+
+        public void wait() {
+            frame_count = 0;
+            sleep = true;
+            sleep_start_frame = Time.frameCount;
         }
     }
 }
