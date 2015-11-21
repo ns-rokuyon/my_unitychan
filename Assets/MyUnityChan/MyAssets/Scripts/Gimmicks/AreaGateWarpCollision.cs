@@ -4,10 +4,11 @@ using System.Collections;
 namespace MyUnityChan {
     public class AreaGateWarpCollision : WarpCollision {
         private Door door = null;
+        private readonly Vector3 player_down_shift = new Vector3(0.0f, 1.3f, 0.0f);
 
         public override void warp(Player player) {
             // warp
-            player.transform.position = warp_to.transform.position;
+            player.transform.position = warp_to.transform.position - player_down_shift;
             player.freeze(false);
 
             // close door
