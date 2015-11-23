@@ -6,6 +6,8 @@ namespace MyUnityChan {
 
         [SerializeField] public BeamSpec spec;
 
+        private TrailRenderer trail;
+
         [System.Serializable]
         public class BeamSpec : AttackSpec {
             public override void attack(Character character, Hitbox hitbox) {
@@ -20,6 +22,7 @@ namespace MyUnityChan {
 
         // Use this for initialization
         void Start() {
+            trail = GetComponentInChildren<TrailRenderer>();
             initialize();
         }
 
@@ -33,6 +36,10 @@ namespace MyUnityChan {
             start_position = transform.position;
 
             projectileCommonSetStartPosition();
+
+            if ( trail != null ) {
+                trail.reset(this);
+            }
         }
 
         public override void initialize() {
