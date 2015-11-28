@@ -12,16 +12,12 @@ namespace MyUnityChan {
         private Transform left_fore_arm;
         private Transform left_hand;
 
-        private int beam_interval = 20;
-        private TimerState timer = null;
-        
         public PlayerBeam(Character character)
             : base(character) {
             left_arm = player.transform.Find(left_shoulder_path + "Character1_LeftArm");
             left_fore_arm = player.transform.Find(left_shoulder_path + "Character1_LeftArm/Character1_LeftForeArm");
             left_hand = player.transform.Find(left_shoulder_path + "Character1_LeftArm/Character1_LeftForeArm/Character1_LeftHand");
 
-            timer = new FrameTimerState();
             shooter = character.GetComponent<BeamTurret>();
         }
 
@@ -34,10 +30,11 @@ namespace MyUnityChan {
         }
 
         public override void perform() {
-            if ( timer != null && timer.isFinished() ) {
-                shooter.shoot();
-                timer.createTimer(beam_interval);
-            }
+            shooter.trigger();
+        }
+
+        public override void off_perform() {
+            shooter.trigger(false);
         }
 
         // play beam-shot motion

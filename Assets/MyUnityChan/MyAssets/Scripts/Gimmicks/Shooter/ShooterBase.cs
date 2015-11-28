@@ -3,10 +3,8 @@ using System.Collections;
 
 namespace MyUnityChan {
     public abstract class ShooterBase : ObjectBase {
-        public bool on = false;
-        public int shooting_frame;
-        public int interval_frame;
-        public string se_name;
+        public bool auto = false;           // Auto trigger in each shooting frame
+        private bool triggered = false;     // Flag for specifying shooting frame manually
 
         protected int start_frame;
         protected int frame_count;
@@ -16,6 +14,10 @@ namespace MyUnityChan {
         protected SoundPlayer sound_player;
         protected Character owner;
 
+        protected int shooting_frame;
+        protected int interval_frame;
+        protected string hitbox_name;
+        protected string se_name;
 
         void Start() {
             baseStart();
@@ -45,6 +47,9 @@ namespace MyUnityChan {
             sound_player.play(Const.Sound.SE.Projectile[se_name]);
         }
 
+        public void trigger(bool t=true) {
+            triggered = t;
+        }
 
         public void baseStart() {
             sleep = false;
@@ -53,19 +58,22 @@ namespace MyUnityChan {
         }
 
         public void baseUpdate() {
-            if ( !on ) return;
+            //if ( !auto ) return;
             if ( PauseManager.isPausing() ) return;
 
             if ( sleep ) {
                 if ( Time.frameCount - sleep_start_frame >= interval_frame ) {
                     sleep = false;
-                    return;
                 }
                 return;
             }
 
             if ( owner != null && ( owner.isFrozen() || owner.isStunned()) ) {
                 wait();
+                return;
+            }
+
+            if ( !auto && !triggered ) {
                 return;
             }
 

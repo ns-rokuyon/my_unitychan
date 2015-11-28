@@ -8,18 +8,6 @@ namespace MyUnityChan {
 
         private TrailRenderer trail;
 
-        [System.Serializable]
-        public class BeamSpec : AttackSpec {
-            public override void attack(Character character, Hitbox hitbox) {
-                character.stun(stun);
-                character.damage(damage);
-                if ( effect_name.Length != 0 ) {
-                    EffectManager.self().createEffect(Const.Prefab.Effect[effect_name],
-                        hitbox.gameObject.transform.position, 60, true);
-                }
-            }
-        }
-
         // Use this for initialization
         void Start() {
             trail = GetComponentInChildren<TrailRenderer>();

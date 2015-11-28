@@ -5,10 +5,20 @@ namespace MyUnityChan {
     public class BeamTurret : TurretBase {
         public Vector3 base_angle = new Vector3(1.0f, 0.0f, 0.0f);
         public string beam_name;
-        public string hitbox_name;
 
         void Start() {
             baseStart();
+            setBeam(beam_name);
+        }
+
+        public void setBeam(string name) {
+            BeamSpec spec = (Resources.Load(Const.Prefab.Projectile[name]) as GameObject)
+                .GetComponent<Beam>().spec;
+
+            shooting_frame = spec.shooting_frame;
+            interval_frame = spec.interval_frame;
+            se_name = spec.se_name;
+            hitbox_name = spec.hitbox_name;
         }
 
         public override Vector3 angle() {
