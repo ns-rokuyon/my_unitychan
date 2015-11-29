@@ -11,6 +11,7 @@ namespace MyUnityChan {
             // To manage object using ObjectPool, add calling addPool method here
             addPool(Const.Prefab.Projectile["NORMAL_BEAM"]);
             addPool(Const.Prefab.Projectile["NORMAL_BEAM_02"]);
+            addPool(Const.Prefab.Projectile["FLAME"]);
             addPool(Const.Prefab.Projectile["HADOUKEN"]);
             addPool(Const.Prefab.Projectile["BEAM_01"]);
             addPool(Const.Prefab.Hitbox["PROJECTILE"]);
@@ -21,7 +22,6 @@ namespace MyUnityChan {
             addPool(Const.Prefab.Effect["HIT_02"]);
             addPool(Const.Prefab.Effect["JUMP_SMOKE_PUFF"]);
             addPool(Const.Prefab.Item["HP_RECOVERY"]);
-            addPool(Const.Prefab.DamageObject["FLAME"]);
             addPool(Const.Prefab.Timer["FRAME_TIMER"]);
         }
 

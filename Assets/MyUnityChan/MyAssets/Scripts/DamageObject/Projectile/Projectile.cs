@@ -3,6 +3,8 @@ using System.Collections;
 
 namespace MyUnityChan {
     public abstract class Projectile : DamageObjectBase {
+        [SerializeField] public ProjectileSpec spec;
+
         protected Vector3 target_dir;
         protected Vector3 start_position;
         protected float distance_moved;

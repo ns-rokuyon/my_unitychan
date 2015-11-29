@@ -3,9 +3,6 @@ using System.Collections;
 
 namespace MyUnityChan {
     public class Beam : Projectile  {
-
-        [SerializeField] public BeamSpec spec;
-
         private TrailRenderer trail;
 
         // Use this for initialization

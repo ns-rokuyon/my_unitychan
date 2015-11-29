@@ -57,6 +57,16 @@ namespace MyUnityChan {
             owner = GetComponent<Character>();
         }
 
+        public void setProjectile(string name) {
+            ProjectileSpec spec = (Resources.Load(Const.Prefab.Projectile[name]) as GameObject)
+                .GetComponent<Projectile>().spec;
+
+            shooting_frame = spec.shooting_frame;
+            interval_frame = spec.interval_frame;
+            se_name = spec.se_name;
+            hitbox_name = spec.hitbox_name;
+        }
+
         public void baseUpdate() {
             //if ( !auto ) return;
             if ( PauseManager.isPausing() ) return;
@@ -68,10 +78,11 @@ namespace MyUnityChan {
                 return;
             }
 
-            if ( owner != null && ( owner.isFrozen() || owner.isStunned()) ) {
+            if ( owner != null && (owner.isFrozen() || owner.isStunned()) ) {
                 wait();
                 return;
             }
+            
 
             if ( !auto && !triggered ) {
                 return;

@@ -40,6 +40,7 @@ public static class Hierarchy {
         public static readonly string PARTICLE = "Object/Particle";
         public static readonly string HITBOX = "Object/Hitbox";
         public static readonly string EFFECT = "Object/Effect";
+        public static readonly string ENEMY = "Enemy";
         public static readonly string DROP_ITEM = "Object/Item/DropItem";
         public static readonly string DAMAGE_OBJECT = "Object/DamageObject";
     }

@@ -8,18 +8,9 @@ namespace MyUnityChan {
 
         void Start() {
             baseStart();
-            setBeam(beam_name);
+            setProjectile(beam_name);
         }
 
-        public void setBeam(string name) {
-            BeamSpec spec = (Resources.Load(Const.Prefab.Projectile[name]) as GameObject)
-                .GetComponent<Beam>().spec;
-
-            shooting_frame = spec.shooting_frame;
-            interval_frame = spec.interval_frame;
-            se_name = spec.se_name;
-            hitbox_name = spec.hitbox_name;
-        }
 
         public override Vector3 angle() {
             if ( this.gameObject.transform.forward.x >= 0 ) return base_angle;

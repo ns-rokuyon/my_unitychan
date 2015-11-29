@@ -2,25 +2,13 @@
 using System.Collections;
 
 namespace MyUnityChan {
-    public class Flame : DamageObjectBase {
+    public class Flame : Projectile {
         private TimerState lifetime = null;
         private int lifetime_frame = 180;
         private DamageObjectHitbox hitbox = null;
 
         private ParticleSystem particle_system = null;
         private Light light = null;
-
-        public class Spec : AttackSpec {
-            public Spec() {
-                damage = 10;
-                frame = 9999;
-            }
-
-            public override void attack(Character character, Hitbox _hitbox) {
-                if ( _hitbox.isOwner(character) ) return;
-                character.damage(damage);
-            }
-        }
 
         // Use this for initialization
         void Start() {
@@ -31,7 +19,7 @@ namespace MyUnityChan {
         void Update() {
             if ( lifetime != null ) {
                 if ( lifetime.isFinished() ) {
-                    ObjectPoolManager.releaseGameObject(this.gameObject, Const.Prefab.DamageObject["FLAME"]);
+                    ObjectPoolManager.releaseGameObject(this.gameObject, Const.Prefab.Projectile["FLAME"]);
                 }
 
                 if ( lifetime.getTimer() != null && ((FrameTimer)lifetime.getTimer()).now() > 120 ) {
@@ -51,7 +39,7 @@ namespace MyUnityChan {
         }
 
         public override void initialize() {
-            createHitbox();
+            //createHitbox();
 
             particle_system = this.gameObject.GetComponent<ParticleSystem>();
             Color color = particle_system.startColor;
@@ -69,7 +57,7 @@ namespace MyUnityChan {
 
         private void createHitbox() {
             hitbox = HitboxManager.self().create<DamageObjectHitbox>(Const.Prefab.Hitbox["FLAME"], true);
-            hitbox.ready(this.gameObject, new Spec());
+            hitbox.ready(this.gameObject, spec);
         }
 
         public DamageObjectHitbox getHitbox() {
