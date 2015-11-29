@@ -133,7 +133,7 @@ namespace MyUnityChan {
         }
 
     #if UNITY_EDITOR
-        public void sceneGUI() {
+        public virtual void sceneGUI() {
             if ( !isEmptyBaselineZ() ) {
                 Vector3 area_center = transform.position;
                 Bounds bounds = gameObject.GetComponent<MeshRenderer>().bounds;
@@ -149,7 +149,7 @@ namespace MyUnityChan {
             }
         }
     #else
-        public override void sceneGUI() {
+        public virtual void sceneGUI() {
         }
     #endif
 
