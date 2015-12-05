@@ -17,6 +17,7 @@ namespace MyUnityChan {
         }
 
         public override void performFixed() {
+            Debug.Log("JUMP!");
             enemy.GetComponent<Rigidbody>().AddForce(new Vector3(enemy.transform.forward.x * jumpFx, jumpFy, 0), ForceMode.Impulse);
         }
 
