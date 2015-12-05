@@ -4,17 +4,13 @@ using System.Collections.Generic;
 namespace MyUnityChan {
 
     public abstract class Enemy : NPCharacter {
-        public GameObject controller_prefab;
-        public GameObject enemy_action_manager_prefab;
+        public string AI_name;
 
         protected int max_hp;
-
         protected EnemyActionManager action_manager;
 
         protected void loadAttachedAI() {
-
-            GameObject controller_inst = Instantiate(controller_prefab) as GameObject;
-            controller_inst.setParent(gameObject);
+            GameObject controller_inst = PrefabInstantiater.create(Const.Prefab.AI[AI_name], gameObject);
             controller = controller_inst.GetComponent<Controller>();
 
             ((AIController)controller).setSelf(this);
@@ -27,15 +23,19 @@ namespace MyUnityChan {
             this.gameObject.SetActive(true);
         }
 
+        void Awake() {
+            action_manager = PrefabInstantiater.create(Const.Prefab.Manager["ENEMY_ACTION_MANAGER"], gameObject)
+                .GetComponent<EnemyActionManager>();
+        }
+
         // Use this for initialization
         void Start() {
             loadAttachedAI();
-            action_manager = new EnemyActionManager();
             inputlock_timer = new FrameTimerState();
             position_history = new RingBuffer<Vector3>(10);
 
             // enemy status setup
-            status = (Instantiate(status_prefab) as GameObject).setParent(gameObject).GetComponent<EnemyStatus>();
+            status = PrefabInstantiater.create(Const.Prefab.Status["ENEMY_STATUS"], gameObject).GetComponent<EnemyStatus>();
 
             start();
         }

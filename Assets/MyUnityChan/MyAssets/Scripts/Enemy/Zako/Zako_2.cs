@@ -7,7 +7,6 @@ namespace MyUnityChan {
         public float walk_maxspeed;
 
         protected override void start() {
-            action_manager = (Instantiate(enemy_action_manager_prefab) as GameObject).setParent(gameObject).GetComponent<EnemyActionManager>();
             action_manager.registerAction(new EnemyWalk(this, walk_f, walk_maxspeed));
             action_manager.registerAction(new EnemyDead(this, Const.Prefab.Effect["BLACK_EXPLOSION"], onDead));
 

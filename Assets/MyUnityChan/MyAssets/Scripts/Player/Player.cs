@@ -52,7 +52,7 @@ namespace MyUnityChan {
             action_manager = (Instantiate(action_manager_prefab) as GameObject).setParent(player_root).GetComponent<PlayerActionManager>();
 
             // player status setup
-            status = (Instantiate(status_prefab) as GameObject).setParent(player_root).GetComponent<PlayerStatus>();
+            status = PrefabInstantiater.create(Const.Prefab.Status["PLAYER_STATUS"], player_root).GetComponent<PlayerStatus>();
 
             // HP gauge setup
             hpgauge = PrefabInstantiater.create(Const.Prefab.UI["PLAYER_HP_GAUGE"], HpGauge.getCanvas("Canvas")).GetComponent<HpGauge>();
