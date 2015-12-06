@@ -61,9 +61,6 @@ namespace MyUnityChan {
 
     }
 
-    public abstract class PlayerController : Controller {
-    }
-
     public abstract class AIController : Controller {
         public bool isStopped = false;
     }

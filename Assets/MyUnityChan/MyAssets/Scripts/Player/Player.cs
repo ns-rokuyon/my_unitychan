@@ -13,7 +13,7 @@ namespace MyUnityChan {
 
         public string player_name = null;
 
-        public GameObject controller_prefab;
+        public string controller_name;
         public GameObject action_manager_prefab;
 
         private GameObject player_root;
@@ -45,7 +45,7 @@ namespace MyUnityChan {
             camera.setPlayer(this.gameObject);
 
             // controller setup
-            controller = (Instantiate(controller_prefab) as GameObject).setParent(player_root).GetComponent<Controller>();
+            controller = PrefabInstantiater.create(Const.Prefab.Controller[controller_name], player_root).GetComponent<Controller>();
             controller.setSelf(this);
 
             // action manager setup

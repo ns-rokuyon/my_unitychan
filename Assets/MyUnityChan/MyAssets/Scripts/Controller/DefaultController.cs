@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 namespace MyUnityChan {
     public class DefaultController : PlayerController {
@@ -7,19 +8,7 @@ namespace MyUnityChan {
          * Keyboard Controller (Default)
          */
 
-        void Update() {
-            if ( self.isInputLocked() && !PauseManager.isPausing() ) {
-                // ignore any inputs
-                clearAllInputs();
-                return;
-            }
-
-            if ( self.isFrozen() ) {
-                // ignore any inputs
-                clearAllInputs();
-                return;
-            }
-
+        protected override void watchInput() {
             if ( Time.timeScale > 0.0f ) {
                 horizontal_input = Input.GetAxis("Horizontal");
                 vertical_input = Input.GetAxis("Vertical");
@@ -36,11 +25,6 @@ namespace MyUnityChan {
             inputs[(int)InputCode.PAUSE] = Input.GetKeyDown("p");
             inputs[(int)InputCode.TEST] = Input.GetKey("t");
             inputs[(int)InputCode.CANCEL] = Input.GetKey("b");
-
-            if ( PauseManager.isPausing() ) {
-                PauseManager.controlOnPause();
-                return;
-            }
         }
 
     }
