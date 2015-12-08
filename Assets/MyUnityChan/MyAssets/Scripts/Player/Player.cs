@@ -82,6 +82,7 @@ namespace MyUnityChan {
             setupSoundPlayer();
 
             player = gameObject;
+            position_history = new RingBuffer<Vector3>(10);
         }
 
         void Update() {
@@ -97,6 +98,7 @@ namespace MyUnityChan {
             }
 
             updateStunned();
+            recordPosition();
         }
 
 
