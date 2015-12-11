@@ -24,6 +24,9 @@ namespace MyUnityChan {
         protected float y_harf;
         protected float z_harf;
 
+        // Camera position
+        [SerializeField] public PlayerCameraPosition camera_position;
+
         // Area Status
         public bool passed;
 
@@ -116,6 +119,10 @@ namespace MyUnityChan {
                 ins[name] = true;
                 passed = true;
 
+                // Adjust player's camera position to that in this area
+                player.getPlayerCamera().setPositionInArea(this);
+
+                // Enemy respawn
                 for ( int i = 0; i < spawnable_enemies.Length; i++ ) {
                     if ( !spawnable_enemies[i].activeSelf ) {
                         spawnable_enemies[i].GetComponent<Enemy>().spawn();
