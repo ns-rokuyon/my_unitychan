@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -18,7 +19,10 @@ namespace MyUnityChan {
         public GameObject[] spawnable_enemies;
 
         private Dictionary<string, bool> ins;
-        List<AreaConnection> connections;
+        protected List<AreaConnection> connections;
+
+        protected List<Area> connected_areas;
+        protected List<GameObject> gameobjects;
 
         protected float x_harf;
         protected float y_harf;
@@ -33,6 +37,8 @@ namespace MyUnityChan {
         void Awake() {
             ins = new Dictionary<string, bool>();
             connections = new List<AreaConnection>();
+            connected_areas = new List<Area>();
+            gameobjects = new List<GameObject>();
             Bounds bounds = gameObject.GetComponent<MeshRenderer>().bounds;
             x_harf = (float)(bounds.size.x / 2.0);
             y_harf = (float)(bounds.size.y / 2.0);
@@ -110,6 +116,22 @@ namespace MyUnityChan {
             AreaConnection.mergeUndirectedConnection(connections, conn);
         }
 
+        public void addConnectedArea(Area area) {
+            connected_areas.Add(area);
+        }
+
+        public List<Area> getNeighborhoodArea() {
+            return connected_areas;
+        }
+
+        public void activateGameObjects() {
+            gameobjects.ForEach(obj => obj.SetActive(true));
+        }
+
+        public void deactivateGameObjects() {
+            gameobjects.ForEach(obj => obj.SetActive(false));
+        }
+
         public void OnTriggerEnter(Collider colliderInfo) {
             if ( colliderInfo.gameObject.tag == "Player" ) {
                 Player player = colliderInfo.gameObject.GetComponent<Player>();
@@ -128,13 +150,21 @@ namespace MyUnityChan {
                         spawnable_enemies[i].GetComponent<Enemy>().spawn();
                     }
                 }
+
+                // Disable enemies
+                AreaManager.self().switchingMembers(this, connected_areas);
+            }
+            else if ( colliderInfo.gameObject.tag == "Enemy" ) {
+                Enemy enemy = colliderInfo.gameObject.GetComponent<Enemy>();
+                enemy.setAreaName(this.gameObject.name);
+                gameobjects.Add(enemy.gameObject);
             }
         }
 
         public void OnTriggerExit(Collider colliderInfo) {
-            if ( colliderInfo.gameObject.tag == "Player" ) {
-                Player player = colliderInfo.gameObject.GetComponent<Player>();
-                string name = player.gameObject.name;
+            if ( colliderInfo.gameObject.tag == "Player" ||
+                 colliderInfo.gameObject.tag == "Enemy" ) {
+                string name = colliderInfo.gameObject.name;
                 ins[name] = false;
             }
         }

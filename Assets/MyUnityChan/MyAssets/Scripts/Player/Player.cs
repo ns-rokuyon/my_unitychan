@@ -31,7 +31,6 @@ namespace MyUnityChan {
         private const float CHECKSPHERE_RADIUS = 0.1f;	// radius of sphere to check player is on ground
         private GameObject sphere_ground_check = null;
 
-        private string area_name = null;
 
         protected static GameObject player;
 
@@ -208,14 +207,6 @@ namespace MyUnityChan {
 
         public PlayerActionManager getActionManager() {
             return action_manager;
-        }
-
-        public void setAreaName(string name) {
-            area_name = name;
-        }
-
-        public string getAreaName() {
-            return area_name;
         }
 
         private void performTest() {

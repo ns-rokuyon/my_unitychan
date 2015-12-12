@@ -11,6 +11,7 @@ namespace MyUnityChan {
         protected CharacterStatus status;
         protected RingBuffer<Vector3> position_history;
 
+        protected string area_name;
         protected int stunned = 0;
 
         public Controller getController() {
@@ -32,6 +33,15 @@ namespace MyUnityChan {
         public void setHP(int _hp) {
             status.hp = _hp;
         }
+
+        public void setAreaName(string name) {
+            area_name = name;
+        }
+
+        public string getAreaName() {
+            return area_name;
+        }
+
 
         public bool isFrozen() {
             return status.freeze;

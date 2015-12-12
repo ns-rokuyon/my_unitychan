@@ -4,6 +4,7 @@ using System.Collections.Generic;
 namespace MyUnityChan {
     public class AreaManager : SingletonObjectBase<AreaManager> {
         private Dictionary<string,Area> areas;
+        private string now_area_name;
 
         void Awake() {
             areas = new Dictionary<string,Area>();
@@ -31,6 +32,10 @@ namespace MyUnityChan {
             return areas[name];
         }
 
+        public Area getNowArea() {
+            return getArea(now_area_name);
+        }
+
         public string getAreaNameFromObject(GameObject obj) {
             foreach ( KeyValuePair<string, Area> pair in areas ) {
                 if ( pair.Value.isIn(obj.transform.position) ) {
@@ -56,6 +61,28 @@ namespace MyUnityChan {
         public void registerAreaConnectionInfo(GameObject from, GameObject to) {
             Area area = getAreaFromMemberObject(from);
             area.addAreaConnections(from, to);
+
+            Area to_area = getAreaFromMemberObject(to);
+            area.addConnectedArea(to_area);
+        }
+
+        public void reportPlayerEntered(Area area) {
+            now_area_name = area.gameObject.name;
+        }
+
+        public void switchingMembers(Area now_area, List<Area> connected_area) {
+            foreach ( KeyValuePair<string, Area> pair in areas ) {
+                Area area = pair.Value;
+                if ( connected_area.IndexOf(area) == -1 ) {
+                    // For not connected areas
+                    area.deactivateGameObjects();
+                }
+                else {
+                    // For connected areas
+                    area.activateGameObjects();
+                }
+            }
+            now_area.activateGameObjects();
         }
     }
 }
