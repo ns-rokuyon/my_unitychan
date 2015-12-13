@@ -70,7 +70,7 @@ namespace MyUnityChan {
             now_area_name = area.gameObject.name;
         }
 
-        public void switchingMembers(Area now_area, List<Area> connected_area) {
+        public void manageGameObjectsInArea(Area now_area, List<Area> connected_area) {
             foreach ( KeyValuePair<string, Area> pair in areas ) {
                 Area area = pair.Value;
                 if ( connected_area.IndexOf(area) == -1 ) {

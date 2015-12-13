@@ -125,7 +125,14 @@ namespace MyUnityChan {
         }
 
         public void activateGameObjects() {
-            gameobjects.ForEach(obj => obj.SetActive(true));
+            List<GameObject> disabled_objs = 
+                gameobjects.FindAll(obj => obj.GetComponent<Character>() && obj.GetComponent<Character>().getHP() > 0);
+            disabled_objs.ForEach(obj => obj.SetActive(true));
+
+            List<GameObject> respawn_objs =
+                gameobjects.FindAll(obj => obj.GetComponent<Spawnable>() && 
+                    obj.GetComponent<Enemy>() && obj.GetComponent<Enemy>().getHP() == 0);
+            respawn_objs.ForEach(obj => { obj.SetActive(true); obj.GetComponent<Enemy>().spawn(); });
         }
 
         public void deactivateGameObjects() {
@@ -144,15 +151,8 @@ namespace MyUnityChan {
                 // Adjust player's camera position to that in this area
                 player.getPlayerCamera().setPositionInArea(this);
 
-                // Enemy respawn
-                for ( int i = 0; i < spawnable_enemies.Length; i++ ) {
-                    if ( !spawnable_enemies[i].activeSelf ) {
-                        spawnable_enemies[i].GetComponent<Enemy>().spawn();
-                    }
-                }
-
-                // Disable enemies
-                AreaManager.self().switchingMembers(this, connected_areas);
+                // Activate, Activate(respawn), or Deactivate enemies
+                AreaManager.self().manageGameObjectsInArea(this, connected_areas);
             }
             else if ( colliderInfo.gameObject.tag == "Enemy" ) {
                 Enemy enemy = colliderInfo.gameObject.GetComponent<Enemy>();
