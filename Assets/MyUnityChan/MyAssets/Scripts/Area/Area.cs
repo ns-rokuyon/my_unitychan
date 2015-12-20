@@ -16,7 +16,7 @@ namespace MyUnityChan {
 
         public float baselineZ = float.NaN;
 
-        public GameObject[] spawnable_enemies;
+        public List<GameObject> bound_objects;
 
         private Dictionary<string, bool> ins;
         protected List<AreaConnection> connections;
@@ -30,9 +30,11 @@ namespace MyUnityChan {
 
         // Camera position
         [SerializeField] public PlayerCameraPosition camera_position;
+        public bool auto_zoom;
 
         // Area Status
         public bool passed;
+
 
         void Awake() {
             ins = new Dictionary<string, bool>();
@@ -72,12 +74,21 @@ namespace MyUnityChan {
             return true;
         }
 
+        public bool isSetBounds() {
+            if ( bound_objects.Count == 0 ) return false;
+            return true;
+        }
+
         public float getBaselineZ() {
             return baselineZ;
         }
 
         public bool isEmptyBaselineZ() {
             return float.IsNaN(baselineZ);
+        }
+
+        public bool isAutoZoom() {
+            return auto_zoom;
         }
 
         public bool isPassed() {
@@ -147,6 +158,8 @@ namespace MyUnityChan {
                 register(name);
                 ins[name] = true;
                 passed = true;
+
+                AreaManager.self().reportPlayerEntered(this);
 
                 // Adjust player's camera position to that in this area
                 player.getPlayerCamera().setPositionInArea(this);
