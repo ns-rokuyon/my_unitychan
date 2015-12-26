@@ -10,6 +10,7 @@ namespace MyUnityChan {
             // warp
             player.transform.position = warp_to.transform.position - player_down_shift;
             player.freeze(false);
+            player.getPlayerCamera().warpByPlayer(player);
 
             // close door
             if ( door == null ) {

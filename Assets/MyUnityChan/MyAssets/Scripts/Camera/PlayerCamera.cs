@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,10 +12,11 @@ namespace MyUnityChan {
 
         private PlayerCameraPosition default_camera_position;
         private PlayerCameraPosition now_camera_position;
-
         private Dictionary<ViewportCorner, Vector3> viewport_corners_in_world;
-
         private Camera camera_component;
+
+        // Temp flags
+        private bool keep_zooming;
 
         enum ViewportCorner {
             LEFT_TOP,
@@ -34,6 +36,8 @@ namespace MyUnityChan {
             now_camera_position = default_camera_position;
 
             viewport_corners_in_world = new Dictionary<ViewportCorner, Vector3>();
+
+            keep_zooming = false;
         }
 
         // Update is called once per frame
@@ -62,21 +66,14 @@ namespace MyUnityChan {
                 return newpos;
             }
 
-            if ( area.right_wall && newpos.x + area_limit_offset >= area.limitRight() ) {
-                newpos.x = transform.position.x;    // no update
-            }
-            if ( area.left_wall && newpos.x - area_limit_offset <= area.limitLeft() ) {
-                newpos.x = transform.position.x;    // no update
-            }
-            if ( area.roof && newpos.y + area_limit_offset >= area.limitRoof() ) {
-                newpos.y = transform.position.y;    // no update
-            }
-            if ( area.floor && newpos.y - area_limit_offset <= area.limitFloor() ) {
-                newpos.y = transform.position.y;    // no update
-            }
+            newpos = limitAreaBound(newpos, area);
 
             if ( area.isAutoZoom() ) {
                 newpos = autoZoom(newpos);
+            }
+
+            if ( area.limit_by_viewport_corners ) {
+                newpos = limitByViewportCorners(newpos);
             }
 
             return newpos;
@@ -87,6 +84,10 @@ namespace MyUnityChan {
             player = target;
             player_component = player.GetComponent<Player>();
             transform.position = player.transform.position + now_camera_position.position_diff;
+        }
+
+        public void warpByPlayer(Player player) {
+            transform.position = player.gameObject.transform.position;
         }
 
         public void setPositionInArea(Area area) {
@@ -134,17 +135,67 @@ namespace MyUnityChan {
                 viewport_corners_in_world[ViewportCorner.RIGHT_TOP].add(-diff * 2.0f, -diff, 0.0f);
         }
 
-        private Vector3 autoZoom(Vector3 newpos) {
-            try {
-                var outOfArea = viewport_corners_in_world.First(pair => !Physics.Raycast(pair.Value, Vector3.forward, 20.0f));
-                Debug.Log(outOfArea);
-
-                // Zoom
-                newpos = newpos.add(0, -0.5f, 2.0f);
+        private Vector3 limitAreaBound(Vector3 newpos, Area area) {
+            if ( area.right_wall && newpos.x + area_limit_offset >= area.limitRight() ) {
+                newpos.x = transform.position.x;    // no update
             }
-            catch (System.InvalidOperationException) {
+            if ( area.left_wall && newpos.x - area_limit_offset <= area.limitLeft() ) {
+                newpos.x = transform.position.x;    // no update
+            }
+            if ( area.roof && newpos.y + area_limit_offset >= area.limitRoof() ) {
+                newpos.y = transform.position.y;    // no update
+            }
+            if ( area.floor && newpos.y - area_limit_offset <= area.limitFloor() ) {
+                newpos.y = transform.position.y;    // no update
             }
             return newpos;
         }
+
+        private Vector3 limitByViewportCorners(Vector3 newpos) {
+            var outOfAreas = viewport_corners_in_world.Where(pair => !Physics.Raycast(pair.Value, Vector3.forward, 20.0f)).ToList();
+
+            outOfAreas.ForEach(pair => {
+                if ( pair.Key == ViewportCorner.RIGHT_TOP ) {
+                    newpos = newpos.changeY(transform.position.y < newpos.y ? transform.position.y : newpos.y)
+                                   .changeX(transform.position.x < newpos.x ? transform.position.x : newpos.x);
+                }
+                else if ( pair.Key == ViewportCorner.LEFT_TOP ) {
+                    newpos = newpos.changeY(transform.position.y < newpos.y ? transform.position.y : newpos.y)
+                                   .changeX(transform.position.x > newpos.x ? transform.position.x : newpos.x);
+                }
+                /*
+                if ( pair.Key == ViewportCorner.RIGHT_BOTTOM ) {
+                    newpos = newpos.changeY(transform.position.y > newpos.y ? transform.position.y : newpos.y)
+                                   .changeX(transform.position.x < newpos.x ? transform.position.x : newpos.x);
+                }
+                if ( pair.Key == ViewportCorner.LEFT_BOTTOM ) {
+                    newpos = newpos.changeY(transform.position.y > newpos.y ? transform.position.y : newpos.y)
+                                   .changeX(transform.position.x > newpos.x ? transform.position.x : newpos.x);
+                }
+                */
+            });
+
+            return newpos;
+        }
+
+        private Vector3 autoZoom(Vector3 newpos) {
+            var outOfAreas = viewport_corners_in_world.Where(pair => !Physics.Raycast(pair.Value, Vector3.forward, 20.0f)).ToList();
+            if ( !keep_zooming && outOfAreas.Count == 0 ) {
+                return newpos;
+            }
+
+            StartCoroutine(switchZoomInterval());
+
+            // Zoom
+            return newpos.add(0, -1.0f, 2.0f);
+        }
+
+        private IEnumerator switchZoomInterval() {
+            if ( keep_zooming ) yield break;
+            keep_zooming = true;
+            yield return new WaitForSeconds(1.0f);
+            keep_zooming = false;
+        }
+
     }
 }

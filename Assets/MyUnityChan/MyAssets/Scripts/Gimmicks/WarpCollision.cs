@@ -13,6 +13,7 @@ namespace MyUnityChan {
             player.transform.position = warp_to.transform.position;
             player.lookAtDirectionX(warp_to.GetComponent<Warp>().dst_direction);
             player.freeze(false);
+            player.getPlayerCamera().warpByPlayer(player);
         }
     }
 }

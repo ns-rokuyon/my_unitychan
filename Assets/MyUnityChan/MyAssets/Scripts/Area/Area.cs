@@ -13,6 +13,8 @@ namespace MyUnityChan {
         public bool floor;
         public bool left_wall;
         public bool right_wall;
+        public bool auto_zoom;
+        public bool limit_by_viewport_corners;
 
         public float baselineZ = float.NaN;
 
@@ -30,7 +32,6 @@ namespace MyUnityChan {
 
         // Camera position
         [SerializeField] public PlayerCameraPosition camera_position;
-        public bool auto_zoom;
 
         // Area Status
         public bool passed;
