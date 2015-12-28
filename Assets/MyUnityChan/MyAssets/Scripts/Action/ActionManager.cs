@@ -118,6 +118,9 @@ namespace MyUnityChan {
         }
 
         public Action getAction(string name) {
+            if ( !actions.ContainsKey(name) ) {
+                return null;
+            }
             return actions[name];
         }
     }

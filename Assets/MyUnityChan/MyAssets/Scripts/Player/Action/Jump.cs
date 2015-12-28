@@ -43,7 +43,7 @@ namespace MyUnityChan {
         }
 
         public override bool condition() {
-            return controller.keyJump() && player.isGrounded();
+            return controller.keyJump() && player.isGrounded() && !player.isGuarding();
         }
 
         public override void effect() {
@@ -102,7 +102,7 @@ namespace MyUnityChan {
 
         public override bool condition() {
             return controller.keyJump() &&
-                readyToJump() && !air_jumped;
+                readyToJump() && !air_jumped && !player.isGuarding();
         }
 
         public override void end() {

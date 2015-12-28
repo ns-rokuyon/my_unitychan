@@ -26,7 +26,7 @@ namespace MyUnityChan {
         }
 
         public override bool condition() {
-            return controller.keyTest();
+            return controller.keyProjectile();
         }
 
         public override void perform() {

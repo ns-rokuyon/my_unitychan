@@ -101,7 +101,7 @@ namespace MyUnityChan {
         }
 
         public override bool condition() {
-            return !player.isInputLocked();
+            return !player.isInputLocked() && !player.isGuarding();
         }
     }
 
@@ -142,7 +142,7 @@ namespace MyUnityChan {
         }
 
         public override bool condition() {
-            return controller.keyDash() && player.isGrounded();
+            return controller.keyDash() && player.isGrounded() && !player.isGuarding();
         }
 
         public bool isDash() {

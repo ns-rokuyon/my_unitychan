@@ -20,7 +20,7 @@ namespace MyUnityChan {
             inputs[(int)InputCode.JUMP] = Input.GetKeyDown("space");
             inputs[(int)InputCode.SLIDING] = Input.GetKeyDown("z");
             inputs[(int)InputCode.ATTACK] = Input.GetKeyDown("x");
-            inputs[(int)InputCode.PROJECTILE] = Input.GetKeyDown("c");
+            inputs[(int)InputCode.PROJECTILE] = Input.GetKey("c");
             inputs[(int)InputCode.DASH] = Input.GetKey("v");
             inputs[(int)InputCode.PAUSE] = Input.GetKeyDown("p");
             inputs[(int)InputCode.TEST] = Input.GetKey("t");

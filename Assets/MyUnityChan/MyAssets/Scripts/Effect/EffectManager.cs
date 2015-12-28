@@ -10,6 +10,7 @@ namespace MyUnityChan {
                 (effect as EffectBase).enablePool(resource_path);
                 return effect;
             }
+            Debug.Log("create : " + resource_path);
             return instantiatePrefab(resource_path, Hierarchy.Layout.EFFECT).GetComponent<T>();
         }
 

@@ -51,7 +51,7 @@ namespace MyUnityChan {
         }
 
         public override bool condition() {
-            return true;
+            return !player.isGuarding();
         }
     }
 }

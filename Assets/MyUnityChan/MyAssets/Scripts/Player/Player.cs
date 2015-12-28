@@ -117,20 +117,26 @@ namespace MyUnityChan {
             action_manager.registerAction(new PlayerLimitSpeed(this));
             action_manager.registerAction(new PlayerJump(this));
             action_manager.registerAction(new PlayerSliding(this));
-            action_manager.registerAction(new PlayerHadouken(this));
             action_manager.registerAction(new PlayerAttack(this));
             action_manager.registerAction(new PlayerTurn(this));
             action_manager.registerAction(new PlayerDown(this));
             action_manager.registerAction(new PlayerBeam(this));
+            action_manager.registerAction(new PlayerGuard(this));
         }
 
         public override void damage(int dam) {
-            if ( !status.invincible.now() ) {
-                animator.SetTrigger("Damaged");
-                status.invincible.enable(60);
-                status.hp -= dam;
-                Debug.Log("damaged!");
+            if ( status.invincible.now() ) return;
+            if ( isGuarding() ) {
+                // Guard effect
+                EffectManager.self().createEffect(Const.Prefab.Effect["GUARD_01"], transform.position, 40, true);
+
+                // Reaction force
+                player.GetComponent<Rigidbody>().AddForce(player.transform.forward * (-10.0f), ForceMode.VelocityChange);
+                return;
             }
+            animator.SetTrigger("Damaged");
+            status.invincible.enable(60);
+            status.hp -= dam;
         }
 
         public void freeze(bool flag=true) {
@@ -178,6 +184,10 @@ namespace MyUnityChan {
 
         public bool isDash() {
             return ((PlayerDash)action_manager.getAction("DASH")).isDash();
+        }
+
+        public bool isGuarding() {
+            return ((PlayerGuard)action_manager.getAction("GUARD")).guarding;
         }
 
         public bool isAnimState(string anim_name) {
