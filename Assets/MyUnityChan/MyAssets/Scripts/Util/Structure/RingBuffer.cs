@@ -36,6 +36,20 @@ namespace MyUnityChan {
             return buffer[head];
         }
 
+        public T getPrev(int prev) {
+            /*
+            NOTE: 
+                getPrev(0) == getHead()
+                getPrev(size - 1) == getLast()
+            */
+            int i = head - prev;
+            if ( i < 0 ) {
+                i += size;
+            }
+            //Debug.Log(i);
+            return buffer[i];
+        }
+
         public T getLast() {
             return buffer[lastIndex()];
         }

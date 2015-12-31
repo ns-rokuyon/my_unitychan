@@ -15,10 +15,12 @@ namespace MyUnityChan {
     public abstract class PlayerAction : Action {
         protected Player player;
         protected PlayerController controller;
+        protected CommandRecorder command_recorder;
 
         public PlayerAction(Character character) {
             player = (Player)character;
             controller = (PlayerController)player.getController();
+            command_recorder = controller.getCommandRecorder();
         }
 
     }

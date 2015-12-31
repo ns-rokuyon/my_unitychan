@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace MyUnityChan {
     public class PlayerHadouken : PlayerAction {
@@ -45,7 +46,26 @@ namespace MyUnityChan {
         public override bool condition() {
             AnimatorStateInfo anim_state = player.getAnimator().GetCurrentAnimatorStateInfo(0);
 
+            List<Controller.InputCode> cmd;
+            if ( player.isLookAhead() ) {
+                cmd = new List<Controller.InputCode> {
+                    Controller.InputCode.DOWN,
+                    Controller.InputCode.RIGHT,
+                    Controller.InputCode.ATTACK
+                };
+            }
+            else {
+                cmd = new List<Controller.InputCode> {
+                    Controller.InputCode.DOWN,
+                    Controller.InputCode.LEFT,
+                    Controller.InputCode.ATTACK
+                };
+            }
+
+            //controller.keyProjectile() &&
             bool cond =
+                command_recorder != null &&
+                command_recorder.command(cmd) &&
                 controller.keyProjectile() &&
                 !player.getAnimator().GetBool("Turn") &&
                 player.isGrounded() &&

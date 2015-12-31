@@ -12,6 +12,10 @@ namespace MyUnityChan {
             PAUSE,
             TEST,
             CANCEL,
+            DOWN,
+            UP,
+            LEFT,
+            RIGHT,
             len
         };
 
@@ -35,6 +39,9 @@ namespace MyUnityChan {
         void Update() {
         }
 
+        public List<bool> getAllInputs() {
+            return inputs;
+        }
 
         public void setSelf(Character ch) {
             self = ch;
@@ -48,6 +55,10 @@ namespace MyUnityChan {
             }
         }
 
+        public CommandRecorder getCommandRecorder() {
+            return GetComponent<CommandRecorder>();
+        }
+
         public bool keyCancel() { return inputs[(int)InputCode.CANCEL]; }
         public bool keyJump() { return inputs[(int)InputCode.JUMP]; }
         public bool keySliding() { return inputs[(int)InputCode.SLIDING]; }
@@ -56,6 +67,10 @@ namespace MyUnityChan {
         public bool keyDash() { return inputs[(int)InputCode.DASH]; }
         public bool keyPause() { return inputs[(int)InputCode.PAUSE]; }
         public bool keyTest() { return inputs[(int)InputCode.TEST]; }
+        public bool keyUp() { return inputs[(int)InputCode.UP]; }
+        public bool keyDown() { return inputs[(int)InputCode.DOWN]; }
+        public bool keyLeft() { return inputs[(int)InputCode.LEFT]; }
+        public bool keyRight() { return inputs[(int)InputCode.RIGHT]; }
         public float keyHorizontal() { return horizontal_input; }
         public float keyVertical() { return vertical_input; }
 
