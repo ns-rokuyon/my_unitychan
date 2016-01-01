@@ -11,7 +11,7 @@ namespace MyUnityChan {
 
         private RingBuffer<List<bool>> history;
         private Controller controller;
-        private readonly int command_margin = 2;
+        private readonly int command_margin = 3;
 
         void Awake() {
             history = new RingBuffer<List<bool>>(buffer_size);
@@ -37,6 +37,8 @@ namespace MyUnityChan {
         }
         
         public bool command(List<Controller.InputCode> input_lists) {
+            if ( !history.isFull() ) return false;
+
             int prev_frame = 0;
             int prev_frame_end = input_lists.Count + command_margin;
             if ( prev_frame_end >= buffer_size ) {

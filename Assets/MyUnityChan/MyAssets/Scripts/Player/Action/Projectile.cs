@@ -66,7 +66,6 @@ namespace MyUnityChan {
             bool cond =
                 command_recorder != null &&
                 command_recorder.command(cmd) &&
-                controller.keyProjectile() &&
                 !player.getAnimator().GetBool("Turn") &&
                 player.isGrounded() &&
                 (player.isLookAhead() || player.isLookBack()) &&

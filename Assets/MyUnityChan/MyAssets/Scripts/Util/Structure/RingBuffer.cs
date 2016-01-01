@@ -24,6 +24,10 @@ namespace MyUnityChan {
             buffer[head] = item;
         }
 
+        public bool isFull() {
+            return buffer.Count == size;
+        }
+
         public int count() {
             return buffer.Count;
         }
