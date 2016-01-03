@@ -9,6 +9,9 @@ namespace MyUnityChan {
 
         public bool activation = true;
 
+        public int priority { get; protected set; }
+        public bool skip_lower_priority { get; protected set; }
+
         // define action name
         public abstract string name();
         public abstract bool condition();           // return whether or not the action manager calls perform()

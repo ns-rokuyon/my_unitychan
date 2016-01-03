@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MyUnityChan {
     public abstract class ActionManager : ObjectBase {
@@ -19,6 +20,9 @@ namespace MyUnityChan {
         }
 
         void Update() {
+            // Orider by each action priority
+            var action_orders = actions.OrderByDescending(pair => pair.Value.priority); 
+
             foreach ( KeyValuePair<string, Action> pair in actions ) {
                 Action action = pair.Value;
 
@@ -32,6 +36,12 @@ namespace MyUnityChan {
                 if ( action.flag == null ) {
                     if ( action.condition() ) {
                         action.perform();
+
+                        if ( action.skip_lower_priority ) {
+                            // If action.skip_lower_priority is true,
+                            // ignore remaining actions have lower priority than this action
+                            break;
+                        }
                     }
                     else {
                         action.off_perform();
@@ -48,6 +58,12 @@ namespace MyUnityChan {
 
                     // ready_to_update flag : true -> false
                     action.flag.doneUpdate();
+
+                    if ( action.skip_lower_priority ) {
+                        // If action.skip_lower_priority is true,
+                        // ignore remaining actions have lower priority than this action
+                        break;
+                    }
                 }
                 else {
                     action.off_perform();

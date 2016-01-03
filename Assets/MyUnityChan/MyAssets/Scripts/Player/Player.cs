@@ -5,6 +5,7 @@ using UnityEngine;
 using System;
 //using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 
 namespace MyUnityChan {
     [RequireComponent(typeof(Animator))]
@@ -121,6 +122,7 @@ namespace MyUnityChan {
             action_manager.registerAction(new PlayerTurn(this));
             action_manager.registerAction(new PlayerDown(this));
             action_manager.registerAction(new PlayerBeam(this));
+            action_manager.registerAction(new PlayerHadouken(this));
             action_manager.registerAction(new PlayerGuard(this));
         }
 

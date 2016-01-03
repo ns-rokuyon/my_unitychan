@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using UniRx;
+using UniRx.Triggers;
 
 namespace MyUnityChan {
     public class DefaultController : PlayerController {

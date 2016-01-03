@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UniRx;
+using UniRx.Triggers;
 
 namespace MyUnityChan {
     public abstract class Controller : ObjectBase {
@@ -25,6 +27,9 @@ namespace MyUnityChan {
         protected float horizontal_input;
         protected float vertical_input;
 
+        public IObservable<float> keyStreamHorizontal { get; private set; }
+        public IObservable<float> keyStreamVertical { get; private set; }
+
         // Use this for initialization
         void Awake() {
             inputs = new List<bool>();
@@ -33,6 +38,9 @@ namespace MyUnityChan {
             }
             horizontal_input = 0.0f;
             vertical_input = 0.0f;
+
+            keyStreamHorizontal = this.UpdateAsObservable().Select(_ => horizontal_input);
+            keyStreamVertical = this.UpdateAsObservable().Select(_ => vertical_input);
         }
 
         // Update is called once per frame
@@ -61,7 +69,7 @@ namespace MyUnityChan {
 
         public bool keyCancel() { return inputs[(int)InputCode.CANCEL]; }
         public bool keyJump() { return inputs[(int)InputCode.JUMP]; }
-        public bool keySliding() { return inputs[(int)InputCode.SLIDING]; }
+        //public bool keySliding() { return inputs[(int)InputCode.SLIDING]; }
         public bool keyAttack() { return inputs[(int)InputCode.ATTACK]; }
         public bool keyProjectile() { return inputs[(int)InputCode.PROJECTILE]; }
         public bool keyDash() { return inputs[(int)InputCode.DASH]; }

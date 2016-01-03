@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UniRx;
 
 
 namespace MyUnityChan {
@@ -7,6 +8,8 @@ namespace MyUnityChan {
 
         public PlayerSliding(Character character)
             : base(character) {
+            priority = 5;
+            skip_lower_priority = true;
         }
 
         public override string name() {
@@ -23,7 +26,7 @@ namespace MyUnityChan {
         }
 
         public override bool condition() {
-            return controller.keySliding() && !player.getAnimator().GetBool("Turn") && player.isGrounded();
+            return controller.keyDown() && controller.keyAttack() && !player.getAnimator().GetBool("Turn") && player.isGrounded();
         }
 
     }

@@ -21,6 +21,8 @@ namespace MyUnityChan {
             player = (Player)character;
             controller = (PlayerController)player.getController();
             command_recorder = controller.getCommandRecorder();
+            priority = 0;
+            skip_lower_priority = false;
         }
 
     }

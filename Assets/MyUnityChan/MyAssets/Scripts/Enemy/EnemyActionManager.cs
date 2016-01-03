@@ -17,6 +17,8 @@ namespace MyUnityChan {
         public EnemyActionBase(Character character) {
             enemy = (Enemy)character;
             controller = (AIController)enemy.getController();
+            priority = 0;
+            skip_lower_priority = false;
         }
 
     }
