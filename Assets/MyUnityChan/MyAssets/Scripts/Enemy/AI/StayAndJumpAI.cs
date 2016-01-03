@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UniRx;
+using UniRx.Triggers;
 
 namespace MyUnityChan {
     public class StayAndJumpAI : AIController {
@@ -8,19 +10,12 @@ namespace MyUnityChan {
         // Use this for initialization
         void Start() {
             target = Player.getPlayer();
+
+            this.UpdateAsObservable()
+                .Select(_ => Mathf.Abs(target.transform.position.x - self.transform.position.x))
+                .Select(dx => dx < 4.0f)
+                .Subscribe(b => inputs[(int)InputCode.JUMP] = b);
         }
 
-        // Update is called once per frame
-        void Update() {
-            float x = self.transform.position.x;
-            float diff = Mathf.Abs(target.transform.position.x - x);
-            if ( diff < 4.0f ) {
-                // If this enemy close to player, change jump flag to true
-                inputs[(int)InputCode.JUMP] = true;
-            }
-            else {
-                inputs[(int)InputCode.JUMP] = false;
-            }
-        }
     }
 }
