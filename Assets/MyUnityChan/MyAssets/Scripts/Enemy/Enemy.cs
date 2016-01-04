@@ -24,8 +24,7 @@ namespace MyUnityChan {
         }
 
         void Awake() {
-            action_manager = PrefabInstantiater.create(Const.Prefab.Manager["ENEMY_ACTION_MANAGER"], gameObject)
-                .GetComponent<EnemyActionManager>();
+            action_manager = GetComponent<EnemyActionManager>();
         }
 
         // Use this for initialization
