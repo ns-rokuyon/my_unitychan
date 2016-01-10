@@ -11,7 +11,7 @@ namespace MyUnityChan {
             MAP
         };
 
-        public Player player { get; set; }
+        public PlayerManager player_manager { get; set; }
         private GameState state { get; set; }
 
         void Awake() {
@@ -34,8 +34,20 @@ namespace MyUnityChan {
             self().state = st;
         }
 
+        // Global player getter
+        public static Player getPlayer() {
+            return getPlayerObject().GetComponent<Player>();
+        }
+
+        public static GameObject getPlayerObject() {
+            if ( !self().player_manager ) {
+                return null;
+            }
+            return self().player_manager.getNowPlayer();
+        }
+
         private void watchStateTransition() {
-            Controller controller = player.getController();
+            Controller controller = getPlayer().getController();
             switch ( state ) { 
                 case GameState.MAIN: 
                     if ( controller.keyPause() ) {

@@ -7,6 +7,8 @@ namespace MyUnityChan {
         public GameObject default_unitychan;
         public GameObject mini_unitychan;
 
+        public string controller_name;
+
         public enum PlayerCharacterName {
             UNITYCHAN,
             MINI_UNITYCHAN
@@ -16,6 +18,9 @@ namespace MyUnityChan {
         private PlayerCharacterName now;
 
         public PlayerCamera camera { get; set; }
+        public Controller controller { get; set; }
+        public HpGauge hpgauge { get; set; }
+        public PlayerStatus status { get; set; }
 
         void Awake() {
             switchable_player_characters = new Dictionary<PlayerCharacterName, GameObject>();
@@ -23,10 +28,29 @@ namespace MyUnityChan {
             default_unitychan.GetComponent<Player>().manager = this;
             switchable_player_characters.Add(PlayerCharacterName.UNITYCHAN, default_unitychan);
             now = PlayerCharacterName.UNITYCHAN;
+            Player now_player = getNowPlayer().GetComponent<Player>();
 
             // camera setup
             camera = PrefabInstantiater.createAndGetComponent<PlayerCamera>(Const.Prefab.Camera["PLAYER_CAMERA"], Hierarchy.Layout.CAMERA);
             camera.player_manager = this;
+
+            // player status setup
+            status = GetComponent<PlayerStatus>();
+            now_player.status = status;
+
+            // controller setup
+            controller = PrefabInstantiater.create(Const.Prefab.Controller[controller_name], this.gameObject).GetComponent<Controller>();
+            controller.setSelf(now_player);
+            now_player.setController(controller);
+
+            // HP gauge setup
+            hpgauge = PrefabInstantiater.create(Const.Prefab.UI["PLAYER_HP_GAUGE"], HpGauge.getCanvas("Canvas")).GetComponent<HpGauge>();
+            hpgauge.setCharacter(now_player);
+            hpgauge.setPosition(new Vector3(200, -24, 10));
+            //hpgauge.transform.SetParent(HpGauge.getCanvas().transform, false);
+
+            // set player to GameStateManager
+            GameStateManager.self().player_manager = this;
 
             // TODO
             addPlayerCharacter(PlayerCharacterName.MINI_UNITYCHAN);
@@ -40,8 +64,19 @@ namespace MyUnityChan {
             Player player = switchable_player_characters[now].GetComponent<Player>();
             foreach ( var pair in switchable_player_characters ) {
                 if ( pair.Key == name ) {
+                    // Enable GameObject
                     pair.Value.SetActive(true);
+
+                    // Copy position
                     pair.Value.transform.position = player.gameObject.transform.position;
+
+                    // Switch controller's focus to next player object
+                    controller.setSelf(pair.Value.GetComponent<Player>());
+
+                    // Switch player object for hp gauge
+                    hpgauge.setCharacter(pair.Value.GetComponent<Player>());
+
+                    // Replace character name
                     now = name;
                 }
                 else {
@@ -70,6 +105,8 @@ namespace MyUnityChan {
             }
             if ( new_player ) {
                 new_player.manager = this;
+                new_player.status = status;
+                new_player.setController(controller);
             }
         }
     }

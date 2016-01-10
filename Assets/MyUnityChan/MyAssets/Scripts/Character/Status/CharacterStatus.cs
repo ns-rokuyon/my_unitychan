@@ -2,6 +2,7 @@
 using System.Collections;
 
 namespace MyUnityChan {
+    [RequireComponent(typeof(Invincible))]
     public class CharacterStatus : Status {
         // values
         public bool freeze { get; set; }

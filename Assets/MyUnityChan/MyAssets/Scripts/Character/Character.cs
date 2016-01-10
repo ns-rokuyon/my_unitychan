@@ -8,8 +8,9 @@ namespace MyUnityChan {
 
         // vars
         protected FrameTimerState inputlock_timer;
-        protected CharacterStatus status;
         protected RingBuffer<Vector3> position_history;
+
+        public CharacterStatus status { get; set; }
 
         protected string area_name;
         protected int stunned = 0;

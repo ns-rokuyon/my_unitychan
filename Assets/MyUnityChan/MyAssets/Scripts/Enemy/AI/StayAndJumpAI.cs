@@ -9,7 +9,7 @@ namespace MyUnityChan {
 
         // Use this for initialization
         void Start() {
-            target = Player.getPlayer();
+            target = GameStateManager.getPlayerObject();
 
             this.UpdateAsObservable()
                 .Select(_ => Mathf.Abs(target.transform.position.x - self.transform.position.x))

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 
 namespace MyUnityChan {
@@ -23,6 +24,9 @@ namespace MyUnityChan {
 
         static public GameObject findPlayerByName(string name) {
             foreach ( GameObject player in players ) {
+                if ( !player.activeSelf ) {
+                    continue;
+                }
                 Player script = player.GetComponent<Player>();
                 if ( script.player_name == name ) {
                     return player;
@@ -32,25 +36,9 @@ namespace MyUnityChan {
         }
 
         static public GameObject findNearestPlayer(Vector3 pos) {
-            if ( players.Count == 1 ) {
-                return players[0];
-            }
-
-            GameObject nearest = null;
-            float min_dist = 100000.0f;
-            foreach ( GameObject player in players ) {
-                if ( nearest == null ) {
-                    nearest = player;
-                    continue;
-                }
-
-                float tmp_dist = Vector3.Distance(nearest.transform.position, player.transform.position);
-                if ( tmp_dist < min_dist ) {
-                    min_dist = tmp_dist;
-                    nearest = player;
-                }
-            }
-            return nearest;
+            if ( players.Count == 1 ) return players[0];
+            return players.Where(player => player.gameObject.activeSelf)
+                .OrderByDescending(player => Vector3.Distance(pos, player.transform.position)).First();
         }
 
         protected Dictionary<string, int> touching_players = new Dictionary<string, int>();

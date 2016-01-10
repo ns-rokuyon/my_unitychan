@@ -18,7 +18,7 @@ namespace MyUnityChan {
 
         public override void perform() {
             enemy.lookAtDirectionX(
-                Mathf.Sign(Player.getPlayer().transform.position.x - enemy.gameObject.transform.position.x));
+                Mathf.Sign(GameStateManager.getPlayerObject().transform.position.x - enemy.gameObject.transform.position.x));
         }
     }
 }

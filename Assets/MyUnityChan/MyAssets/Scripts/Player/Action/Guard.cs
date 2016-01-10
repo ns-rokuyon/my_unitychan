@@ -16,7 +16,7 @@ namespace MyUnityChan {
         }
 
         public override bool condition() {
-            return controller.keyTest();
+            return controller.keyGuard();
         }
 
         public override void perform() {

@@ -7,10 +7,10 @@ namespace MyUnityChan {
     public abstract class Controller : ObjectBase {
         public enum InputCode {
             JUMP = 0,
-            SLIDING,
             ATTACK,
             PROJECTILE,
             DASH,
+            GUARD,
             PAUSE,
             TEST,
             CANCEL,
@@ -69,11 +69,11 @@ namespace MyUnityChan {
 
         public bool keyCancel() { return inputs[(int)InputCode.CANCEL]; }
         public bool keyJump() { return inputs[(int)InputCode.JUMP]; }
-        //public bool keySliding() { return inputs[(int)InputCode.SLIDING]; }
         public bool keyAttack() { return inputs[(int)InputCode.ATTACK]; }
         public bool keyProjectile() { return inputs[(int)InputCode.PROJECTILE]; }
         public bool keyDash() { return inputs[(int)InputCode.DASH]; }
         public bool keyPause() { return inputs[(int)InputCode.PAUSE]; }
+        public bool keyGuard() { return inputs[(int)InputCode.GUARD]; }
         public bool keyTest() { return inputs[(int)InputCode.TEST]; }
         public bool keyUp() { return inputs[(int)InputCode.UP]; }
         public bool keyDown() { return inputs[(int)InputCode.DOWN]; }

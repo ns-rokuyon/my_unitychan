@@ -20,12 +20,12 @@ namespace MyUnityChan {
                 vertical_input = Input.GetAxisRaw("Vertical");
             }
             inputs[(int)InputCode.JUMP] = Input.GetKeyDown("space");
-            inputs[(int)InputCode.SLIDING] = Input.GetKeyDown("z");
             inputs[(int)InputCode.ATTACK] = Input.GetKeyDown("x");
             inputs[(int)InputCode.PROJECTILE] = Input.GetKey("c");
             inputs[(int)InputCode.DASH] = Input.GetKey("v");
+            inputs[(int)InputCode.GUARD] = Input.GetKey("z");
             inputs[(int)InputCode.PAUSE] = Input.GetKeyDown("p");
-            inputs[(int)InputCode.TEST] = Input.GetKey("t");
+            inputs[(int)InputCode.TEST] = Input.GetKeyDown("t");
             inputs[(int)InputCode.CANCEL] = Input.GetKey("b");
         }
 

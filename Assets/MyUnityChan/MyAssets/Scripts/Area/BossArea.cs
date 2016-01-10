@@ -42,7 +42,7 @@ namespace MyUnityChan {
         }
 
         private void waiting() {
-            GameObject player = Player.getPlayer();
+            GameObject player = GameStateManager.getPlayerObject();
             if ( player == null || !isIn(player.name) ) return;
 
             float player_x = player.transform.position.x;

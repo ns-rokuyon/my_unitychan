@@ -34,7 +34,7 @@ namespace MyUnityChan {
             position_history = new RingBuffer<Vector3>(10);
 
             // enemy status setup
-            status = PrefabInstantiater.create(Const.Prefab.Status["ENEMY_STATUS"], gameObject).GetComponent<EnemyStatus>();
+            status = GetComponent<EnemyStatus>();
 
             start();
         }

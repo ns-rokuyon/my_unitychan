@@ -5,6 +5,8 @@ using System.Linq;
 
 namespace MyUnityChan {
     public class PlayerCamera : ObjectBase {
+        public PlayerManager player_manager { get; set; }
+
         private GameObject player = null;
         private Player player_component = null;
 
@@ -42,6 +44,9 @@ namespace MyUnityChan {
 
         // Update is called once per frame
         void Update() {
+            player = player_manager.getNowPlayer();
+            player_component = player.GetComponent<Player>();
+
             updateViewpointCornersInWorld();
 
             if ( player ) {
@@ -81,9 +86,11 @@ namespace MyUnityChan {
 
         public void setPlayer(GameObject target) {
             // set target gameobject
+            /*
             player = target;
             player_component = player.GetComponent<Player>();
             transform.position = player.transform.position + now_camera_position.position_diff;
+            */
         }
 
         public void warpByPlayer(Player player) {

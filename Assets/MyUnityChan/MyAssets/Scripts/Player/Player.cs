@@ -13,13 +13,10 @@ namespace MyUnityChan {
     public class Player : Character {
 
         public string player_name = null;
-        public string controller_name;
 
         private GameObject player_root;
-        private PlayerCamera camera;
         private Animator animator;
         private PlayerActionManager action_manager = null;
-        private HpGauge hpgauge;
 
         private float dist_to_ground;
         private Vector3 dist_checksphere_center = new Vector3(0, 0.6f, 0);
@@ -30,33 +27,17 @@ namespace MyUnityChan {
         private const float CHECKSPHERE_RADIUS = 0.1f;	// radius of sphere to check player is on ground
         private GameObject sphere_ground_check = null;
 
+        public PlayerManager manager { get; set; }
 
-        protected static GameObject player;
+        //protected static GameObject player;
 
         // Use this for initialization
         void Start() {
             player_name = "player1";
             player_root = transform.parent.gameObject;
 
-            // camera setup
-            camera = PrefabInstantiater.createAndGetComponent<PlayerCamera>(Const.Prefab.Camera["PLAYER_CAMERA"], Hierarchy.Layout.CAMERA);
-            camera.setPlayer(this.gameObject);
-
-            // controller setup
-            controller = PrefabInstantiater.create(Const.Prefab.Controller[controller_name], player_root).GetComponent<Controller>();
-            controller.setSelf(this);
-
             // action manager setup
             action_manager = GetComponent<PlayerActionManager>();
-
-            // player status setup
-            status = PrefabInstantiater.create(Const.Prefab.Status["PLAYER_STATUS"], player_root).GetComponent<PlayerStatus>();
-
-            // HP gauge setup
-            hpgauge = PrefabInstantiater.create(Const.Prefab.UI["PLAYER_HP_GAUGE"], HpGauge.getCanvas("Canvas")).GetComponent<HpGauge>();
-            hpgauge.setCharacter(this);
-            hpgauge.setPosition(new Vector3(200, -24, 10));
-            //hpgauge.transform.SetParent(HpGauge.getCanvas().transform, false);
 
             // animation
             animator = GetComponent<Animator>();
@@ -73,13 +54,10 @@ namespace MyUnityChan {
             // player infomation for NPC
             NPCharacter.setPlayers();
 
-            // set player to GameStateManager
-            GameStateManager.self().player = this;
-
             // init sound player
             setupSoundPlayer();
 
-            player = gameObject;
+            //player = gameObject;
             position_history = new RingBuffer<Vector3>(10);
         }
 
@@ -97,16 +75,16 @@ namespace MyUnityChan {
 
             updateStunned();
             recordPosition();
+
+            if ( controller.keyTest() ) {
+                performTest();
+            }
         }
 
 
         void FixedUpdate() {
             // gravity
             //rigidbody.AddForce(new Vector3(0f, -32.0f, 0));	// -32
-        }
-
-        public static GameObject getPlayer() {
-            return player;
         }
 
         private void registerActions() {
@@ -131,7 +109,7 @@ namespace MyUnityChan {
                 EffectManager.self().createEffect(Const.Prefab.Effect["GUARD_01"], transform.position, 40, true);
 
                 // Reaction force
-                player.GetComponent<Rigidbody>().AddForce(player.transform.forward * (-10.0f), ForceMode.VelocityChange);
+                GetComponent<Rigidbody>().AddForce(transform.forward * (-10.0f), ForceMode.VelocityChange);
                 return;
             }
             animator.SetTrigger("Damaged");
@@ -196,7 +174,11 @@ namespace MyUnityChan {
         }
 
         public PlayerCamera getPlayerCamera() {
-            return camera;
+            return manager.camera;
+        }
+
+        public void setController(Controller _controller) {
+            controller = _controller;
         }
 
         public Animator getAnimator() {
@@ -221,6 +203,7 @@ namespace MyUnityChan {
 
         private void performTest() {
             Debug.Log("performTest");
+            manager.switchPlayerCharacter();
         }
 
 
