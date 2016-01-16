@@ -139,5 +139,9 @@ namespace MyUnityChan {
             }
             return actions[name];
         }
+
+        public List<string> getAllActionKeys() {
+            return actions.Select(a => a.Key).ToList();
+        }
     }
 }

@@ -11,6 +11,10 @@ public static class Vector {
         return new Vector3(vec.x + diff_x, vec.y + diff_y, vec.z + diff_z);
     }
 
+    public static Vector3 mul(this Vector3 vec, float mx, float my, float mz) {
+        return new Vector3(vec.x * mx, vec.y * my, vec.z * mz);
+    }
+
     public static Vector3 changeX(this Vector3 vec, float new_x) {
         return new Vector3(new_x, vec.y, vec.z);
     }

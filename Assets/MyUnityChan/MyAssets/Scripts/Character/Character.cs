@@ -10,6 +10,7 @@ namespace MyUnityChan {
         protected FrameTimerState inputlock_timer;
         protected RingBuffer<Vector3> position_history;
 
+        public Const.CharacterName character_name { get; set; }
         public CharacterStatus status { get; set; }
 
         protected string area_name;
@@ -68,6 +69,26 @@ namespace MyUnityChan {
                 status.invincible.enable(30);
                 status.hp -= dam;
             }
+        }
+
+        public float getVx(bool abs=false) {
+            Rigidbody rigidbody = GetComponent<Rigidbody>();
+            if ( rigidbody ) {
+                if ( abs )
+                    return Mathf.Abs(GetComponent<Rigidbody>().velocity.x);
+                return GetComponent<Rigidbody>().velocity.x;
+            }
+            return 0.0f;    // TODO
+        }
+
+        public float getVy(bool abs=false) {
+            Rigidbody rigidbody = GetComponent<Rigidbody>();
+            if ( rigidbody ) {
+                if ( abs ) 
+                    return Mathf.Abs(GetComponent<Rigidbody>().velocity.y);
+                return GetComponent<Rigidbody>().velocity.y;
+            }
+            return 0.0f;
         }
 
         protected void recordPosition() {

@@ -1,11 +1,21 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace MyUnityChan {
     public class PlayerJump : PlayerAction {
         protected float jump_start_y;
         protected Vector3 effect_offset = new Vector3(0.0f, 0.2f, 0.0f);
         protected string effect_name = "JUMP_SMOKE_PUFF";
+
+        private readonly Dictionary<Const.CharacterName, Vector3> jumpF = new Dictionary<Const.CharacterName, Vector3>{
+            { Const.CharacterName.UNITYCHAN, new Vector3(0, 250.0f, 0) },
+            { Const.CharacterName.MINI_UNITYCHAN, new Vector3(0, 90.0f, 0) }
+        };
+
+        private readonly Dictionary<Const.CharacterName, Vector3> dashJumpF = new Dictionary<Const.CharacterName, Vector3>{
+            { Const.CharacterName.UNITYCHAN, new Vector3(100.0f, 100.0f, 0) },
+            { Const.CharacterName.MINI_UNITYCHAN, new Vector3(30.0f, 30.0f, 0) }
+        };
 
         public PlayerJump(Character character)
             : base(character) {
@@ -19,11 +29,11 @@ namespace MyUnityChan {
             jump_start_y = player.transform.position.y;
             if ( player.isDash() ) {
                 // dashdump (ground jump)
-                player.GetComponent<Rigidbody>().AddForce(new Vector3(player.transform.forward.x * 100.0f, 100.0f, 0), ForceMode.Impulse);
+                player.GetComponent<Rigidbody>().AddForce(dashJumpF[player.character_name].mul(player.transform.forward.x, 1, 1), ForceMode.Impulse);
             }
             else {
                 // jump (ground jump or air jump)
-                player.GetComponent<Rigidbody>().AddForce(new Vector3(0f, 250.0f, 0), ForceMode.Impulse);
+                player.GetComponent<Rigidbody>().AddForce(jumpF[player.character_name], ForceMode.Impulse);
             }
         }
 
@@ -55,6 +65,16 @@ namespace MyUnityChan {
 
     public class PlayerDoubleJump : PlayerJump {
         private bool air_jumped;
+
+        private readonly Dictionary<Const.CharacterName, Vector3> secondjumpF = new Dictionary<Const.CharacterName, Vector3>{
+            { Const.CharacterName.UNITYCHAN, new Vector3(0, 250.0f, 0) },
+            { Const.CharacterName.MINI_UNITYCHAN, new Vector3(0, 90.0f, 0) }
+        };
+
+        private readonly Dictionary<Const.CharacterName, Vector3> dashJumpF = new Dictionary<Const.CharacterName, Vector3>{
+            { Const.CharacterName.UNITYCHAN, new Vector3(100.0f, 100.0f, 0) },
+            { Const.CharacterName.MINI_UNITYCHAN, new Vector3(30.0f, 30.0f, 0) }
+        };
 
         public PlayerDoubleJump(Character character)
             : base(character) {

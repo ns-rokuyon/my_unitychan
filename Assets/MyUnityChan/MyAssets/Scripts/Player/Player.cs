@@ -29,27 +29,30 @@ namespace MyUnityChan {
 
         public PlayerManager manager { get; set; }
 
-        //protected static GameObject player;
+        void Awake() {
+            // action manager setup
+            action_manager = GetComponent<PlayerActionManager>();
+
+            // animation
+            animator = GetComponent<Animator>();
+
+            // init timer
+            inputlock_timer = new FrameTimerState();
+        }
 
         // Use this for initialization
         void Start() {
             player_name = "player1";
             player_root = transform.parent.gameObject;
 
-            // action manager setup
-            action_manager = GetComponent<PlayerActionManager>();
-
-            // animation
-            animator = GetComponent<Animator>();
-            //locomotion = new Locomotion(animator);
             anim_speed_default = animator.speed * 1.2f;
             dist_to_ground = GetComponent<CapsuleCollider>().height;
 
-            // init timer
-            inputlock_timer = new FrameTimerState();
-
-            // init player actions
-            registerActions();
+            // init player actions (required)
+            registerActions(new List<Const.PlayerAction>{
+                Const.PlayerAction.ACCEL, Const.PlayerAction.BRAKE, Const.PlayerAction.DOWN,
+                Const.PlayerAction.JUMP, Const.PlayerAction.LIMIT_SPEED, Const.PlayerAction.TURN
+            });
 
             // player infomation for NPC
             NPCharacter.setPlayers();
@@ -87,19 +90,39 @@ namespace MyUnityChan {
             //rigidbody.AddForce(new Vector3(0f, -32.0f, 0));	// -32
         }
 
-        private void registerActions() {
-            action_manager.registerAction(new PlayerBrake(this));
-            action_manager.registerAction(new PlayerAccel(this));
-            action_manager.registerAction(new PlayerDash(this));
-            action_manager.registerAction(new PlayerLimitSpeed(this));
-            action_manager.registerAction(new PlayerJump(this));
-            action_manager.registerAction(new PlayerSliding(this));
-            action_manager.registerAction(new PlayerAttack(this));
-            action_manager.registerAction(new PlayerTurn(this));
-            action_manager.registerAction(new PlayerDown(this));
-            action_manager.registerAction(new PlayerBeam(this));
-            action_manager.registerAction(new PlayerHadouken(this));
-            action_manager.registerAction(new PlayerGuard(this));
+        public void registerAction(Const.PlayerAction action_class) {
+            switch ( action_class ) {
+                case Const.PlayerAction.ACCEL:
+                    action_manager.registerAction(new PlayerAccel(this)); break;
+                case Const.PlayerAction.ATTACK:
+                    action_manager.registerAction(new PlayerAttack(this)); break;
+                case Const.PlayerAction.BEAM:
+                    action_manager.registerAction(new PlayerBeam(this)); break;
+                case Const.PlayerAction.BRAKE:
+                    action_manager.registerAction(new PlayerBrake(this)); break;
+                case Const.PlayerAction.DASH:
+                    action_manager.registerAction(new PlayerDash(this)); break;
+                case Const.PlayerAction.DOWN:
+                    action_manager.registerAction(new PlayerDown(this)); break;
+                case Const.PlayerAction.GUARD:
+                    action_manager.registerAction(new PlayerGuard(this)); break;
+                case Const.PlayerAction.HADOUKEN:
+                    action_manager.registerAction(new PlayerHadouken(this)); break;
+                case Const.PlayerAction.JUMP:
+                    action_manager.registerAction(new PlayerJump(this)); break;
+                case Const.PlayerAction.LIMIT_SPEED:
+                    action_manager.registerAction(new PlayerLimitSpeed(this)); break;
+                case Const.PlayerAction.SLIDING:
+                    action_manager.registerAction(new PlayerSliding(this)); break;
+                case Const.PlayerAction.TURN:
+                    action_manager.registerAction(new PlayerTurn(this)); break;
+                default:
+                    break;
+            }
+        }
+
+        public void registerActions(List<Const.PlayerAction> action_class_list) {
+            action_class_list.ForEach(ac => registerAction(ac));
         }
 
         public override void damage(int dam) {
@@ -161,11 +184,15 @@ namespace MyUnityChan {
         }
 
         public bool isDash() {
-            return ((PlayerDash)action_manager.getAction("DASH")).isDash();
+            PlayerDash dash = ((PlayerDash)action_manager.getAction("DASH"));
+            if ( dash == null ) return false;
+            return dash.isDash();
         }
 
         public bool isGuarding() {
-            return ((PlayerGuard)action_manager.getAction("GUARD")).guarding;
+            PlayerGuard guard =((PlayerGuard)action_manager.getAction("GUARD"));
+            if ( guard == null ) return false;
+            return guard.guarding;
         }
 
         public bool isAnimState(string anim_name) {

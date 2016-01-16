@@ -10,6 +10,8 @@ namespace MyUnityChan {
         public PlayerHadouken(Character character)
             : base(character) {
             spec = new Spec();
+            priority = 10;
+            skip_lower_priority = true;
         }
 
         public override string name() {

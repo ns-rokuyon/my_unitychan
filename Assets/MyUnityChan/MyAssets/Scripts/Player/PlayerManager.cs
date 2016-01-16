@@ -7,15 +7,12 @@ namespace MyUnityChan {
         public GameObject default_unitychan;
         public GameObject mini_unitychan;
 
+        public GameObject hpgauge_object_ref;
+
         public string controller_name;
 
-        public enum PlayerCharacterName {
-            UNITYCHAN,
-            MINI_UNITYCHAN
-        }
-
-        private Dictionary<PlayerCharacterName, GameObject> switchable_player_characters;
-        private PlayerCharacterName now;
+        private Dictionary<Const.CharacterName, GameObject> switchable_player_characters;
+        private Const.CharacterName now;
 
         public PlayerCamera camera { get; set; }
         public Controller controller { get; set; }
@@ -23,12 +20,13 @@ namespace MyUnityChan {
         public PlayerStatus status { get; set; }
 
         void Awake() {
-            switchable_player_characters = new Dictionary<PlayerCharacterName, GameObject>();
+            switchable_player_characters = new Dictionary<Const.CharacterName, GameObject>();
 
             default_unitychan.GetComponent<Player>().manager = this;
-            switchable_player_characters.Add(PlayerCharacterName.UNITYCHAN, default_unitychan);
-            now = PlayerCharacterName.UNITYCHAN;
+            switchable_player_characters.Add(Const.CharacterName.UNITYCHAN, default_unitychan);
+            now = Const.CharacterName.UNITYCHAN;
             Player now_player = getNowPlayer().GetComponent<Player>();
+            now_player.character_name = now;
 
             // camera setup
             camera = PrefabInstantiater.createAndGetComponent<PlayerCamera>(Const.Prefab.Camera["PLAYER_CAMERA"], Hierarchy.Layout.CAMERA);
@@ -44,23 +42,34 @@ namespace MyUnityChan {
             now_player.setController(controller);
 
             // HP gauge setup
-            hpgauge = PrefabInstantiater.create(Const.Prefab.UI["PLAYER_HP_GAUGE"], HpGauge.getCanvas("Canvas")).GetComponent<HpGauge>();
-            hpgauge.setCharacter(now_player);
-            hpgauge.setPosition(new Vector3(200, -24, 10));
-            //hpgauge.transform.SetParent(HpGauge.getCanvas().transform, false);
+            if ( hpgauge_object_ref )
+                hpgauge = hpgauge_object_ref.GetComponent<HpGauge>();
 
             // set player to GameStateManager
             GameStateManager.self().player_manager = this;
 
+        }
+
+        void Start() {
+            Player now_player = getNowPlayer().GetComponent<Player>();
+
+            now_player.registerActions(new List<Const.PlayerAction> {
+                Const.PlayerAction.ATTACK, Const.PlayerAction.BEAM, Const.PlayerAction.DASH,
+                Const.PlayerAction.GUARD, Const.PlayerAction.HADOUKEN, Const.PlayerAction.SLIDING
+            });
+
+            hpgauge.setCharacter(now_player);
+            hpgauge.setPosition(new Vector3(200, -24, 10));
+
             // TODO
-            addPlayerCharacter(PlayerCharacterName.MINI_UNITYCHAN);
+            addPlayerCharacter(Const.CharacterName.MINI_UNITYCHAN);
         }
 
         public GameObject getNowPlayer() {
             return switchable_player_characters[now];
         } 
 
-        public void switchPlayerCharacter(PlayerCharacterName name) {
+        public void switchPlayerCharacter(Const.CharacterName name) {
             Player player = switchable_player_characters[now].GetComponent<Player>();
             foreach ( var pair in switchable_player_characters ) {
                 if ( pair.Key == name ) {
@@ -86,18 +95,19 @@ namespace MyUnityChan {
         }
 
         public void switchPlayerCharacter() {
-            if ( now == PlayerCharacterName.UNITYCHAN ) switchPlayerCharacter(PlayerCharacterName.MINI_UNITYCHAN);
-            else switchPlayerCharacter(PlayerCharacterName.UNITYCHAN);
+            if ( now == Const.CharacterName.UNITYCHAN ) switchPlayerCharacter(Const.CharacterName.MINI_UNITYCHAN);
+            else switchPlayerCharacter(Const.CharacterName.UNITYCHAN);
         }
 
-        public void addPlayerCharacter(PlayerCharacterName name) {
+        public void addPlayerCharacter(Const.CharacterName name) {
             Player new_player = null;
             switch (name) {
-                case PlayerCharacterName.MINI_UNITYCHAN:
+                case Const.CharacterName.MINI_UNITYCHAN:
                     if ( mini_unitychan ) {
                         mini_unitychan.SetActive(false);
                         new_player = mini_unitychan.GetComponent<Player>();
-                        switchable_player_characters.Add(PlayerCharacterName.MINI_UNITYCHAN, mini_unitychan);
+                        switchable_player_characters.Add(Const.CharacterName.MINI_UNITYCHAN, mini_unitychan);
+                        new_player.character_name = Const.CharacterName.MINI_UNITYCHAN;
                     }
                     break;
                 default:

@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+using UniRx;
+using UniRx.Triggers;
 
 namespace MyUnityChan {
     public class PlayerBrake : PlayerAction {
@@ -46,16 +48,22 @@ namespace MyUnityChan {
 
     public class PlayerAccel : PlayerAction {
         private float maxspeed = 5.0f;
-        private Vector3 moveF = new Vector3(2000f, 0, 0);
+        private Vector3 moveF;
+
+        private readonly Dictionary<Const.CharacterName, Vector3> __moveF = new Dictionary<Const.CharacterName, Vector3>{
+            { Const.CharacterName.UNITYCHAN, new Vector3(2000f, 0, 0) },
+            { Const.CharacterName.MINI_UNITYCHAN, new Vector3(400f, 0, 0) }
+        };
 
         public PlayerAccel(Character character)
             : base(character) {
+            moveF = __moveF[character.character_name];
         }
 
         public override string name() {
             return "ACCEL";
         }
-
+        
         public override void performFixed() {
             float horizontal = controller.keyHorizontal();
             Vector3 fw = player.transform.forward;
@@ -112,6 +120,16 @@ namespace MyUnityChan {
         public PlayerDash(Character character)
             : base(character) {
             dash = false;
+            Observable.Interval(System.TimeSpan.FromSeconds(0.5))
+                .Where(_ => condition())
+                .Where(_ => player.getVx(abs:true) > 0.1f)
+                .Subscribe(_ => {
+                EffectManager.self().createEffect(
+                    Const.Prefab.Effect["DASH_SMOKE_PUFF"], 
+                    player.transform.position.add(0.0f, 0.2f, 0.0f),
+                    60, true);
+                }
+            );
         }
 
         public override string name() {
