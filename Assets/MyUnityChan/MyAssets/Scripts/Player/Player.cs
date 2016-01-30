@@ -9,7 +9,6 @@ using UniRx;
 
 namespace MyUnityChan {
     [RequireComponent(typeof(Animator))]
-
     public class Player : Character {
 
         public string player_name = null;
@@ -36,8 +35,6 @@ namespace MyUnityChan {
             // animation
             animator = GetComponent<Animator>();
 
-            // init timer
-            inputlock_timer = new FrameTimerState();
         }
 
         // Use this for initialization
@@ -59,6 +56,9 @@ namespace MyUnityChan {
 
             // init sound player
             setupSoundPlayer();
+
+            // init timer
+            inputlock_timer = new FrameTimerState();
 
             //player = gameObject;
             position_history = new RingBuffer<Vector3>(10);
