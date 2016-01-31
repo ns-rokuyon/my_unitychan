@@ -162,6 +162,9 @@ namespace MyUnityChan {
 
                 AreaManager.self().reportPlayerEntered(this);
 
+                // Update player's position in area change
+                player.last_entrypoint = player.gameObject.transform.position;
+
                 // Adjust player's camera position to that in this area
                 player.getPlayerCamera().setPositionInArea(this);
 

@@ -26,6 +26,8 @@ namespace MyUnityChan {
         private const float CHECKSPHERE_RADIUS = 0.1f;	// radius of sphere to check player is on ground
         private GameObject sphere_ground_check = null;
 
+        public Vector3 last_entrypoint { get; set; }    // player's position in last area change
+
         public PlayerManager manager { get; set; }
 
         void Awake() {
