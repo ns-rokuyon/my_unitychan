@@ -4,6 +4,9 @@ using System.Collections;
 namespace MyUnityChan {
     public class Spin : ObjectBase {
         public Vector3 angle;
+        public bool noise;
+        public float noise_weight;
+
         private RealDeltaTime pause_canceller;
 
         void Awake() {
@@ -17,7 +20,10 @@ namespace MyUnityChan {
                 return;
             }
 
-            transform.Rotate(angle * Time.deltaTime);
+            if ( noise )
+                transform.Rotate(angle.changeZ(angle.z + Mathf.PerlinNoise(Time.time, 0.0f) * noise_weight) * Time.deltaTime);
+            else
+                transform.Rotate(angle * Time.deltaTime);
         }
     }
 }
