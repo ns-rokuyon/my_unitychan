@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace MyUnityChan {
 
     public abstract class PoolObjectBase : ObjectBase {
-        private bool pooled = false;
+        protected bool pooled = false;
 
         public abstract void initialize();
         public abstract void finalize();

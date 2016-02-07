@@ -8,7 +8,12 @@ namespace MyUnityChan {
         // Update is called once per frame
         void Update() {
             if ( timer != null && timer.isFinished() ) {
-                ObjectPoolManager.releaseGameObject(gameObject, resource_path);
+                if ( pooled ) {
+                    ObjectPoolManager.releaseGameObject(gameObject, resource_path);
+                }
+                else {
+                    Destroy(gameObject);
+                }
             }
         }
 
