@@ -6,11 +6,15 @@ namespace MyUnityChan {
         public int start_frame = 0;
         public int count = 0;
         public int duration = 0;
+        public bool endless = false;
 
         public void setTimer(int time) {
             start_frame = Time.frameCount;
             duration = time;
             running = true;
+            if ( time == 0 ) {
+                endless = true;
+            }
         }
 
         public int now() {
@@ -29,7 +33,7 @@ namespace MyUnityChan {
             }
             if ( running ) {
                 count++;
-                if ( count >= duration ) {
+                if ( !endless && count >= duration ) {
                     running = false;
                 }
             }
@@ -39,10 +43,12 @@ namespace MyUnityChan {
             start_frame = 0;
             count = 0;
             duration = 0;
+            endless = false;
         }
 
         public override void finalize() {
             running = false;
+            endless = false;
         }
     }
 
