@@ -132,14 +132,23 @@ namespace MyUnityChan {
             );
         }
 
+        public void unlockInput() {
+            if ( isInputLocked() ) inputlock_timer.destroy();
+        }
+
         public void lockInput(int frame) {
             // disable movement by inputs for N frames specified
+            // If frame is 0, endless dummy timer is created
             inputlock_timer.destroy();
             inputlock_timer.createTimer(frame);
         }
 
         public bool isInputLocked() {
             // return true when inputs are locked
+            if ( inputlock_timer == null ) {
+                Debug.LogWarning("inputlock_timer is not initialized");
+                return false;
+            }
             return inputlock_timer.isRunning();
         }
 

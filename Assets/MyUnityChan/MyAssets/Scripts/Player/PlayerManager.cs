@@ -29,11 +29,18 @@ namespace MyUnityChan {
             now_player.character_name = now;
 
             // camera setup
-            camera = PrefabInstantiater.createAndGetComponent<PlayerCamera>(Const.Prefab.Camera["PLAYER_CAMERA"], Hierarchy.Layout.CAMERA);
+            GameObject camera_obj = GameObject.Find("Camera/PlayerCamera");
+            if ( camera_obj ) {
+                camera = camera_obj.GetComponent<PlayerCamera>();
+            }
+            else {
+                camera = PrefabInstantiater.createAndGetComponent<PlayerCamera>(Const.Prefab.Camera["PLAYER_CAMERA"], Hierarchy.Layout.CAMERA);
+            }
             camera.player_manager = this;
 
             // player status setup
             status = GetComponent<PlayerStatus>();
+            status.addEnergyTank();
             now_player.status = status;
 
             // controller setup
@@ -59,7 +66,7 @@ namespace MyUnityChan {
             });
 
             hpgauge.setCharacter(now_player);
-            hpgauge.setPosition(new Vector3(200, -24, 10));
+            //hpgauge.setPosition(new Vector3(200, -24, 10));
 
             // TODO
             addPlayerCharacter(Const.CharacterName.MINI_UNITYCHAN);
@@ -73,17 +80,20 @@ namespace MyUnityChan {
             Player player = switchable_player_characters[now].GetComponent<Player>();
             foreach ( var pair in switchable_player_characters ) {
                 if ( pair.Key == name ) {
+                    Player next_player = pair.Value.GetComponent<Player>(); 
+
                     // Enable GameObject
                     pair.Value.SetActive(true);
 
                     // Copy position
                     pair.Value.transform.position = player.gameObject.transform.position;
+                    next_player.last_entrypoint = player.last_entrypoint;
 
                     // Switch controller's focus to next player object
-                    controller.setSelf(pair.Value.GetComponent<Player>());
+                    controller.setSelf(next_player);
 
                     // Switch player object for hp gauge
-                    hpgauge.setCharacter(pair.Value.GetComponent<Player>());
+                    hpgauge.setCharacter(next_player);
 
                     // Replace character name
                     now = name;

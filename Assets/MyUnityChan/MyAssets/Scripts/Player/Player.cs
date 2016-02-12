@@ -230,6 +230,39 @@ namespace MyUnityChan {
             return action_manager;
         }
 
+        public int getReservedHP() {
+            return (status as PlayerStatus).reserved_hp;
+        }
+
+        public int getAllHP() {
+            return getReservedHP() + getHP();
+        }
+
+        public void interrupt() {
+            lockInput(0);
+        }
+
+        public void resume() {
+            unlockInput();
+        }
+
+        public void comeback(Vector3 dst) {
+            interrupt();
+            CameraFade.StartAlphaFade(Color.black, false, 1f, 1f, () => {
+                StartCoroutine(doComeback(dst));
+            });
+        }
+
+        private IEnumerator doComeback(Vector3 dst) {
+            Debug.Log("doComeback");
+            transform.position = dst;
+            RaycastHit ground;
+            Physics.Raycast(transform.position, Vector3.down, out ground, 5.0f);
+            EffectManager.self().createEffect(Const.Prefab.Effect["RESURRECTION_01"], ground.point, 240, false);
+            yield return new WaitForSeconds(0.5f);
+            resume();
+        }
+
         private void performTest() {
             Debug.Log("performTest");
             manager.switchPlayerCharacter();

@@ -7,7 +7,7 @@ namespace MyUnityChan {
 
         protected override void affectPlayer(Player player) {
             player.damage(damage);
-            player.gameObject.transform.position = player.last_entrypoint;
+            player.comeback(player.last_entrypoint);
         }
 
         protected override void affectEnemy(Enemy enemy) {
