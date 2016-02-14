@@ -58,11 +58,13 @@ namespace MyUnityChan {
         }
 
         void OnDrawGizmos() {
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(viewport_corners_in_world[ViewportCorner.RIGHT_TOP], 0.1F);
-            Gizmos.DrawSphere(viewport_corners_in_world[ViewportCorner.RIGHT_BOTTOM], 0.1F);
-            Gizmos.DrawSphere(viewport_corners_in_world[ViewportCorner.LEFT_BOTTOM], 0.1F);
-            Gizmos.DrawSphere(viewport_corners_in_world[ViewportCorner.LEFT_TOP], 0.1F);
+            if ( viewport_corners_in_world != null ) {
+                Gizmos.color = Color.red;
+                Gizmos.DrawSphere(viewport_corners_in_world[ViewportCorner.RIGHT_TOP], 0.1F);
+                Gizmos.DrawSphere(viewport_corners_in_world[ViewportCorner.RIGHT_BOTTOM], 0.1F);
+                Gizmos.DrawSphere(viewport_corners_in_world[ViewportCorner.LEFT_BOTTOM], 0.1F);
+                Gizmos.DrawSphere(viewport_corners_in_world[ViewportCorner.LEFT_TOP], 0.1F);
+            }
         }
 
         private Vector3 adjustNewPosition(Vector3 newpos) {
