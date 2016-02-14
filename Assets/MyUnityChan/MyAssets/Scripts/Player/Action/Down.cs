@@ -22,7 +22,7 @@ namespace MyUnityChan {
         }
 
         public override bool condition() {
-            return player.getHP() == 0;
+            return player.getAllHP() == 0;
         }
 
     }

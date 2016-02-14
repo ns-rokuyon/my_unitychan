@@ -8,6 +8,7 @@ namespace MyUnityChan {
         public GameObject mini_unitychan;
 
         public GameObject hpgauge_object_ref;
+        public GameObject reserved_hpgauge_object_ref;
 
         public string controller_name;
 
@@ -17,6 +18,7 @@ namespace MyUnityChan {
         public PlayerCamera camera { get; set; }
         public Controller controller { get; set; }
         public HpGauge hpgauge { get; set; }
+        public ReservedHpGauge reserved_hpgauge { get; set; }
         public PlayerStatus status { get; set; }
 
         void Awake() {
@@ -52,6 +54,9 @@ namespace MyUnityChan {
             if ( hpgauge_object_ref )
                 hpgauge = hpgauge_object_ref.GetComponent<HpGauge>();
 
+            if ( reserved_hpgauge_object_ref )
+                reserved_hpgauge = reserved_hpgauge_object_ref.GetComponent<ReservedHpGauge>();
+
             // set player to GameStateManager
             GameStateManager.self().player_manager = this;
 
@@ -66,7 +71,7 @@ namespace MyUnityChan {
             });
 
             hpgauge.setCharacter(now_player);
-            //hpgauge.setPosition(new Vector3(200, -24, 10));
+            reserved_hpgauge.setCharacter(now_player);
 
             // TODO
             addPlayerCharacter(Const.CharacterName.MINI_UNITYCHAN);

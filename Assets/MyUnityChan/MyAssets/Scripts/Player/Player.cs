@@ -230,12 +230,8 @@ namespace MyUnityChan {
             return action_manager;
         }
 
-        public int getReservedHP() {
+        public override int getReservedHP() {
             return (status as PlayerStatus).reserved_hp;
-        }
-
-        public int getAllHP() {
-            return getReservedHP() + getHP();
         }
 
         public void interrupt() {

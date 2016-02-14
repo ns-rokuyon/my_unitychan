@@ -64,6 +64,14 @@ namespace MyUnityChan {
             }
         }
 
+        public virtual int getReservedHP() {
+            return 0;
+        }
+
+        public virtual int getAllHP() {
+            return getReservedHP() + getHP();
+        }
+
         public virtual void damage(int dam) {
             if ( !status.invincible.now() ) {
                 status.invincible.enable(30);

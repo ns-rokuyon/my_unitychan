@@ -4,23 +4,32 @@ using System.Collections;
 
 namespace MyUnityChan {
     public class HpGauge : GUIObjectBase {
+        public bool use_energy_bar_toolkit;
 
-        private Slider slider;
-        private Character character;
+        protected EnergyBar energybar;
+        protected Slider slider;
+        protected Character character;
 
         void Awake() {
-            slider = GetComponent<Slider>();
+            if ( use_energy_bar_toolkit ) 
+                energybar = GetComponent<EnergyBar>();
+            else 
+                slider = GetComponent<Slider>();
+
             character = null;
         }
 
         // Update is called once per frame
         void Update() {
             if ( character ) {
-                slider.value = character.getHP();
+                if ( use_energy_bar_toolkit ) 
+                    energybar.SetValueCurrent(character.getHP());
+                else 
+                    slider.value = character.getHP();
             }
         }
 
-        public void setCharacter(Character ch) {
+        public virtual void setCharacter(Character ch) {
             character = ch;
         }
 

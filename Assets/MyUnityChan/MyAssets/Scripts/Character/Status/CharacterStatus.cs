@@ -6,7 +6,7 @@ namespace MyUnityChan {
     public class CharacterStatus : Status {
         // values
         public bool freeze { get; set; }
-        public int hp { get; set; }
+        public virtual int hp { get; set; }
 
         // refarences to component
         public Invincible invincible { get; private set; }
