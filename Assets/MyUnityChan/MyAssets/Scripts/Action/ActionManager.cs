@@ -23,7 +23,7 @@ namespace MyUnityChan {
             // Orider by each action priority
             var action_orders = actions.OrderByDescending(pair => pair.Value.priority); 
 
-            foreach ( KeyValuePair<string, Action> pair in actions ) {
+            foreach ( KeyValuePair<string, Action> pair in action_orders ) {
                 Action action = pair.Value;
 
                 if ( !action.activation ) {
