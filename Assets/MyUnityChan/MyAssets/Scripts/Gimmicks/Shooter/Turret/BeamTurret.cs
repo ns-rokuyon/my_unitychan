@@ -3,18 +3,11 @@ using System.Collections;
 
 namespace MyUnityChan {
     public class BeamTurret : TurretBase {
-        public Vector3 base_angle = new Vector3(1.0f, 0.0f, 0.0f);
         public string beam_name;
 
         void Start() {
             baseStart();
             setProjectile(beam_name);
-        }
-
-
-        public override Vector3 angle() {
-            if ( this.gameObject.transform.forward.x >= 0 ) return base_angle;
-            return base_angle.flipX();
         }
 
         public override void shoot() {
