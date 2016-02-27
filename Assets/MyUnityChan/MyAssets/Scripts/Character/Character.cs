@@ -128,6 +128,13 @@ namespace MyUnityChan {
             return travel;
         }
 
+        public bool isLookAhead() {
+            return transform.forward.x >= 1.0f;
+        }
+
+        public bool isLookBack() {
+            return transform.forward.x <= -1.0f;
+        }
 
         // xdir = 1.0f | -1.0f
         public void lookAtDirectionX(float xdir) {

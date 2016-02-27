@@ -173,14 +173,6 @@ namespace MyUnityChan {
                 Physics.Raycast(transform.position + ground_raycast_offset, new Vector3(-1.0f, 0.0f, 0), 1.0f);
         }
 
-        public bool isLookAhead() {
-            return transform.forward.x >= 1.0f;
-        }
-
-        public bool isLookBack() {
-            return transform.forward.x <= -1.0f;
-        }
-
         public bool isTurnDirSwitched() {
             return turn_dir_switched;
         }
@@ -261,7 +253,8 @@ namespace MyUnityChan {
 
         private void performTest() {
             Debug.Log("performTest");
-            manager.switchPlayerCharacter();
+            //manager.switchPlayerCharacter();
+            GetComponent<MissilePod>().shoot();
         }
 
 
