@@ -7,11 +7,26 @@ namespace MyUnityChan {
         public static readonly string hitbox_resource_path = Const.Prefab.Hitbox["PROJECTILE"];
         public AttackSpec spec = null;
 
+        private List<Controller.InputCode> cmd;
+        private List<Controller.InputCode> cmd_mirror;
+
         public PlayerHadouken(Character character)
             : base(character) {
             spec = new Spec();
             priority = 10;
             skip_lower_priority = true;
+
+            cmd = new List<Controller.InputCode> {
+                    Controller.InputCode.DOWN,
+                    Controller.InputCode.RIGHT,
+                    Controller.InputCode.ATTACK
+                };
+
+            cmd_mirror = new List<Controller.InputCode> {
+                Controller.InputCode.DOWN,
+                Controller.InputCode.LEFT,
+                Controller.InputCode.ATTACK
+            };
         }
 
         public override string name() {
@@ -48,23 +63,14 @@ namespace MyUnityChan {
         public override bool condition() {
             AnimatorStateInfo anim_state = player.getAnimator().GetCurrentAnimatorStateInfo(0);
 
-            List<Controller.InputCode> cmd;
+            List<Controller.InputCode> command;
             if ( player.isLookAhead() ) {
-                cmd = new List<Controller.InputCode> {
-                    Controller.InputCode.DOWN,
-                    Controller.InputCode.RIGHT,
-                    Controller.InputCode.ATTACK
-                };
+                command = cmd;
             }
             else {
-                cmd = new List<Controller.InputCode> {
-                    Controller.InputCode.DOWN,
-                    Controller.InputCode.LEFT,
-                    Controller.InputCode.ATTACK
-                };
+                command = cmd_mirror;
             }
 
-            //controller.keyProjectile() &&
             bool cond =
                 command_recorder != null &&
                 command_recorder.command(cmd) &&

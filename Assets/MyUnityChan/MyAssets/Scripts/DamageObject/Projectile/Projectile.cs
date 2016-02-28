@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace MyUnityChan {
     public abstract class Projectile : DamageObjectBase {
@@ -15,7 +16,14 @@ namespace MyUnityChan {
         protected Player player;
         protected bool penetration;
         protected int hit_num = 0;
+        protected bool waiting_for_destroying;
 
+        protected delegate void SetEnabledToComponent(bool f);
+        protected List<SetEnabledToComponent> component_to_disable_in_waiting 
+            = new List<SetEnabledToComponent>();
+
+        public bool use_physics;
+        public float waiting_time_for_destroying = 0.0f;
         public string resource_name;
 
         public virtual void setDir(Vector3 dir) {
@@ -29,6 +37,7 @@ namespace MyUnityChan {
         protected void projectileCommonSetStartPosition() {
             hit_num = 0;
             area_name = AreaManager.Instance.getAreaNameFromObject(this.gameObject);
+            waiting_for_destroying = false;
         }
 
         public virtual void setStartPosition(Vector3 pos) {
@@ -42,20 +51,39 @@ namespace MyUnityChan {
             player = _player;
         }
 
+        protected void projectileCommonUpdate() {
+            projectileCommonUpdate(Const.Prefab.Projectile[resource_name]);
+        }
+
         protected void projectileCommonUpdate(string resource_path) {
             if ( PauseManager.isPausing() ) return;
 
-            transform.Translate(target_dir * speed, Space.World);
+            if ( waiting_for_destroying ) return;
+
+            if ( !use_physics ) transform.Translate(target_dir * speed, Space.World);
+
             distance_moved = Mathf.Abs(transform.position.x - start_position.x);
             if ( distance_moved > max_range ) {
-                ObjectPoolManager.releaseGameObject(gameObject, resource_path);
+                StartCoroutine("destroy", resource_path);
             }
-            if ( area_name == null || !AreaManager.Instance.isInArea(this.gameObject, area_name) ) {
-                ObjectPoolManager.releaseGameObject(gameObject, resource_path);
+            else if ( area_name == null || !AreaManager.Instance.isInArea(this.gameObject, area_name) ) {
+                StartCoroutine("destroy", resource_path);
             }
-            if ( !penetration && hit_num > 0 ) {
-                ObjectPoolManager.releaseGameObject(gameObject, resource_path);
+            else if ( !penetration && hit_num > 0 ) {
+                StartCoroutine("destroy", resource_path);
             }
+        }
+
+        protected IEnumerator destroy(string resource_path) {
+            if ( waiting_time_for_destroying > 0.0f ) {
+                if ( GetComponent<Rigidbody>() ) GetComponent<Rigidbody>().velocity = Vector3.zero;
+                foreach ( var component_enabler in component_to_disable_in_waiting ) {
+                    component_enabler(false);
+                }
+                waiting_for_destroying = true;
+                yield return new WaitForSeconds(waiting_time_for_destroying);
+            }
+            ObjectPoolManager.releaseGameObject(gameObject, resource_path);
         }
 
         public void countHit() {

@@ -9,6 +9,7 @@ namespace MyUnityChan {
             JUMP = 0,
             ATTACK,
             PROJECTILE,
+            WEAPON,
             DASH,
             GUARD,
             PAUSE,
@@ -71,6 +72,7 @@ namespace MyUnityChan {
         public bool keyJump() { return inputs[(int)InputCode.JUMP]; }
         public bool keyAttack() { return inputs[(int)InputCode.ATTACK]; }
         public bool keyProjectile() { return inputs[(int)InputCode.PROJECTILE]; }
+        public bool keyWeapon() { return inputs[(int)InputCode.WEAPON]; }
         public bool keyDash() { return inputs[(int)InputCode.DASH]; }
         public bool keyPause() { return inputs[(int)InputCode.PAUSE]; }
         public bool keyGuard() { return inputs[(int)InputCode.GUARD]; }

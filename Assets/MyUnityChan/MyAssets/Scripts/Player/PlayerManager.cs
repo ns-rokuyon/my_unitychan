@@ -66,7 +66,7 @@ namespace MyUnityChan {
             Player now_player = getNowPlayer().GetComponent<Player>();
 
             now_player.registerActions(new List<Const.PlayerAction> {
-                Const.PlayerAction.ATTACK, Const.PlayerAction.BEAM, Const.PlayerAction.DASH,
+                Const.PlayerAction.ATTACK, Const.PlayerAction.BEAM, Const.PlayerAction.DASH, Const.PlayerAction.MISSILE,
                 Const.PlayerAction.GUARD, Const.PlayerAction.HADOUKEN, Const.PlayerAction.SLIDING
             });
 

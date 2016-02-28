@@ -23,6 +23,14 @@ namespace MyUnityChan {
             }
         }
 
+        protected bool triggerGround(Collider other) {
+            if ( other.tag == "Ground" ) {
+                spec.attack(null, this);
+                return true;
+            }
+            return false;
+        }
+
         public void OnTriggerEnter(Collider other) {
             if ( triggerPlayer(other) ) {
                 projectile.GetComponent<Projectile>().countHit();
@@ -31,6 +39,9 @@ namespace MyUnityChan {
                 projectile.GetComponent<Projectile>().countHit();
             }
             if ( triggerDoor(other) ) {
+                projectile.GetComponent<Projectile>().countHit();
+            }
+            if ( triggerGround(other) ) {
                 projectile.GetComponent<Projectile>().countHit();
             }
         }

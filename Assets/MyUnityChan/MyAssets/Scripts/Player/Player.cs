@@ -114,6 +114,8 @@ namespace MyUnityChan {
                     action_manager.registerAction(new PlayerJump(this)); break;
                 case Const.PlayerAction.LIMIT_SPEED:
                     action_manager.registerAction(new PlayerLimitSpeed(this)); break;
+                case Const.PlayerAction.MISSILE:
+                    action_manager.registerAction(new PlayerMissile(this)); break;
                 case Const.PlayerAction.SLIDING:
                     action_manager.registerAction(new PlayerSliding(this)); break;
                 case Const.PlayerAction.TURN:

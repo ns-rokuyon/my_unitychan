@@ -4,6 +4,8 @@ using System.Collections;
 namespace MyUnityChan {
     public abstract class DamageObjectBase : PoolObjectBase {
 
+        public bool has_hitbox_in_children;
+
         void Awake() {
             commonSetting();
         }

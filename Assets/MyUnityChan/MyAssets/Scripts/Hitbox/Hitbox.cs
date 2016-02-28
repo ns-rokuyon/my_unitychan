@@ -5,6 +5,8 @@ namespace MyUnityChan {
     public class Hitbox : PoolObjectBase {
         public static readonly bool RENDER_HITBOX = true;
 
+        public bool persistent;
+
         protected GameObject owner = null;
         protected bool use_objectpool = false;
         protected string resource_path = null;
@@ -73,9 +75,19 @@ namespace MyUnityChan {
             return false;
         }
 
+        public void setEnabledCollider(bool f) {
+            GetComponent<Collider>().enabled = f;
+        }
+
         protected void destroy() {
             end_timer.destroy();
             end_timer = null;
+
+            if ( persistent ) {
+                setEnabledCollider(false);
+                return;
+            }
+
             if ( use_objectpool ) {
                 ObjectPoolManager.releaseGameObject(this.gameObject, resource_path);
             }
