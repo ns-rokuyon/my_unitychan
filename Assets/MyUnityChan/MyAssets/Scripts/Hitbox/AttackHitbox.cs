@@ -59,6 +59,7 @@ namespace MyUnityChan {
             if ( other.tag == "Door" ) {
                 Door door = ((Door)other.gameObject.GetComponent<Door>());
                 door.open();
+                spec.attack(null, this);
                 return true;
             }
             return false;
