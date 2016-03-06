@@ -7,9 +7,11 @@ namespace MyUnityChan {
         private int target_update_time_span;
         private string area_name;
 
+        private bool coroutine_running = false;
+
         // Use this for initialization
         void Start() {
-            target_update_time_span = 10;
+            target_update_time_span = 60;
             area_name = AreaManager.Instance.getAreaNameFromObject(self.gameObject);
         }
 
@@ -32,16 +34,23 @@ namespace MyUnityChan {
                 return;
             }
 
+            if ( !coroutine_running )
+                StartCoroutine(switchDirection());
+        }
+
+        private IEnumerator switchDirection() {
             float target_x = target.transform.position.x;
             float self_x = self.transform.position.x;
 
             if ( target_x < self_x ) {
+                yield return new WaitForSeconds(0.5f);
                 horizontal_input = -1.0f;
             }
             else {
+                yield return new WaitForSeconds(0.5f);
                 horizontal_input = +1.0f;
             }
-
         }
+
     }
 }
