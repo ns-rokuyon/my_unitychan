@@ -72,9 +72,11 @@ namespace MyUnityChan {
             }
 
             public override void attack(Character character, Hitbox hitbox) {
-                character.GetComponent<Rigidbody>().AddForce(new Vector3(hitbox.forward.x * 5.0f, 5.0f, 0.0f), ForceMode.Impulse);
-                character.stun(stun);
-                character.damage(damage);
+                if ( character ) {
+                    character.GetComponent<Rigidbody>().AddForce(new Vector3(hitbox.forward.x * 5.0f, 5.0f, 0.0f), ForceMode.Impulse);
+                    character.stun(stun);
+                    character.damage(damage);
+                }
                 (EffectManager.Instance as EffectManager).createEffect(Const.Prefab.Effect[effect_name],
                     hitbox.gameObject.transform.position, 60, true);
             }
@@ -122,9 +124,11 @@ namespace MyUnityChan {
             }
 
             public override void attack(Character character, Hitbox hitbox) {
-                character.GetComponent<Rigidbody>().AddForce(new Vector3(hitbox.forward.x * 2.0f, 7.0f, 0.0f), ForceMode.Impulse);
-                character.stun(stun);
-                character.damage(damage);
+                if ( character ) {
+                    character.GetComponent<Rigidbody>().AddForce(new Vector3(hitbox.forward.x * 2.0f, 7.0f, 0.0f), ForceMode.Impulse);
+                    character.stun(stun);
+                    character.damage(damage);
+                }
                 (EffectManager.Instance as EffectManager).createEffect(Const.Prefab.Effect[effect_name],
                     hitbox.gameObject.transform.position, 60, true);
             }
@@ -173,9 +177,11 @@ namespace MyUnityChan {
             }
 
             public override void attack(Character character, Hitbox hitbox) {
-                character.GetComponent<Rigidbody>().AddForce(new Vector3(hitbox.forward.x * 2.0f, 7.0f, 0.0f), ForceMode.Impulse);
-                character.stun(stun);
-                character.damage(damage);
+                if ( character ) {
+                    character.GetComponent<Rigidbody>().AddForce(new Vector3(hitbox.forward.x * 2.0f, 7.0f, 0.0f), ForceMode.Impulse);
+                    character.stun(stun);
+                    character.damage(damage);
+                }
                 (EffectManager.Instance as EffectManager).createEffect(Const.Prefab.Effect[effect_name],
                     hitbox.gameObject.transform.position, 60, true);
             }
