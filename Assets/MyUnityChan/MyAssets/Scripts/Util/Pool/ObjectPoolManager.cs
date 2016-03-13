@@ -26,6 +26,7 @@ namespace MyUnityChan {
             addPool(Const.Prefab.Effect["JUMP_SMOKE_PUFF"]);
             addPool(Const.Prefab.Effect["DASH_SMOKE_PUFF"]);
             addPool(Const.Prefab.Item["HP_RECOVERY"]);
+            addPool(Const.Prefab.Item["MISSILE_SUPPLY"]);
             addPool(Const.Prefab.Timer["FRAME_TIMER"]);
         }
 

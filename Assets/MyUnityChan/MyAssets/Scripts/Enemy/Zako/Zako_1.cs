@@ -14,7 +14,14 @@ namespace MyUnityChan {
 
         // callback when enemy is dying
         private void onDead() {
-            DropItem item = DropItemManager.self().create<DropItem>(Const.Prefab.Item["HP_RECOVERY"], true);
+            string itemname;
+            if ( Random.value > 0.5 ) {
+                itemname = "HP_RECOVERY";
+            } else {
+                itemname = "MISSILE_SUPPLY";
+            }
+
+            DropItem item = DropItemManager.self().create<DropItem>(Const.Prefab.Item[itemname], true);
             item.setPosition(transform.position + Vector3.up);
         }
 
