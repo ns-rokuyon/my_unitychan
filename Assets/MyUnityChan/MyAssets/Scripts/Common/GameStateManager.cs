@@ -11,6 +11,9 @@ namespace MyUnityChan {
             MAP
         };
 
+        [SerializeField]
+        public Const.Language language;
+
         public PlayerManager player_manager { get; set; }
         private GameState state { get; set; }
 
