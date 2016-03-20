@@ -106,6 +106,8 @@ namespace MyUnityChan {
                     action_manager.registerAction(new PlayerDash(this)); break;
                 case Const.PlayerAction.DOWN:
                     action_manager.registerAction(new PlayerDown(this)); break;
+                case Const.PlayerAction.DOUBLE_JUMP:
+                    action_manager.registerAction(new PlayerDoubleJump(this)); break;
                 case Const.PlayerAction.GUARD:
                     action_manager.registerAction(new PlayerGuard(this)); break;
                 case Const.PlayerAction.HADOUKEN:
@@ -127,6 +129,10 @@ namespace MyUnityChan {
 
         public void registerActions(List<Const.PlayerAction> action_class_list) {
             action_class_list.ForEach(ac => registerAction(ac));
+        }
+
+        public void disableAction(string name) {
+            action_manager.disableAction(name);
         }
 
         public override void damage(int dam) {
@@ -255,8 +261,7 @@ namespace MyUnityChan {
 
         private void performTest() {
             Debug.Log("performTest");
-            //manager.switchPlayerCharacter();
-            GetComponent<MissilePod>().shoot();
+            manager.switchPlayerCharacter();
         }
 
 
