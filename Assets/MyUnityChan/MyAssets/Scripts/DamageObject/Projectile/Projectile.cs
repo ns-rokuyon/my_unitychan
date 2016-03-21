@@ -40,7 +40,7 @@ namespace MyUnityChan {
             waiting_for_destroying = false;
         }
 
-        public virtual void setStartPosition(Vector3 pos) {
+        public override void setStartPosition(Vector3 pos) {
             transform.position = pos;
             start_position = pos;
 

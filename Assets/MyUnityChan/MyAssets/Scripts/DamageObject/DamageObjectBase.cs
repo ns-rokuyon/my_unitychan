@@ -10,6 +10,10 @@ namespace MyUnityChan {
             commonSetting();
         }
 
+        public virtual void setStartPosition(Vector3 pos) {
+            transform.position = pos;
+        }
+
         public void commonSetting() {
             int ch_layer = LayerMask.NameToLayer("Character");
             int do_layer = LayerMask.NameToLayer("DamageObject");
