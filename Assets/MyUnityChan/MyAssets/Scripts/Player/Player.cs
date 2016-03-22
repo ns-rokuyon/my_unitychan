@@ -36,7 +36,6 @@ namespace MyUnityChan {
 
             // animation
             animator = GetComponent<Animator>();
-
         }
 
         // Use this for initialization
@@ -93,6 +92,8 @@ namespace MyUnityChan {
         }
 
         public void registerAction(Const.PlayerAction action_class) {
+            if ( !action_manager ) action_manager = GetComponent<PlayerActionManager>();
+
             switch ( action_class ) {
                 case Const.PlayerAction.ACCEL:
                     action_manager.registerAction(new PlayerAccel(this)); break;
@@ -100,6 +101,8 @@ namespace MyUnityChan {
                     action_manager.registerAction(new PlayerAttack(this)); break;
                 case Const.PlayerAction.BEAM:
                     action_manager.registerAction(new PlayerBeam(this)); break;
+                case Const.PlayerAction.BOMB:
+                    action_manager.registerAction(new PlayerBomb(this)); break;
                 case Const.PlayerAction.BRAKE:
                     action_manager.registerAction(new PlayerBrake(this)); break;
                 case Const.PlayerAction.DASH:
@@ -123,6 +126,7 @@ namespace MyUnityChan {
                 case Const.PlayerAction.TURN:
                     action_manager.registerAction(new PlayerTurn(this)); break;
                 default:
+                    Debug.LogWarning("Undefined player action: id=" + action_class);
                     break;
             }
         }

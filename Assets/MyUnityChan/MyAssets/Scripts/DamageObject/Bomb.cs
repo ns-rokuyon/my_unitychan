@@ -20,6 +20,10 @@ namespace MyUnityChan {
                 gameObject.transform.position,
                 100,
                 true);
+
+            // Delete this object
+            ObjectPoolManager.releaseGameObject(this.gameObject, Const.Prefab.Hitbox[spec.hitbox_name]);
         }
+
     }
 }

@@ -121,8 +121,10 @@ namespace MyUnityChan {
                     if ( mini_unitychan ) {
                         mini_unitychan.SetActive(false);
                         new_player = mini_unitychan.GetComponent<Player>();
+                        new_player.setController(controller);
                         switchable_player_characters.Add(Const.CharacterName.MINI_UNITYCHAN, mini_unitychan);
                         new_player.character_name = Const.CharacterName.MINI_UNITYCHAN;
+                        //new_player.registerAction(Const.PlayerAction.BOMB);
                     }
                     break;
                 default:

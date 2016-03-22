@@ -40,8 +40,8 @@ namespace MyUnityChan {
 
                 go = objects[i].gameObject;
                 if ( !go.activeInHierarchy ) {
-                    initializeObject(go);
                     go.SetActive(true);
+                    initializeObject(go);
                     return go;
                 }
             }
