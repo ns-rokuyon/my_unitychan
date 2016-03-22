@@ -9,6 +9,16 @@ namespace MyUnityChan {
         [SerializeField] public int frame;      // time hitbox enabled
         [SerializeField] public string effect_name;
 
-        public abstract void attack(Character character, Hitbox hitbox);
+        public virtual void attack(Character character, Hitbox hitbox) {
+            if ( character ) {
+                character.stun(stun);
+                character.damage(damage);
+            }
+
+            if ( effect_name.Length != 0 ) {
+                EffectManager.self().createEffect(Const.Prefab.Effect[effect_name],
+                    hitbox.gameObject.transform.position, 60, true);
+            }
+        }
     }
 }
