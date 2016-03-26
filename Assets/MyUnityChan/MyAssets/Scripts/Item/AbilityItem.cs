@@ -12,9 +12,13 @@ namespace MyUnityChan {
         [SerializeField]
         public GameText description;
 
+        [SerializeField]
+        public Const.CharacterName target;
+
         public override void perform(Player player) {
-            player.registerAction(action);
-            remove_actions.ForEach(remove_action => player.disableAction(remove_action));
+            Player target_player = player.manager.getPlayer(target);
+            target_player.registerAction(action);
+            remove_actions.ForEach(remove_action => target_player.disableAction(remove_action));
         }
 
         public override void destroy(Player player) {

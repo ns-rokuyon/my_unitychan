@@ -15,7 +15,6 @@ namespace MyUnityChan {
 
         private GameObject player_root;
         private Animator animator;
-        private PlayerActionManager action_manager = null;
 
         private float dist_to_ground;
         private Vector3 dist_checksphere_center = new Vector3(0, 0.6f, 0);
@@ -29,11 +28,9 @@ namespace MyUnityChan {
         public Vector3 last_entrypoint { get; set; }    // player's position in last area change
 
         public PlayerManager manager { get; set; }
+        public PlayerActionManager action_manager { get; set; }
 
         void Awake() {
-            // action manager setup
-            action_manager = GetComponent<PlayerActionManager>();
-
             // animation
             animator = GetComponent<Animator>();
         }
@@ -228,10 +225,6 @@ namespace MyUnityChan {
 
         public float getAnimSpeedDefault() {
             return anim_speed_default;
-        }
-
-        public PlayerActionManager getActionManager() {
-            return action_manager;
         }
 
         public override int getReservedHP() {

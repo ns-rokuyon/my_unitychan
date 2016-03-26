@@ -5,15 +5,10 @@ using System.Linq;
 namespace MyUnityChan {
     public abstract class ActionManager : ObjectBase {
         protected Character character;
-        protected Dictionary<string, Action> actions;
+        protected Dictionary<string, Action> actions = new Dictionary<string, Action>();
 
         protected abstract void start();
         protected abstract void update();
-
-        void Awake() {
-            character = null;
-            actions = new Dictionary<string, Action>();
-        }
 
         void Start() {
             start();

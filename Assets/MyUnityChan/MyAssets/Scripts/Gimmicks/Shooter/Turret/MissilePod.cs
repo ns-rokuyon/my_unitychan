@@ -28,7 +28,6 @@ namespace MyUnityChan {
         }
 
         public override void shoot() {
-            Debug.Log(missile_num);
             if ( missile_num == 0 ) {
                 return;
             }

@@ -30,7 +30,8 @@ namespace MyUnityChan {
             if ( stock > 0 ) {
                 GameObject obj = ObjectPoolManager.getGameObject(Const.Prefab.DamageObject["BOMB"]);
                 obj.setParent(Hierarchy.Layout.DAMAGE_OBJECT);
-                obj.GetComponent<TimeBomb>().setStartPosition(player.transform.position);
+                obj.GetComponent<TimeBomb>().setStartPosition(
+                    player.transform.position.add(player.transform.forward.x * 0.5f, 0, 0));
 
                 stock--;
 

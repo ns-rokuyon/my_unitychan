@@ -24,7 +24,7 @@ namespace MyUnityChan {
         void Awake() {
             switchable_player_characters = new Dictionary<Const.CharacterName, GameObject>();
 
-            default_unitychan.GetComponent<Player>().manager = this;
+            //default_unitychan.GetComponent<Player>().manager = this;
             switchable_player_characters.Add(Const.CharacterName.UNITYCHAN, default_unitychan);
             now = Const.CharacterName.UNITYCHAN;
             Player now_player = getNowPlayer().GetComponent<Player>();
@@ -43,12 +43,10 @@ namespace MyUnityChan {
             // player status setup
             status = GetComponent<PlayerStatus>();
             status.addEnergyTank();
-            now_player.status = status;
 
             // controller setup
             controller = PrefabInstantiater.create(Const.Prefab.Controller[controller_name], this.gameObject).GetComponent<Controller>();
             controller.setSelf(now_player);
-            now_player.setController(controller);
 
             // HP gauge setup
             if ( hpgauge_object_ref )
@@ -56,6 +54,9 @@ namespace MyUnityChan {
 
             if ( reserved_hpgauge_object_ref )
                 reserved_hpgauge = reserved_hpgauge_object_ref.GetComponent<ReservedHpGauge>();
+
+            // Initialize player
+            initPlayer(now_player);
 
             // set player to GameStateManager
             GameStateManager.self().player_manager = this;
@@ -80,6 +81,10 @@ namespace MyUnityChan {
         public GameObject getNowPlayer() {
             return switchable_player_characters[now];
         } 
+
+        public Player getPlayer(Const.CharacterName name) {
+            return switchable_player_characters[name].GetComponent<Player>();
+        }
 
         public void switchPlayerCharacter(Const.CharacterName name) {
             Player player = switchable_player_characters[now].GetComponent<Player>();
@@ -131,10 +136,15 @@ namespace MyUnityChan {
                     break;
             }
             if ( new_player ) {
-                new_player.manager = this;
-                new_player.status = status;
-                new_player.setController(controller);
+                initPlayer(new_player);
             }
+        }
+
+        public void initPlayer(Player player) {
+            player.manager = this;
+            player.status = status;
+            player.setController(controller);
+            player.action_manager = player.gameObject.GetComponent<PlayerActionManager>();
         }
     }
 }
