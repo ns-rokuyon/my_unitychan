@@ -32,18 +32,12 @@ namespace MyUnityChan {
         }
 
         public void OnTriggerEnter(Collider other) {
-            if ( triggerPlayer(other) ) {
-                projectile.GetComponent<Projectile>().countHit();
-            }
-            if ( triggerEnemy(other) ) {
-                projectile.GetComponent<Projectile>().countHit();
-            }
-            if ( triggerDoor(other) ) {
-                projectile.GetComponent<Projectile>().countHit();
-            }
-            if ( triggerGround(other) ) {
-                projectile.GetComponent<Projectile>().countHit();
-            }
+            Projectile proj = projectile.GetComponent<Projectile>();
+            if ( triggerPlayer(other) ) proj.countHit();
+            if ( triggerEnemy(other) ) proj.countHit();
+            if ( triggerDoor(other) ) proj.countHit();
+            if ( triggerGround(other) ) proj.countHit();
+            if ( triggerBlock(other) ) proj.countHit();
         }
 
         /*

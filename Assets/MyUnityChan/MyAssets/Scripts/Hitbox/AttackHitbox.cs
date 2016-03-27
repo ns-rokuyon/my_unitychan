@@ -28,9 +28,11 @@ namespace MyUnityChan {
         }
 
         public void OnTriggerEnter(Collider other) {
+            // 'other' object must be attached Colider and Rigidbody component
             triggerPlayer(other);
             triggerEnemy(other);
             triggerDoor(other);
+            triggerBlock(other);
         }
 
         protected bool triggerEnemy(Collider other) {
@@ -65,6 +67,15 @@ namespace MyUnityChan {
             return false;
         }
 
+        protected bool triggerBlock(Collider other) {
+            if ( other.tag == "Block" ) {
+                Block block = ((Block)other.gameObject.GetComponent<Block>());
+                spec.attack(null, this);
+                block.damage(spec.damage);
+                return true;
+            }
+            return false;
+        }
     }
 
 }

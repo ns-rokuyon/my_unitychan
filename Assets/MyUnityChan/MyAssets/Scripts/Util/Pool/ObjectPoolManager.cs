@@ -22,6 +22,7 @@ namespace MyUnityChan {
             addPool(Const.Prefab.Hitbox["FLAME"]);
             addPool(Const.Prefab.Effect["BLACK_EXPLOSION"]);
             addPool(Const.Prefab.Effect["BOMB_EXPLOSION"]);
+            addPool(Const.Prefab.Effect["DRILL_GROUND"]);
             addPool(Const.Prefab.Effect["MISSILE_EXPLOSION"]);
             addPool(Const.Prefab.Effect["HIT_01"]);
             addPool(Const.Prefab.Effect["HIT_02"]);
