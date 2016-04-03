@@ -22,7 +22,7 @@ namespace MyUnityChan {
         }
 
         public override void destroy(Player player) {
-            ModalManager.Instance.show(name.get(), description.get());
+            ModalManager.Instance.show(name, description);
             PauseManager.Instance.pause(true, ModalManager.Instance.control, () => { ModalManager.Instance.hide(); });
             Destroy(this.gameObject);
         }

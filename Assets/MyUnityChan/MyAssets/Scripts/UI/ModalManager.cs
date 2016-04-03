@@ -16,9 +16,9 @@ namespace MyUnityChan {
             modal_desc = modal.transform.FindChild("Description").gameObject.GetComponent<Text>();
         }
 
-        public void show(string title, string desc) {
-            modal_title.text = title;
-            modal_desc.text = desc;
+        public void show(GameText title, GameText desc) {
+            modal_title.text = title.get();
+            modal_desc.text = desc.get();
             modal.SetActive(true);
         }
 
