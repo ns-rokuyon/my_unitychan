@@ -45,6 +45,8 @@ namespace MyUnityChan {
 
         // Update is called once per frame
         void Update() {
+            if ( PauseManager.isPausing() ) return;
+
             if ( SettingManager.Instance.get(Settings.Flag.ENEMY_STOP) ) {
                 (controller as AIController).isStopped = true;
             }
