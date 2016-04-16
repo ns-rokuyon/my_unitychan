@@ -128,6 +128,10 @@ namespace MyUnityChan {
             actions[name].disable();
         }
 
+        public void enableAction(string name) {
+            actions[name].enable();
+        }
+
         public Action getAction(string name) {
             if ( !actions.ContainsKey(name) ) {
                 return null;

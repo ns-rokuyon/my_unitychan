@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityChan;
 
 using UnityEngine;
 using System;
@@ -136,6 +137,18 @@ namespace MyUnityChan {
             action_manager.disableAction(name);
         }
 
+        public void enableAction(string name) {
+            action_manager.enableAction(name);
+        }
+
+        public void disableAction(Const.PlayerAction id) {
+            action_manager.disableAction(id);
+        }
+
+        public void enableAction(Const.PlayerAction id) {
+            action_manager.enableAction(id);
+        }
+
         public override void damage(int dam) {
             if ( status.invincible.now() ) return;
             if ( isGuarding() ) {
@@ -254,6 +267,14 @@ namespace MyUnityChan {
             EffectManager.self().createEffect(Const.Prefab.Effect["RESURRECTION_01"], ground.point, 240, false);
             yield return new WaitForSeconds(0.5f);
             resume();
+        }
+
+        public void enableSpringManager() {
+            GetComponent<SpringManager>().enabled = true;
+        }
+
+        public void disableSpringManager() {
+            GetComponent<SpringManager>().enabled = false;
         }
 
         private void performTest() {

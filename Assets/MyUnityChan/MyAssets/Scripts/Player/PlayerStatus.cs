@@ -28,17 +28,16 @@ namespace MyUnityChan {
         }
         public int reserved_hp { get; private set; }
         public int energy_tanks { get; private set; }
-        public Dictionary<Ability.Id, Ability.Status> abilities { get; set; }
+        public Dictionary<Ability.Id, PlayerAbility> abilities { get; set; }
 
         protected override void start() {
-            abilities = new Dictionary<Ability.Id, Ability.Status>();
+            abilities = new Dictionary<Ability.Id, PlayerAbility>();
             foreach ( var def in Ability.Defs ) {
-                abilities.Add(def.Key, Ability.Status.NO_GET);
+                abilities.Add(def.Key, new PlayerAbility(def.Value));
             }
         }
 
         protected override void update() {
-            foreach ( var ab in abilities ) Debug.Log(ab);
         }
 
         public void addEnergyTank() {
@@ -53,15 +52,14 @@ namespace MyUnityChan {
         }
 
         public void setAbilityStatus(Ability.Id id, Ability.Status st) {
-            abilities[id] = st;
+            if ( abilities[id].status == Ability.Status.NO_GET ) {
+                abilities[id].def.on(GameStateManager.getPlayer().manager, true);
+            }
+            abilities[id].status = st;
         }
 
         public void toggleAbilityStatus(Ability.Id id) {
-            Ability.Status now = abilities[id];
-            if ( now == Ability.Status.NO_GET ) return;
-
-            if ( now == Ability.Status.OFF ) abilities[id] = Ability.Status.ON;
-            else abilities[id] = Ability.Status.OFF;
+            abilities[id].toggleStatus();
         }
 
     }
