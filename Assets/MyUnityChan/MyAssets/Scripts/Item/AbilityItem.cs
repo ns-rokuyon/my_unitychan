@@ -15,7 +15,7 @@ namespace MyUnityChan {
         }
 
         public override void destroy(Player player) {
-            AbilityDef ad = Ability.Defs[ability_id];
+            AbilityDef ad = player.manager.status.getAbility(ability_id).def;
             ModalManager.Instance.show(ad.name, ad.description);
             PauseManager.Instance.pause(true, ModalManager.Instance.control, () => { ModalManager.Instance.hide(); });
             Destroy(this.gameObject);

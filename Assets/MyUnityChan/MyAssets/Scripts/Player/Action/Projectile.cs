@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 namespace MyUnityChan {
     public class PlayerHadouken : PlayerAction {
@@ -31,6 +32,10 @@ namespace MyUnityChan {
 
         public override string name() {
             return "HADOUKEN";
+        }
+
+        public override Const.PlayerAction id() {
+            return Const.PlayerAction.HADOUKEN;
         }
 
         public class Spec : AttackSpec {

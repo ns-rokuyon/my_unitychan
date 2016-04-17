@@ -12,8 +12,7 @@ namespace MyUnityChan {
             def = _def;
             status = def.init_status;
 
-            var status_changed = Observable.EveryUpdate()
-                .ObserveEveryValueChanged(_ => status);
+            var status_changed = Observable.EveryUpdate().Select(_ => status).DistinctUntilChanged();
             status_changed.Where(s => s == Ability.Status.ON).Subscribe(_ => {
                 def.on(GameStateManager.getPlayer().manager);
             });

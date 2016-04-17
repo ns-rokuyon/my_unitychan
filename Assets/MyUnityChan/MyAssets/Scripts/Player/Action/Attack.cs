@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 namespace MyUnityChan {
     public class PlayerAttack : PlayerAction {
@@ -9,6 +10,10 @@ namespace MyUnityChan {
 
         public override string name() {
             return "ATTACK";
+        }
+
+        public override Const.PlayerAction id() {
+            return Const.PlayerAction.ATTACK;
         }
 
         public PlayerAttack(Character character)
@@ -94,6 +99,10 @@ namespace MyUnityChan {
             return "PUNCH_L";
         }
 
+        public override Const.PlayerAction id() {
+            return Const.PlayerAction._UNCLASSIFIED;
+        }
+
         public override void perform() {
             player.getAnimator().Play("PunchL");
             InvokerManager.createFrameDelayInvoker(3, createHitbox);
@@ -144,6 +153,10 @@ namespace MyUnityChan {
 
         public override string name() {
             return "PUNCH_R";
+        }
+
+        public override Const.PlayerAction id() {
+            return Const.PlayerAction._UNCLASSIFIED;
         }
 
         public override void perform() {
@@ -197,6 +210,10 @@ namespace MyUnityChan {
 
         public override string name() {
             return "SPIN_KICK";
+        }
+
+        public override Const.PlayerAction id() {
+            return Const.PlayerAction._UNCLASSIFIED;
         }
 
         public override void perform() {

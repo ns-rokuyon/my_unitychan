@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 namespace MyUnityChan {
     public class PlayerMissile : PlayerAction {
@@ -23,6 +24,10 @@ namespace MyUnityChan {
 
         public override string name() {
             return "MISSILE";
+        }
+
+        public override Const.PlayerAction id() {
+            return Const.PlayerAction.MISSILE;
         }
 
         public override bool condition() {

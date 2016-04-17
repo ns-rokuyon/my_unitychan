@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UniRx;
-
+using System;
 
 namespace MyUnityChan {
     public class PlayerSliding : PlayerAction {
@@ -14,6 +14,10 @@ namespace MyUnityChan {
 
         public override string name() {
             return "SLIDING";
+        }
+
+        public override Const.PlayerAction id() {
+            return Const.PlayerAction.SLIDING;
         }
 
         public override void performFixed() {

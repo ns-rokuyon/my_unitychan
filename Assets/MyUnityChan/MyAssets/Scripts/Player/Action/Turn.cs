@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 namespace MyUnityChan {
     public class PlayerTurn : PlayerAction {
@@ -9,6 +10,10 @@ namespace MyUnityChan {
 
         public override string name() {
             return "TURN";
+        }
+
+        public override Const.PlayerAction id() {
+            return Const.PlayerAction.TURN;
         }
 
         public override void perform() {

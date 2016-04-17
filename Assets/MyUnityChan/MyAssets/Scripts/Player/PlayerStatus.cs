@@ -30,7 +30,8 @@ namespace MyUnityChan {
         public int energy_tanks { get; private set; }
         public Dictionary<Ability.Id, PlayerAbility> abilities { get; set; }
 
-        protected override void start() {
+        protected override void awake() {
+            base.awake();
             abilities = new Dictionary<Ability.Id, PlayerAbility>();
             foreach ( var def in Ability.Defs ) {
                 abilities.Add(def.Key, new PlayerAbility(def.Value));
@@ -49,6 +50,10 @@ namespace MyUnityChan {
 
         public int getReservedHpLimit() {
             return energy_tanks * Const.Unit.RESERVED_HP;
+        }
+
+        public PlayerAbility getAbility(Ability.Id id) {
+            return abilities[id];
         }
 
         public void setAbilityStatus(Ability.Id id, Ability.Status st) {

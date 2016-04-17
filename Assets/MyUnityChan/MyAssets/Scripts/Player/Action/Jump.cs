@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 namespace MyUnityChan {
     public class PlayerJump : PlayerAction {
@@ -23,6 +24,10 @@ namespace MyUnityChan {
 
         public override string name() {
             return "JUMP";
+        }
+
+        public override Const.PlayerAction id() {
+            return Const.PlayerAction.JUMP;
         }
 
         public override void performFixed() {
@@ -83,6 +88,10 @@ namespace MyUnityChan {
 
         public override string name() {
             return "AIR_JUMP";
+        }
+
+        public override Const.PlayerAction id() {
+            return Const.PlayerAction.DOUBLE_JUMP;
         }
 
         public override void performFixed() {

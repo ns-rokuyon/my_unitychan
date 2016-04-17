@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UniRx;
 using UniRx.Triggers;
+using System;
 
 namespace MyUnityChan {
     public class PlayerBrake : PlayerAction {
@@ -16,6 +17,10 @@ namespace MyUnityChan {
 
         public override string name() {
             return "BRAKE";
+        }
+
+        public override Const.PlayerAction id() {
+            return Const.PlayerAction.BRAKE;
         }
 
         public override void performFixed() {
@@ -63,7 +68,11 @@ namespace MyUnityChan {
         public override string name() {
             return "ACCEL";
         }
-        
+
+        public override Const.PlayerAction id() {
+            return Const.PlayerAction.ACCEL;
+        }
+
         public override void performFixed() {
             float horizontal = controller.keyHorizontal();
             Vector3 fw = player.transform.forward;
@@ -136,6 +145,10 @@ namespace MyUnityChan {
             return "DASH";
         }
 
+        public override Const.PlayerAction id() {
+            return Const.PlayerAction.DASH;
+        }
+
         public override void perform() {
             dash = true;
             player.getAnimator().speed = player.getAnimSpeedDefault() * 1.2f;
@@ -185,6 +198,10 @@ namespace MyUnityChan {
 
         public override string name() {
             return "LIMIT_SPEED";
+        }
+
+        public override Const.PlayerAction id() {
+            return Const.PlayerAction.LIMIT_SPEED;
         }
 
         public override void performFixed() {

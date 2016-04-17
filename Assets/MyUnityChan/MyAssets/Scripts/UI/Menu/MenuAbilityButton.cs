@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
 using System;
+using UniRx;
+using UniRx.Triggers;
 
 namespace MyUnityChan {
     public class MenuAbilityButton : GUIObjectBase, ISelectHandler, IDeselectHandler {
@@ -10,15 +12,41 @@ namespace MyUnityChan {
         public Ability.Id ability_id;
 
         private RectTransform rect_transform;
+        private Text description;
+
+        public PlayerAbility ability { get; set; } 
 
         void Awake() {
             setupSoundPlayer();
             rect_transform = GetComponent<RectTransform>();
+            description = transform.parent.GetComponentInChildren<Text>();
+        }
+
+        void Start() {
+            ability = GameStateManager.self().player_manager.status.getAbility(ability_id);
+            this.ObserveEveryValueChanged(_ => ability.status)
+                .Subscribe(s => {
+                    if ( s == Ability.Status.NO_GET ) {
+                        GetComponent<RawImage>().enabled = false;
+                    }
+                    else if ( s == Ability.Status.OFF ) {
+                        GetComponent<RawImage>().enabled = false;
+                    }
+                    else if ( s == Ability.Status.ON ) {
+                        GetComponent<RawImage>().enabled = true;
+                    }
+                });
         }
 
         public void OnSelect(BaseEventData eventData) {
             sound.play(Const.Sound.SE.UI["BUTTON_SELECT"], true);
             rect_transform.localPosition = rect_transform.localPosition.add(0, 0, -10.0f);
+            if ( ability.status == Ability.Status.NO_GET ) {
+                description.text = "?????";
+            }
+            else {
+                description.text = ability.def.name.get();
+            }
         }
 
         public void OnDeselect(BaseEventData eventData) {

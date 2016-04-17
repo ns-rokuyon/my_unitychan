@@ -2,6 +2,7 @@
 using System.Collections;
 using UniRx;
 using UniRx.Triggers;
+using System;
 
 namespace MyUnityChan {
     public class PlayerBomb : PlayerAction {
@@ -24,6 +25,10 @@ namespace MyUnityChan {
 
         public override string name() {
             return "BOMB";
+        }
+
+        public override Const.PlayerAction id() {
+            return Const.PlayerAction.BOMB;
         }
 
         public override void perform() {
