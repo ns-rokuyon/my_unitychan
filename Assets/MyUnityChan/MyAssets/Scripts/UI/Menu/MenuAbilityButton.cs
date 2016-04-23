@@ -15,11 +15,13 @@ namespace MyUnityChan {
         private Text description;
 
         public PlayerAbility ability { get; set; } 
+        public Image icon_filter { get; private set; }
 
         void Awake() {
             setupSoundPlayer();
             rect_transform = GetComponent<RectTransform>();
             description = transform.parent.GetComponentInChildren<Text>();
+            icon_filter = gameObject.transform.FindChild("Filter").gameObject.GetComponent<Image>();
         }
 
         void Start() {
@@ -30,10 +32,11 @@ namespace MyUnityChan {
                         GetComponent<RawImage>().enabled = false;
                     }
                     else if ( s == Ability.Status.OFF ) {
-                        GetComponent<RawImage>().enabled = false;
+                        icon_filter.enabled = true;
                     }
                     else if ( s == Ability.Status.ON ) {
                         GetComponent<RawImage>().enabled = true;
+                        icon_filter.enabled = false;
                     }
                 });
         }
