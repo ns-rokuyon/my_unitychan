@@ -50,7 +50,8 @@ namespace MyUnityChan {
             updateViewpointCornersInWorld();
 
             if ( player ) {
-                Vector3 newpos = player.transform.position + now_camera_position.position_diff;
+                Vector3 newpos = player.transform.position + 
+                    now_camera_position.position_diff + player_component.player_camera_position.position_diff;
                 newpos = adjustNewPosition(newpos);
 
                 transform.position = newpos;

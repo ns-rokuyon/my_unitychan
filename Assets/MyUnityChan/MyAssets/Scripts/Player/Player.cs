@@ -14,6 +14,9 @@ namespace MyUnityChan {
 
         public string player_name = null;
 
+        [SerializeField]
+        public PlayerCameraPosition player_camera_position;
+
         private GameObject player_root;
         private Animator animator;
 
