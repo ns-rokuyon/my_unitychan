@@ -15,6 +15,9 @@ namespace MyUnityChan {
         }
 
         void Update() {
+            if ( PauseManager.isPausing() )
+                return;
+
             // Orider by each action priority
             var action_orders = actions.OrderByDescending(pair => pair.Value.priority); 
 
