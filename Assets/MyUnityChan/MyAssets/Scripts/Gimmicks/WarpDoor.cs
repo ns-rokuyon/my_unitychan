@@ -16,7 +16,7 @@ namespace MyUnityChan {
 
         public override bool condition(Player player) {
             float vertical = player.getController().keyVertical();
-            return !player.isFrozen() && vertical > 0;
+            return !player.isFrozen()&& player.isGrounded() && vertical > 0;
         }
 
         public override void warp(Player player) {
