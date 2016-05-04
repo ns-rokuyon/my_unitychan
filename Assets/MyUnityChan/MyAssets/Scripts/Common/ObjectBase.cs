@@ -37,14 +37,17 @@ namespace MyUnityChan {
         }
 
         public void OnTriggerEnter(Collider other) {
+            Debug.Log("OnEnter");
             if ( other.tag == "MovingFloor" && transform.parent == null ) {
                 transform.parent = other.gameObject.transform;
+                other.gameObject.GetComponent<MovingFloor>().getOn(this);
             }
         }
 
         public void OnTriggerExit(Collider other) {
             if ( other.tag == "MovingFloor" && transform.parent != null ) {
                 transform.parent = null;
+                other.gameObject.GetComponent<MovingFloor>().getOff(this);
             }
         }
 

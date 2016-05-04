@@ -10,6 +10,9 @@ namespace MyUnityChan {
         // Update is called once per frame
         void Update() {
         }
+
+        public virtual void getOn(ObjectBase ob) { }
+        public virtual void getOff(ObjectBase ob) { }
     }
 
     public abstract class Warp : ObjectBase {
