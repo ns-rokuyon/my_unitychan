@@ -18,6 +18,7 @@ namespace MyUnityChan {
 
         // Use this for initialization
         void Start() {
+            // Initialize state
             if ( Vector3.Distance(top, transform.position) > Vector3.Distance(bottom, transform.position) ) {
                 state = State.WAITING_BOTTOM;
             }
@@ -29,21 +30,53 @@ namespace MyUnityChan {
         // Update is called once per frame
         void Update() {
             if ( state == State.GOING_UP ) {
-                transform.position = transform.position.add(0, -speed * Time.deltaTime, 0);
+                // Move
+                transform.localPosition = transform.localPosition.add(0, speed * Time.deltaTime, 0);
+                if ( transform.localPosition.y > top.y ) {
+                    // Stop
+                    transform.localPosition = top;
+                    state = State.WAITING_TOP;
+                    freePlayer();
+                }
             }
             else if ( state == State.GOING_DOWN ) {
-                transform.position = transform.position.add(0, speed * Time.deltaTime, 0);
+                // Move
+                transform.localPosition = transform.localPosition.add(0, -speed * Time.deltaTime, 0);
+                if ( transform.localPosition.y < bottom.y ) {
+                    // Stop
+                    transform.localPosition = bottom;
+                    state = State.WAITING_BOTTOM;
+                    freePlayer();
+                }
+            }
+            else {
+                PlayerManager pm = getPlayerManager();
+                if ( pm ) {
+                    if ( pm.controller.keyUp() && state == State.WAITING_BOTTOM ) {
+                        // Start
+                        state = State.GOING_UP;
+                        lockPlayer();
+                    }
+                    else if ( pm.controller.keyDown() && state == State.WAITING_TOP ) {
+                        // Start
+                        state = State.GOING_DOWN;
+                        lockPlayer();
+                    }
+                }
             }
         }
 
-        public override void getOn(ObjectBase ob) {
-            Debug.Log("getOn");
-            if ( state == State.WAITING_BOTTOM )
-                state = State.GOING_UP;
-            else if ( state == State.WAITING_TOP )
-                state = State.GOING_DOWN;
+        protected void lockPlayer() {
+            PlayerManager pm = getPlayerManager();
+            if ( pm )
+                pm.getNowPlayerComponent().freeze();
         }
 
+        protected void freePlayer() {
+            PlayerManager pm = getPlayerManager();
+            if ( pm )
+                pm.getNowPlayerComponent().freeze(false);
+        }
     }
 
 }

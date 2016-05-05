@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MyUnityChan {
-    public class MovingFloor : ObjectBase { 
+    public class MovingFloor : ObjectBase {
+        public List<ObjectBase> members = new List<ObjectBase>();
+
         // Use this for initialization
         void Start() {
         }
@@ -11,8 +14,26 @@ namespace MyUnityChan {
         void Update() {
         }
 
-        public virtual void getOn(ObjectBase ob) { }
-        public virtual void getOff(ObjectBase ob) { }
+        public virtual void getOn(ObjectBase ob) {
+            if ( ob.GetComponent<Player>() ) {
+                ob = ob.GetComponent<Player>().manager;
+            }
+            ob.transform.parent = gameObject.transform;
+            members.Add(ob);
+        }
+
+        public virtual void getOff(ObjectBase ob) {
+            if ( ob.GetComponent<Player>() ) {
+                ob = ob.GetComponent<Player>().manager;
+            }
+            ob.transform.parent = null;
+            members.Remove(ob);
+        }
+
+        public PlayerManager getPlayerManager() {
+            return members.Where(m => m.GetComponent<PlayerManager>()).FirstOrDefault() as PlayerManager;
+        }
+
     }
 
     public abstract class Warp : ObjectBase {

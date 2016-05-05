@@ -82,6 +82,10 @@ namespace MyUnityChan {
             return switchable_player_characters[now];
         } 
 
+        public Player getNowPlayerComponent() {
+            return getNowPlayer().GetComponent<Player>();
+        }
+
         public Player getPlayer(Const.CharacterName name) {
             return switchable_player_characters[name].GetComponent<Player>();
         }
