@@ -28,6 +28,7 @@ namespace MyUnityChan {
         }
         public int reserved_hp { get; private set; }
         public int energy_tanks { get; private set; }
+        public int missile_tanks { get; set; }
         public Dictionary<Ability.Id, PlayerAbility> abilities { get; set; }
 
         protected override void awake() {

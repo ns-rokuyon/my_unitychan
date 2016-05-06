@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UniRx;
+using UniRx.Triggers;
 
 namespace MyUnityChan {
     public class MissilePod : TurretBase {
@@ -11,6 +13,7 @@ namespace MyUnityChan {
         public int missile_num { get; protected set; }
 
         protected Text indicator = null;
+        private Player player = null;
 
         void Awake() {
             indicator = indicator_ui_object.GetComponent<Text>();
@@ -20,6 +23,17 @@ namespace MyUnityChan {
             baseStart();
             setProjectile(missile_name);
             missile_num = missile_max;
+
+            player = GetComponent<Player>();
+            if ( player ) {
+                // Auto sync (this.missile_max <-> player.status.missile_tanks * 5)
+                this.ObserveEveryValueChanged(_ => player.manager.status.missile_tanks)
+                    .Where(tanks => tanks > 0)
+                    .Subscribe(_ => {
+                        missile_max += Const.Unit.ADDITIONAL_MISSILES;
+                        addMissile(Const.Unit.ADDITIONAL_MISSILES);
+                    });
+            }
         }
 
         void Update() {
