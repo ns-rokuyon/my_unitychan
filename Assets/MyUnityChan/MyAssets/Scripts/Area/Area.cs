@@ -18,7 +18,8 @@ namespace MyUnityChan {
 
         public float baselineZ = float.NaN;
 
-        public List<GameObject> bound_objects;
+        public List<GameObject> bound_objects;  // TODO: Remove
+        public List<GameObject> area_objects;
 
         private Dictionary<string, bool> ins;
         protected List<AreaConnection> connections;
