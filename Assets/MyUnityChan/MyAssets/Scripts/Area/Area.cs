@@ -63,6 +63,12 @@ namespace MyUnityChan {
         }
 
         public bool isIn(Vector3 pos) {
+            MeshCollider mesh_collider = GetComponent<MeshCollider>();
+            if ( mesh_collider ) {
+                // If this area has MeshCollider
+                return mesh_collider.bounds.Contains(pos);
+            }
+
             Vector3 area_center = transform.position;
             if ( area_center.x - x_harf > pos.x || area_center.x + x_harf < pos.x ) {
                 return false;
