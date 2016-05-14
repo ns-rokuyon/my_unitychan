@@ -4,6 +4,12 @@ using System.Collections.Generic;
 
 namespace MyUnityChan {
     public class MapBuilder : SingletonObjectBase<MapBuilder> {
+        public string build_to = "MapViewer/Map";
+        public Vector3 scale = new Vector3(0.01f, 0.01f, 0.01f);
+
+        public LayerMask layer() {
+            return LayerMask.NameToLayer("MapElement");
+        }
 
         // Use this for initialization
         void Start() {
@@ -31,8 +37,10 @@ namespace MyUnityChan {
                 Area[] found = FindObjectsOfType<Area>();
                 foreach ( Area area in found ) {
                     string name = area.gameObject.name;
-                    GameObject obj = PrefabInstantiater.create("Prefabs/UI/Map/MapAreaElement", "Map");
+                    GameObject obj = PrefabInstantiater.create("Prefabs/UI/Map/MapAreaElement", builder.build_to);
                     obj.name = name + "__map";
+                    obj.AddComponent<MapAreaElement>();
+                    obj.layer = builder.layer();
                     Mesh mesh = null;
 
                     // Copy mesh to area element from area
@@ -47,22 +55,27 @@ namespace MyUnityChan {
                     obj.gameObject.transform.position = area.gameObject.transform.position;
                     obj.transform.localScale = area.gameObject.transform.localScale;
                     obj.transform.localRotation = area.gameObject.transform.localRotation;
+
+                    // Set area ref
+                    obj.GetComponent<MapAreaElement>().area_object = area.gameObject;
                 }
 
                 AreaGate[] gates = FindObjectsOfType<AreaGate>();
                 foreach ( AreaGate gate in gates ) {
                     // Create area joint point into mapviewer
-                    GameObject gatepoint = PrefabInstantiater.create(Const.Prefab.UI["MAP_CONNECTION_POINT"], "Map");
+                    GameObject gatepoint = PrefabInstantiater.create(Const.Prefab.UI["MAP_CONNECTION_POINT"], builder.build_to);
+                    gatepoint.AddComponent<MapElement>();
+                    gatepoint.layer = builder.layer();
                     gatepoint.transform.position = gate.gameObject.transform.position;
                 }
                     
                 // Scaling
-                builder.gameObject.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+                builder.gameObject.transform.localScale = builder.scale;
             }
 
             if ( GUILayout.Button("Clear") ) {
                 builder.gameObject.transform.localScale = Vector3.one;
-                var area_elements = FindObjectsOfType<ConvexMesh>();
+                var area_elements = FindObjectsOfType<MapElement>();
                 foreach ( var obj in area_elements ) {
                     DestroyImmediate(obj.gameObject);
                 }
