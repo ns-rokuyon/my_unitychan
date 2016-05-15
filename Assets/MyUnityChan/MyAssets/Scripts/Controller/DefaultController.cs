@@ -28,6 +28,8 @@ namespace MyUnityChan {
             inputs[(int)InputCode.PAUSE] = Input.GetKeyDown("p");
             inputs[(int)InputCode.TEST] = Input.GetKeyDown("t");
             inputs[(int)InputCode.CANCEL] = Input.GetKey("b");
+            inputs[(int)InputCode.PREV_TAB] = Input.GetKeyDown("z");
+            inputs[(int)InputCode.NEXT_TAB] = Input.GetKeyDown("n");
         }
 
     }

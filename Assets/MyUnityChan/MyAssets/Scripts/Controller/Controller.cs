@@ -19,6 +19,8 @@ namespace MyUnityChan {
             UP,
             LEFT,
             RIGHT,
+            PREV_TAB,
+            NEXT_TAB,
             len
         };
 
@@ -81,6 +83,8 @@ namespace MyUnityChan {
         public bool keyDown() { return inputs[(int)InputCode.DOWN]; }
         public bool keyLeft() { return inputs[(int)InputCode.LEFT]; }
         public bool keyRight() { return inputs[(int)InputCode.RIGHT]; }
+        public bool keyPrevTab() { return inputs[(int)InputCode.PREV_TAB]; }
+        public bool keyNextTab() { return inputs[(int)InputCode.NEXT_TAB]; }
         public float keyHorizontal() { return horizontal_input; }
         public float keyVertical() { return vertical_input; }
 
