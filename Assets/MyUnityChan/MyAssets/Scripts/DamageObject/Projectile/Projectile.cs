@@ -5,6 +5,7 @@ using System.Collections.Generic;
 namespace MyUnityChan {
     public abstract class Projectile : DamageObjectBase {
         [SerializeField] public ProjectileSpec spec;
+        public bool penetration;
 
         protected Vector3 target_dir;
         protected Vector3 start_position;
@@ -14,7 +15,6 @@ namespace MyUnityChan {
         protected string area;
         protected string area_name;
         protected Player player;
-        protected bool penetration;
         protected int hit_num = 0;
         protected bool waiting_for_destroying;
 

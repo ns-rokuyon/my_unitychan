@@ -30,7 +30,7 @@ namespace MyUnityChan {
         // Use this for initialization
         void Awake() {
             GameObject.Find(Const.Canvas.GAME_CAMERA_CANVAS).GetComponent<Canvas>().worldCamera = this.gameObject.GetComponent<Camera>();
-            GameObject.Find(Const.Canvas.MAP_VIEWER_CANVAS).GetComponent<Canvas>().worldCamera = this.gameObject.GetComponent<Camera>();
+            //GameObject.Find(Const.Canvas.MAP_VIEWER_CANVAS).GetComponent<Canvas>().worldCamera = this.gameObject.GetComponent<Camera>();
 
             camera_component = GetComponent<Camera>();
 
