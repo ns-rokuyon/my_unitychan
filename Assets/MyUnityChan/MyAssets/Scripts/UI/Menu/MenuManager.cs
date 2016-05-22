@@ -35,6 +35,8 @@ namespace MyUnityChan {
         }
 
         void Update() {
+            if ( !canvas.enabled ) return;
+
             if ( GameStateManager.Instance.player_manager.controller.keyNextTab() ) {
                 int focused_tab_id = tab_pages.FindIndex(t => t.isFocused());
                 int next_id = focused_tab_id + 1;

@@ -46,6 +46,7 @@ namespace MyUnityChan {
 
         public void deactivate() {
             canvas.enabled = false;
+            es.SetSelectedGameObject(null);
         }
     }
 }

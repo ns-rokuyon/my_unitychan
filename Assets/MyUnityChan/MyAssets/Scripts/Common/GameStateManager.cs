@@ -7,8 +7,7 @@ namespace MyUnityChan {
             NO_SET,
             MAIN,
             MENU,
-            SETTINGS,
-            MAP
+            SETTINGS
         };
 
         [SerializeField]
@@ -72,17 +71,6 @@ namespace MyUnityChan {
                         state = GameState.MAIN;
                         MenuManager.Instance.quit();
                         PauseManager.Instance.pause(false);
-                    }
-                    break;
-                case GameState.MAP:
-                    if ( controller.keyCancel() ) {
-                        /*
-                         * State: MAP -> MENU
-                         * Trigger: cancel key was pressed
-                         */ 
-                        state = GameState.MENU;
-                        MapViewer.Instance.quit();
-                        MenuManager.Instance.enter();
                     }
                     break;
                 case GameState.SETTINGS:
