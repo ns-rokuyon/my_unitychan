@@ -17,7 +17,7 @@ namespace MyUnityChan {
                 Time.timeScale = 0;
                 pause_off_callback = callback;
                 control_on_pause = control;
-                GUIObjectBase.getCanvas("Canvas").GetComponent<Canvas>().enabled = false;
+                GUIObjectBase.getCanvas("Canvas_HUD").GetComponent<Canvas>().enabled = false;
                 GameStateManager.self().player_manager.getNowPlayer()
                     .GetComponent<SpringManager>().enabled = false;
             }
@@ -28,7 +28,7 @@ namespace MyUnityChan {
                 if ( pause_off_callback != null ) {
                     pause_off_callback();
                 }
-                GUIObjectBase.getCanvas("Canvas").GetComponent<Canvas>().enabled = true;
+                GUIObjectBase.getCanvas("Canvas_HUD").GetComponent<Canvas>().enabled = true;
                 pause_off_callback = null; 
                 control_on_pause = null;
                 delay_control_count = 2;
