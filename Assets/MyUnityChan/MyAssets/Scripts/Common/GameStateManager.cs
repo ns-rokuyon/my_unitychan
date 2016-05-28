@@ -6,8 +6,7 @@ namespace MyUnityChan {
         public enum GameState {
             NO_SET,
             MAIN,
-            MENU,
-            SETTINGS
+            MENU
         };
 
         [SerializeField]
@@ -71,17 +70,6 @@ namespace MyUnityChan {
                         state = GameState.MAIN;
                         MenuManager.Instance.quit();
                         PauseManager.Instance.pause(false);
-                    }
-                    break;
-                case GameState.SETTINGS:
-                    if ( controller.keyCancel() ) {
-                        /*
-                         * State: SETTINGS -> MENU
-                         * Trigger: cancel key was pressed
-                         */
-                        state = GameState.MENU;
-                        SettingManager.Instance.quit();
-                        MenuManager.Instance.enter();
                     }
                     break;
                 default:

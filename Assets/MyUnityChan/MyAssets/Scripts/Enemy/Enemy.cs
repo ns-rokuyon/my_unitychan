@@ -47,7 +47,7 @@ namespace MyUnityChan {
         void Update() {
             if ( PauseManager.isPausing() ) return;
 
-            if ( SettingManager.Instance.get(Settings.Flag.ENEMY_STOP) ) {
+            if ( SettingManager.get(Settings.Flag.ENEMY_STOP) ) {
                 (controller as AIController).isStopped = true;
             }
             else {

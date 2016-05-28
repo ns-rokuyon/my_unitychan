@@ -24,16 +24,14 @@ namespace MyUnityChan {
         }
 
         public void OnSelect(BaseEventData event_data) {
-            frame.color = Color.green;
             sound.play(Const.Sound.SE.UI["BUTTON_SELECT"]);
         }
 
         public void OnDeselect(BaseEventData event_data) {
-            frame.color = Color.white;
         }
 
         public void changeSetting(bool b) {
-            SettingManager.Instance.set(flag_key, toggle.isOn);
+            SettingManager.set(flag_key, toggle.isOn);
         }
     }
 

@@ -30,6 +30,7 @@ namespace MyUnityChan {
         public int energy_tanks { get; private set; }
         public int missile_tanks { get; set; }
         public Dictionary<Ability.Id, PlayerAbility> abilities { get; set; }
+        public PlayerSetting setting { get; private set; }
 
         protected override void awake() {
             base.awake();
@@ -37,6 +38,8 @@ namespace MyUnityChan {
             foreach ( var def in Ability.Defs ) {
                 abilities.Add(def.Key, new PlayerAbility(def.Value));
             }
+
+            setting = new PlayerSetting();
         }
 
         protected override void update() {

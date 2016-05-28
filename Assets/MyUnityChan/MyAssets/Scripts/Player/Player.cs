@@ -287,7 +287,7 @@ namespace MyUnityChan {
 
 
         void OnGUI() {
-            if ( !SettingManager.Instance.get(Settings.Flag.SHOW_DEBUG_WINDOW) ) {
+            if ( !SettingManager.get(Settings.Flag.SHOW_DEBUG_WINDOW) ) {
                 return;
             }
 
