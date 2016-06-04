@@ -7,17 +7,22 @@ namespace MyUnityChan {
         private T default_value;
         public GameText title { get; private set; }
         public GameText desc { get; private set; }
+        public Settings.Category category { get; private set; }
 
-        public Setting(T v, GameText t, GameText d) {
+        public Setting(T v, Settings.Category c, GameText t, GameText d) {
             value = v;
+            category = c;
             default_value = v;
             title = t;
-            if ( d == null ) {
-                desc = title;
-            }
-            else {
-                desc = d;
-            }
+            desc = d == null ? t : d;
+        }
+
+        public Setting(SettingRuleElement<T> rule) {
+            value = rule.default_value;
+            default_value = rule.default_value;
+            category = rule.category;
+            title = rule.title;
+            desc = rule.description == null ? rule.title : rule.description;
         }
 
         public void setDefault() {

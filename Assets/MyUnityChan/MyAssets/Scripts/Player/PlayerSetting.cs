@@ -12,11 +12,7 @@ namespace MyUnityChan {
 
         public void setup() {
             foreach (KeyValuePair<Settings.Flag, SettingRuleElement<bool>> rule in Settings.FlagSettingRules ) {
-                flags[rule.Key] = new Setting<bool>(
-                    rule.Value.default_value,
-                    GameText.text(rule.Value.title_jp, rule.Value.title_en),
-                    GameText.text(rule.Value.desc_jp, rule.Value.desc_en)
-                    );
+                flags[rule.Key] = new Setting<bool>(rule.Value);
             }
         }
     }

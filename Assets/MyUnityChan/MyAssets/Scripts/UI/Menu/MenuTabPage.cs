@@ -9,6 +9,7 @@ namespace MyUnityChan {
     public class MenuTabPage : GUIObjectBase {
         [SerializeField]
         public GameText tab_name;
+        public GameObject prior_selectable;
 
         public int id { get; set; }
         public List<Selectable> selectables { get; private set; }
@@ -39,6 +40,11 @@ namespace MyUnityChan {
         public void activate() {
             MenuManager.self().tab_title.text = tab_name.get();
             canvas.enabled = true;
+
+            if ( prior_selectable ) {
+                es.SetSelectedGameObject(prior_selectable);
+                return;
+            }
             var first_selectable = selectables.FirstOrDefault();
             if ( first_selectable )
                 es.SetSelectedGameObject(first_selectable.gameObject);

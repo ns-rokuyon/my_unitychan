@@ -66,6 +66,9 @@ namespace MyUnityChan {
             base.damage(dam);
 
             if ( hp_gauge == null ) {
+                if ( !SettingManager.get(Settings.Flag.SHOW_ENEMY_HP_BAR) )
+                    return;
+
                 hp_gauge = PrefabInstantiater.create(
                     Const.Prefab.UI["ENEMY_HP_GAUGE"], 
                     GUIObjectBase.getCanvas("Canvas_WorldSpace")).GetComponent<HpGauge>();
