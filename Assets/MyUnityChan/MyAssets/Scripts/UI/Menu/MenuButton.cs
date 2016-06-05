@@ -6,11 +6,11 @@ using System.Collections;
 namespace MyUnityChan {
     public class MenuButton : GUIObjectBase, ISelectHandler {
 
-        void Awake() {
+        protected virtual void Awake() {
             setupSoundPlayer();
         }
 
-        public void OnSelect(BaseEventData event_data) {
+        public virtual void OnSelect(BaseEventData event_data) {
             sound.play(Const.Sound.SE.UI["BUTTON_SELECT"], true);
         }
     }

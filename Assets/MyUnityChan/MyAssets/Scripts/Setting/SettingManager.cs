@@ -13,11 +13,13 @@ namespace MyUnityChan {
         private PlayerManager pm;
 
         private Dictionary<Setting<bool>, GameObject> flag_setting_objects;
+        private Dictionary<SettingSelect, GameObject> select_setting_objects;
 
         public Settings.Category focus_category { get; set; }
 
         void Awake() {
             flag_setting_objects = new Dictionary<Setting<bool>, GameObject>();
+            select_setting_objects = new Dictionary<SettingSelect, GameObject>();
             es = EventSystem.current;
             focus_category = Settings.Category.GENERAL;
         }
@@ -39,6 +41,20 @@ namespace MyUnityChan {
                 flag_setting_objects.Add(setting.Value, toggle);
             }
 
+            // Instantiate select settings
+            foreach ( var setting in pm.status.setting.selects ) {
+                GameObject dropdown = PrefabInstantiater.create(Const.Prefab.UI["DROPDOWN"]);
+                dropdown.GetComponentInChildren<Text>().text = setting.Value.title.get();
+                dropdown.setParent(scroll_content);
+                dropdown.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+                dropdown.GetComponentInChildren<Dropdown>().options.Clear();
+                foreach ( var option in setting.Value.item_texts ) {
+                    dropdown.GetComponentInChildren<Dropdown>().options.Add(new Dropdown.OptionData(option.get()));
+                }
+
+                select_setting_objects.Add(setting.Value, dropdown);
+            }
+
             // Instantiate other settings
             // ...
 
@@ -48,6 +64,14 @@ namespace MyUnityChan {
                 .Subscribe(_ => {
                     // flag settings
                     foreach ( var kv in flag_setting_objects ) {
+                        if ( kv.Key.category == focus_category )
+                            kv.Value.SetActive(true);
+                        else
+                            kv.Value.SetActive(false);
+                    }
+
+                    // select settings
+                    foreach ( var kv in select_setting_objects ) {
                         if ( kv.Key.category == focus_category )
                             kv.Value.SetActive(true);
                         else

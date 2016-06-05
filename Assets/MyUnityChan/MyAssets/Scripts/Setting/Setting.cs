@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+using System;
 
 namespace MyUnityChan {
     public class Setting<T> : StructBase where T : struct {
@@ -27,6 +28,24 @@ namespace MyUnityChan {
 
         public void setDefault() {
             value = default_value;
+        }
+    }
+
+    public class SettingSelect : Setting<int> {
+        public Type type { get; private set; }
+        public List<GameText> item_texts { get; private set; }
+
+        public SettingSelect(SettingSelectRuleElement rule) : 
+            base(rule.default_value, rule.category, rule.title, rule.description) {
+            type = rule.type;
+            item_texts = new List<GameText>();
+            foreach ( var it in rule.item_texts ) {
+                item_texts.Add(it);
+            }
+        }
+
+        public T selected<T>() {
+            return (T)Enum.ToObject(type, value);
         }
     }
 }

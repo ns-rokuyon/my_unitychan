@@ -11,10 +11,10 @@ namespace MyUnityChan {
 
         void Start() {
             button = GetComponent<Button>();
-            button.onClick.AddListener(changeCategory);
+            button.onClick.AddListener(change);
         }
 
-        public void changeCategory() {
+        public override void change() {
             SettingManager.Instance.focus_category = nav;
         }
     }

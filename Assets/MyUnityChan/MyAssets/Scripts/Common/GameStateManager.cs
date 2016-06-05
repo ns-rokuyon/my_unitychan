@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 using System.Collections;
 
 namespace MyUnityChan {
@@ -33,6 +34,11 @@ namespace MyUnityChan {
 
         public static void change(GameState st) {
             self().state = st;
+        }
+
+        public static void showCurrentSelected() {
+            var current_ui = EventSystem.current.currentSelectedGameObject;
+            if ( current_ui ) Debug.Log(current_ui.name);
         }
 
         // Global player getter
