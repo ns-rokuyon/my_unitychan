@@ -47,5 +47,9 @@ namespace MyUnityChan {
         public T selected<T>() {
             return (T)Enum.ToObject(type, value);
         }
+
+        public void select(int v) {
+            value = v;
+        }
     }
 }

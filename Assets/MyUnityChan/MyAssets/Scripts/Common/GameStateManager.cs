@@ -10,11 +10,14 @@ namespace MyUnityChan {
             MENU
         };
 
-        [SerializeField]
-        public Const.Language language;
-
         public PlayerManager player_manager { get; set; }
         private GameState state { get; set; }
+
+        public Const.Language language {
+            get {
+                return SettingManager.get<Const.Language>(Settings.Select.LANG);
+            }
+        }
 
         void Awake() {
             state = GameState.NO_SET;

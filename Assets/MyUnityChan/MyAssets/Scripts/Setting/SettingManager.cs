@@ -47,6 +47,7 @@ namespace MyUnityChan {
                 dropdown.GetComponentInChildren<Text>().text = setting.Value.title.get();
                 dropdown.setParent(scroll_content);
                 dropdown.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+                dropdown.GetComponent<MenuDropdownButton>().key = setting.Key;
                 dropdown.GetComponentInChildren<Dropdown>().options.Clear();
                 foreach ( var option in setting.Value.item_texts ) {
                     dropdown.GetComponentInChildren<Dropdown>().options.Add(new Dropdown.OptionData(option.get()));
@@ -81,18 +82,46 @@ namespace MyUnityChan {
                     // other settings
                     // ...
                 });
+
+            // If LANG is changed, reset label text for all button
+            this.ObserveEveryValueChanged(_ => get<Const.Language>(Settings.Select.LANG))
+                .Subscribe(_ => resetLanguage());
+        }
+
+        private void resetLanguage() {
+            if ( flag_setting_objects == null ) return;
+            if ( select_setting_objects == null ) return;
+
+            foreach ( var kv in flag_setting_objects ) {
+                kv.Value.GetComponentInChildren<Text>().text = kv.Key.title.get();
+            }
+            foreach ( var kv in select_setting_objects ) {
+                kv.Value.GetComponentInChildren<Text>().text = kv.Key.title.get();
+            }
         }
 
         public static void changeCategory(Settings.Category cate) {
             Instance.focus_category = cate;
         }
 
+        // Set flag setting value
         public static void set(Settings.Flag key, bool v) {
             Instance.pm.status.setting.flags[key].value = v;
         }
 
+        // Set select setting value
+        public static void set(Settings.Select key, int v) {
+            Instance.pm.status.setting.selects[key].select(v);
+        }
+
+        // Get flag setting value
         public static bool get(Settings.Flag key) {
             return Instance.pm.status.setting.flags[key].value;
+        }
+
+        // Get select setting value
+        public static T get<T>(Settings.Select key) {
+            return Instance.pm.status.setting.selects[key].selected<T>();
         }
     }
 }

@@ -6,12 +6,13 @@ using System;
 using UniRx;
 
 namespace MyUnityChan {
-    public class MenuDropdownButton : MenuButton, 
+    public class MenuDropdownButton : MenuButton,
         IPointerClickHandler, IPointerEnterHandler, ISubmitHandler {
 
         public GameObject dropdown_object;
         public Dropdown dropdown { get; private set; }
         public Text selected_label { get; private set; }
+        public Settings.Select key { get; set; }
 
         private readonly string SELECTED_LABEL_GAMEOBJECT_NAME = "SelectedItemLabel";
 
@@ -40,6 +41,9 @@ namespace MyUnityChan {
             // Update SelectedItemLabel
             var op = dropdown.options[value];
             selected_label.text = op.text;
+
+            // Update Setting
+            SettingManager.set(key, value);
         }
 
         public void OnPointerClick(PointerEventData eventData) {
