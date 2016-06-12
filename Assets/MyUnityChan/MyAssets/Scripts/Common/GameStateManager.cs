@@ -69,6 +69,9 @@ namespace MyUnityChan {
                         PauseManager.Instance.pause(true);
                         MenuManager.Instance.enter();
                     }
+                    else {
+                        EventSystem.current.SetSelectedGameObject(null);
+                    }
                     break;
                 case GameState.MENU:
                     if ( controller.keyPause() ) {

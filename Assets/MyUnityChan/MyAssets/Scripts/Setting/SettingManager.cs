@@ -16,12 +16,15 @@ namespace MyUnityChan {
         private Dictionary<SettingSelect, GameObject> select_setting_objects;
 
         public Settings.Category focus_category { get; set; }
+        public Dictionary<Settings.Flag, System.IDisposable> flag_setting_callbacks { get; set; }
 
         void Awake() {
             flag_setting_objects = new Dictionary<Setting<bool>, GameObject>();
             select_setting_objects = new Dictionary<SettingSelect, GameObject>();
             es = EventSystem.current;
             focus_category = Settings.Category.GENERAL;
+
+            flag_setting_callbacks = new Dictionary<Settings.Flag, System.IDisposable>();
         }
 
         void Start() {
@@ -122,6 +125,24 @@ namespace MyUnityChan {
         // Get select setting value
         public static T get<T>(Settings.Select key) {
             return Instance.pm.status.setting.selects[key].selected<T>();
+        }
+
+        // Add callback which invokes 'func(bool flag)' when it's flag changes
+        public static void setCallback(Settings.Flag key, System.Action<bool> func) {
+            if ( Instance.flag_setting_callbacks.ContainsKey(key) ) return;
+
+            var o = Instance.ObserveEveryValueChanged(_ => {
+                    try {
+                        return get(key);
+                    }
+                    catch ( System.NullReferenceException e ) {
+                        // TODO
+                        return false;
+                    }
+                })
+                .Subscribe(b => func(b))
+                .AddTo(Instance.gameObject);
+            Instance.flag_setting_callbacks.Add(key, o);
         }
     }
 }

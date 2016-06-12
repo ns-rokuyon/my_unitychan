@@ -6,8 +6,10 @@ namespace MyUnityChan {
         [SerializeField]
         public Ability.Id ability_id;
 
-        void Start() {
+        private static List<AbilityItem> _all = new List<AbilityItem>();
 
+        void Start() {
+            _all.Add(this);     // For debug
         }
 
         public override void perform(Player player) {
@@ -19,6 +21,11 @@ namespace MyUnityChan {
             ModalManager.Instance.show(ad.name, ad.description);
             PauseManager.Instance.pause(true, ModalManager.Instance.control, () => { ModalManager.Instance.hide(); });
             Destroy(this.gameObject);
+        }
+
+        public static void setAllAbilitiesToPlayer() {
+            Player player = GameStateManager.getPlayer();
+            _all.ForEach(ab => player.manager.status.setAbilityStatus(ab.ability_id, Ability.Status.ON));
         }
     }
 }
