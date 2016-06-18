@@ -1,17 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UniRx;
 
 namespace MyUnityChan {
     public class BeamTurret : TurretBase {
-        public string beam_name;
+        [SerializeField]
+        public Const.BeamName beam_name;
 
         void Start() {
             baseStart();
-            setProjectile(beam_name);
+            //setProjectile(beam_name.ToString());
+
+            this.ObserveEveryValueChanged(_ => beam_name)
+                .Subscribe(bn => setProjectile(bn.ToString()))
+                .AddTo(gameObject);
         }
 
         public override void shoot() {
-            GameObject obj = ObjectPoolManager.getGameObject(Const.Prefab.Projectile[beam_name]);
+            GameObject obj = ObjectPoolManager.getGameObject(Const.Prefab.Projectile[projectile_name]);
             obj.setParent(Hierarchy.Layout.PROJECTILE);
 
             Beam beam = obj.GetComponent<Beam>();
@@ -19,7 +25,14 @@ namespace MyUnityChan {
             beam.setStartPosition(this.gameObject.transform.position);
 
             // hitbox
-            ProjectileHitbox hitbox = HitboxManager.self().create<ProjectileHitbox>(Const.Prefab.Hitbox[hitbox_name], use_objectpool:true);
+            ProjectileHitbox hitbox;
+            if ( beam.has_hitbox_in_children ) {
+                hitbox = beam.gameObject.GetComponentInChildren<ProjectileHitbox>();
+                hitbox.setEnabledCollider(true);
+            }
+            else {
+                hitbox = HitboxManager.self().create<ProjectileHitbox>(Const.Prefab.Hitbox[hitbox_name], use_objectpool:true);
+            }
             hitbox.setOwner(this.gameObject);
             hitbox.ready(obj, beam.spec);
 
@@ -27,5 +40,8 @@ namespace MyUnityChan {
             sound();
         }
 
+        public void switchBeam(Const.BeamName _beam) {
+            beam_name = _beam;
+        }
     }
 }

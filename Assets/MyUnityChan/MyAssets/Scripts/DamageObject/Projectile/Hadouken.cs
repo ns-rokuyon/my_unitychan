@@ -26,8 +26,6 @@ namespace MyUnityChan {
             penetration = true;
             hit_num = 0;
             distance_moved = 0.0f;
-            max_range = 40.0f;
-            speed = 0.2f;
         }
 
         public override void finalize() {

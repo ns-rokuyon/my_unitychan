@@ -81,13 +81,13 @@ namespace MyUnityChan {
 
         protected void destroy() {
             end_timer.destroy();
-            end_timer = null;
 
             if ( persistent ) {
                 setEnabledCollider(false);
                 return;
             }
 
+            end_timer = null;
             if ( use_objectpool ) {
                 ObjectPoolManager.releaseGameObject(this.gameObject, resource_path);
             }

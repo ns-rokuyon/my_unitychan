@@ -43,7 +43,6 @@ namespace MyUnityChan {
 
             penetration = false;
             distance_moved = 0.0f;
-            max_range = 40.0f;
             hit_num = 0;
             waiting_for_destroying = false;
             rigid_body = GetComponent<Rigidbody>();

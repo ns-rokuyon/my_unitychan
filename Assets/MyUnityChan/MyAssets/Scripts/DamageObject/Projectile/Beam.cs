@@ -17,7 +17,8 @@ namespace MyUnityChan {
         }
 
         public override void setStartPosition(Vector3 pos) {
-            transform.position = pos + target_dir * 0.4f + Vector3.up * 1.2f;
+            transform.position = pos + 
+                target_dir * start_position_offset.x + Vector3.up * start_position_offset.y + Vector3.forward * start_position_offset.z;
             start_position = transform.position;
 
             projectileCommonSetStartPosition();
@@ -28,10 +29,7 @@ namespace MyUnityChan {
         }
 
         public override void initialize() {
-            penetration = false;
             distance_moved = 0.0f;
-            max_range = 40.0f;
-            speed = 0.2f;
             hit_num = 0;
         }
 

@@ -14,6 +14,7 @@ namespace MyUnityChan {
             addPool(Const.Prefab.Projectile["FLAME"]);
             addPool(Const.Prefab.Projectile["HADOUKEN"]);
             addPool(Const.Prefab.Projectile["BEAM_01"]);
+            addPool(Const.Prefab.Projectile["PLASMA_BEAM"]);
             addPool(Const.Prefab.Projectile["MISSILE_01"]);
             addPool(Const.Prefab.DamageObject["BOMB"]);
             addPool(Const.Prefab.Hitbox["PROJECTILE"]);

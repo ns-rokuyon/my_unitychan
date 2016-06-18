@@ -19,6 +19,8 @@ namespace MyUnityChan {
         protected string hitbox_name;
         protected string se_name;
 
+        protected string projectile_name;
+
         void Start() {
             baseStart();
         }
@@ -58,7 +60,8 @@ namespace MyUnityChan {
         }
 
         public void setProjectile(string name) {
-            ProjectileSpec spec = (Resources.Load(Const.Prefab.Projectile[name]) as GameObject)
+            projectile_name = name;
+            ProjectileSpec spec = (Resources.Load(Const.Prefab.Projectile[projectile_name]) as GameObject)
                 .GetComponent<Projectile>().spec;
 
             shooting_frame = spec.shooting_frame;
