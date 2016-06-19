@@ -33,10 +33,12 @@ namespace MyUnityChan {
 
         public PlayerManager manager { get; set; }
         public PlayerActionManager action_manager { get; set; }
+        public List<Const.BeamName> beam_slot { get; set; }
 
         void Awake() {
             // animation
             animator = GetComponent<Animator>();
+            beam_slot = new List<Const.BeamName>();
         }
 
         // Use this for initialization
@@ -50,7 +52,8 @@ namespace MyUnityChan {
             // init player actions (required)
             registerActions(new List<Const.PlayerAction>{
                 Const.PlayerAction.ACCEL, Const.PlayerAction.BRAKE, Const.PlayerAction.DOWN,
-                Const.PlayerAction.JUMP, Const.PlayerAction.LIMIT_SPEED, Const.PlayerAction.TURN
+                Const.PlayerAction.JUMP, Const.PlayerAction.LIMIT_SPEED, Const.PlayerAction.TURN,
+                Const.PlayerAction.SWITCH_BEAM
             });
 
             // player infomation for NPC
@@ -114,6 +117,8 @@ namespace MyUnityChan {
                     action_manager.registerAction(new PlayerDoubleJump(this)); break;
                 case Const.PlayerAction.GUARD:
                     action_manager.registerAction(new PlayerGuard(this)); break;
+                case Const.PlayerAction.SWITCH_BEAM:
+                    action_manager.registerAction(new PlayerSwitchBeam(this)); break;
                 case Const.PlayerAction.HADOUKEN:
                     action_manager.registerAction(new PlayerHadouken(this)); break;
                 case Const.PlayerAction.JUMP:

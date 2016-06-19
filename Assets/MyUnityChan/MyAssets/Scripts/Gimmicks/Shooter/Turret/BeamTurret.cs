@@ -12,11 +12,15 @@ namespace MyUnityChan {
             //setProjectile(beam_name.ToString());
 
             this.ObserveEveryValueChanged(_ => beam_name)
+                .Where(bn => bn != Const.BeamName._NOT_SET)
                 .Subscribe(bn => setProjectile(bn.ToString()))
                 .AddTo(gameObject);
         }
 
         public override void shoot() {
+            if ( beam_name == Const.BeamName._NOT_SET )
+                return;
+
             GameObject obj = ObjectPoolManager.getGameObject(Const.Prefab.Projectile[projectile_name]);
             obj.setParent(Hierarchy.Layout.PROJECTILE);
 
