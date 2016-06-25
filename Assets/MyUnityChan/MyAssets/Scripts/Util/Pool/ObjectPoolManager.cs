@@ -9,27 +9,18 @@ namespace MyUnityChan {
         void Awake() {
             pools = new Dictionary<string, ObjectPool>();
             // To manage object using ObjectPool, add calling addPool method here
-            addPool(Const.Prefab.Projectile["NORMAL_BEAM"]);
-            addPool(Const.Prefab.Projectile["NORMAL_BEAM_02"]);
-            addPool(Const.Prefab.Projectile["FLAME"]);
-            addPool(Const.Prefab.Projectile["HADOUKEN"]);
-            addPool(Const.Prefab.Projectile["BEAM_01"]);
-            addPool(Const.Prefab.Projectile["PLASMA_BEAM"]);
-            addPool(Const.Prefab.Projectile["MISSILE_01"]);
-            addPool(Const.Prefab.DamageObject["BOMB"]);
-            addPool(Const.Prefab.Hitbox["PROJECTILE"]);
-            addPool(Const.Prefab.Hitbox["BEAM"]);
-            addPool(Const.Prefab.Hitbox["BOMB_EXPLOSION"]);
-            addPool(Const.Prefab.Hitbox["FLAME"]);
-            addPool(Const.Prefab.Effect["BLACK_EXPLOSION"]);
-            addPool(Const.Prefab.Effect["BOMB_EXPLOSION"]);
-            addPool(Const.Prefab.Effect["DRILL_GROUND"]);
-            addPool(Const.Prefab.Effect["MISSILE_EXPLOSION"]);
-            addPool(Const.Prefab.Effect["HIT_01"]);
-            addPool(Const.Prefab.Effect["HIT_02"]);
-            addPool(Const.Prefab.Effect["GUARD_01"]);
-            addPool(Const.Prefab.Effect["JUMP_SMOKE_PUFF"]);
-            addPool(Const.Prefab.Effect["DASH_SMOKE_PUFF"]);
+            foreach ( var path in Const.Prefab.Projectile ) {
+                addPool(path.Value);
+            }
+            foreach ( var path in Const.Prefab.Hitbox ) {
+                addPool(path.Value);
+            }
+            foreach ( var path in Const.Prefab.Effect ) {
+                addPool(path.Value);
+            }
+            foreach ( var path in Const.Prefab.DamageObject ) {
+                addPool(path.Value);
+            }
             addPool(Const.Prefab.Item["HP_RECOVERY"]);
             addPool(Const.Prefab.Item["MISSILE_SUPPLY"]);
             addPool(Const.Prefab.Timer["FRAME_TIMER"]);

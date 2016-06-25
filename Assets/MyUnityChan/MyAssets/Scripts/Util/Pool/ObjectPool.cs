@@ -23,6 +23,8 @@ namespace MyUnityChan {
 
     public class ObjectPool : ObjectBase {
 
+        public bool debug;
+
         private List<PoolObjectBase> objects;
         private GameObject prefab;
 
@@ -42,6 +44,8 @@ namespace MyUnityChan {
                 if ( !go.activeInHierarchy ) {
                     go.SetActive(true);
                     initializeObject(go);
+                    if ( debug )
+                        DebugManager.log(gameObject.name + ": Return pooled object (i=" + i + "/" + objects.Count + ")");
                     return go;
                 }
             }
@@ -49,6 +53,9 @@ namespace MyUnityChan {
             go = Instantiate(prefab) as GameObject;
             initializeObject(go);
             objects.Add(go.GetComponent<PoolObjectBase>());
+
+            if ( debug )
+                DebugManager.log(gameObject.name + ": Return new pooled object (pooled=" + objects.Count + ")");
 
             return go;
         }
@@ -69,7 +76,7 @@ namespace MyUnityChan {
         private void initializeObject(GameObject go) {
             PoolObjectBase comp = go.GetComponent<PoolObjectBase>();
             if ( comp == null ) {
-                Debug.LogError("Effect script is not found in effect prefab");
+                DebugManager.log("Effect script is not found in effect prefab", Const.Loglevel.ERROR);
             }
             comp.setPooled(true);
             comp.initialize();
