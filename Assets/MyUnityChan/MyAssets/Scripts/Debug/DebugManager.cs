@@ -13,6 +13,9 @@ namespace MyUnityChan {
             SettingManager.setCallback(Settings.Flag.GET_ALL_ABILITIES, flag => {
                 if ( flag ) AbilityItem.setAllAbilitiesToPlayer();
             });
+            SettingManager.setCallback(Settings.Flag.SHOW_HITBOX, flag => {
+                Hitbox.RENDER_HITBOX = flag;
+            });
         }
 
         public static void log(object message, Const.Loglevel level = Const.Loglevel.INFO) {
