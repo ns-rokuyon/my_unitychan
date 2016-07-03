@@ -6,10 +6,12 @@ using UnityEngine;
 using System;
 //using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UniRx;
 
 namespace MyUnityChan {
     [RequireComponent(typeof(Animator))]
+    [RequireComponent(typeof(GroundChecker))]
     public class Player : Character {
 
         public string player_name = null;
@@ -35,14 +37,15 @@ namespace MyUnityChan {
         public PlayerActionManager action_manager { get; set; }
         public List<Const.BeamName> beam_slot { get; set; }
 
-        void Awake() {
+        // Awake
+        protected override void awake() {
             // animation
             animator = GetComponent<Animator>();
             beam_slot = new List<Const.BeamName>();
         }
 
-        // Use this for initialization
-        void Start() {
+        // Start
+        protected override void start() {
             player_name = "player1";
             player_root = transform.parent.gameObject;
 
@@ -69,7 +72,7 @@ namespace MyUnityChan {
             position_history = new RingBuffer<Vector3>(10);
         }
 
-        void Update() {
+        protected override void update() {
             float horizontal = ((PlayerController)controller).keyHorizontal();
             float vy = GetComponent<Rigidbody>().velocity.y;
 
@@ -87,12 +90,6 @@ namespace MyUnityChan {
             if ( controller.keyTest() ) {
                 performTest();
             }
-        }
-
-
-        void FixedUpdate() {
-            // gravity
-            //rigidbody.AddForce(new Vector3(0f, -32.0f, 0));	// -32
         }
 
         public void registerAction(Const.PlayerAction action_class) {
@@ -172,7 +169,7 @@ namespace MyUnityChan {
             status.hp -= dam;
         }
 
-        public void freeze(bool flag=true) {
+        public void freeze(bool flag = true) {
             status.freeze = flag;
         }
 
@@ -197,10 +194,8 @@ namespace MyUnityChan {
             //animator.speed = 0.0f;	// slow animation
         }
 
-        public bool isGrounded() {
-            return Physics.Raycast(transform.position + ground_raycast_offset, Vector3.down, 0.5f) ||
-                Physics.Raycast(transform.position + ground_raycast_offset, new Vector3(1.0f, 0.0f, 0), 1.0f) ||
-                Physics.Raycast(transform.position + ground_raycast_offset, new Vector3(-1.0f, 0.0f, 0), 1.0f);
+        public override bool isGrounded() {
+            return ground_checker.isGrounded();
         }
 
         public bool isTurnDirSwitched() {
@@ -214,7 +209,7 @@ namespace MyUnityChan {
         }
 
         public bool isGuarding() {
-            PlayerGuard guard =((PlayerGuard)action_manager.getAction("GUARD"));
+            PlayerGuard guard = ((PlayerGuard)action_manager.getAction("GUARD"));
             if ( guard == null ) return false;
             return guard.guarding;
         }
@@ -290,6 +285,37 @@ namespace MyUnityChan {
             manager.switchPlayerCharacter();
         }
 
+        /*
+        public void OnCollisionStay(Collision collisionInfo) {
+            DebugManager.log("tag=" + collisionInfo.gameObject.tag);
+            if ( collisionInfo.gameObject.tag == "Ground" ) {
+                var p = collisionInfo.contacts.OrderBy(cp => cp.point.y).First();
+                foreach (var c in collisionInfo.contacts ) {
+                    DebugManager.log(c.point);
+                }
+                if ( Mathf.Abs(height / 2.0f - Vector3.Distance(p.point, transform.position)) < 0.1f ) {
+                    grounded = true;
+                }
+                DebugManager.log("cp=" + p.point);
+                DebugManager.log("p=" + transform.position);
+                DebugManager.log("dist=" + Vector3.Distance(p.point, transform.position));
+                //DebugManager.self().drawLine(p.point, transform.position);
+            }
+        }
+
+        public void OnCollisionExit(Collision collisionInfo) {
+            if ( collisionInfo.gameObject.tag == "Ground" ) {
+                if ( collisionInfo.contacts.Length == 0 ) {
+                    grounded = false;
+                    return;
+                }
+                var p = collisionInfo.contacts.OrderBy(cp => cp.point.y).First();
+                if ( Mathf.Abs(height / 2.0f - Vector3.Distance(p.point, transform.position)) >= 0.1f ) {
+                    grounded = false;
+                }
+            }
+        }
+        */
 
         void OnGUI() {
             if ( !SettingManager.get(Settings.Flag.SHOW_DEBUG_WINDOW) ) {

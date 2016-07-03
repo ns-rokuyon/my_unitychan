@@ -43,11 +43,11 @@ namespace MyUnityChan {
 
         protected Dictionary<string, int> touching_players = new Dictionary<string, int>();
 
-        protected virtual void start() { }
-        protected virtual void update() { }
         protected virtual void die() { }
 
         protected void checkPlayerTouched() {
+            if ( isFrozen() || isStunned() ) return;
+
             foreach ( KeyValuePair<string, int> pair in touching_players ) {
                 if ( pair.Value > PLAYER_TOUCHING_FRAME_OFFSET ) {
                     GameObject player = findPlayerByName(pair.Key);
@@ -68,11 +68,10 @@ namespace MyUnityChan {
             gameObject.transform.LookAt(new Vector3(gameObject.transform.position.x + dir_x * 100.0f, gameObject.transform.position.y, transform.position.z));
         }
 
-        public bool isGrounded() {
-            Vector3 ground_raycast_offset = new Vector3(0, 0.05f, 0);
-            return Physics.Raycast(transform.position + ground_raycast_offset, Vector3.down, 0.5f) ||
-                Physics.Raycast(transform.position + ground_raycast_offset, new Vector3(1.0f, 0.0f, 0), 1.0f) ||
-                Physics.Raycast(transform.position + ground_raycast_offset, new Vector3(-1.0f, 0.0f, 0), 1.0f);
+        public override bool isGrounded() {
+            if ( !ground_checker )
+                return false;
+            return ground_checker.isGrounded();
         }
 
         public void OnCollisionStay(Collision collisionInfo) {

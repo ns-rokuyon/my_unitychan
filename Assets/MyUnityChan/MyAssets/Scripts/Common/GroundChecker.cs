@@ -45,10 +45,12 @@ namespace MyUnityChan {
             return ghit.point;
         }
 
+        /*
         void OnDrawGizmos() {
             Gizmos.DrawRay(transform.position + upshift, Vector3.down * max_distance);
             if ( isGrounded() ) 
                 Gizmos.DrawWireSphere(ghit.point, radius);
         }
+        */
     }
 }

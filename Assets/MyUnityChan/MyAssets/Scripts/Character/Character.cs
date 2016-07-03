@@ -12,9 +12,37 @@ namespace MyUnityChan {
 
         public Const.CharacterName character_name { get; set; }
         public CharacterStatus status { get; set; }
+        public GroundChecker ground_checker { get; protected set; }
+        public float height { get; protected set; }
+        public float width { get; protected set; }
 
         protected string area_name;
         protected int stunned = 0;
+
+        protected virtual void awake() { }
+        protected virtual void start() { }
+        protected virtual void update() { }
+
+        void Awake() {
+            // Common Awake
+            MeshRenderer meshrenderer = gameObject.GetComponent<MeshRenderer>();
+            if ( meshrenderer ) {
+                Bounds bounds = meshrenderer.bounds;
+                height = bounds.size.y;
+                width = bounds.size.x;
+            }
+            ground_checker = GetComponent<GroundChecker>();
+
+            awake();
+        }
+
+        void Start() {
+            start();
+        }
+
+        void Update() {
+            update();
+        }
 
         public Controller getController() {
             return controller;
@@ -49,7 +77,7 @@ namespace MyUnityChan {
             return status.freeze;
         }
 
-        public void stun(int stun_power) {
+        public virtual void stun(int stun_power) {
             stunned = stun_power;
         }
 
@@ -76,6 +104,16 @@ namespace MyUnityChan {
             if ( !status.invincible.now() ) {
                 status.invincible.enable(30);
                 status.hp -= dam;
+            }
+        }
+
+        public virtual void launch(float power_y) {
+            Rigidbody rigidbody = GetComponent<Rigidbody>();
+            if ( rigidbody ) {
+                if ( isGrounded() )
+                    rigidbody.AddForce(new Vector3(0.0f, power_y, 0.0f), ForceMode.Impulse);
+                else 
+                    rigidbody.velocity = Vector3.zero;
             }
         }
 
@@ -126,6 +164,10 @@ namespace MyUnityChan {
                 prev = pos;
             }
             return travel;
+        }
+
+        public virtual bool isGrounded() {
+            throw new System.NotImplementedException();
         }
 
         public bool isLookAhead() {
