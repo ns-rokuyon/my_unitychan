@@ -158,8 +158,5 @@ namespace MyUnityChan {
 
             return false;
         }
-
-        public override void effect() {
-        }
     }
 }

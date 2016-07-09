@@ -7,6 +7,8 @@ namespace MyUnityChan {
         public float walk_maxspeed;
 
         protected override void start() {
+            base.start();
+
             action_manager.registerAction(new EnemyWalk(this, walk_f, walk_maxspeed));
             action_manager.registerAction(new EnemyDead(this, Const.Prefab.Effect["BLACK_EXPLOSION"], onDead));
 
@@ -18,9 +20,6 @@ namespace MyUnityChan {
         private void onDead() {
             DropItem item = DropItemManager.self().create<DropItem>(Const.Prefab.Item["HP_RECOVERY"], true);
             item.setPosition(transform.position + Vector3.up);
-        }
-
-        protected override void update() {
         }
 
         void FixedUpdate() {

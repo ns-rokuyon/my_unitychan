@@ -78,7 +78,7 @@ namespace MyUnityChan {
 
             public override void attack(Character character, Hitbox hitbox) {
                 if ( character ) {
-                    character.GetComponent<Rigidbody>().AddForce(new Vector3(hitbox.forward.x * 5.0f, 5.0f, 0.0f), ForceMode.Impulse);
+                    character.launch(5.0f);
                     character.stun(stun);
                     character.damage(damage);
                 }
@@ -134,7 +134,7 @@ namespace MyUnityChan {
 
             public override void attack(Character character, Hitbox hitbox) {
                 if ( character ) {
-                    character.GetComponent<Rigidbody>().AddForce(new Vector3(hitbox.forward.x * 2.0f, 7.0f, 0.0f), ForceMode.Impulse);
+                    character.launch(7.0f);
                     character.stun(stun);
                     character.damage(damage);
                 }
@@ -191,7 +191,7 @@ namespace MyUnityChan {
 
             public override void attack(Character character, Hitbox hitbox) {
                 if ( character ) {
-                    character.GetComponent<Rigidbody>().AddForce(new Vector3(hitbox.forward.x * 2.0f, 7.0f, 0.0f), ForceMode.Impulse);
+                    character.launch(7.0f);
                     character.stun(stun);
                     character.damage(damage);
                 }

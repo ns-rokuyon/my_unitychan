@@ -20,5 +20,13 @@ namespace MyUnityChan {
                 (Instantiate(Instance.frame_delay_vector3_invoker_prefab) as GameObject).setParent(Hierarchy.Layout.INVOKER).GetComponent<FrameDelayVector3Invoker>();
             invoker.set(frame, param, func);
         }
+
+        public static void createCoroutine(IEnumerator f) {
+            Instance.startCoroutine(f);
+        }
+
+        public void startCoroutine(IEnumerator f) {
+            StartCoroutine(f);
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using EnergyBarToolkit;
+using UniRx;
 
 namespace MyUnityChan {
 
@@ -26,13 +27,15 @@ namespace MyUnityChan {
             this.gameObject.SetActive(true);
         }
 
-        void Awake() {
+        // Awake
+        protected override void awake() {
+            DebugManager.log("awake: " + gameObject.name);
             action_manager = GetComponent<EnemyActionManager>();
             hp_gauge = null;
         }
 
-        // Use this for initialization
-        void Start() {
+        // Start
+        protected override void start() {
             loadAttachedAI();
             inputlock_timer = new FrameTimerState();
             position_history = new RingBuffer<Vector3>(10);
@@ -40,11 +43,16 @@ namespace MyUnityChan {
             // enemy status setup
             status = GetComponent<EnemyStatus>();
 
-            start();
+            this.ObserveEveryValueChanged(_ => stunned)
+                .Where(st => st == 0)
+                .Subscribe(_ => {
+                    var anim = GetComponent<Animator>();
+                    anim.speed = 1.0f;
+                }).AddTo(gameObject);
         }
 
         // Update is called once per frame
-        void Update() {
+        protected override void update() {
             if ( PauseManager.isPausing() ) return;
 
             if ( SettingManager.get(Settings.Flag.ENEMY_STOP) ) {
@@ -58,8 +66,17 @@ namespace MyUnityChan {
             faceForward();
             recordPosition();
             followHpGauge();
+        }
 
-            update();
+        public override void stun(int stun_power) {
+            base.stun(stun_power);
+
+            Animator animator = GetComponent<Animator>();
+            Rigidbody rigidbody = GetComponent<Rigidbody>();
+            if ( rigidbody )
+                rigidbody.velocity = Vector3.zero;
+            if ( animator )
+                animator.speed = 0.2f;
         }
 
         public override void damage(int dam) {

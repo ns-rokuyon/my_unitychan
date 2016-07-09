@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace MyUnityChan {
     public class Hitbox : PoolObjectBase {
-        public static readonly bool RENDER_HITBOX = true;
+        public static bool RENDER_HITBOX = true;
 
         public bool persistent;
 
