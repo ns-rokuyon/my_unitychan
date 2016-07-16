@@ -73,7 +73,7 @@ namespace MyUnityChan {
                 damage = 10;
                 stun = 60;
                 frame = 5;
-                effect_name = Const.Name.Effect.HIT_01;
+                effect_name = Const.ID.Effect.HIT_01;
             }
 
             public override void attack(Character character, Hitbox hitbox) {
@@ -130,7 +130,7 @@ namespace MyUnityChan {
                 damage = 30;
                 stun = 120;
                 frame = 5;
-                effect_name = Const.Name.Effect.HIT_01;
+                effect_name = Const.ID.Effect.HIT_01;
             }
 
             public override void attack(Character character, Hitbox hitbox) {
@@ -188,7 +188,7 @@ namespace MyUnityChan {
                 damage = 70;
                 stun = 120;
                 frame = 12;
-                effect_name = Const.Name.Effect.HIT_01;
+                effect_name = Const.ID.Effect.HIT_01;
             }
 
             public override void attack(Character character, Hitbox hitbox) {

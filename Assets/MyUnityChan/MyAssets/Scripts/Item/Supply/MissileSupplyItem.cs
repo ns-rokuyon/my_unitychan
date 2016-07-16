@@ -12,7 +12,7 @@ namespace MyUnityChan {
 
         public override void destroy(Player player) {
             if ( isPooledObject() ) {
-                ObjectPoolManager.releaseGameObject(this.gameObject, prefabPath(Const.Name.Item.MISSILE_SUPPLY));
+                ObjectPoolManager.releaseGameObject(this.gameObject, prefabPath(Const.ID.Item.MISSILE_SUPPLY));
             }
             else {
                 Destroy(this.gameObject);

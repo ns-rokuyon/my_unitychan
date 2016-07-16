@@ -26,15 +26,15 @@ namespace MyUnityChan {
             return sound;
         }
 
-        public string prefabPath(Const.Name.AI name) {
+        public string prefabPath(Const.ID.AI name) {
             return Const.Prefab.AI[name];
         }
 
-        public string prefabPath(Const.Name.Effect name) {
+        public string prefabPath(Const.ID.Effect name) {
             return Const.Prefab.Effect[name];
         }
 
-        public string prefabPath(Const.Name.Item name) {
+        public string prefabPath(Const.ID.Item name) {
             return Const.Prefab.Item[name];
         }
 

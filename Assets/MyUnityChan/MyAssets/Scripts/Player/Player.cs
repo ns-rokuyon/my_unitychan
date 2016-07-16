@@ -158,7 +158,7 @@ namespace MyUnityChan {
             if ( status.invincible.now() ) return;
             if ( isGuarding() ) {
                 // Guard effect
-                EffectManager.self().createEffect(Const.Name.Effect.GUARD_01, transform.position, 40, true);
+                EffectManager.self().createEffect(Const.ID.Effect.GUARD_01, transform.position, 40, true);
 
                 // Reaction force
                 GetComponent<Rigidbody>().AddForce(transform.forward * (-10.0f), ForceMode.VelocityChange);
@@ -267,7 +267,7 @@ namespace MyUnityChan {
             transform.position = dst;
             RaycastHit ground;
             Physics.Raycast(transform.position, Vector3.down, out ground, 5.0f);
-            EffectManager.self().createEffect(Const.Name.Effect.RESURRECTION_01, ground.point, 240, false);
+            EffectManager.self().createEffect(Const.ID.Effect.RESURRECTION_01, ground.point, 240, false);
             yield return new WaitForSeconds(0.5f);
             resume();
         }

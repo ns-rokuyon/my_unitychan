@@ -13,7 +13,7 @@ namespace MyUnityChan {
             Tag: Enemy
             Layer: Character
         */
-        public Const.Name.AI AI_name;
+        public Const.ID.AI AI_name;
         public int max_hp;
 
         protected EnemyActionManager action_manager;

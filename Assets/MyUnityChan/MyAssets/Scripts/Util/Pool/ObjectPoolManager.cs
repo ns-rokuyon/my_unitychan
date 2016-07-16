@@ -21,8 +21,8 @@ namespace MyUnityChan {
             foreach ( var path in Const.Prefab.DamageObject ) {
                 addPool(path.Value);
             }
-            addPool(Const.Prefab.Item[Const.Name.Item.HP_RECOVERY]);
-            addPool(Const.Prefab.Item[Const.Name.Item.MISSILE_SUPPLY]);
+            addPool(Const.Prefab.Item[Const.ID.Item.HP_RECOVERY]);
+            addPool(Const.Prefab.Item[Const.ID.Item.MISSILE_SUPPLY]);
             addPool(Const.Prefab.Timer["FRAME_TIMER"]);
         }
 

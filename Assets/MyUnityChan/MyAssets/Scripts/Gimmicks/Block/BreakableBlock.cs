@@ -4,7 +4,7 @@ using System.Collections;
 namespace MyUnityChan {
     public class BreakableBlock : Block {
         public int hp;
-        public Const.Name.Effect effect;
+        public Const.ID.Effect effect;
 
         public override void damage(int dam) {
             hp -= dam;

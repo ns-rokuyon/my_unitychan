@@ -11,7 +11,7 @@ namespace MyUnityChan {
                 damage = 10;
                 stun = 100;
                 frame = 5;
-                effect_name = "HIT_01";
+                effect_name = Const.ID.Effect.HIT_01;
             }
 
             public override void attack(Character character, Hitbox hitbox) {
@@ -20,7 +20,8 @@ namespace MyUnityChan {
                     character.stun(stun);
                     character.damage(damage);
                 }
-                (EffectManager.Instance as EffectManager).createEffect(Const.Prefab.Effect[effect_name],
+                (EffectManager.Instance as EffectManager).createEffect(
+                    effect_name,
                     hitbox.gameObject.transform.position, 60, true);
             }
         }

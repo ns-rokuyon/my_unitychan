@@ -12,7 +12,7 @@ namespace MyUnityChan {
     }
 
     public interface IEnemyItemDrop {
-        Const.Name.Item dropItem();
+        Const.ID.Item dropItem();
     }
 
     public interface IEnemyLevelUp {

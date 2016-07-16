@@ -22,7 +22,7 @@ namespace MyUnityChan {
 
             // DropItem
             if ( enemy is IEnemyItemDrop ) {
-                Const.Name.Item itemname = (enemy as IEnemyItemDrop).dropItem();
+                Const.ID.Item itemname = (enemy as IEnemyItemDrop).dropItem();
                 DropItem item = DropItemManager.createItem<DropItem>(itemname, true);
                 item.setPosition(enemy.transform.position + Vector3.up);
             }

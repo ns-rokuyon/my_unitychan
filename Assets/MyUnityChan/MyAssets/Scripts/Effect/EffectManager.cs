@@ -31,7 +31,7 @@ namespace MyUnityChan {
             return effect.gameObject;
         }
 
-        public GameObject createEffect(Const.Name.Effect effect_name, Vector3 pos, int frame, bool use_objectpool = false) {
+        public GameObject createEffect(Const.ID.Effect effect_name, Vector3 pos, int frame, bool use_objectpool = false) {
             return createEffect(Const.Prefab.Effect[effect_name], pos, frame, use_objectpool);
         }
     }
