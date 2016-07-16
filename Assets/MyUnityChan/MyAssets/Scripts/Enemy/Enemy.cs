@@ -5,16 +5,23 @@ using UniRx;
 
 namespace MyUnityChan {
 
+    [RequireComponent(typeof(EnemyActionManager))]
+    [RequireComponent(typeof(EnemyStatus))]
+    [RequireComponent(typeof(GroundChecker))]
     public abstract class Enemy : NPCharacter {
-        public string AI_name;
+        /*
+            Tag: Enemy
+            Layer: Character
+        */
+        public Const.Name.AI AI_name;
+        public int max_hp;
 
-        protected int max_hp;
         protected EnemyActionManager action_manager;
 
         public HpGauge hp_gauge { get; protected set; }
 
         protected void loadAttachedAI() {
-            GameObject controller_inst = PrefabInstantiater.create(Const.Prefab.AI[AI_name], gameObject);
+            GameObject controller_inst = PrefabInstantiater.create(prefabPath(AI_name), gameObject);
             controller = controller_inst.GetComponent<Controller>();
 
             ((AIController)controller).setSelf(this);
@@ -29,9 +36,9 @@ namespace MyUnityChan {
 
         // Awake
         protected override void awake() {
-            DebugManager.log("awake: " + gameObject.name);
             action_manager = GetComponent<EnemyActionManager>();
             hp_gauge = null;
+            level = 1;
         }
 
         // Start
@@ -47,7 +54,8 @@ namespace MyUnityChan {
                 .Where(st => st == 0)
                 .Subscribe(_ => {
                     var anim = GetComponent<Animator>();
-                    anim.speed = 1.0f;
+                    if ( anim )
+                        anim.speed = 1.0f;
                 }).AddTo(gameObject);
         }
 
@@ -90,6 +98,7 @@ namespace MyUnityChan {
                     Const.Prefab.UI["ENEMY_HP_GAUGE"], 
                     GUIObjectBase.getCanvas("Canvas_WorldSpace")).GetComponent<HpGauge>();
                 hp_gauge.setCharacter(this);
+                hp_gauge.setMapHp(max_hp);
                 hp_gauge.gameObject.transform.position = gameObject.transform.position.add(0, 2.0f, 0);
             }
         }

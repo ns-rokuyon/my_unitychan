@@ -33,6 +33,13 @@ namespace MyUnityChan {
             character = ch;
         }
 
+        public void setMapHp(int maxhp) {
+            if ( use_energy_bar_toolkit )
+                energybar.SetValueMax(maxhp);
+            else
+                slider.maxValue = maxhp;
+        }
+
         public void setPosition(Vector3 pos) {
             GetComponent<RectTransform>().anchoredPosition = pos;
         }

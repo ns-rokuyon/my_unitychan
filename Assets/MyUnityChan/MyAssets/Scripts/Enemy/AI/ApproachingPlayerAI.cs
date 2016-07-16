@@ -3,6 +3,11 @@ using System.Collections;
 
 namespace MyUnityChan {
     public class ApproachingPlayerAI : AIController {
+        public bool allow_attack;
+        public float distance_judgment_close_range;
+
+        public bool close_range { get; private set; }
+
         private GameObject target;
         private int target_update_time_span;
         private string area_name;
@@ -36,11 +41,25 @@ namespace MyUnityChan {
 
             if ( !coroutine_running )
                 StartCoroutine(switchDirection());
+
+            if ( allow_attack ) {
+                if ( close_range )
+                    inputs[(int)InputCode.ATTACK] = true;
+                else
+                    inputs[(int)InputCode.ATTACK] = false;
+            }
         }
 
         private IEnumerator switchDirection() {
             float target_x = target.transform.position.x;
             float self_x = self.transform.position.x;
+
+            if ( Mathf.Abs(target_x - self_x) <= distance_judgment_close_range ) {
+                close_range = true;
+            }
+            else {
+                close_range = false;
+            }
 
             if ( target_x < self_x ) {
                 yield return new WaitForSeconds(0.5f);
