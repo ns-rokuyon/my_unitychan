@@ -7,7 +7,7 @@ namespace MyUnityChan {
         [SerializeField] public int damage;
         [SerializeField] public int stun;      // time enemy is stuned
         [SerializeField] public int frame;      // time hitbox enabled
-        [SerializeField] public string effect_name;
+        [SerializeField] public Const.Name.Effect effect_name;
 
         public virtual void attack(Character character, Hitbox hitbox) {
             if ( character ) {
@@ -15,10 +15,12 @@ namespace MyUnityChan {
                 character.damage(damage);
             }
 
-            if ( effect_name.Length != 0 ) {
-                EffectManager.self().createEffect(Const.Prefab.Effect[effect_name],
-                    hitbox.gameObject.transform.position, 60, true);
-            }
+            if ( effect_name == Const.Name.Effect._NO_EFFECT )
+                return;
+
+            EffectManager.self().createEffect(
+                effect_name,
+                hitbox.gameObject.transform.position, 60, true);
         }
     }
 }

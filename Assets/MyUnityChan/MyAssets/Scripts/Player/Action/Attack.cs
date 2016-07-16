@@ -73,7 +73,7 @@ namespace MyUnityChan {
                 damage = 10;
                 stun = 60;
                 frame = 5;
-                effect_name = "HIT_01";
+                effect_name = Const.Name.Effect.HIT_01;
             }
 
             public override void attack(Character character, Hitbox hitbox) {
@@ -82,7 +82,8 @@ namespace MyUnityChan {
                     character.stun(stun);
                     character.damage(damage);
                 }
-                (EffectManager.Instance as EffectManager).createEffect(Const.Prefab.Effect[effect_name],
+                (EffectManager.Instance as EffectManager).createEffect(
+                    effect_name,
                     hitbox.gameObject.transform.position, 60, true);
             }
         }
@@ -129,7 +130,7 @@ namespace MyUnityChan {
                 damage = 30;
                 stun = 120;
                 frame = 5;
-                effect_name = "HIT_01";
+                effect_name = Const.Name.Effect.HIT_01;
             }
 
             public override void attack(Character character, Hitbox hitbox) {
@@ -138,7 +139,8 @@ namespace MyUnityChan {
                     character.stun(stun);
                     character.damage(damage);
                 }
-                (EffectManager.Instance as EffectManager).createEffect(Const.Prefab.Effect[effect_name],
+                (EffectManager.Instance as EffectManager).createEffect(
+                    effect_name,
                     hitbox.gameObject.transform.position, 60, true);
             }
         }
@@ -186,7 +188,7 @@ namespace MyUnityChan {
                 damage = 70;
                 stun = 120;
                 frame = 12;
-                effect_name = "HIT_01";
+                effect_name = Const.Name.Effect.HIT_01;
             }
 
             public override void attack(Character character, Hitbox hitbox) {
@@ -195,7 +197,7 @@ namespace MyUnityChan {
                     character.stun(stun);
                     character.damage(damage);
                 }
-                (EffectManager.Instance as EffectManager).createEffect(Const.Prefab.Effect[effect_name],
+                (EffectManager.Instance as EffectManager).createEffect(effect_name,
                     hitbox.gameObject.transform.position, 60, true);
             }
         }

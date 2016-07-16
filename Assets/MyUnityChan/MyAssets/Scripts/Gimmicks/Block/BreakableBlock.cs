@@ -4,7 +4,7 @@ using System.Collections;
 namespace MyUnityChan {
     public class BreakableBlock : Block {
         public int hp;
-        public string effect;
+        public Const.Name.Effect effect;
 
         public override void damage(int dam) {
             hp -= dam;
@@ -12,7 +12,7 @@ namespace MyUnityChan {
         }
 
         public virtual void broken() {
-            EffectManager.self().createEffect(Const.Prefab.Effect[effect], transform.position, 60, true);
+            EffectManager.self().createEffect(effect, transform.position, 60, true);
 
             Destroy(gameObject);
         }

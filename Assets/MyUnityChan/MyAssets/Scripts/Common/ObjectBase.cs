@@ -6,16 +6,6 @@ namespace MyUnityChan {
 
         protected SoundPlayer sound;
 
-        // Use this for initialization
-        void Start() {
-
-        }
-
-        // Update is called once per frame
-        void Update() {
-
-        }
-
         public void adjustZtoBaseline() {
             Area area = AreaManager.Instance.getAreaFromMemberObject(this.gameObject);
             if ( !area.isEmptyBaselineZ() ) {
@@ -34,6 +24,18 @@ namespace MyUnityChan {
 
         public SoundPlayer getSoundPlayer() {
             return sound;
+        }
+
+        public string prefabPath(Const.Name.AI name) {
+            return Const.Prefab.AI[name];
+        }
+
+        public string prefabPath(Const.Name.Effect name) {
+            return Const.Prefab.Effect[name];
+        }
+
+        public string prefabPath(Const.Name.Item name) {
+            return Const.Prefab.Item[name];
         }
 
         public void OnTriggerEnter(Collider other) {

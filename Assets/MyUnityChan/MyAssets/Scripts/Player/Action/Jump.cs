@@ -6,7 +6,7 @@ namespace MyUnityChan {
     public class PlayerJump : PlayerAction {
         protected float jump_start_y;
         protected Vector3 effect_offset = new Vector3(0.0f, 0.2f, 0.0f);
-        protected string effect_name = "JUMP_SMOKE_PUFF";
+        protected Const.Name.Effect effect_name = Const.Name.Effect.JUMP_SMOKE_PUFF;
 
         private readonly Dictionary<Const.CharacterName, Vector3> jumpF = new Dictionary<Const.CharacterName, Vector3>{
             { Const.CharacterName.UNITYCHAN, new Vector3(0, 250.0f, 0) },
@@ -62,7 +62,8 @@ namespace MyUnityChan {
         }
 
         public override void effect() {
-            EffectManager.self().createEffect(Const.Prefab.Effect[effect_name],
+            EffectManager.self().createEffect(
+                effect_name,
                 player.transform.position + effect_offset, 60, true);
         }
     }
