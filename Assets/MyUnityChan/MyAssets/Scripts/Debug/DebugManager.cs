@@ -7,6 +7,7 @@ namespace MyUnityChan {
     public class DebugManager : SingletonObjectBase<DebugManager> {
         [SerializeField]
         public Const.Loglevel loglevel;
+        public bool lock_logging;
 
         // Use this for initialization
         void Start() {
@@ -19,6 +20,7 @@ namespace MyUnityChan {
         }
 
         public static void log(object message, Const.Loglevel level = Const.Loglevel.INFO) {
+            if ( Instance.lock_logging ) return;
             if ( Instance.loglevel > level ) return;
 
             switch ( level ) {
@@ -36,5 +38,13 @@ namespace MyUnityChan {
                     break;
             }
         }
+
+        public void drawLine(Vector3 pa, Vector3 pb) {
+            LineRenderer renderer = GetComponent<LineRenderer>();
+            renderer.SetVertexCount(2);
+            renderer.SetPosition(0, pa);
+            renderer.SetPosition(1, pb);
+        }
+
     }
 }

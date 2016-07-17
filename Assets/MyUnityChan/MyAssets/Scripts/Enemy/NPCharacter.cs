@@ -10,8 +10,6 @@ namespace MyUnityChan {
 
         protected int player_hit_damage = 10;
 
-        public int level { get; set; }
-
         static public void setPlayers() {
             removeNullPlayers();
             foreach ( GameObject pl in GameObject.FindGameObjectsWithTag("Player") ) {

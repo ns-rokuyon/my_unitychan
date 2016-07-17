@@ -14,17 +14,25 @@ namespace MyUnityChan {
             Layer: Character
         */
         public Const.ID.AI AI_name;
+        public Const.ID.Enemy enemy_id;
+        public Const.ID.EnemyFamily enemyfamily_id;
         public int max_hp;
 
         protected EnemyActionManager action_manager;
 
         public HpGauge hp_gauge { get; protected set; }
+        public int level { get; set; }  // >= 1
+        public int exp { get; set; }
 
         protected void loadAttachedAI() {
             GameObject controller_inst = PrefabInstantiater.create(prefabPath(AI_name), gameObject);
             controller = controller_inst.GetComponent<Controller>();
 
             ((AIController)controller).setSelf(this);
+        }
+
+        public override bool assert() {
+            return base.assert() && Const.EnemyFamily[enemyfamily_id].Contains(enemy_id);
         }
 
         public virtual void spawn() {
@@ -36,9 +44,13 @@ namespace MyUnityChan {
 
         // Awake
         protected override void awake() {
+            if ( !assert() ) {
+                throw new System.FormatException("Assertion Error! : " + this.name);
+            }
             action_manager = GetComponent<EnemyActionManager>();
             hp_gauge = null;
-            level = 1;
+            level = levelInFamily();
+            exp = 0;
         }
 
         // Start
@@ -49,6 +61,9 @@ namespace MyUnityChan {
 
             // enemy status setup
             status = GetComponent<EnemyStatus>();
+
+            if ( this is IEnemyLevelUp )
+                (this as IEnemyLevelUp).levelUp();  // Apply initialized level
 
             this.ObserveEveryValueChanged(_ => stunned)
                 .Where(st => st == 0)
@@ -74,6 +89,7 @@ namespace MyUnityChan {
             faceForward();
             recordPosition();
             followHpGauge();
+            leveling();
         }
 
         public override void stun(int stun_power) {
@@ -101,6 +117,31 @@ namespace MyUnityChan {
                 hp_gauge.setMapHp(max_hp);
                 hp_gauge.gameObject.transform.position = gameObject.transform.position.add(0, 2.0f, 0);
             }
+        }
+
+        public void leveling() {
+            if ( this is IEnemyLevelUp ) {
+                if ( Const.EnemyFamily[enemyfamily_id].Count == level ) {
+                    // Max level
+                    return;
+                }
+                var enemy = this as IEnemyLevelUp;
+                if ( exp >= enemy.getMaxExp() ) {
+                    exp = 0;
+                    // Updating level
+                    level++;
+                    enemy_id = Const.EnemyFamily[enemyfamily_id][level - 1];
+                    enemy.levelUp();
+                }
+            }
+        }
+
+        public int getMaxLevel() {
+            return Const.EnemyFamily[enemyfamily_id].Count;
+        }
+
+        public int levelInFamily() {
+            return Const.EnemyFamily[enemyfamily_id].IndexOf(enemy_id) + 1;
         }
 
         public void followHpGauge() {

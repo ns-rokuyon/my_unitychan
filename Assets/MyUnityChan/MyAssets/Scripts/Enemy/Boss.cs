@@ -2,6 +2,6 @@
 using System.Collections;
 
 namespace MyUnityChan {
-    public class Boss : Enemy {
+    public abstract class Boss : Enemy {
     }
 }

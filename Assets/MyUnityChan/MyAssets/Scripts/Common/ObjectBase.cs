@@ -18,6 +18,10 @@ namespace MyUnityChan {
             }
         }
 
+        public virtual bool assert() {
+            return true;
+        }
+
         protected void setupSoundPlayer() {
             sound = gameObject.GetComponent<SoundPlayer>();
         }
