@@ -1,16 +1,28 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace MyUnityChan {
     public class ZakoGroundTypeBase : Enemy {
 
-        public float walk_fx;       // Force to walk forward
-        public float max_speed;
+        [System.Serializable]
+        public class Param : StructBase {
+            public float walk_fx;       // Force to walk forward
+            public float max_speed;
+        };
+
+        [SerializeField]
+        public List<ZakoGroundTypeBase.Param> default_params;
+
+        public ZakoGroundTypeBase.Param param {
+            get; protected set;
+        }
 
         protected override void start() {
             base.start();
 
-            action_manager.registerAction(new EnemyWalk(this, new Vector3(walk_fx, 0, 0), max_speed));
+            param = default_params[level - 1];
+
+            action_manager.registerAction(new EnemyWalk(this, new Vector3(param.walk_fx, 0, 0), param.max_speed));
             action_manager.registerAction(new EnemyDead(this));
 
             setHP(max_hp);

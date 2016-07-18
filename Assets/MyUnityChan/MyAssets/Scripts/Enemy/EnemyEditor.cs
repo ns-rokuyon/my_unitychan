@@ -14,7 +14,11 @@ namespace MyUnityChan {
         public override void OnInspectorGUI() {
             DrawDefaultInspector();
             if ( enemy is IEnemyLevelUp ) {
-                (enemy as IEnemyLevelUp).levelUp();
+                try {
+                    (enemy as IEnemyLevelUp).levelUp();
+                } catch {
+                    DebugManager.log("EnemyEditor.OnInspectorGUI Error");
+                }
             }
         }
     }

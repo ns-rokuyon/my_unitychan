@@ -21,7 +21,20 @@ namespace MyUnityChan {
         protected EnemyActionManager action_manager;
 
         public HpGauge hp_gauge { get; protected set; }
-        public int level { get; set; }  // >= 1
+
+        private int __level;
+        public int level {
+            get {
+                if ( Application.isPlaying ) {
+                    return this.__level;
+                } else {
+                    return levelInFamily();
+                }
+            }
+            set {
+                this.__level = value;
+            }
+        }  // >= 1
         public int exp { get; set; }
 
         protected void loadAttachedAI() {
@@ -132,6 +145,7 @@ namespace MyUnityChan {
                     level++;
                     enemy_id = Const.EnemyFamily[enemyfamily_id][level - 1];
                     enemy.levelUp();
+                    setHP(max_hp);
                 }
             }
         }
@@ -142,6 +156,10 @@ namespace MyUnityChan {
 
         public int levelInFamily() {
             return Const.EnemyFamily[enemyfamily_id].IndexOf(enemy_id) + 1;
+        }
+
+        public override void defeatSomeone(Character character) {
+            exp += Const.Unit.EXP_ENEMY_DEFEATS_SOMEONE;
         }
 
         public void followHpGauge() {

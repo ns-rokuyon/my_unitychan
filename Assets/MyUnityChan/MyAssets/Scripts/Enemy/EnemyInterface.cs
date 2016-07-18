@@ -18,6 +18,5 @@ namespace MyUnityChan {
     public interface IEnemyLevelUp {
         int getMaxExp();
         void levelUp();
-        //void levelUpOnInspector();
     }
 }

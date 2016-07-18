@@ -13,6 +13,10 @@ namespace MyUnityChan {
             if ( character ) {
                 character.stun(stun);
                 character.damage(damage);
+                if ( character.getHP() <= 0 ) {
+                    Character owner = hitbox.getOwner().GetComponent<Character>();
+                    owner.defeatSomeone(character);
+                }
             }
 
             if ( effect_name == Const.ID.Effect._NO_EFFECT )

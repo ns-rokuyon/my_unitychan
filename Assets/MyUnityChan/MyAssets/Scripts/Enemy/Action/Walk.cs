@@ -12,8 +12,17 @@ namespace MyUnityChan {
 
         public EnemyWalk(Character character, Vector3 f, float maxsp)
             : base(character) {
-                moveF = f;
-                maxspeed = maxsp;
+            setParam(f, maxsp);
+        }
+
+        public void setParam(Vector3 f, float maxsp) {
+            moveF = f;
+            maxspeed = maxsp;
+        }
+
+        public void setParam(ZakoGroundTypeBase.Param param) {
+            moveF = new Vector3(param.walk_fx, 0, 0);
+            maxspeed = param.max_speed;
         }
 
         public override void performFixed() {

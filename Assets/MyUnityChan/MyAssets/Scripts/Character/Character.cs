@@ -170,6 +170,10 @@ namespace MyUnityChan {
             throw new System.NotImplementedException();
         }
 
+        public virtual void defeatSomeone(Character character) {
+            // Callback method.
+        }
+
         public bool isLookAhead() {
             return transform.forward.x >= 1.0f;
         }

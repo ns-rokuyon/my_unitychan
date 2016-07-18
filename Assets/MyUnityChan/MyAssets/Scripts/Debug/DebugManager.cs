@@ -23,6 +23,10 @@ namespace MyUnityChan {
             if ( Instance.lock_logging ) return;
             if ( Instance.loglevel > level ) return;
 
+            printLog(message, level);
+        }
+
+        public static void printLog(object message, Const.Loglevel level) {
             switch ( level ) {
                 case Const.Loglevel.WARN:
                     Debug.LogWarning(message);
