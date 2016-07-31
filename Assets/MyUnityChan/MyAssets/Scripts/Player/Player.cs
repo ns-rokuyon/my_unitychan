@@ -12,6 +12,7 @@ using UniRx;
 namespace MyUnityChan {
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(GroundChecker))]
+    [RequireComponent(typeof(WallChecker))]
     public class Player : Character {
 
         public string player_name = null;
@@ -36,6 +37,7 @@ namespace MyUnityChan {
         public PlayerManager manager { get; set; }
         public PlayerActionManager action_manager { get; set; }
         public List<Const.BeamName> beam_slot { get; set; }
+        public WallChecker wall_checker { get; set; }
 
         // Awake
         protected override void awake() {
@@ -51,12 +53,13 @@ namespace MyUnityChan {
 
             anim_speed_default = animator.speed * 1.2f;
             dist_to_ground = GetComponent<CapsuleCollider>().height;
+            wall_checker = GetComponent<WallChecker>();
 
             // init player actions (required)
             registerActions(new List<Const.PlayerAction>{
                 Const.PlayerAction.ACCEL, Const.PlayerAction.BRAKE, Const.PlayerAction.DOWN,
                 Const.PlayerAction.JUMP, Const.PlayerAction.LIMIT_SPEED, Const.PlayerAction.TURN,
-                Const.PlayerAction.SWITCH_BEAM
+                Const.PlayerAction.SWITCH_BEAM, Const.PlayerAction.WALL_JUMP
             });
 
             // player infomation for NPC
@@ -112,6 +115,8 @@ namespace MyUnityChan {
                     action_manager.registerAction(new PlayerDown(this)); break;
                 case Const.PlayerAction.DOUBLE_JUMP:
                     action_manager.registerAction(new PlayerDoubleJump(this)); break;
+                case Const.PlayerAction.WALL_JUMP:
+                    action_manager.registerAction(new PlayerWallJump(this)); break;
                 case Const.PlayerAction.GUARD:
                     action_manager.registerAction(new PlayerGuard(this)); break;
                 case Const.PlayerAction.SWITCH_BEAM:
@@ -167,6 +172,10 @@ namespace MyUnityChan {
             animator.SetTrigger("Damaged");
             status.invincible.enable(60);
             status.hp -= dam;
+        }
+
+        public override bool isTouchedWall() {
+            return wall_checker.isTouchedWall();
         }
 
         public void freeze(bool flag = true) {

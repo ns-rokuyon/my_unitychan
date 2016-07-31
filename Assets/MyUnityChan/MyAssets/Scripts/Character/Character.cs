@@ -182,6 +182,21 @@ namespace MyUnityChan {
             return transform.forward.x <= -1.0f;
         }
 
+        public Vector3 getFrontVector() {
+            if ( isLookAhead() )
+                return Vector3.right;
+            else
+                return Vector3.left;
+        }
+
+        public Vector3 getBackVector() {
+            return -1.0f * getFrontVector();
+        }
+
+        public void lookBack() {
+            transform.LookAt(transform.position + getBackVector());
+        }
+
         // xdir = 1.0f | -1.0f
         public void lookAtDirectionX(float xdir) {
             transform.LookAt(

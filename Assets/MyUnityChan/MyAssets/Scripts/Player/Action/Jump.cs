@@ -160,4 +160,57 @@ namespace MyUnityChan {
             return false;
         }
     }
+
+    public class PlayerWallJump : PlayerAction {
+        protected Vector3 effect_offset = new Vector3(0.0f, 0.2f, 0.0f);
+        protected Const.ID.Effect effect_name = Const.ID.Effect.JUMP_SMOKE_PUFF;
+
+        public Vector3 F {
+            get {
+                return player.getBackVector() * 250.0f + new Vector3(0.0f, 250.0f, 0.0f);
+            }
+        }
+
+        public PlayerWallJump(Character character)
+            : base(character) {
+        }
+
+        public override string name() {
+            return "WALL_JUMP";
+        }
+
+        public override Const.PlayerAction id() {
+            return Const.PlayerAction.WALL_JUMP;
+        }
+
+        public override bool condition() {
+            Action jump = player.action_manager.getAction("JUMP");
+            if ( jump != null && jump.activation ) {
+                return controller.keyJump() && !jump.condition() && player.isTouchedWall();
+            }
+            return false;
+        }
+
+        public override void performFixed() {
+            // Wall jump
+            player.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            player.GetComponent<Rigidbody>().AddForce(F, ForceMode.Impulse);
+            player.lookBack();
+        }
+
+        public override void perform() {
+            player.getAnimator().SetBool("Jump", true);
+            // Wall jump
+            player.getAnimator().Play("Jump", -1, 0.0f);
+            player.setAnimSpeedDefault();
+            player.getAnimator().SetBool("OnGround", false);
+            player.lockInput(20);
+        }
+
+        public override void effect() {
+            EffectManager.self().createEffect(
+                effect_name,
+                player.transform.position + effect_offset, 60, true);
+        }
+    }
 }
