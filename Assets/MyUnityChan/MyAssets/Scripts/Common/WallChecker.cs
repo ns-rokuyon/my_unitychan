@@ -31,7 +31,7 @@ namespace MyUnityChan {
         }
 
         public bool isTouchedWall() {
-            return Physics.SphereCast(transform.position + frontshift,
+            return Physics.SphereCast(transform.position + upshift + frontshift,
                                       radius, character.getFrontVector(), out ghit, max_distance);
         }
 
