@@ -22,6 +22,7 @@ namespace MyUnityChan {
 
         void Update() {
             if ( !canvas.enabled ) return;
+            if ( !PauseManager.isPausing() ) return;
 
             control();
         }

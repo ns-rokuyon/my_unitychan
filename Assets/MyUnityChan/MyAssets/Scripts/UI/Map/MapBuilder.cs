@@ -60,17 +60,27 @@ namespace MyUnityChan {
                     obj.GetComponent<MapAreaElement>().area_object = area.gameObject;
                 }
 
+                Dictionary<GameObject, GameObject> gate_connectionpoint_map = new Dictionary<GameObject, GameObject>(); // gate object -> map connection object
                 AreaGate[] gates = FindObjectsOfType<AreaGate>();
                 foreach ( AreaGate gate in gates ) {
                     // Create area joint point into mapviewer
                     GameObject gatepoint = PrefabInstantiater.create(Const.Prefab.UI["MAP_CONNECTION_POINT"], builder.build_to);
-                    gatepoint.AddComponent<MapElement>();
+                    gatepoint.AddComponent<MapConnectionPointElement>();
                     gatepoint.layer = builder.layer();
                     gatepoint.transform.position = gate.gameObject.transform.position;
+                    gatepoint.GetComponent<MapConnectionPointElement>().gate = gate;
+                    gate_connectionpoint_map.Add(gate.gameObject, gatepoint);
                 }
-                    
+
                 // Scaling
                 builder.gameObject.transform.localScale = builder.scale;
+
+                // Build connection for each point
+                foreach ( AreaGate gate in gates ) {
+                    GameObject t = gate_connectionpoint_map[gate.gameObject];
+                    GameObject pair = gate_connectionpoint_map[gate.gate_pair.gameObject];
+                    t.GetComponent<MapConnectionPointElement>().pair = pair;
+                }
             }
 
             if ( GUILayout.Button("Clear") ) {
