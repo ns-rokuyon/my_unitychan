@@ -6,9 +6,10 @@ using UniRx.Triggers;
 namespace MyUnityChan {
     public class MapConnectionPointElement : MapElement {
         public GameObject pair;     // Preseted by MapBuilder
-
+        public GameObject gate;       // Preseted by MapBuilder
+        
         public GameObject connection_visualizer { get; set; }
-        public AreaGate gate { get; set; }
+        public AreaGate _gate { get; set; }
 
         void Awake() {
             connection_visualizer = PrefabInstantiater.create(Const.Prefab.UI["MAP_CONNECTION_VISUALIZER"],
@@ -19,12 +20,18 @@ namespace MyUnityChan {
             var comp = connection_visualizer.GetComponent<MapConnectionVisualizerElement>();
             comp.pointA = this.gameObject;
             comp.pointB = pair;
+
+            _gate = gate.GetComponent<AreaGate>();
         }
 
         void Start() {
-            gate.ObserveEveryValueChanged(g => g.pass).Subscribe(_ => {
-                connection_visualizer.GetComponent<MapConnectionVisualizerElement>().brighten();
-            });
+            var r = GetComponent<Renderer>();
+            DebugManager.log(r.sortingOrder);
+            this.ObserveEveryValueChanged(_ => _gate.pass)
+                .Where(b => b)
+                .Subscribe(_ => {
+                    connection_visualizer.GetComponent<MapConnectionVisualizerElement>().brighten();
+                });
         }
 
     }

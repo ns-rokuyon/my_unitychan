@@ -49,7 +49,7 @@ namespace MyUnityChan {
                     obj.GetComponent<MeshFilter>().sharedMesh = mesh;
 
                     // Apply material
-                    obj.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/Common/Glass");
+                    obj.GetComponent<MeshRenderer>().material = Resources.Load<Material>("Materials/UI/Map/MapArea");
 
                     // Position
                     obj.gameObject.transform.position = area.gameObject.transform.position;
@@ -68,7 +68,7 @@ namespace MyUnityChan {
                     gatepoint.AddComponent<MapConnectionPointElement>();
                     gatepoint.layer = builder.layer();
                     gatepoint.transform.position = gate.gameObject.transform.position;
-                    gatepoint.GetComponent<MapConnectionPointElement>().gate = gate;
+                    gatepoint.GetComponent<MapConnectionPointElement>().gate = gate.gameObject;
                     gate_connectionpoint_map.Add(gate.gameObject, gatepoint);
                 }
 

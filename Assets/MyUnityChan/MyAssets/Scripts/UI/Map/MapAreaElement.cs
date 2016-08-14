@@ -51,8 +51,8 @@ namespace MyUnityChan {
             public void monitor(MapAreaElement self) {
                 Area area = self.getAreaRef();
                 if ( area && area.isPassed() ) {
-                    self.gameObject.GetComponent<MeshRenderer>().material.color = 
-                        new Color(0, 255, 0, self.gameObject.GetComponent<MeshRenderer>().material.color.a);
+                    self.gameObject.GetComponent<MeshRenderer>().material.color =
+                        new Color32(0, 255, 0, 60);
                     self.pass_monitoring = null;
                 }
             }

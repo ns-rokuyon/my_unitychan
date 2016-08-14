@@ -9,6 +9,11 @@ namespace MyUnityChan {
         public GameObject pointB { get; set; }
         public float time_diff;
 
+        void Awake() {
+            var renderer = GetComponent<Renderer>();
+            renderer.sortingOrder = 900;
+        }
+
         void Start() {
             Observable.EveryUpdate()
                 .Where(t => PauseManager.isPausing())
@@ -26,7 +31,7 @@ namespace MyUnityChan {
 
         public void brighten() {
             var mat = GetComponent<MeshRenderer>().materials[0];
-            //mat.color = new Color(mat.color.r, mat.color.g, mat.color.b, 255);
+            mat.color = new Color(mat.color.r, mat.color.g, mat.color.b, 1.0f);
         }
     }
 }
