@@ -9,16 +9,6 @@ namespace MyUnityChan {
             AreaManager.self().registerAreaConnectionInfo(this.gameObject, warp_to);
         }
 
-        // Update is called once per frame
-        void Update() {
-
-        }
-
-        public override bool condition(Player player) {
-            float vertical = player.getController().keyVertical();
-            return !player.isFrozen()&& player.isGrounded() && vertical > 0;
-        }
-
         public override void warp(Player player) {
             // warp
             player.transform.position = warp_to.transform.position;
@@ -27,5 +17,11 @@ namespace MyUnityChan {
             player.getPlayerCamera().warpByPlayer(player);
         }
 
+        public override void onPlayerInputUp(Player player) {
+            player.freeze();    // moving lock
+            CameraFade.StartAlphaFade(Color.black, false, 1f, 0f, () => {
+                warp(player);
+            });
+        }
     }
 }

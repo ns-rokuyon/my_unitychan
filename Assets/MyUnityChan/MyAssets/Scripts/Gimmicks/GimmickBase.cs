@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace MyUnityChan {
     public class MovingFloor : ObjectBase {
@@ -36,24 +37,57 @@ namespace MyUnityChan {
 
     }
 
-    public abstract class Warp : ObjectBase {
+    public class TriggerCollision : ObjectBase {
+        public virtual void onPlayerInputUp(Player player) { }
+        public virtual void onPlayerInputDown(Player player) { }
+        public virtual void onPlayerEnter(Player player) { }
+
+        public virtual bool isInputUp(Character character) {
+            return !character.isFrozen() &&
+                    character.isGrounded() && 
+                    character.getController().keyVertical() > 0;
+        }
+        public virtual bool isInputDown(Character character) {
+            return !character.isFrozen() &&
+                    character.isGrounded() && 
+                    character.getController().keyVertical() > 0;
+        }
+        public virtual bool isEnter(Character character) {
+            return !character.isFrozen();
+        }
+
+        public virtual void onEnemyInputUp(Enemy enemy) { }
+        public virtual void onEnemyInputDown(Enemy enemy) { }
+        public virtual void onEnemyEnter(Enemy enemy) { }
+
+        public virtual void OnTriggerStay(Collider colliderInfo) {
+            if ( colliderInfo.gameObject.tag == "Player" ) {
+                Player player = colliderInfo.gameObject.GetComponent<Player>();
+                if ( isInputUp(player) )
+                    onPlayerInputUp(player);
+                else if ( isInputDown(player) )
+                    onPlayerInputDown(player);
+                else if ( isEnter(player) )
+                    onPlayerEnter(player);
+            }
+            else if ( colliderInfo.gameObject.tag == "Enemy" ) {
+                Enemy enemy = colliderInfo.gameObject.GetComponent<Enemy>();
+                if ( isInputUp(enemy) )
+                    onEnemyInputUp(enemy);
+                else if ( isInputDown(enemy) )
+                    onEnemyInputDown(enemy);
+                else if ( isEnter(enemy) )
+                    onEnemyEnter(enemy);
+            }
+        }
+    }
+
+    public abstract class Warp : TriggerCollision {
         public GameObject warp_to;
         public float dst_direction;
 
-        public abstract bool condition(Player player);
         public abstract void warp(Player player);
 
-        public void OnTriggerStay(Collider colliderInfo) {
-            if ( colliderInfo.gameObject.tag == "Player" ) {
-                Player player = colliderInfo.gameObject.GetComponent<Player>();
-                if ( condition(player) ) {
-                    player.freeze();    // moving lock
-                    CameraFade.StartAlphaFade(Color.black, false, 1f, 0f, () => {
-                        warp(player);
-                    });
-                }
-            }
-        }
     }
 
     public abstract class Door : ObjectBase {
