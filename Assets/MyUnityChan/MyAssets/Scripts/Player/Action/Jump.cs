@@ -9,13 +9,13 @@ namespace MyUnityChan {
         protected Const.ID.Effect effect_name = Const.ID.Effect.JUMP_SMOKE_PUFF;
 
         private readonly Dictionary<Const.CharacterName, Vector3> jumpF = new Dictionary<Const.CharacterName, Vector3>{
-            { Const.CharacterName.UNITYCHAN, new Vector3(0, 250.0f, 0) },
-            { Const.CharacterName.MINI_UNITYCHAN, new Vector3(0, 90.0f, 0) }
+            { Const.CharacterName.UNITYCHAN, new Vector3(0, 600.0f, 0) },       // Mass: 46kg
+            { Const.CharacterName.MINI_UNITYCHAN, new Vector3(0, 130.0f, 0) }   // Mass: 10kg
         };
 
         private readonly Dictionary<Const.CharacterName, Vector3> dashJumpF = new Dictionary<Const.CharacterName, Vector3>{
-            { Const.CharacterName.UNITYCHAN, new Vector3(100.0f, 100.0f, 0) },
-            { Const.CharacterName.MINI_UNITYCHAN, new Vector3(30.0f, 30.0f, 0) }
+            { Const.CharacterName.UNITYCHAN, new Vector3(100.0f, 400.0f, 0) },
+            { Const.CharacterName.MINI_UNITYCHAN, new Vector3(30.0f, 120.0f, 0) }
         };
 
         public PlayerJump(Character character)
@@ -72,9 +72,14 @@ namespace MyUnityChan {
     public class PlayerDoubleJump : PlayerJump {
         private bool air_jumped;
 
+        private readonly Dictionary<Const.CharacterName, Vector3> jumpF = new Dictionary<Const.CharacterName, Vector3>{
+            { Const.CharacterName.UNITYCHAN, new Vector3(0, 600.0f, 0) },       // Mass: 46kg
+            { Const.CharacterName.MINI_UNITYCHAN, new Vector3(0, 130.0f, 0) }   // Mass: 10kg
+        };
+
         private readonly Dictionary<Const.CharacterName, Vector3> secondjumpF = new Dictionary<Const.CharacterName, Vector3>{
-            { Const.CharacterName.UNITYCHAN, new Vector3(0, 250.0f, 0) },
-            { Const.CharacterName.MINI_UNITYCHAN, new Vector3(0, 90.0f, 0) }
+            { Const.CharacterName.UNITYCHAN, new Vector3(0, 600.0f, 0) },       // Mass: 46kg
+            { Const.CharacterName.MINI_UNITYCHAN, new Vector3(0, 130.0f, 0) }   // Mass: 10kg
         };
 
         private readonly Dictionary<Const.CharacterName, Vector3> dashJumpF = new Dictionary<Const.CharacterName, Vector3>{
@@ -99,18 +104,18 @@ namespace MyUnityChan {
             jump_start_y = player.transform.position.y;
             if ( player.isDash() ) {
                 // dashdump (ground jump)
-                player.GetComponent<Rigidbody>().AddForce(new Vector3(player.transform.forward.x * 100.0f, 100.0f, 0), ForceMode.Impulse);
+                player.GetComponent<Rigidbody>().AddForce(dashJumpF[player.character_name].mul(player.transform.forward.x, 1, 1), ForceMode.Impulse);
             }
             else {
                 // jump (ground jump or air jump)
                 if ( player.isGrounded() ) {
-                    player.GetComponent<Rigidbody>().AddForce(new Vector3(0f, 250.0f, 0), ForceMode.Impulse);
+                    player.GetComponent<Rigidbody>().AddForce(jumpF[player.character_name], ForceMode.Impulse);
                 }
                 else {
                     Rigidbody rigidbody = player.GetComponent<Rigidbody>();
                     rigidbody.velocity = Vector3.zero;
                     rigidbody.angularVelocity = Vector3.zero;
-                    rigidbody.AddForce(new Vector3(0f, 270.0f, 0), ForceMode.Impulse);
+                    player.GetComponent<Rigidbody>().AddForce(secondjumpF[player.character_name], ForceMode.Impulse);
                 }
             }
         }
@@ -165,9 +170,14 @@ namespace MyUnityChan {
         protected Vector3 effect_offset = new Vector3(0.0f, 0.2f, 0.0f);
         protected Const.ID.Effect effect_name = Const.ID.Effect.JUMP_SMOKE_PUFF;
 
+        private readonly Dictionary<Const.CharacterName, Vector3> jumpF = new Dictionary<Const.CharacterName, Vector3>{
+            { Const.CharacterName.UNITYCHAN, new Vector3(0, 600.0f, 0) },       // Mass: 46kg
+            { Const.CharacterName.MINI_UNITYCHAN, new Vector3(0, 130.0f, 0) }   // Mass: 10kg
+        };
+
         public Vector3 F {
             get {
-                return player.getBackVector() * 250.0f + new Vector3(0.0f, 250.0f, 0.0f);
+                return player.getBackVector() * 300.0f + jumpF[player.character_name];
             }
         }
 

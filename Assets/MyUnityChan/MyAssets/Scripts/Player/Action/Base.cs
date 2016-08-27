@@ -53,10 +53,11 @@ namespace MyUnityChan {
 
     public class PlayerAccel : PlayerAction {
         private float maxspeed = 5.0f;
+        private float terminal_velocity = 10.0f;
         private Vector3 moveF;
 
         private readonly Dictionary<Const.CharacterName, Vector3> __moveF = new Dictionary<Const.CharacterName, Vector3>{
-            { Const.CharacterName.UNITYCHAN, new Vector3(2000f, 0, 0) },
+            { Const.CharacterName.UNITYCHAN, new Vector3(4000f, 0, 0) },
             { Const.CharacterName.MINI_UNITYCHAN, new Vector3(400f, 0, 0) }
         };
 
@@ -74,26 +75,35 @@ namespace MyUnityChan {
         }
 
         public override void performFixed() {
+            Rigidbody rigidbody = player.GetComponent<Rigidbody>();
             float horizontal = controller.keyHorizontal();
             Vector3 fw = player.transform.forward;
-            float vx = player.GetComponent<Rigidbody>().velocity.x;
+            float vx = rigidbody.velocity.x;
 
             //if ( Mathf.Abs(horizontal) >= 0.2 && horizontal * vx < maxspeed ) {
             if ( Mathf.Abs(horizontal) >= 0.2 ) {
                 if ( player.isGrounded() && Mathf.Sign(horizontal) != Mathf.Sign(vx) && Mathf.Abs(vx) > 0.1f ) {
                     // when player is turning, add low force
                     if ( player.isDash() ) {
-                        player.GetComponent<Rigidbody>().AddForce(horizontal * moveF / 8.0f);
+                        rigidbody.AddForce(horizontal * moveF / 8.0f);
                     }
                     else {
-                        player.GetComponent<Rigidbody>().AddForce(horizontal * moveF / 4.0f);
+                        rigidbody.AddForce(horizontal * moveF / 4.0f);
                     }
                 }
                 else {
                     // accelerate
                     if ( !player.isTouchedWall() ) {
-                        player.GetComponent<Rigidbody>().AddForce(horizontal * moveF);
+                       rigidbody.AddForce(horizontal * moveF);
                     }
+                }
+            }
+
+            if ( !player.isGrounded() ) {
+                if ( rigidbody.velocity.y > -terminal_velocity) {
+                    float coef = 23.9f;
+                    // Quick falling down
+                    player.GetComponent<Rigidbody>().AddForce(Vector3.down * coef * rigidbody.mass, ForceMode.Force);
                 }
             }
         }
