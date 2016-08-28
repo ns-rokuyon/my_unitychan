@@ -35,7 +35,7 @@ namespace MyUnityChan {
         public IObservable<float> keyStreamVertical { get; private set; }
 
         // Use this for initialization
-        void Awake() {
+        public virtual void Awake() {
             inputs = new List<bool>();
             for ( int i = 0; i < (int)InputCode.len; i++ ) {
                 inputs.Add(false);
@@ -45,10 +45,6 @@ namespace MyUnityChan {
 
             keyStreamHorizontal = this.UpdateAsObservable().Select(_ => horizontal_input);
             keyStreamVertical = this.UpdateAsObservable().Select(_ => vertical_input);
-        }
-
-        // Update is called once per frame
-        void Update() {
         }
 
         public List<bool> getAllInputs() {

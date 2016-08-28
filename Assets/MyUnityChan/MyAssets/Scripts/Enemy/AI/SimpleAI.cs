@@ -7,12 +7,15 @@ namespace MyUnityChan {
         private int target_update_time_span;
 
         // Use this for initialization
-        void Start() {
+        public override void Start() {
+            base.Start();
             target_update_time_span = 10;
         }
 
         // Update is called once per frame
-        void Update() {
+        public override void Update() {
+            base.Update();
+
             if ( isStopped ) {
                 return;
             }

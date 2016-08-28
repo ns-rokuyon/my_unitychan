@@ -16,6 +16,7 @@ namespace MyUnityChan {
         public Const.ID.AI AI_name;
         public Const.ID.Enemy enemy_id;
         public Const.ID.EnemyFamily enemyfamily_id;
+        public Const.ID.Effect dead_effect;
         public int max_hp;
 
         protected EnemyActionManager action_manager;

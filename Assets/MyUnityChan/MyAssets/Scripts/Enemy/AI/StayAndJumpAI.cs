@@ -8,7 +8,9 @@ namespace MyUnityChan {
         private GameObject target;
 
         // Use this for initialization
-        void Start() {
+        public override void Start() {
+            base.Start();
+
             target = GameStateManager.getPlayerObject();
 
             this.UpdateAsObservable()

@@ -15,13 +15,16 @@ namespace MyUnityChan {
         private bool coroutine_running = false;
 
         // Use this for initialization
-        void Start() {
+        public override void Start() {
+            base.Start();
             target_update_time_span = 60;
             area_name = AreaManager.Instance.getAreaNameFromObject(self.gameObject);
         }
 
         // Update is called once per frame
-        void Update() {
+        public override void Update() {
+            base.Update();
+
             if ( isStopped ) {
                 return;
             }
