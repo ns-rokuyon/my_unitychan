@@ -33,7 +33,7 @@ namespace MyUnityChan {
         // Use this for initialization
         void Start() {
             radius = transform.lossyScale.x * sphere_scale;
-            upshift = Vector3.up * (radius + delta);
+            upshift = Vector3.up * (radius + delta + start_y_offset);
         }
 
         public bool isGrounded() {
@@ -45,12 +45,10 @@ namespace MyUnityChan {
             return ghit.point;
         }
 
-        /*
         void OnDrawGizmos() {
             Gizmos.DrawRay(transform.position + upshift, Vector3.down * max_distance);
             if ( isGrounded() ) 
                 Gizmos.DrawWireSphere(ghit.point, radius);
         }
-        */
     }
 }
