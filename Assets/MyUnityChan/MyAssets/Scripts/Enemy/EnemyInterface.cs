@@ -19,4 +19,8 @@ namespace MyUnityChan {
         int getMaxExp();
         void levelUp();
     }
+    
+    public interface IEnemyTakeDamage {
+        void takeDamage(int damage);
+    }
 }

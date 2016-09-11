@@ -20,6 +20,11 @@ namespace MyUnityChan {
                         inputs[(int)InputCode.JUMP] = true;
                     });
             }
+
+            // Custom start routine
+            if ( self is ICustomAIStart ) {
+                (self as ICustomAIStart).customStart();
+            }
         }
 
         // Update is called once per frame
@@ -29,5 +34,9 @@ namespace MyUnityChan {
 
             clearAllInputs();
         }
+    }
+
+    public interface ICustomAIStart {
+        void customStart();
     }
 }

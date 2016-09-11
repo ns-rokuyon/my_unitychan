@@ -25,12 +25,13 @@ namespace MyUnityChan {
 
         void Awake() {
             // Common Awake
-            MeshRenderer meshrenderer = gameObject.GetComponent<MeshRenderer>();
-            if ( meshrenderer ) {
-                Bounds bounds = meshrenderer.bounds;
+            Renderer renderer = GetComponentInChildren<Renderer>();
+            if ( renderer ) {
+                Bounds bounds = renderer.bounds;
                 height = bounds.size.y;
                 width = bounds.size.x;
             }
+
             ground_checker = GetComponent<GroundChecker>();
 
             awake();

@@ -120,6 +120,10 @@ namespace MyUnityChan {
         public override void damage(int dam) {
             base.damage(dam);
 
+            if ( this is IEnemyTakeDamage ) {
+                (this as IEnemyTakeDamage).takeDamage(dam);
+            }
+
             if ( hp_gauge == null ) {
                 if ( !SettingManager.get(Settings.Flag.SHOW_ENEMY_HP_BAR) )
                     return;
@@ -129,7 +133,7 @@ namespace MyUnityChan {
                     GUIObjectBase.getCanvas("Canvas_WorldSpace")).GetComponent<HpGauge>();
                 hp_gauge.setCharacter(this);
                 hp_gauge.setMapHp(max_hp);
-                hp_gauge.gameObject.transform.position = gameObject.transform.position.add(0, 2.0f, 0);
+                hp_gauge.gameObject.transform.position = gameObject.transform.position.add(0, height, 0);
             }
         }
 
@@ -165,7 +169,7 @@ namespace MyUnityChan {
 
         public void followHpGauge() {
             if ( hp_gauge ) {
-                hp_gauge.gameObject.transform.position = gameObject.transform.position.add(0, 2.0f, 0);
+                hp_gauge.gameObject.transform.position = gameObject.transform.position.add(0, height , 0);
             }
         }
 
