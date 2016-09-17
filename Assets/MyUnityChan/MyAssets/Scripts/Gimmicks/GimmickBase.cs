@@ -7,14 +7,6 @@ namespace MyUnityChan {
     public class MovingFloor : ObjectBase {
         public List<ObjectBase> members = new List<ObjectBase>();
 
-        // Use this for initialization
-        void Start() {
-        }
-
-        // Update is called once per frame
-        void Update() {
-        }
-
         public virtual void getOn(ObjectBase ob) {
             if ( ob.GetComponent<Player>() ) {
                 ob = ob.GetComponent<Player>().manager;
