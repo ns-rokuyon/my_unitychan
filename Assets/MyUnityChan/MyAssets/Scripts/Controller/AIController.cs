@@ -34,6 +34,17 @@ namespace MyUnityChan {
 
             clearAllInputs();
         }
+
+        public void inputKey(Controller.InputCode code, bool flag) {
+            inputs[(int)code] = flag;
+        }
+
+        public void restart() {
+            // Custom start routine
+            if ( self is ICustomAIStart ) {
+                (self as ICustomAIStart).customStart();
+            }
+        }
     }
 
     public interface ICustomAIStart {

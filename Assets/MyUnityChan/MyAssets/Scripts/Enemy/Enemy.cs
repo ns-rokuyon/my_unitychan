@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using EnergyBarToolkit;
 using UniRx;
+using UniRx.Triggers;
 
 namespace MyUnityChan {
 
@@ -37,6 +38,7 @@ namespace MyUnityChan {
             }
         }  // >= 1
         public int exp { get; set; }
+        public IObservable<int> levelUpSignal { get; set; }
 
         protected void loadAttachedAI() {
             GameObject controller_inst = PrefabInstantiater.create(prefabPath(AI_name), gameObject);
@@ -86,6 +88,8 @@ namespace MyUnityChan {
                     if ( anim )
                         anim.speed = 1.0f;
                 }).AddTo(gameObject);
+
+            levelUpSignal = this.ObserveEveryValueChanged(_ => level).Where(lv => lv > 1);
         }
 
         // Update is called once per frame
