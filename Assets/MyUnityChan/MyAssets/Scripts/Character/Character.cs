@@ -65,11 +65,11 @@ namespace MyUnityChan {
             status.hp = _hp;
         }
 
-        public void setAreaName(string name) {
+        public virtual void setAreaName(string name) {
             area_name = name;
         }
 
-        public string getAreaName() {
+        public virtual string getAreaName() {
             return area_name;
         }
 

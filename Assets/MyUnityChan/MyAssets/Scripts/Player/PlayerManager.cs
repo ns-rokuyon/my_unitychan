@@ -20,6 +20,7 @@ namespace MyUnityChan {
         public HpGauge hpgauge { get; set; }
         public ReservedHpGauge reserved_hpgauge { get; set; }
         public PlayerStatus status { get; set; }
+        public string area_name { get; set; }
 
         void Awake() {
             switchable_player_characters = new Dictionary<Const.CharacterName, GameObject>();

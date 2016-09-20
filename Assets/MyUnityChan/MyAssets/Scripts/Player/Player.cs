@@ -232,6 +232,14 @@ namespace MyUnityChan {
             return manager.camera;
         }
 
+        public override string getAreaName() {
+            return manager.area_name;
+        }
+
+        public override void setAreaName(string name) {
+            manager.area_name = name;
+        }
+
         public void setController(Controller _controller) {
             controller = _controller;
         }

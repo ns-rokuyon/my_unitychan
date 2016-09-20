@@ -160,7 +160,9 @@ namespace MyUnityChan {
 
         public void OnTriggerEnter(Collider colliderInfo) {
             if ( colliderInfo.gameObject.tag == "Player" ) {
+                // Player entered into this area or player switched in this area
                 Player player = colliderInfo.gameObject.GetComponent<Player>();
+                string before_area = player.getAreaName();
                 player.setAreaName(this.gameObject.name);
                 string name = player.gameObject.name;
                 register(name);
@@ -175,8 +177,10 @@ namespace MyUnityChan {
                 // Adjust player's camera position to that in this area
                 player.getPlayerCamera().setPositionInArea(this);
 
-                // Activate, Activate(respawn), or Deactivate enemies
-                AreaManager.self().manageGameObjectsInArea(this, connected_areas);
+                if ( before_area != player.getAreaName() ) {
+                    // Activate, Activate(respawn), or Deactivate enemies
+                    AreaManager.self().manageGameObjectsInArea(this, connected_areas);
+                }
             }
             else if ( colliderInfo.gameObject.tag == "Enemy" ) {
                 Enemy enemy = colliderInfo.gameObject.GetComponent<Enemy>();
