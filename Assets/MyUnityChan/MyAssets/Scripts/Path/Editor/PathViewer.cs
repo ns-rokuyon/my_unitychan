@@ -2,23 +2,23 @@
 using UnityEditor;
 using System.Collections;
 
-[CustomEditor(typeof(Path), true)]
-public class PathViewer : Editor {
+namespace MyUnityChan {
+    [CustomEditor(typeof(Path), true)]
+    public class PathViewer : Editor {
 
-    private Path path;
+        private Path path;
 
-    void OnEnable() {
-        path = target as Path;
+        void OnEnable() {
+            path = target as Path;
+        }
+
+        void OnSceneGUI() {
+            path.sceneGUI();
+        }
+
+        public override void OnInspectorGUI() {
+            path.inspectorGUI();
+            DrawDefaultInspector();
+        }
     }
-
-    void OnSceneGUI() {
-        path.sceneGUI();
-    }
-
-    public override void OnInspectorGUI() {
-        path.inspectorGUI();
-        DrawDefaultInspector();
-    }
-
-
 }
