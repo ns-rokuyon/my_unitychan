@@ -106,6 +106,7 @@ namespace MyUnityChan {
 
         public override void perform() {
             player.getAnimator().Play("PunchL");
+            player.voice(Const.ID.PlayerVoice.ATTACK, true, 3);
             InvokerManager.createFrameDelayInvoker(3, createHitbox);
         }
 
@@ -163,6 +164,7 @@ namespace MyUnityChan {
 
         public override void perform() {
             player.getAnimator().Play("PunchR");
+            player.voice(Const.ID.PlayerVoice.ATTACK6, true, 6);
             InvokerManager.createFrameDelayInvoker(6, createHitbox);
             //player.getMoveController().register(new Player.DelayNormalEvent(6, createHitbox));
         }
@@ -220,7 +222,8 @@ namespace MyUnityChan {
 
         public override void perform() {
             player.getAnimator().Play("SpinKick");
-            InvokerManager.createFrameDelayInvoker(20, createHitbox);
+            player.voice(Const.ID.PlayerVoice.ATTACK5, true, 25);
+            InvokerManager.createFrameDelayInvoker(40, createHitbox);
         }
 
         public override bool condition() {

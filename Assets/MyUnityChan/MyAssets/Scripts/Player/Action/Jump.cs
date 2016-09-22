@@ -52,6 +52,7 @@ namespace MyUnityChan {
                 // jump (ground jump or air jump)
                 player.getAnimator().Play("Jump", -1, 0.0f);
             }
+            player.voice(Const.ID.PlayerVoice.JUMP);
             player.setAnimSpeedDefault();
             player.getAnimator().SetBool("OnGround", false);
             player.lockInput(2);

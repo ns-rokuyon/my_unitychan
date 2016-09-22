@@ -172,6 +172,7 @@ namespace MyUnityChan {
             animator.SetTrigger("Damaged");
             status.invincible.enable(60);
             status.hp -= dam;
+            voice(Const.ID.PlayerVoice.DAMAGED);
         }
 
         public override bool isTouchedWall() {
@@ -184,6 +185,12 @@ namespace MyUnityChan {
 
         public void respawn() {
             Application.LoadLevel("testplay");
+        }
+
+        public void voice(Const.ID.PlayerVoice voice_id, bool playOneShot=false, int delay = 0) {
+            AudioClip clip = AssetBundleManager.get(
+                Const.ID.AssetBundle.UNITYCHAN_VOICE, Const.Sound.Voice.UnityChan[voice_id]) as AudioClip;
+            getSoundPlayer().play(clip, playOneShot, delay);
         }
 
         void onTurnMiddle() {

@@ -14,13 +14,21 @@ namespace MyUnityChan {
             StartCoroutine(loadAll());
         }
 
+        public static Object get(Const.ID.AssetBundle id, string key) {
+            if ( self().now_loading )
+                return null;
+            return self().assets[id][key];
+        }
+
         protected IEnumerator loadAll() {
+            DebugManager.log("Start: Loading AssetBundle");
             now_loading = true;
             foreach ( Const.ID.AssetBundle id in System.Enum.GetValues(typeof(Const.ID.AssetBundle)) ) {
                 var coroutine = StartCoroutine(loadAssetBundle(id));
                 yield return coroutine;
             }
             now_loading = false;
+            DebugManager.log("Done: Loading AssetBundle");
         }
 
         protected IEnumerator loadAssetBundle(Const.ID.AssetBundle id) {
