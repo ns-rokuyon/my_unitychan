@@ -51,6 +51,7 @@ namespace MyUnityChan {
                 dropdown.setParent(scroll_content);
                 dropdown.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
                 dropdown.GetComponent<MenuDropdownButton>().key = setting.Key;
+                dropdown.GetComponent<MenuDropdownButton>().created_by_settingmanager = true;
                 dropdown.GetComponentInChildren<Dropdown>().options.Clear();
                 foreach ( var option in setting.Value.item_texts ) {
                     dropdown.GetComponentInChildren<Dropdown>().options.Add(new Dropdown.OptionData(option.get()));

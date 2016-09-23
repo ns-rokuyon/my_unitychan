@@ -10,6 +10,7 @@ namespace MyUnityChan {
         IPointerClickHandler, IPointerEnterHandler, ISubmitHandler {
 
         public GameObject dropdown_object;
+        public bool created_by_settingmanager { get; set; }
         public Dropdown dropdown { get; private set; }
         public Text selected_label { get; private set; }
         public Settings.Select key { get; set; }
@@ -27,6 +28,7 @@ namespace MyUnityChan {
             else {
                 Debug.LogWarning("Cannot find gameobject by name(" + SELECTED_LABEL_GAMEOBJECT_NAME + ")");
             }
+            DebugManager.log(selected_label_object.name);
         }
 
         void Start() {
@@ -42,8 +44,10 @@ namespace MyUnityChan {
             var op = dropdown.options[value];
             selected_label.text = op.text;
 
-            // Update Setting
-            SettingManager.set(key, value);
+            if ( created_by_settingmanager ) {
+                // Update Setting
+                SettingManager.set(key, value);
+            }
         }
 
         public void OnPointerClick(PointerEventData eventData) {
