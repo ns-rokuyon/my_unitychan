@@ -17,7 +17,7 @@ namespace MyUnityChan {
         protected int shooting_frame;
         protected int interval_frame;
         protected string hitbox_name;
-        protected string se_name;
+        protected Const.ID.SE.Projectile se_name;
 
         protected string projectile_name;
 
@@ -37,7 +37,7 @@ namespace MyUnityChan {
         public virtual void shoot() { }
 
         public virtual void sound() {
-            if ( se_name.Length == 0 ) {
+            if ( se_name == Const.ID.SE.Projectile._NO ) {
                 return;
             }
             if ( sound_player == null ) {

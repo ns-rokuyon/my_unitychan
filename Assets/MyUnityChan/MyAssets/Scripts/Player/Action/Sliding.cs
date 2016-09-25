@@ -53,6 +53,7 @@ namespace MyUnityChan {
 
         public override void perform() {
             InvokerManager.createCoroutine(createHitbox());
+            player.voice(Const.ID.PlayerVoice.ATTACK3);
             player.getAnimator().CrossFade("Sliding", 0.001f);
             player.lockInput(40);
         }

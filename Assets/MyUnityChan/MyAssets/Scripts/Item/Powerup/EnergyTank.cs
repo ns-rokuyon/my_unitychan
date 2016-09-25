@@ -14,6 +14,7 @@ namespace MyUnityChan {
 
         public override void perform(Player player) {
             player.manager.status.addEnergyTank();
+            player.onGetPowerupItem();
         }
 
     }

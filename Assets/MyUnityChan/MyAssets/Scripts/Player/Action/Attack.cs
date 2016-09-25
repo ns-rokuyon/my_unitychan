@@ -222,7 +222,7 @@ namespace MyUnityChan {
 
         public override void perform() {
             player.getAnimator().Play("SpinKick");
-            player.voice(Const.ID.PlayerVoice.ATTACK5, true, 25);
+            player.voice(Const.ID.PlayerVoice.ATTACK4, true, 20);
             InvokerManager.createFrameDelayInvoker(40, createHitbox);
         }
 

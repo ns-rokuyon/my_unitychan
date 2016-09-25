@@ -193,6 +193,13 @@ namespace MyUnityChan {
             getSoundPlayer().play(clip, playOneShot, delay);
         }
 
+        public void onGetPowerupItem() {
+            AudioClip clip = AssetBundleManager.get(
+                Const.ID.AssetBundle.UNITYCHAN_VOICE,
+                Const.Sound.Voice.UnityChan[Const.ID.PlayerVoice.POWER_UP]) as AudioClip;
+            getSoundPlayer().play(clip);
+        }
+
         void onTurnMiddle() {
             Debug.Log("on turn middle");
             turn_dir_switched = true;
