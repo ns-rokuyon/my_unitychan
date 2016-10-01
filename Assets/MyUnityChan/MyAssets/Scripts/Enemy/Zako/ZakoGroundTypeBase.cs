@@ -11,7 +11,7 @@ namespace MyUnityChan {
         };
 
         [SerializeField]
-        public List<ZakoGroundTypeBase.Param> default_params;
+        public ZakoGroundTypeBase.Param default_param;
 
         public ZakoGroundTypeBase.Param param {
             get; protected set;
@@ -20,7 +20,7 @@ namespace MyUnityChan {
         protected override void start() {
             base.start();
 
-            param = default_params[level - 1];
+            param = default_param;
 
             action_manager.registerAction(new EnemyWalk(this, new Vector3(param.walk_fx, 0, 0), param.max_speed));
             action_manager.registerAction(new EnemyDead(this));

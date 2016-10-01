@@ -28,8 +28,7 @@ namespace MyUnityChan {
             }
 
             // Discard
-            enemy.destroyHpGauge();
-            enemy.gameObject.SetActive(false);
+            enemy.deactivate();
         }
 
         public override bool condition() {

@@ -13,7 +13,7 @@ namespace MyUnityChan {
         };
 
         [SerializeField]
-        public List<ZakoAirTypeBase.Param> default_params;
+        public ZakoAirTypeBase.Param default_param;
 
         public float flight_level { get; private set; }
 
@@ -29,7 +29,7 @@ namespace MyUnityChan {
         protected override void start() {
             base.start();
 
-            param = default_params[level - 1];
+            param = default_param;
 
             action_manager.registerAction(new EnemyFly(this, param.flyF, param.flapF, param.max_speed));
             action_manager.registerAction(new EnemyDead(this));

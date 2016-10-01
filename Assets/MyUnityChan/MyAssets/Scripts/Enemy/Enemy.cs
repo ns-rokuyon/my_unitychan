@@ -24,21 +24,12 @@ namespace MyUnityChan {
 
         public HpGauge hp_gauge { get; protected set; }
 
-        private int __level;
         public int level {
             get {
-                if ( Application.isPlaying ) {
-                    return this.__level;
-                } else {
-                    return levelInFamily();
-                }
-            }
-            set {
-                this.__level = value;
+                return levelInFamily();
             }
         }  // >= 1
         public int exp { get; set; }
-        public IObservable<int> levelUpSignal { get; set; }
 
         protected void loadAttachedAI() {
             GameObject controller_inst = PrefabInstantiater.create(prefabPath(AI_name), gameObject);
@@ -65,8 +56,8 @@ namespace MyUnityChan {
             }
             action_manager = GetComponent<EnemyActionManager>();
             hp_gauge = null;
-            level = levelInFamily();
             exp = 0;
+            setupSoundPlayer();
         }
 
         // Start
@@ -78,9 +69,6 @@ namespace MyUnityChan {
             // enemy status setup
             status = GetComponent<EnemyStatus>();
 
-            if ( this is IEnemyLevelUp )
-                (this as IEnemyLevelUp).levelUp();  // Apply initialized level
-
             this.ObserveEveryValueChanged(_ => stunned)
                 .Where(st => st == 0)
                 .Subscribe(_ => {
@@ -88,13 +76,12 @@ namespace MyUnityChan {
                     if ( anim )
                         anim.speed = 1.0f;
                 }).AddTo(gameObject);
-
-            levelUpSignal = this.ObserveEveryValueChanged(_ => level).Where(lv => lv > 1);
-        }
+         }
 
         // Update is called once per frame
         protected override void update() {
             if ( PauseManager.isPausing() ) return;
+            if ( !controller ) return;
 
             if ( SettingManager.get(Settings.Flag.ENEMY_STOP) ) {
                 (controller as AIController).isStopped = true;
@@ -143,20 +130,29 @@ namespace MyUnityChan {
 
         public void leveling() {
             if ( this is IEnemyLevelUp ) {
-                if ( Const.EnemyFamily[enemyfamily_id].Count == level ) {
+                if ( getMaxLevel() == level ) {
                     // Max level
                     return;
                 }
                 var enemy = this as IEnemyLevelUp;
                 if ( exp >= enemy.getMaxExp() ) {
                     exp = 0;
-                    // Updating level
-                    level++;
-                    enemy_id = Const.EnemyFamily[enemyfamily_id][level - 1];
-                    enemy.levelUp();
-                    setHP(max_hp);
+                    changeForm();
+                    deactivate();
                 }
             }
+        }
+
+        protected virtual void changeForm() {
+            string next_enemy_prefab_path = Const.Prefab.Enemy[getEnemyIdNextLevel()];
+            GameObject obj = PrefabInstantiater.create(next_enemy_prefab_path, Hierarchy.Layout.ENEMY);
+            obj.transform.position = transform.position;
+        }
+
+        public void deactivate() {
+            setHP(0);
+            destroyHpGauge();
+            gameObject.SetActive(false);
         }
 
         public int getMaxLevel() {
@@ -165,6 +161,10 @@ namespace MyUnityChan {
 
         public int levelInFamily() {
             return Const.EnemyFamily[enemyfamily_id].IndexOf(enemy_id) + 1;
+        }
+
+        public Const.ID.Enemy getEnemyIdNextLevel() {
+            return Const.EnemyFamily[enemyfamily_id][level];
         }
 
         public override void defeatSomeone(Character character) {
