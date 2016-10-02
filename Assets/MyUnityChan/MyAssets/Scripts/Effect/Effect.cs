@@ -27,6 +27,7 @@ namespace MyUnityChan {
 
         public override void initialize() {
             timer = new FrameTimerState();
+            setupSoundPlayer();
         }
         public override void finalize() {
             timer = null;

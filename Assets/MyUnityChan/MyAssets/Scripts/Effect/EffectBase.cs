@@ -2,16 +2,9 @@
 using System.Collections;
 
 namespace MyUnityChan {
+    [RequireComponent(typeof(SoundPlayer))]
     public abstract class EffectBase : PoolObjectBase {
         protected string resource_path = null;
-
-        // Use this for initialization
-        void Start() {
-        }
-
-        // Update is called once per frame
-        void Update() {
-        }
 
         public override void initialize() {
             throw new System.NotImplementedException();

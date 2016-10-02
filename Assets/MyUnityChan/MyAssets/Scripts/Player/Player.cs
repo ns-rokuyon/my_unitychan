@@ -187,7 +187,7 @@ namespace MyUnityChan {
             Application.LoadLevel("testplay");
         }
 
-        public void voice(Const.ID.PlayerVoice voice_id, bool playOneShot=false, int delay = 0) {
+        public void voice(Const.ID.PlayerVoice voice_id, bool playOneShot=true, int delay = 0) {
             AudioClip clip = AssetBundleManager.get(
                 Const.ID.AssetBundle.UNITYCHAN_VOICE, Const.Sound.Voice.UnityChan[voice_id]) as AudioClip;
             getSoundPlayer().play(clip, playOneShot, delay);
