@@ -73,18 +73,9 @@ namespace MyUnityChan {
                 damage = 10;
                 stun = 60;
                 frame = 5;
-                effect_name = Const.ID.Effect.HIT_01;
-            }
-
-            public override void attack(Character character, Hitbox hitbox) {
-                if ( character ) {
-                    character.launch(5.0f);
-                    character.stun(stun);
-                    character.damage(damage);
-                }
-                (EffectManager.Instance as EffectManager).createEffect(
-                    effect_name,
-                    hitbox.gameObject.transform.position, 60, true);
+                launch_fy = 5.0f;
+                hit_se = Const.ID.SE.HIT_1;
+                effect_name = Const.ID.Effect.IMPACT_02;
             }
         }
 
@@ -107,6 +98,7 @@ namespace MyUnityChan {
         public override void perform() {
             player.getAnimator().Play("PunchL");
             player.voice(Const.ID.PlayerVoice.ATTACK, true, 3);
+            player.lockInput(6);
             InvokerManager.createFrameDelayInvoker(3, createHitbox);
         }
 
@@ -131,18 +123,9 @@ namespace MyUnityChan {
                 damage = 30;
                 stun = 120;
                 frame = 5;
-                effect_name = Const.ID.Effect.HIT_01;
-            }
-
-            public override void attack(Character character, Hitbox hitbox) {
-                if ( character ) {
-                    character.launch(7.0f);
-                    character.stun(stun);
-                    character.damage(damage);
-                }
-                (EffectManager.Instance as EffectManager).createEffect(
-                    effect_name,
-                    hitbox.gameObject.transform.position, 60, true);
+                launch_fy = 7.0f;
+                hit_se = Const.ID.SE.HIT_2;
+                effect_name = Const.ID.Effect.IMPACT_02;
             }
         }
 
@@ -165,8 +148,8 @@ namespace MyUnityChan {
         public override void perform() {
             player.getAnimator().Play("PunchR");
             player.voice(Const.ID.PlayerVoice.ATTACK6, true, 6);
+            player.lockInput(10);
             InvokerManager.createFrameDelayInvoker(6, createHitbox);
-            //player.getMoveController().register(new Player.DelayNormalEvent(6, createHitbox));
         }
 
         public override bool condition() {
@@ -190,17 +173,9 @@ namespace MyUnityChan {
                 damage = 70;
                 stun = 120;
                 frame = 12;
-                effect_name = Const.ID.Effect.HIT_01;
-            }
-
-            public override void attack(Character character, Hitbox hitbox) {
-                if ( character ) {
-                    character.launch(7.0f);
-                    character.stun(stun);
-                    character.damage(damage);
-                }
-                (EffectManager.Instance as EffectManager).createEffect(effect_name,
-                    hitbox.gameObject.transform.position, 60, true);
+                launch_fy = 7.0f;
+                hit_se = Const.ID.SE.HIT_3;
+                effect_name = Const.ID.Effect.IMPACT_01;
             }
         }
 
@@ -223,7 +198,8 @@ namespace MyUnityChan {
         public override void perform() {
             player.getAnimator().Play("SpinKick");
             player.voice(Const.ID.PlayerVoice.ATTACK4, true, 20);
-            InvokerManager.createFrameDelayInvoker(40, createHitbox);
+            player.lockInput(45);
+            InvokerManager.createFrameDelayInvoker(22, createHitbox);
         }
 
         public override bool condition() {

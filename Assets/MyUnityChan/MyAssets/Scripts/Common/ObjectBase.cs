@@ -30,6 +30,14 @@ namespace MyUnityChan {
             return sound;
         }
 
+        public void se(Const.ID.SE sid, bool playOneShot=true, int delay = 0) {
+            if ( sound == null ) {
+                DebugManager.log(name + " doesn't have SoundPlayer component", Const.Loglevel.WARN);
+                return;
+            }
+            sound.play(sid, playOneShot, delay);
+        }
+
         public string prefabPath(Const.ID.AI name) {
             return Const.Prefab.AI[name];
         }

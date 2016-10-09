@@ -24,7 +24,7 @@ namespace MyUnityChan {
         }
 
         public void OnSelect(BaseEventData event_data) {
-            sound.play(Const.Sound.SE.UI[Const.ID.SE.UI.BUTTON_SELECT]);
+            se(Const.ID.SE.BUTTON_SELECT);
         }
 
         public void OnDeselect(BaseEventData event_data) {

@@ -11,18 +11,9 @@ namespace MyUnityChan {
                 damage = 10;
                 stun = 100;
                 frame = 5;
+                launch_fy = 5.0f;
+                hit_se = Const.ID.SE.HIT_1;
                 effect_name = Const.ID.Effect.HIT_01;
-            }
-
-            public override void attack(Character character, Hitbox hitbox) {
-                if ( character ) {
-                    character.GetComponent<Rigidbody>().AddForce(new Vector3(0.0f, 5.0f, 0.0f), ForceMode.Impulse);
-                    character.stun(stun);
-                    character.damage(damage);
-                }
-                (EffectManager.Instance as EffectManager).createEffect(
-                    effect_name,
-                    hitbox.gameObject.transform.position, 60, true);
             }
         }
 

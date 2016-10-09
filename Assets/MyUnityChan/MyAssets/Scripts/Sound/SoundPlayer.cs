@@ -15,6 +15,12 @@ namespace MyUnityChan {
             play(clip, playOneShot, delay);
         }
 
+        public void play(Const.ID.SE sid, bool playOneShot=true, int delay = 0) {
+            if ( sid == Const.ID.SE._NO )
+                return;
+            play(Const.Sound.SE[sid], playOneShot, delay);
+        }
+
         public void play(AudioClip clip, bool playOneShot = true, int delay = 0) {
             StartCoroutine(_play(clip, playOneShot, delay));
         }

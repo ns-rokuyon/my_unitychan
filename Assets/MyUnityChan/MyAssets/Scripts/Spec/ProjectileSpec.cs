@@ -8,6 +8,6 @@ namespace MyUnityChan {
         public int interval_frame;
         public string hitbox_name;
         [SerializeField]
-        public Const.ID.SE.Projectile se_name;
+        public Const.ID.SE se_name;
     }
 }

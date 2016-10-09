@@ -46,7 +46,7 @@ namespace MyUnityChan {
         public int nClips() {
             switch ( category ) {
                 case Const.ID.SoundTestCategory.SE:
-                    break;
+                    return System.Enum.GetValues(typeof(Const.ID.SE)).Length;
                 case Const.ID.SoundTestCategory.UNITYCHAN_VOICE:
                     return System.Enum.GetValues(typeof(Const.ID.PlayerVoice)).Length;
                 default:
@@ -63,6 +63,8 @@ namespace MyUnityChan {
             string title = "" + (cursor + 1) + " / " + nClips() + "\n"; 
             switch ( category ) {
                 case Const.ID.SoundTestCategory.SE:
+                    sound_player.play((Const.ID.SE)cursor);
+                    title_text.text = title + ((Const.ID.SE)cursor).ToString();
                     break;
                 case Const.ID.SoundTestCategory.UNITYCHAN_VOICE:
                     AudioClip clip = AssetBundleManager.get(Const.ID.AssetBundle.UNITYCHAN_VOICE,

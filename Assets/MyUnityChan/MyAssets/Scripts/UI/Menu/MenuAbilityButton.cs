@@ -42,7 +42,7 @@ namespace MyUnityChan {
         }
 
         public void OnSelect(BaseEventData eventData) {
-            sound.play(Const.Sound.SE.UI[Const.ID.SE.UI.BUTTON_SELECT], true);
+            se(Const.ID.SE.BUTTON_SELECT);
             rect_transform.localPosition = rect_transform.localPosition.add(0, 0, -10.0f);
             if ( ability.status == Ability.Status.NO_GET ) {
                 description.text = "?????";
