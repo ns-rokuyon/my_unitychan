@@ -5,7 +5,6 @@ namespace MyUnityChan {
     [RequireComponent(typeof(EnergyBar))]
     public class ReservedHpGauge : HpGauge {
         void Awake() {
-            use_energy_bar_toolkit = true;
             energybar = GetComponent<EnergyBar>();
             character = null;
         }
