@@ -7,7 +7,7 @@ namespace MyUnityChan {
         public int shooting_frame;
         public int interval_frame;
         public string hitbox_name;
-        [SerializeField]
-        public Const.ID.SE se_name;
+        [SerializeField] public Const.ID.SE se_name;
+        [SerializeField] public Const.ID.Effect shoot_effect = Const.ID.Effect._NO_EFFECT;
     }
 }

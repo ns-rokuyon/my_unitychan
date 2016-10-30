@@ -39,6 +39,8 @@ namespace MyUnityChan {
             hit_num = 0;
             area_name = AreaManager.Instance.getAreaNameFromObject(this.gameObject);
             waiting_for_destroying = false;
+
+            EffectManager.self().createEffect(spec.shoot_effect, start_position, 60, true);
         }
 
         public override void setStartPosition(Vector3 pos) {
