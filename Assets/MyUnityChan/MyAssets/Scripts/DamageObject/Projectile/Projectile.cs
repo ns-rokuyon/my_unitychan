@@ -4,13 +4,22 @@ using System.Collections.Generic;
 
 namespace MyUnityChan {
     public abstract class Projectile : DamageObjectBase {
+        public abstract class Custom : ObjectBase {
+            public abstract void initialize();
+            public abstract void finalize();
+        }
+
         [SerializeField] public ProjectileSpec spec;
         public bool penetration;
         public float speed;         // If 'use_physics' flag is true, 'speed' is not used
         public float max_range;
         public Vector3 start_position_offset = new Vector3(0.4f, 1.2f, 0.0f);
 
-        protected Vector3 target_dir;
+        public Vector3 target_dir {
+            get {
+                return gameObject.transform.forward;
+            }
+        }
         protected Vector3 start_position;
         protected float distance_moved;
         protected string area;
@@ -28,7 +37,8 @@ namespace MyUnityChan {
         public string resource_name;
 
         public virtual void setDir(Vector3 dir) {
-            target_dir = dir;
+            transform.rotation = Quaternion.LookRotation(dir);
+            //target_dir = dir;
         }
 
         public bool isPenetration() {
@@ -96,6 +106,5 @@ namespace MyUnityChan {
         public int getHitNum() {
             return hit_num;
         }
-
     }
 }

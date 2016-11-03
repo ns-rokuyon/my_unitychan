@@ -21,7 +21,10 @@ namespace MyUnityChan {
 
         protected string projectile_name;
 
+        public Const.ID.TARGETING_MODE targeting_mode { get; set; }
+
         void Start() {
+            targeting_mode = Const.ID.TARGETING_MODE._NO_TARGETING;
             baseStart();
         }
 
@@ -61,8 +64,16 @@ namespace MyUnityChan {
 
         public void setProjectile(string name) {
             projectile_name = name;
-            ProjectileSpec spec = (Resources.Load(Const.Prefab.Projectile[projectile_name]) as GameObject)
-                .GetComponent<Projectile>().spec;
+            Projectile proj = (Resources.Load(Const.Prefab.Projectile[projectile_name]) as GameObject).GetComponent<Projectile>();
+            ProjectileSpec spec = proj.spec;
+
+            Homing homing = proj.GetComponent<Homing>();
+            if ( homing ) {
+                targeting_mode = homing.mode;
+            }
+            else {
+                targeting_mode = Const.ID.TARGETING_MODE._NO_TARGETING;
+            }
 
             shooting_frame = spec.shooting_frame;
             interval_frame = spec.interval_frame;

@@ -31,9 +31,15 @@ namespace MyUnityChan {
         public override void initialize() {
             distance_moved = 0.0f;
             hit_num = 0;
+            foreach ( var c in GetComponents<Projectile.Custom>() ) {
+                c.initialize();
+            }
         }
 
         public override void finalize() {
+            foreach ( var c in GetComponents<Projectile.Custom>() ) {
+                c.finalize();
+            }
         }
     }
 
