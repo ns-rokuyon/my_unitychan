@@ -26,6 +26,24 @@ namespace MyUnityChan {
             printLog(message, level);
         }
 
+        public static void log(object message, GameObject obj, Const.Loglevel level = Const.Loglevel.INFO) {
+            log("[" + obj.name + "] " + message, level);
+        }
+
+        public static void warn(object message, GameObject obj = null) {
+            if ( obj )
+                log(message, obj, Const.Loglevel.WARN);
+            else
+                log(message, Const.Loglevel.WARN);
+        }
+
+        public static void error(object message, GameObject obj = null) {
+            if ( obj )
+                log(message, obj, Const.Loglevel.ERROR);
+            else
+                log(message, Const.Loglevel.ERROR);
+        }
+
         public static void printLog(object message, Const.Loglevel level) {
             switch ( level ) {
                 case Const.Loglevel.WARN:
