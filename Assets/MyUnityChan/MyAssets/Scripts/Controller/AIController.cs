@@ -23,7 +23,7 @@ namespace MyUnityChan {
 
             // Custom start routine
             if ( self is ICustomAIStart ) {
-                (self as ICustomAIStart).customStart();
+                (self as ICustomAIStart).customAIStart(this);
             }
         }
 
@@ -42,12 +42,12 @@ namespace MyUnityChan {
         public void restart() {
             // Custom start routine
             if ( self is ICustomAIStart ) {
-                (self as ICustomAIStart).customStart();
+                (self as ICustomAIStart).customAIStart(this);
             }
         }
     }
 
     public interface ICustomAIStart {
-        void customStart();
+        void customAIStart(AIController ai);
     }
 }

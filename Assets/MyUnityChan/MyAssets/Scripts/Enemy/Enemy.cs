@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using EnergyBarToolkit;
 using UniRx;
 using UniRx.Triggers;
+using System.Collections;
 
 namespace MyUnityChan {
 
