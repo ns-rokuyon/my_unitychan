@@ -7,7 +7,18 @@ namespace MyUnityChan {
     public class AIController : Controller {
         public bool isStopped = false;
 
+        // Test
+        public bool __new_ai_controller_test = false;
+        public AI ai { get; set; }
+
         public virtual void Start() {
+            AIModel model = self.GetComponent<AIModel>();
+            if ( model ) {
+                model.self = self as Enemy;
+                model.controller = this;
+                ai = model.build();
+            }
+
             // Common routines
             if ( self is ZakoAirTypeBase ) {
                 // Keep inputs for flapping
@@ -17,13 +28,8 @@ namespace MyUnityChan {
                     .RepeatUntilDestroy(gameObject)
                     .Where(_ => (self as ZakoAirTypeBase).flight_level > self.transform.position.y)
                     .Subscribe(_ => {
-                        inputs[(int)InputCode.JUMP] = true;
+                        inputKey(InputCode.JUMP);
                     });
-            }
-
-            // Custom start routine
-            if ( self is ICustomAIStart ) {
-                (self as ICustomAIStart).customAIStart(this);
             }
         }
 
@@ -32,18 +38,19 @@ namespace MyUnityChan {
             if ( PauseManager.isPausing() ) isStopped = true;
             else isStopped = false;
 
+            if ( __new_ai_controller_test ) {
+                return;
+            }
             clearAllInputs();
         }
 
-        public void inputKey(Controller.InputCode code, bool flag) {
-            inputs[(int)code] = flag;
+        public void restart() {
         }
 
-        public void restart() {
-            // Custom start routine
-            if ( self is ICustomAIStart ) {
-                (self as ICustomAIStart).customAIStart(this);
-            }
+        public AI.State getObservedState() {
+            AI.State state = new AI.State();
+            state.player = GameStateManager.getPlayer();
+            return state;
         }
     }
 

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using UniRx;
 using UniRx.Triggers;
@@ -55,7 +56,7 @@ namespace MyUnityChan {
             self = ch;
         }
 
-        protected void clearAllInputs() {
+        public void clearAllInputs() {
             for ( int i = 0; i < inputs.Count; i++ ) {
                 horizontal_input = 0.0f;
                 vertical_input = 0.0f;
@@ -86,6 +87,50 @@ namespace MyUnityChan {
         public float keyHorizontal() { return horizontal_input; }
         public float keyVertical() { return vertical_input; }
 
+        public IEnumerator pressAndReleaseKey(InputCode code, int frame) {
+            while ( frame > 0 ) {
+                inputs[(int)code] = true;
+                frame--;
+                yield return null;
+            }
+            inputs[(int)code] = false;
+        }
+
+        public IEnumerator pressAndReleaseHorizontal(float x, int frame) {
+            while ( frame > 0 ) {
+                horizontal_input = x;
+                frame--;
+                yield return null;
+            }
+            horizontal_input = 0.0f;
+        }
+
+        public IEnumerator pressAndReleaseVertical(float y, int frame) {
+            while ( frame > 0 ) {
+                vertical_input = y;
+                frame--;
+                yield return null;
+            }
+            vertical_input = 0.0f;
+        }
+
+        public void inputKey(InputCode code, int frame = 1) {
+            if ( inputs[(int)code] )
+                return;
+            StartCoroutine(pressAndReleaseKey(code, frame));
+        }
+
+        public void inputHorizontal(float x, int frame = 1) {
+            if ( horizontal_input > 0.0f || horizontal_input < 0.0f )
+                return;
+            StartCoroutine(pressAndReleaseHorizontal(x, frame));
+        }
+
+        public void inputVertical(float y, int frame = 1) {
+            if ( vertical_input > 0.0f || vertical_input < 0.0f )
+                return;
+            StartCoroutine(pressAndReleaseHorizontal(y, frame));
+        }
     }
 
 }

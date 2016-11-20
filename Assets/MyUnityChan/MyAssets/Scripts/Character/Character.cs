@@ -150,6 +150,23 @@ namespace MyUnityChan {
             position_history.clear();
         }
 
+        public Vector3 getPrevPosition(int prev) {
+            if ( position_history == null )
+                return transform.position;
+            if ( prev >= getPositionHistoryCount() ) {
+                return transform.position;
+            }
+            return position_history.getPrev(prev);
+        }
+
+        public Vector3 getOldestPosition() {
+            if ( position_history == null )
+                return transform.position;
+            if ( getPositionHistoryCount() == 0 )
+                return transform.position;
+            return position_history.getLast();
+        }
+
         public Vector3 getRecentTravelDistance() {
             Vector3 travel = Vector3.zero;
             Vector3 prev = Vector3.zero;
