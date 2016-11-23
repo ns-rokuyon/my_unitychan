@@ -7,8 +7,6 @@ namespace MyUnityChan {
     public class AIController : Controller {
         public bool isStopped = false;
 
-        // Test
-        public bool __new_ai_controller_test = false;
         public AI ai { get; set; }
 
         public virtual void Start() {
@@ -16,10 +14,16 @@ namespace MyUnityChan {
             if ( model ) {
                 model.self = self as Enemy;
                 model.controller = this;
-                ai = model.build();
+                model.init();
+
+                ai = model.define();
+                if ( model.debug )
+                    ai.debug = true;
+                ai.build();
             }
 
             // Common routines
+            // TODO: merge AI class
             if ( self is ZakoAirTypeBase ) {
                 // Keep inputs for flapping
                 int flap_interval = (self as ZakoAirTypeBase).param.flap_interval;
@@ -38,13 +42,15 @@ namespace MyUnityChan {
             if ( PauseManager.isPausing() ) isStopped = true;
             else isStopped = false;
 
-            if ( __new_ai_controller_test ) {
-                return;
-            }
-            clearAllInputs();
+            //clearAllInputs();
         }
 
         public void restart() {
+            if ( ai != null ) {
+                ai.kill();
+                ai = null;
+            }
+            Start();
         }
 
         public AI.State getObservedState() {
@@ -52,9 +58,5 @@ namespace MyUnityChan {
             state.player = GameStateManager.getPlayer();
             return state;
         }
-    }
-
-    public interface ICustomAIStart {
-        void customAIStart(AIController ai);
     }
 }

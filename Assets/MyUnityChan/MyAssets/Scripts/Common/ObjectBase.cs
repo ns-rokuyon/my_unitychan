@@ -42,6 +42,10 @@ namespace MyUnityChan {
             return Const.Prefab.AI[name];
         }
 
+        public string prefabPath(Const.ID.Controller name) {
+            return Const.Prefab.Controller[name];
+        }
+
         public string prefabPath(Const.ID.Effect name) {
             return Const.Prefab.Effect[name];
         }

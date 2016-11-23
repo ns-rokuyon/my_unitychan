@@ -10,7 +10,8 @@ namespace MyUnityChan {
         public GameObject hpgauge_object_ref;
         public GameObject reserved_hpgauge_object_ref;
 
-        public string controller_name;
+        [SerializeField]
+        public Const.ID.Controller controller_name;
 
         private Dictionary<Const.CharacterName, GameObject> switchable_player_characters;
         private Const.CharacterName now;
@@ -46,7 +47,7 @@ namespace MyUnityChan {
             status.addEnergyTank();
 
             // controller setup
-            controller = PrefabInstantiater.create(Const.Prefab.Controller[controller_name], this.gameObject).GetComponent<Controller>();
+            controller = PrefabInstantiater.create(prefabPath(controller_name), this.gameObject).GetComponent<Controller>();
             controller.setSelf(now_player);
 
             // HP gauge setup

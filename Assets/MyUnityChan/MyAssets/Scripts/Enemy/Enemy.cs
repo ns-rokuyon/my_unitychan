@@ -15,7 +15,6 @@ namespace MyUnityChan {
             Tag: Enemy
             Layer: Character
         */
-        public Const.ID.AI AI_name;
         public Const.ID.Enemy enemy_id;
         public Const.ID.EnemyFamily enemyfamily_id;
         public Const.ID.Effect dead_effect;
@@ -33,7 +32,7 @@ namespace MyUnityChan {
         public int exp { get; set; }
 
         protected void loadAttachedAI() {
-            GameObject controller_inst = PrefabInstantiater.create(prefabPath(AI_name), gameObject);
+            GameObject controller_inst = PrefabInstantiater.create(prefabPath(Const.ID.Controller.AI), gameObject);
             controller = controller_inst.GetComponent<Controller>();
 
             ((AIController)controller).setSelf(this);
@@ -47,7 +46,11 @@ namespace MyUnityChan {
             touching_players.Clear();
             setHP(max_hp);
             clearPositionHistory();
+            if ( controller ) {
+                Destroy(controller.gameObject);
+            }
             this.gameObject.SetActive(true);
+            loadAttachedAI();
         }
 
         // Awake
@@ -59,6 +62,9 @@ namespace MyUnityChan {
             hp_gauge = null;
             exp = 0;
             setupSoundPlayer();
+
+            // enemy status setup
+            status = GetComponent<EnemyStatus>();
         }
 
         // Start
@@ -66,9 +72,6 @@ namespace MyUnityChan {
             loadAttachedAI();
             inputlock_timer = new FrameTimerState();
             position_history = new RingBuffer<Vector3>(10);
-
-            // enemy status setup
-            status = GetComponent<EnemyStatus>();
 
             this.ObserveEveryValueChanged(_ => stunned)
                 .Where(st => st == 0)

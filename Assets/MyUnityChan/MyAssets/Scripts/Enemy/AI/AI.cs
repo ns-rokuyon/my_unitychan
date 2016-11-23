@@ -21,7 +21,11 @@ namespace MyUnityChan {
         public static AI root(Character _self, AIController _controller) {
             AI ai = new AI(_self, _controller);
             // Add common patterns
-             ai.def(AI.Def.Name("Area checker")
+            ai.def(AI.Def.Name("Abort")
+                   .If(_ => !ai.self.gameObject.activeSelf)
+                   .Then(_ => ai.kill())
+                   .Break())
+              .def(AI.Def.Name("Area checker")
                    .StopIf(s => ai.self.getAreaName() != s.player.getAreaName()));
             return ai;
         }
@@ -41,17 +45,24 @@ namespace MyUnityChan {
         }
 
         public AI kill() {
+            if ( brain == null )
+                return this;
             brain.Dispose();
             brain = null;
             return this;
         }
 
         private void think(State state) {
+            state.flagstack.Clear();
+
             foreach ( var def in patterns ) {
                 bool flag = false;
                 if ( def.condition != null && def.condition.check(state) ) {
                     flag = true;
                 }
+
+                state.flagstack.Add(flag);
+
                 if ( flag ) {
                     if ( def.true_behavior != null )
                         def.true_behavior.act(state);
@@ -61,20 +72,36 @@ namespace MyUnityChan {
                         def.false_behavior.act(state);
                 }
 
+                if ( def.break_condition != null && def.break_condition.check(state) ) {
+                    state.message.stop = true;
+                }
+
                 if ( state.message.stop ) {
                     // If message.stop in state was changed to true,
                     // stop thinking loop
                     break;
                 }
             }
+
+            if ( debug ) printFlagStack(state);
+        }
+
+        public void printFlagStack(State state) {
+            DebugManager.log("printFlagStack");
+            for ( int i = 0; i < state.flagstack.Count; i++ ) {
+                bool f = state.flagstack[i];
+                DebugManager.log("[AI<" + self.name + ">] name: '" + patterns[i].name + "', judge=" + f);
+            }
         }
 
         public class State {
             public Player player { get; set; }
             public Message message { get; set; }
+            public List<bool> flagstack { get; set; }
 
             public State() {
                 message = new Message();
+                flagstack = new List<bool>();
             }
         }
 
@@ -85,6 +112,7 @@ namespace MyUnityChan {
         public class Def {
             public string name { get; set; }
             public Condition condition { get; set; }
+            public Condition break_condition { get; set; }
             public Behavior true_behavior { get; set; }
             public Behavior false_behavior { get; set; }
 
@@ -126,6 +154,19 @@ namespace MyUnityChan {
             public Def StopIf(Func<State, bool> _cond) {
                 condition = new Condition(_cond);
                 true_behavior = new Behavior(s => s.message.stop = true);
+                return this;
+            }
+
+            public Def Break() {
+                if ( false_behavior != null ) {
+                    break_condition = new Condition(s => !s.flagstack[s.flagstack.Count - 1]);
+                    return this;
+                }
+                if ( true_behavior != null ) {
+                    break_condition = new Condition(s => s.flagstack[s.flagstack.Count - 1]);
+                    return this;
+                }
+                break_condition = new Condition(_ => true);
                 return this;
             }
 

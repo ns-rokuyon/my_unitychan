@@ -7,7 +7,7 @@ namespace MyUnityChan {
         public bool allow_attack;
         public float close_range;
 
-        public override AI build() {
+        public override AI define() {
             return AI.root(self, controller)
                 .def(AI.Def.Name("Input forward")
                      .Keep(s => inputForward(s.player)))
@@ -15,8 +15,7 @@ namespace MyUnityChan {
                      .StopIf(_ => !allow_attack))
                 .def(AI.Def.Name("Attack")
                      .If(s => Mathf.Abs(s.player.transform.position.x - self.transform.position.x) <= close_range)
-                     .Then(_ => controller.inputKey(Controller.InputCode.ATTACK)))
-                .build();
+                     .Then(_ => controller.inputKey(Controller.InputCode.ATTACK)));
         }
 
         private void inputForward(Player player) {
