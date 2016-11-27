@@ -39,10 +39,18 @@ namespace MyUnityChan {
             if ( Mathf.Abs(vx) > maxspeed ) {
                 enemy.GetComponent<Rigidbody>().velocity = new Vector3(Mathf.Sign(vx) * maxspeed, vy);
             }
+
+            if ( enemy is IEnemyWalk )
+                (enemy as IEnemyWalk).onForward();
+        }
+
+        public override void off_perform() {
+            if ( enemy is IEnemyWalk )
+                (enemy as IEnemyWalk).onStay();
         }
 
         public override bool condition() {
-            return !enemy.isStunned();
+            return !enemy.isStunned() && controller.keyHorizontal() != 0.0f;
         }
     }
 }

@@ -11,6 +11,11 @@ namespace MyUnityChan {
         void createDeadEffect();
     }
 
+    public interface IEnemyWalk {
+        void onForward();
+        void onStay();
+    }
+
     public interface IEnemyItemDrop {
         Const.ID.Item dropItem();
     }

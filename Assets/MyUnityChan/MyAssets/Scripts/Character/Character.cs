@@ -118,6 +118,14 @@ namespace MyUnityChan {
             }
         }
 
+        public float distanceXTo(Character to) {
+            return Mathf.Abs(to.transform.position.x - transform.position.x);
+        }
+
+        public float distanceYTo(Character to) {
+            return Mathf.Abs(to.transform.position.y - transform.position.y);
+        }
+
         public float getVx(bool abs=false) {
             Rigidbody rigidbody = GetComponent<Rigidbody>();
             if ( rigidbody ) {

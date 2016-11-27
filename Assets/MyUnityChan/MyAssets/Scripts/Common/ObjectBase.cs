@@ -38,10 +38,6 @@ namespace MyUnityChan {
             sound.play(sid, playOneShot, delay);
         }
 
-        public string prefabPath(Const.ID.AI name) {
-            return Const.Prefab.AI[name];
-        }
-
         public string prefabPath(Const.ID.Controller name) {
             return Const.Prefab.Controller[name];
         }

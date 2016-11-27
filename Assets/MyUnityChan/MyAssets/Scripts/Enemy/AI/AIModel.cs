@@ -2,7 +2,7 @@
 using System.Collections;
 
 namespace MyUnityChan {
-    public abstract class AIModel : ObjectBase {
+    public abstract partial class AIModel : ObjectBase {
         public bool debug;      // Debug mode
 
         public AIController controller { get; set; }
