@@ -8,6 +8,7 @@ namespace MyUnityChan {
         [SerializeField]
         public Const.Loglevel loglevel;
         public bool lock_logging;
+        public int print_freq = 1;
 
         // Use this for initialization
         void Start() {
@@ -22,6 +23,8 @@ namespace MyUnityChan {
         public static void log(object message, Const.Loglevel level = Const.Loglevel.INFO) {
             if ( Instance.lock_logging ) return;
             if ( Instance.loglevel > level ) return;
+            if ( Instance.print_freq <= 0 ) return;
+            if ( Time.frameCount % Instance.print_freq != 0 ) return;
 
             printLog(message, level);
         }

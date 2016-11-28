@@ -43,7 +43,7 @@ namespace MyUnityChan {
         }
 
         // Update is called once per frame
-        void Update() {
+        void LateUpdate() {
             player = player_manager.getNowPlayer();
             player_component = player.GetComponent<Player>();
 

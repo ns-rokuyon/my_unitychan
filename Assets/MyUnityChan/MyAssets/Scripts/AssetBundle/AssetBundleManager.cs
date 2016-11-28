@@ -17,7 +17,13 @@ namespace MyUnityChan {
         public static Object get(Const.ID.AssetBundle id, string key) {
             if ( self().now_loading )
                 return null;
-            return self().assets[id][key];
+            try {
+                return self().assets[id][key];
+            }
+            catch ( KeyNotFoundException e ) {
+                DebugManager.warn("AssetBundleManager returns null for id=" + id + ", key=" + key);
+                return null;
+            }
         }
 
         protected IEnumerator loadAll() {
