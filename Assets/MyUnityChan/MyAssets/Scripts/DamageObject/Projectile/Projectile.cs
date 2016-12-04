@@ -11,15 +11,12 @@ namespace MyUnityChan {
 
         [SerializeField] public ProjectileSpec spec;
         public bool penetration;
-        public float speed;         // If 'use_physics' flag is true, 'speed' is not used
+        public float speed;             // If 'use_physics' flag is true, 'speed' is not used
+        public float acceleration;      // If 'use_physics' flag is true, 'acceleration' is not used
+        public float terminal_velocity; // If acceleration > 0.0f, stop accelerating when speed reaches terminal velocity
         public float max_range;
         public Vector3 start_position_offset = new Vector3(0.4f, 1.2f, 0.0f);
 
-        public Vector3 target_dir {
-            get {
-                return gameObject.transform.forward;
-            }
-        }
         protected Vector3 start_position;
         protected float distance_moved;
         protected string area;
@@ -36,9 +33,12 @@ namespace MyUnityChan {
         public float waiting_time_for_destroying = 0.0f;
         public string resource_name;
 
+        public Vector3 target_dir { get; set; }
+        public float velocity { get; set; }         // Velocity > 0
+
         public virtual void setDir(Vector3 dir) {
-            transform.rotation = Quaternion.LookRotation(dir);
-            //target_dir = dir;
+            //transform.rotation = Quaternion.LookRotation(dir);
+            target_dir = dir;
         }
 
         public bool isPenetration() {
@@ -47,6 +47,7 @@ namespace MyUnityChan {
 
         protected void projectileCommonSetStartPosition() {
             hit_num = 0;
+            velocity = speed;       // Initial velocity
             area_name = AreaManager.Instance.getAreaNameFromObject(this.gameObject);
             waiting_for_destroying = false;
 
@@ -73,16 +74,27 @@ namespace MyUnityChan {
 
             if ( waiting_for_destroying ) return;
 
-            if ( !use_physics ) transform.Translate(target_dir * speed, Space.World);
+            if ( !use_physics ) {
+                if ( acceleration > 0.0f ) {
+                    velocity = velocity + acceleration * Time.deltaTime;
+                    if ( terminal_velocity > 0.0f ) {
+                        velocity = terminal_velocity;
+                    }
+                }
+                transform.Translate(target_dir * velocity, Space.World);
+            }
 
             distance_moved = Mathf.Abs(transform.position.x - start_position.x);
             if ( distance_moved > max_range ) {
+                DebugManager.log("maxrange!");
                 StartCoroutine("destroy", resource_path);
             }
             else if ( area_name == null || !AreaManager.Instance.isInArea(this.gameObject, area_name) ) {
+                DebugManager.log("out of area!");
                 StartCoroutine("destroy", resource_path);
             }
             else if ( !penetration && hit_num > 0 ) {
+                DebugManager.log("hit!");
                 StartCoroutine("destroy", resource_path);
             }
         }

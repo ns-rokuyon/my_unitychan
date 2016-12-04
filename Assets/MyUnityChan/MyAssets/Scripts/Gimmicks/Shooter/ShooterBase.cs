@@ -1,30 +1,35 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UniRx;
+using UniRx.Triggers;
 
 namespace MyUnityChan {
     public abstract class ShooterBase : ObjectBase {
         public bool auto = false;           // Auto trigger in each shooting frame
+
         private bool triggered = false;     // Flag for specifying shooting frame manually
-
-        protected int start_frame;
-        protected int frame_count;
-        protected bool sleep;
-        protected int sleep_start_frame;
-
+        protected bool shooting;
         protected SoundPlayer sound_player;
         protected Character owner;
 
-        protected int shooting_frame;
+        /*
+           [ round=1 ]
+            |-----interval_frame-----|-------------- -- -
+          shoot                    shoot
+
+           [ round=3 ]
+            |--burst_delta--|--burst_delta--|-----interval_frame-----|--burst_delta--|-- -
+          shoot           shoot           shoot                    shoot           shoot
+        */
+        protected int n_round_burst;
+        protected int burst_delta_frame;
         protected int interval_frame;
         protected string hitbox_name;
         protected Const.ID.SE se_name;
 
         protected string projectile_name;
 
-        public Const.ID.TARGETING_MODE targeting_mode { get; set; }
-
         void Start() {
-            targeting_mode = Const.ID.TARGETING_MODE._NO_TARGETING;
             baseStart();
         }
 
@@ -57,8 +62,7 @@ namespace MyUnityChan {
         }
 
         public void baseStart() {
-            sleep = false;
-            frame_count = 0;
+            shooting = false;
             owner = GetComponent<Character>();
         }
 
@@ -67,59 +71,49 @@ namespace MyUnityChan {
             Projectile proj = (Resources.Load(Const.Prefab.Projectile[projectile_name]) as GameObject).GetComponent<Projectile>();
             ProjectileSpec spec = proj.spec;
 
-            Homing homing = proj.GetComponent<Homing>();
-            if ( homing ) {
-                targeting_mode = homing.mode;
-            }
-            else {
-                targeting_mode = Const.ID.TARGETING_MODE._NO_TARGETING;
-            }
-
-            shooting_frame = spec.shooting_frame;
+            n_round_burst = spec.n_round_burst;
+            burst_delta_frame = spec.burst_delta_frame;
             interval_frame = spec.interval_frame;
             se_name = spec.se_name;
             hitbox_name = spec.hitbox_name;
         }
 
         public void baseUpdate() {
-            //if ( !auto ) return;
             if ( PauseManager.isPausing() ) return;
 
-            if ( sleep ) {
-                if ( Time.frameCount - sleep_start_frame >= interval_frame ) {
-                    sleep = false;
-                }
+            if ( owner != null && (owner.isFrozen() || owner.isStunned()) ) 
                 return;
-            }
-
-            if ( owner != null && (owner.isFrozen() || owner.isStunned()) ) {
-                wait();
-                return;
-            }
             
-
-            if ( !auto && !triggered ) {
+            if ( !auto && !triggered )
                 return;
-            }
 
-            if ( frame_count > 0 ) {
-                if ( shooting_frame <= frame_count ) {
-                    wait();
-                    return;
-                }
-                shoot();
-                frame_count++;
-            }
-            else {
-                shoot();
-                frame_count = 1;
-            }
+            if ( shooting )
+                return;
+
+            StartCoroutine(shootByTrigger());
         }
 
-        public void wait() {
-            frame_count = 0;
-            sleep = true;
-            sleep_start_frame = Time.frameCount;
+        public IEnumerator shootByTrigger() {
+            shooting = true;
+            if ( n_round_burst == 1 ) {
+                shoot();
+            }
+            else {
+                for ( int i = 0; i < n_round_burst; i++ ) {
+                    shoot();
+                    int delta = burst_delta_frame;
+                    while ( delta > 0 ) {
+                        delta--;
+                        yield return null;
+                    }
+                }
+            }
+            int interval = interval_frame;
+            while ( interval > 0 ) {
+                interval--;
+                yield return null;
+            }
+            shooting = false;
         }
     }
 }

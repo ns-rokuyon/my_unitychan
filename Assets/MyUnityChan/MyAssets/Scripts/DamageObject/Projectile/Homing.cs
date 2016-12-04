@@ -1,48 +1,46 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UniRx;
+using UniRx.Triggers;
 using System;
 
 namespace MyUnityChan {
     public class Homing : Projectile.Custom {
-        public float angle_per_sec;     // Rotation speed
+        public float lerp_t;                // 0.0 - 1.0
         public int lockon_frame_delay;
-        [SerializeField]
-        public Const.ID.TARGETING_MODE mode;
+        public bool lockon_once;            // If false, enable to update target position
+        [SerializeField] public Const.ID.TARGETING_MODE mode;
 
         public GameObject target { get; protected set; }
+        public Projectile projectile { get; set; }
         public Vector3 destination { get; protected set; }
         public bool locked { get; protected set; }
         public bool end_homing { get; set; }
+
+        protected IDisposable targetter;
+        protected IDisposable aimer;
+        protected IDisposable rudder;
 
         void Awake() {
             initialize();
         }
 
-        // Update is called once per frame
-        void Update() {
-            if ( !target ) {
-                if ( searchTarget() ) {
-                    Observable.TimerFrame(lockon_frame_delay)
-                        .Subscribe(_ => lockon());
-                }
-            }
-
-            if ( !locked ) return;
-            if ( end_homing ) return;
-
-            Quaternion from = transform.rotation;
-            Quaternion to = Quaternion.LookRotation(destination.changeZ(transform.position.z) - transform.position);
-            if ( Quaternion.Angle(from, to) < 5.0f ) {
-                transform.rotation = to;
+        protected void homing() {
+            Vector3 diff = destination - transform.position;
+            float target_angle = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+            float now_angle = Mathf.Atan2(projectile.target_dir.y, projectile.target_dir.x) * Mathf.Rad2Deg;
+            if ( Mathf.Abs(Mathf.DeltaAngle(now_angle, target_angle)) < 4.0f ) {
                 end_homing = true;
             }
-            else {
-                transform.rotation = Quaternion.Lerp(from, to, Time.deltaTime * angle_per_sec);
-            }
+            float interpolation_angle = Mathf.LerpAngle(now_angle, target_angle, lerp_t) * Mathf.Deg2Rad;
+
+            projectile.target_dir = new Vector3(
+                Mathf.Cos(interpolation_angle),
+                Mathf.Sin(interpolation_angle),
+                0.0f);
         }
 
-        public bool searchTarget() {
+        public void searchTarget() {
             switch ( mode ) {
                 case Const.ID.TARGETING_MODE.TO_PLAYER:
                     target = GameStateManager.getPlayerObject();
@@ -51,9 +49,6 @@ namespace MyUnityChan {
                 default:
                     break;
             }
-            if ( !target )
-                return false;
-            return true;
         }
 
         public void setTarget(GameObject obj) {
@@ -69,9 +64,28 @@ namespace MyUnityChan {
             locked = false;
             target = null;
             end_homing = false;
+            projectile = GetComponent<Projectile>();
+
+            targetter = this.UpdateAsObservable()
+                .Subscribe(_ => searchTarget());
+
+            aimer = this.UpdateAsObservable()
+                .Where(_ => target != null)
+                .DelayFrame(lockon_frame_delay)
+                .First()
+                .Subscribe(_ => {
+                    lockon();
+                });
+
+            rudder = this.UpdateAsObservable()
+                .Where(_ => locked)
+                .Where(_ => !end_homing)
+                .Subscribe(_ => homing());
         }
 
         public override void finalize() {
+            targetter.Dispose();
+            aimer.Dispose();
         }
     }
 }
