@@ -1,27 +1,52 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using System;
 
 namespace MyUnityChan {
     public partial class AI {
         public partial class Def {
             public string name { get; set; }
-            public Condition condition { get; set; }
+            public List<Condition> conditions { get; set; }
             public Condition break_condition { get; set; }
             public Behavior true_behavior { get; set; }
             public Behavior false_behavior { get; set; }
 
             private Def() {
+                conditions = new List<Condition>();
             }
 
             public class Condition {
-                private Func<State, bool> cond;
+                public Func<State, bool> cond { get; set; }
+                public Condition() { }
                 public Condition(Func<State, bool> _cond) {
                     cond = _cond;
                 }
 
-                public bool check(State state) {
+                public virtual bool check(State state) {
                     return cond(state);
+                }
+            }
+
+            public class FrameCondition : Condition {
+                public Func<State, FrameCondition, bool> framecond { get; set; }
+                public int last_checked { get; set; }
+                public int last_true { get; set; }
+                public int last_false { get; set; }
+                public int now { get { return Time.frameCount; } }
+
+                public FrameCondition(Func<State, FrameCondition, bool> _cond) {
+                    framecond = _cond;
+                    last_checked = last_false = last_true = 0;
+                }
+
+                public override bool check(State state) {
+                    bool flag = framecond(state, this);
+                    last_checked = Time.frameCount;
+                    if ( flag )
+                        last_true = Time.frameCount;
+                    else
+                        last_false = Time.frameCount;
+                    return flag;
                 }
             }
 
@@ -55,18 +80,27 @@ namespace MyUnityChan {
             }
 
             public Def If(Func<State, bool> _cond) {
-                condition = new Condition(_cond);
+                conditions.Add(new Condition(_cond));
                 return this;
             }
 
+            public Def And(Func<State, bool> _cond) {
+                return If(_cond);
+            }
+
             public Def Random(float p) {
-                condition = new Condition(_ => UnityEngine.Random.value <= p);
+                conditions.Add(new Condition(_ => UnityEngine.Random.value <= p));
                 return this;
             }
 
             public Def StopIf(Func<State, bool> _cond) {
-                condition = new Condition(_cond);
+                conditions.Add(new Condition(_cond));
                 true_behavior = new Behavior(s => s.message.stop = true);
+                return this;
+            }
+
+            public Def Interval(int frame) {
+                conditions.Add(new FrameCondition((s, f) => f.now - f.last_true >= frame));
                 return this;
             }
 
@@ -88,22 +122,23 @@ namespace MyUnityChan {
                 return this;
             }
 
-            public Def RandomThen(Action<State> _behavior, float probability) {
-                true_behavior = new ProbBehavior(_behavior, probability);
-                return this;
-            }
-            
             public Def Else(Action<State> _behavior) {
                 false_behavior = new Behavior(_behavior);
                 return this;
             }
 
             public Def Keep(Action<State> _behavior) {
-                condition = new Condition(s => true);
+                conditions.Add(new Condition(s => true));
                 true_behavior = new Behavior(_behavior);
                 return this;
             }
 
+            // Deprecated
+            public Def RandomThen(Action<State> _behavior, float probability) {
+                true_behavior = new ProbBehavior(_behavior, probability);
+                return this;
+            }
+            
         }
     }
 }

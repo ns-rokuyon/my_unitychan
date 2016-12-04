@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UniRx;
 
 namespace MyUnityChan {
     public class Character : ObjectBase {
@@ -15,6 +16,9 @@ namespace MyUnityChan {
         public GroundChecker ground_checker { get; protected set; }
         public float height { get; protected set; }
         public float width { get; protected set; }
+
+        public int hitstop_counts { get; protected set; }
+        public Vector3 hitstop_stock_velocity { get; protected set; }
 
         protected string area_name;
         protected int stunned = 0;
@@ -38,6 +42,10 @@ namespace MyUnityChan {
         }
 
         void Start() {
+            Observable.EveryUpdate()
+                .Where(_ => hitstop_counts > 0)
+                .Subscribe(_ => hitstop_counts--);
+
             start();
         }
 
@@ -93,6 +101,41 @@ namespace MyUnityChan {
             }
         }
 
+        public void hitstop(int frame) {
+            if ( frame <= 0 )
+                return;
+            if ( !isHitstopping() ) {
+                StartCoroutine(hitstopping(frame));
+            }
+            else {
+                hitstop_counts = frame;
+            }
+        }
+
+        protected IEnumerator hitstopping(int frame) {
+            hitstop_counts = frame;
+            var rigidbody = GetComponent<Rigidbody>();
+            var animator = GetComponent<Animator>();
+            Vector3 v = rigidbody.velocity;
+            DebugManager.log("keep=" + rigidbody.velocity);
+            while ( isHitstopping() ) {
+                if ( rigidbody )
+                    rigidbody.velocity = Vector3.zero;
+                if ( animator )
+                    animator.speed = 0.1f;
+                yield return null;
+            }
+            if ( rigidbody )
+                rigidbody.velocity = v;
+            if ( animator )
+                animator.speed = 1.0f;
+            DebugManager.log(rigidbody.velocity);
+        }
+
+        public bool isHitstopping() {
+            return hitstop_counts > 0;
+        }
+
         public virtual int getReservedHP() {
             return 0;
         }
@@ -103,12 +146,15 @@ namespace MyUnityChan {
 
         public virtual void damage(int dam) {
             if ( !status.invincible.now() ) {
-                status.invincible.enable(30);
+                status.invincible.enable(10);
                 status.hp -= dam;
             }
         }
 
         public virtual void launch(float power_y) {
+            if ( power_y == 0.0f ) {
+                return;
+            }
             Rigidbody rigidbody = GetComponent<Rigidbody>();
             if ( rigidbody ) {
                 if ( isGrounded() )

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 using UniRx;
 using UniRx.Triggers;
 
@@ -57,9 +58,9 @@ namespace MyUnityChan {
 
             foreach ( var def in patterns ) {
                 bool flag = false;
-                if ( def.condition != null && def.condition.check(state) ) {
+                var checks = def.conditions.Select(cond => cond.check(state));
+                if ( !checks.Contains(false) )
                     flag = true;
-                }
 
                 state.flagstack.Add(flag);
 
