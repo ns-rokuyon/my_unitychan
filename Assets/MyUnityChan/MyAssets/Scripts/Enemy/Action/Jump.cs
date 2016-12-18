@@ -23,7 +23,7 @@ namespace MyUnityChan {
         }
 
         public override bool condition() {
-            return controller.keyJump() && enemy.isGrounded();
+            return controller.keyJump() && enemy.isGrounded() && !enemy.isHitstopping() && !enemy.isStunned();
         }
 
         public override void effect() {

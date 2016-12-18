@@ -13,7 +13,7 @@ namespace MyUnityChan {
         }
 
         public override bool condition() {
-            return controller.keyAttack() && !enemy.isStunned() && !enemy.isFrozen();
+            return controller.keyAttack() && !enemy.isStunned() && !enemy.isHitstopping() && !enemy.isFrozen();
         }
 
         public override string name() {

@@ -5,9 +5,9 @@ namespace MyUnityChan {
     public class Hitbox : PoolObjectBase {
         public static bool RENDER_HITBOX = true;
 
+        public GameObject owner = null;
         public bool persistent;
 
-        protected GameObject owner = null;
         protected bool use_objectpool = false;
         protected string resource_path = null;
         protected int time = 0;                         // active time
@@ -63,6 +63,12 @@ namespace MyUnityChan {
 
         public GameObject getOwner() {
             return owner;
+        }
+
+        public T getOwner<T>() {
+            if ( !owner )
+                return default(T);
+            return owner.GetComponent<T>();
         }
 
         public bool isOwner(Character character) {

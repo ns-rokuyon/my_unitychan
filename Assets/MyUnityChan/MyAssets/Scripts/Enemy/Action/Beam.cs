@@ -11,7 +11,7 @@ namespace MyUnityChan {
         }
 
         public override bool condition() {
-            return controller.keyProjectile();
+            return controller.keyProjectile() && !enemy.isStunned() && !enemy.isHitstopping();
         }
 
         public override string name() {

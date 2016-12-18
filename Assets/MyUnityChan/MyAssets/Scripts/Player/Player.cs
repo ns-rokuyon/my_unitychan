@@ -170,7 +170,8 @@ namespace MyUnityChan {
                 return;
             }
             animator.SetTrigger("Damaged");
-            status.invincible.enable(60);
+            //lockInput(50);
+            status.invincible.enable(10);
             status.hp -= dam;
             voice(Const.ID.PlayerVoice.DAMAGED);
         }

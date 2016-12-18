@@ -3,7 +3,8 @@ using System.Collections;
 
 namespace MyUnityChan {
     public class AttackHitbox : Hitbox {
-        protected AttackSpec spec = null;
+        [SerializeField]
+        public AttackSpec spec;
 
         protected void initPosition(AttackSpec atkspec) {
             // attack parameter

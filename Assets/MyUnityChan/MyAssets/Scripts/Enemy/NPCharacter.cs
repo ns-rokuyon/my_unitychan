@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,9 +7,9 @@ using System.Linq;
 namespace MyUnityChan {
     public class NPCharacter : Character {
         static protected List<GameObject> players = new List<GameObject>();
-        const int PLAYER_TOUCHING_FRAME_OFFSET = 10;
+        const int PLAYER_TOUCHING_FRAME_OFFSET = 40;
 
-        protected int player_hit_damage = 10;
+        protected int player_hit_damage = 3;
 
         static public void setPlayers() {
             removeNullPlayers();
@@ -46,16 +47,22 @@ namespace MyUnityChan {
         protected virtual void die() { }
 
         protected void checkPlayerTouched() {
-            if ( isFrozen() || isStunned() ) return;
+            if ( isFrozen() || isStunned() || isHitstopping() || isInputLocked() ) return;
 
             foreach ( KeyValuePair<string, int> pair in touching_players ) {
                 if ( pair.Value > PLAYER_TOUCHING_FRAME_OFFSET ) {
                     GameObject player = findPlayerByName(pair.Key);
                     Player script = player.GetComponent<Player>();
 
-                    script.damage(player_hit_damage);
+                    StartCoroutine(touchPlayer(script));
                 }
             }
+        }
+
+        protected IEnumerator touchPlayer(Player player) {
+            player.damage(player_hit_damage);
+            yield return null;
+            clearTouchingCount(player);
         }
 
         protected void faceForward() {
@@ -72,6 +79,15 @@ namespace MyUnityChan {
             if ( !ground_checker )
                 return false;
             return ground_checker.isGrounded();
+        }
+
+        public float getDistanceXToPlayer() {
+            return 0.0f;        // TODO
+        }
+
+        public void clearTouchingCount(Player player) {
+            if ( touching_players.ContainsKey(player.player_name) )
+                touching_players[player.player_name] = 0;
         }
 
         public void OnCollisionStay(Collision collisionInfo) {
@@ -91,7 +107,7 @@ namespace MyUnityChan {
         public void OnCollisionExit(Collision collisionInfo) {
             if ( collisionInfo.gameObject.tag == "Player" ) {
                 Player player_script = collisionInfo.gameObject.GetComponent<Player>();
-                touching_players[player_script.player_name] = 0;
+                clearTouchingCount(player_script);
             }
         }
     }

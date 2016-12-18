@@ -52,7 +52,7 @@ namespace MyUnityChan {
         }
 
         public override bool condition() {
-            return !enemy.isStunned();
+            return !enemy.isStunned() && !enemy.isHitstopping();
         }
     }
 }

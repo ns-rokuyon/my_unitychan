@@ -71,7 +71,8 @@ namespace MyUnityChan {
         public class Spec : AttackSpec {
             public Spec() {
                 damage = 10;
-                stun = 60;
+                stun = 0;
+                hitstop = 5;
                 frame = 5;
                 launch_fy = 5.0f;
                 hit_se = Const.ID.SE.HIT_1;
@@ -121,7 +122,8 @@ namespace MyUnityChan {
         public class Spec : AttackSpec {
             public Spec() {
                 damage = 30;
-                stun = 120;
+                stun = 0;
+                hitstop = 8;
                 frame = 5;
                 launch_fy = 7.0f;
                 hit_se = Const.ID.SE.HIT_2;
@@ -171,8 +173,9 @@ namespace MyUnityChan {
         public class Spec : AttackSpec {
             public Spec() {
                 damage = 70;
-                stun = 120;
+                stun = 0;
                 frame = 12;
+                hitstop = 20;
                 launch_fy = 7.0f;
                 hit_se = Const.ID.SE.HIT_3;
                 effect_name = Const.ID.Effect.IMPACT_01;
