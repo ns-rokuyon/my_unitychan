@@ -8,11 +8,14 @@ namespace MyUnityChan {
 
         void Awake() {
             setupSoundPlayer();
+            awake();
         }
 
         public abstract void perform(Player player);
 
         public abstract void destroy(Player player);
+
+        public virtual void awake() { }
 
         public void setPosition(Vector3 pos) {
             gameObject.transform.position = pos;

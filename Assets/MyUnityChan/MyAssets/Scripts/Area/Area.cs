@@ -35,7 +35,7 @@ namespace MyUnityChan {
         [SerializeField] public PlayerCameraPosition camera_position;
 
         // Area Status
-        public bool passed;
+        public bool passed { get; set; }
 
 
         void Awake() {

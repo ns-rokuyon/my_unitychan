@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MyUnityChan {
     public class AreaManager : SingletonObjectBase<AreaManager> {
@@ -19,13 +20,12 @@ namespace MyUnityChan {
             }
         }
 
-        // Use this for initialization
-        void Start() {
+        public static int getAreaNum() {
+            return self().areas.Count;
         }
 
-        // Update is called once per frame
-        void Update() {
-            
+        public static int getPassedAreaNum() {
+            return self().areas.Count(kv => kv.Value.passed);
         }
 
         public Area getArea(string name) {

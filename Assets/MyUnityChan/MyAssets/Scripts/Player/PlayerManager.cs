@@ -44,7 +44,7 @@ namespace MyUnityChan {
 
             // player status setup
             status = GetComponent<PlayerStatus>();
-            status.addEnergyTank();
+            //status.addEnergyTank();
 
             // controller setup
             controller = PrefabInstantiater.create(prefabPath(controller_name), this.gameObject).GetComponent<Controller>();
