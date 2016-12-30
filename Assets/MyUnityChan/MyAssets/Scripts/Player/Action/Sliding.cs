@@ -20,7 +20,6 @@ namespace MyUnityChan {
 
         private AttackSpec spec = null;
         private string hitbox_resource_path;
-        private WaitForSeconds wait_hitbox;
 
         public PlayerSliding(Character character)
             : base(character) {
@@ -28,7 +27,6 @@ namespace MyUnityChan {
             skip_lower_priority = true;
             hitbox_resource_path = Const.Prefab.Hitbox["KICK"];
             spec = new Spec();
-            wait_hitbox = new WaitForSeconds(0.1f);
         }
 
         public override string name() {
@@ -44,14 +42,14 @@ namespace MyUnityChan {
         }
 
         public override void perform() {
-            InvokerManager.createCoroutine(createHitbox());
             player.voice(Const.ID.PlayerVoice.ATTACK3);
             player.getAnimator().CrossFade("Sliding", 0.001f);
             player.lockInput(40);
+            Observable.TimerFrame(6)
+                .Subscribe(_ => createHitbox());
         }
 
-        public IEnumerator createHitbox() {
-            yield return wait_hitbox;
+        public void createHitbox() {
             Vector3 fw = player.transform.forward;
             MeleeAttackHitbox hitbox = HitboxManager.self().create<MeleeAttackHitbox>(hitbox_resource_path);
             hitbox.ready(player.transform.position, fw, new Vector3(0.7f * fw.x, 0.0f, 0.0f), spec);

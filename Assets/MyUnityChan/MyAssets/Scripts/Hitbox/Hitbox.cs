@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UniRx;
 
 namespace MyUnityChan {
     public class Hitbox : PoolObjectBase {
@@ -11,33 +12,29 @@ namespace MyUnityChan {
         protected bool use_objectpool = false;
         protected string resource_path = null;
         protected int time = 0;                         // active time
-        protected TimerState end_timer = null;
         public Vector3 forward { get; set; }
 
         void Awake() {
-            end_timer = new FrameTimerState();
             if ( !RENDER_HITBOX ) {
                 gameObject.GetComponent<MeshRenderer>().enabled = false;
             }
-        }
-
-        // Use this for initialization
-        void Start() {
-        }
-
-        // Update is called once per frame
-        void Update() {
-            CommonUpdate();
-            UniqueUpdate();
         }
 
         protected virtual void UniqueUpdate() {
         }
 
         private void CommonUpdate() {
-            if ( end_timer != null && end_timer.isFinished() ) {
-                destroy();
-            }
+        }
+
+        public void startCountdown(int frame) {
+            Observable.EveryUpdate()
+                .Subscribe(_ => {
+                    CommonUpdate();
+                    UniqueUpdate();
+                });
+
+            Observable.TimerFrame(frame)
+                .Subscribe(_ => destroy());
         }
 
         public void OnTriggerEnter(Collider other) {
@@ -86,14 +83,14 @@ namespace MyUnityChan {
         }
 
         protected void destroy() {
-            end_timer.destroy();
+            //end_timer.destroy();
 
             if ( persistent ) {
                 setEnabledCollider(false);
                 return;
             }
 
-            end_timer = null;
+            //end_timer = null;
             if ( use_objectpool ) {
                 ObjectPoolManager.releaseGameObject(this.gameObject, resource_path);
             }
@@ -105,12 +102,9 @@ namespace MyUnityChan {
 
         // PoolObject callbacks
         public override void initialize() {
-            end_timer = new FrameTimerState();
         }
 
         public override void finalize() {
-            end_timer = null;            
         }
-
     }
 }

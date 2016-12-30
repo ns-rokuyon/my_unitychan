@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using UniRx;
 
 namespace MyUnityChan {
     public class PlayerDown : PlayerAction {
@@ -21,7 +22,8 @@ namespace MyUnityChan {
             player.getAnimator().CrossFade("Down", 0.001f);
             player.lockInput(150);
             if ( !player.isFrozen() ) {
-                InvokerManager.createFrameDelayInvoker(64, player.respawn);
+                Observable.TimerFrame(64)
+                    .Subscribe(_ => player.respawn());
             }
             player.freeze();
         }

@@ -11,8 +11,7 @@ namespace MyUnityChan {
             spec = atkspec;
 
             // timer
-            time = spec.frame;
-            end_timer.createTimer(time);
+            startCountdown(spec.frame);
         }
 
         protected void initPosition(Vector3 pos, Vector3 fw, AttackSpec atkspec) {
@@ -24,8 +23,7 @@ namespace MyUnityChan {
             spec = atkspec;
 
             // timer
-            time = spec.frame;
-            end_timer.createTimer(time);
+            startCountdown(spec.frame);
         }
 
         public void OnTriggerEnter(Collider other) {

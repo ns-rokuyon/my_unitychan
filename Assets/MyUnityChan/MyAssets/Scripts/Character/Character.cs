@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UniRx;
+using System;
 
 namespace MyUnityChan {
     public class Character : ObjectBase {
@@ -8,7 +9,7 @@ namespace MyUnityChan {
         protected Controller controller;
 
         // vars
-        protected FrameTimerState inputlock_timer;
+        protected IDisposable locker;
         protected RingBuffer<Vector3> position_history;
 
         public Const.CharacterName character_name { get; set; }
@@ -37,6 +38,7 @@ namespace MyUnityChan {
             }
 
             ground_checker = GetComponent<GroundChecker>();
+            locker = null;
 
             awake();
         }
@@ -281,23 +283,31 @@ namespace MyUnityChan {
         }
 
         public void unlockInput() {
-            if ( isInputLocked() ) inputlock_timer.destroy();
+            if ( isInputLocked() ) {
+                locker.Dispose();
+                locker = null;
+            }
         }
 
         public void lockInput(int frame) {
             // disable movement by inputs for N frames specified
             // If frame is 0, endless dummy timer is created
-            inputlock_timer.destroy();
-            inputlock_timer.createTimer(frame);
+            if ( locker != null )
+                unlockInput();
+
+            if ( frame > 0 )
+                locker = Observable.TimerFrame(frame)
+                    .Subscribe(_ => unlockInput());
+            else
+                locker = Observable.EveryUpdate()
+                    .Subscribe(_ => { });
         }
 
         public bool isInputLocked() {
             // return true when inputs are locked
-            if ( inputlock_timer == null ) {
-                Debug.LogWarning("inputlock_timer is not initialized");
+            if ( locker == null )
                 return false;
-            }
-            return inputlock_timer.isRunning();
+            return true;
         }
 
 

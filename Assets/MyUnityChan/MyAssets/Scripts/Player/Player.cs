@@ -68,9 +68,6 @@ namespace MyUnityChan {
             // init sound player
             setupSoundPlayer();
 
-            // init timer
-            inputlock_timer = new FrameTimerState();
-
             //player = gameObject;
             position_history = new RingBuffer<Vector3>(10);
         }
@@ -173,6 +170,7 @@ namespace MyUnityChan {
             //lockInput(50);
             status.invincible.enable(10);
             status.hp -= dam;
+            manager.camera.shake();
             voice(Const.ID.PlayerVoice.DAMAGED);
         }
 
@@ -180,8 +178,14 @@ namespace MyUnityChan {
             return wall_checker.isTouchedWall();
         }
 
-        public void freeze(bool flag = true) {
-            status.freeze = flag;
+        public void freeze(bool flag = true, int frame = 0) {
+            if ( frame > 0 ) {
+                Observable.TimerFrame(frame)
+                    .Subscribe(_ => status.freeze = flag);
+            }
+            else {
+                status.freeze = flag;
+            }
         }
 
         public void respawn() {
@@ -360,7 +364,7 @@ namespace MyUnityChan {
             float vx = GetComponent<Rigidbody>().velocity.x;
             float vy = GetComponent<Rigidbody>().velocity.y;
             CapsuleCollider cc = GetComponent<CapsuleCollider>();
-            GUI.Box(new Rect(Screen.width - 260, 10, 250, 250), "Interaction");
+            GUI.Box(new Rect(Screen.width - 260, 10, 250, 300), "Interaction");
             GUI.Label(new Rect(Screen.width - 245, 30, 250, 30), "forward: " + fw);
             GUI.Label(new Rect(Screen.width - 245, 50, 250, 30), "vx: " + vx);
             GUI.Label(new Rect(Screen.width - 245, 70, 250, 30), "vy: " + vy);
@@ -372,6 +376,7 @@ namespace MyUnityChan {
             GUI.Label(new Rect(Screen.width - 245, 190, 250, 30), "capsule_height: " + cc.height);
             GUI.Label(new Rect(Screen.width - 245, 210, 250, 30), "areaname: " + area_name);
             GUI.Label(new Rect(Screen.width - 245, 230, 250, 30), "animspeed: " + animator.speed);
+            GUI.Label(new Rect(Screen.width - 245, 250, 250, 30), "focus ui: " + MenuManager.getCurrentSelectedName());
         }
     }
 }

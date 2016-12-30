@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UniRx;
+using UniRx.Triggers;
 
 namespace MyUnityChan {
     public class Flame : Projectile {
-        private TimerState lifetime = null;
+        public bool fading_out { get; set; }
         private int lifetime_frame = 180;
         private DamageObjectHitbox hitbox = null;
 
@@ -15,17 +17,8 @@ namespace MyUnityChan {
             initialize();
         }
 
-        // Update is called once per frame
-        void Update() {
-            if ( lifetime != null ) {
-                if ( lifetime.isFinished() ) {
-                    ObjectPoolManager.releaseGameObject(this.gameObject, Const.Prefab.Projectile["FLAME"]);
-                }
-
-                if ( lifetime.getTimer() != null && ((FrameTimer)lifetime.getTimer()).now() > 120 ) {
-                    fadeOut();
-                }
-            }
+        private void destroy() {
+            ObjectPoolManager.releaseGameObject(this.gameObject, Const.Prefab.Projectile["FLAME"]);
         }
 
         private void fadeOut() {
@@ -39,7 +32,7 @@ namespace MyUnityChan {
         }
 
         public override void initialize() {
-            //createHitbox();
+            fading_out = false;
 
             particle_system = this.gameObject.GetComponent<ParticleSystem>();
             Color color = particle_system.startColor;
@@ -48,8 +41,14 @@ namespace MyUnityChan {
             light = this.gameObject.GetComponentsInChildren<Light>(true)[0];
             light.intensity = 1.5f;
 
-            lifetime = new FrameTimerState();
-            lifetime.createTimer(lifetime_frame);
+            Observable.EveryUpdate()
+                .Where(_ => fading_out)
+                .Subscribe(_ => fadeOut());
+
+            this.ObserveEveryValueChanged(_ => light.intensity)
+                .Where(v => v <= 0.0)
+                .Single()
+                .Subscribe(_ => destroy());
         }
 
         public override void finalize() {

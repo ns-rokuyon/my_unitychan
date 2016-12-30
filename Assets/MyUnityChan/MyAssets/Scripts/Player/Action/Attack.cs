@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using UniRx;
 
 namespace MyUnityChan {
     public class PlayerAttack : PlayerAction {
@@ -100,7 +101,8 @@ namespace MyUnityChan {
             player.getAnimator().Play("PunchL");
             player.voice(Const.ID.PlayerVoice.ATTACK, true, 3);
             player.lockInput(6);
-            InvokerManager.createFrameDelayInvoker(3, createHitbox);
+            Observable.TimerFrame(3)
+                .Subscribe(_ => createHitbox());
         }
 
         public override bool condition() {
@@ -151,7 +153,8 @@ namespace MyUnityChan {
             player.getAnimator().Play("PunchR");
             player.voice(Const.ID.PlayerVoice.ATTACK6, true, 6);
             player.lockInput(10);
-            InvokerManager.createFrameDelayInvoker(6, createHitbox);
+            Observable.TimerFrame(6)
+                .Subscribe(_ => createHitbox());
         }
 
         public override bool condition() {
@@ -202,7 +205,8 @@ namespace MyUnityChan {
             player.getAnimator().Play("SpinKick");
             player.voice(Const.ID.PlayerVoice.ATTACK4, true, 20);
             player.lockInput(45);
-            InvokerManager.createFrameDelayInvoker(22, createHitbox);
+            Observable.TimerFrame(22)
+                .Subscribe(_ => createHitbox());
         }
 
         public override bool condition() {

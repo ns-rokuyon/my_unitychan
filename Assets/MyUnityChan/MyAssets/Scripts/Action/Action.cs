@@ -2,7 +2,7 @@
 using System.Collections;
 
 namespace MyUnityChan {
-    public abstract class Action {
+    public abstract class Action : StructBase {
         // manage consistency of Update(), FixedUpdate(), and user inputs.
         // if flag is null, action is run by checking condition() only.
         public ActionFlag flag = new ActionFlag();

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using UniRx;
 
 namespace MyUnityChan {
     public class PlayerHadouken : PlayerAction {
@@ -57,7 +58,8 @@ namespace MyUnityChan {
             Vector3 fw = player.transform.forward;
             player.getAnimator().Play("Hadouken");
             player.lockInput(30);
-            InvokerManager.createFrameDelayVector3Invoker(15, fw, shootProjectile);
+            Observable.TimerFrame(15)
+                .Subscribe(_ => shootProjectile(fw));
         }
 
         public override void performFixed() {

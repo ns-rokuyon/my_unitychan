@@ -174,7 +174,8 @@ namespace MyUnityChan {
         public override void off_perform() {
             player.getAnimator().speed = player.getAnimSpeedDefault();
             if ( dash ) {
-                InvokerManager.createFrameDelayInvoker(3, offDash);
+                Observable.TimerFrame(3)
+                    .Subscribe(_ => offDash());
                 if ( player.getAnimator().GetBool("Jump") ) {
                     return;
                 }

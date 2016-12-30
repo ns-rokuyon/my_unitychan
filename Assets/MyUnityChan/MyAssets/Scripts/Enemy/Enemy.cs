@@ -70,7 +70,6 @@ namespace MyUnityChan {
         // Start
         protected override void start() {
             loadAttachedAI();
-            inputlock_timer = new FrameTimerState();
             position_history = new RingBuffer<Vector3>(10);
 
             this.ObserveEveryValueChanged(_ => stunned)

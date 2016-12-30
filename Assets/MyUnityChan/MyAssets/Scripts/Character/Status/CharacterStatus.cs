@@ -12,7 +12,7 @@ namespace MyUnityChan {
         public Invincible invincible { get; private set; }
 
         protected override void awake() {
-            invincible = PrefabInstantiater.create(Const.Prefab.Status["INVINCIBLE_SWITCH"], gameObject).GetComponent<Invincible>();
+            invincible = GetComponent<Invincible>();
             freeze = false;
             hp = 100;
         }
