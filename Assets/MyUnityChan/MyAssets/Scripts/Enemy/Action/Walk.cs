@@ -36,7 +36,7 @@ namespace MyUnityChan {
 
             float vx = enemy.GetComponent<Rigidbody>().velocity.x;
             float vy = enemy.GetComponent<Rigidbody>().velocity.y;
-            if ( enemy.isGrounded() && Mathf.Abs(vx) > maxspeed ) {
+            if ( Mathf.Abs(vx) > maxspeed ) {
                 enemy.GetComponent<Rigidbody>().velocity = new Vector3(Mathf.Sign(vx) * maxspeed, vy);
             }
 

@@ -40,6 +40,7 @@ namespace MyUnityChan {
 
             // Reset alpha to 1.0
             this.ObserveEveryValueChanged(_ => energybar.valueCurrent)
+                .Where(_ => renderer != null)
                 .Subscribe(_ => {
                     renderer.spriteBarColor.a = 1.0f;
                     foreach ( var s in renderer.spritesForeground ) {
