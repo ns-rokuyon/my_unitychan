@@ -17,8 +17,10 @@ namespace MyUnityChan {
 
         public Settings.Category focus_category { get; set; }
         public Dictionary<Settings.Flag, System.IDisposable> flag_setting_callbacks { get; set; }
+        public bool setup_done { get; set; }
 
         void Awake() {
+            setup_done = false;
             flag_setting_objects = new Dictionary<Setting<bool>, GameObject>();
             select_setting_objects = new Dictionary<SettingSelect, GameObject>();
             es = EventSystem.current;
@@ -63,7 +65,6 @@ namespace MyUnityChan {
             // Instantiate other settings
             // ...
 
-
             // Switch category page
             this.ObserveEveryValueChanged(_ => focus_category)
                 .Subscribe(_ => {
@@ -90,6 +91,8 @@ namespace MyUnityChan {
             // If LANG is changed, reset label text for all button
             this.ObserveEveryValueChanged(_ => get<Const.Language>(Settings.Select.LANG))
                 .Subscribe(_ => resetLanguage());
+
+            setup_done = true;
         }
 
         private void resetLanguage() {
@@ -102,6 +105,10 @@ namespace MyUnityChan {
             foreach ( var kv in select_setting_objects ) {
                 kv.Value.GetComponentInChildren<Text>().text = kv.Key.title.get();
             }
+        }
+
+        public static bool isSetupDone() {
+            return self().setup_done;
         }
 
         public static void changeCategory(Settings.Category cate) {
