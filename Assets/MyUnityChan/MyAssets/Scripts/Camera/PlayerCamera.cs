@@ -2,10 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 
 namespace MyUnityChan {
     public class PlayerCamera : ObjectBase {
         public PlayerManager player_manager { get; set; }
+        public bool tracking;
 
         private GameObject player = null;
         private Player player_component = null;
@@ -13,9 +15,10 @@ namespace MyUnityChan {
         private float area_limit_offset = 2.0f;
 
         private PlayerCameraPosition default_camera_position;
-        private PlayerCameraPosition now_camera_position;
+        public PlayerCameraPosition now_camera_position { get; set; }
         private Dictionary<ViewportCorner, Vector3> viewport_corners_in_world;
         private Camera camera_component;
+        private UnityStandardAssets.ImageEffects.MotionBlur blur;
 
         // Temp flags
         private bool keep_zooming;
@@ -29,10 +32,10 @@ namespace MyUnityChan {
 
         // Use this for initialization
         void Awake() {
-            GameObject.Find(Const.Canvas.GAME_CAMERA_CANVAS).GetComponent<Canvas>().worldCamera = this.gameObject.GetComponent<Camera>();
-            //GameObject.Find(Const.Canvas.MAP_VIEWER_CANVAS).GetComponent<Canvas>().worldCamera = this.gameObject.GetComponent<Camera>();
+            //GameObject.Find(Const.Canvas.GAME_CAMERA_CANVAS).GetComponent<Canvas>().worldCamera = this.gameObject.GetComponent<Camera>();
 
             camera_component = GetComponent<Camera>();
+            blur = GetComponent<UnityStandardAssets.ImageEffects.MotionBlur>();
 
             default_camera_position = PlayerCameraPosition.getDefault();
             now_camera_position = default_camera_position;
@@ -54,7 +57,17 @@ namespace MyUnityChan {
                     now_camera_position.position_diff + player_component.player_camera_position.position_diff;
                 newpos = adjustNewPosition(newpos);
 
-                transform.position = newpos;
+                if ( tracking )
+                    transform.position = newpos;    // Update position
+
+                if ( blur ) {
+                    if ( player_component.isHitstopping() ) {
+                        blur.blurAmount = 0.6f;
+                    }
+                    else {
+                        blur.blurAmount = 0.1f;
+                    }
+                }
             }
         }
 
@@ -98,6 +111,7 @@ namespace MyUnityChan {
 
         public void warpByPlayer(Player player) {
             transform.position = player.gameObject.transform.position;
+            tracking = true;
         }
 
         public void setPositionInArea(Area area) {
@@ -110,6 +124,22 @@ namespace MyUnityChan {
             }
 
             gameObject.transform.rotation = Quaternion.Euler(now_camera_position.rotation);
+        }
+
+        public void shake() {
+            transform.DOShakePosition(0.1f, strength: 0.6f);
+            tracking = false;
+            StartCoroutine(restartTracking(0.1f));
+        }
+
+        public void zoom(Vector3 to, float duration) {
+            transform.DOMove(to, duration);
+            tracking = false;
+        }
+
+        public IEnumerator restartTracking(float sec) {
+            yield return new WaitForSeconds(sec);
+            tracking = true;
         }
 
         private void updateViewpointCornersInWorld() {

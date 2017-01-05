@@ -21,7 +21,7 @@ namespace MyUnityChan {
 
         static public PlayerCameraPosition getDefault() {
             PlayerCameraPosition pos = new PlayerCameraPosition(
-                new Vector3(0.0f, 1.5f, -5.0f), new Vector3(10.0f, 0.0f, 0.0f) );
+                new Vector3(0.0f, 1.5f, -10.0f), new Vector3(0.0f, 0.0f, 0.0f) );
             return pos;
         }
 
