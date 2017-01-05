@@ -25,6 +25,17 @@ public static class Hierarchy {
     }
 
     // Method Extension
+    public static string getHierarchyPath(this GameObject self) {
+        string path = self.name;
+        var tf = self.transform.parent;
+        while ( tf != null ) {
+            path = tf.name + "/" + path;
+            tf = tf.parent;
+        }
+        return path;
+    }
+
+    // Method Extension
     [System.Obsolete("Deprecated")]
     public static GameObject setParent(this GameObject self, Component parent) {
         self.transform.SetParent(parent.gameObject.transform);
