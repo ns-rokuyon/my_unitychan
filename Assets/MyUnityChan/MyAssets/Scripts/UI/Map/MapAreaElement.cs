@@ -4,8 +4,10 @@ using Vectrosity;
 
 namespace MyUnityChan {
     public class MapAreaElement : MapElement {
-        public GameObject area_object;
-        public Area area_ref { get; protected set; }
+        public string area_path;    // Set by MapBuilderEditor
+
+        public GameObject area_object { get; protected set; }
+        public Area area { get; protected set; }
         public PassMonitoring pass_monitoring { get; private set; }
 
         private List<Tuple<GameObject, GameObject>> point_sets;
@@ -13,10 +15,11 @@ namespace MyUnityChan {
         void Awake() {
             point_sets = new List<Tuple<GameObject, GameObject>>();
             pass_monitoring = new PassMonitoring();
+            area_object = GameObject.Find(area_path);
         }
 
         void Start() {
-            area_ref = area_object.GetComponent<Area>();
+            area = area_object.GetComponent<Area>();
         }
 
         // Update is called once per frame
@@ -28,11 +31,11 @@ namespace MyUnityChan {
         }
 
         public void setAreaRef(Area obj) {
-            area_ref = obj;
+            area = obj;
         }
 
         public Area getAreaRef() {
-            return area_ref;
+            return area;
         }
 
         public void addPointSet(GameObject pointA, GameObject pointB, GameObject map) {

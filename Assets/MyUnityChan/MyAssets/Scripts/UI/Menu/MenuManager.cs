@@ -27,6 +27,7 @@ namespace MyUnityChan {
                 tab_title = tab_title_object.GetComponent<Text>();
 
             foreach ( var t in tab_page_objects ) {
+                t.SetActive(true);
                 tab_pages.Add(t.GetComponent<MenuTabPage>());
                 tab_pages.Last().id = tab_pages.Count - 1;
             }
@@ -71,6 +72,20 @@ namespace MyUnityChan {
             quit();
             GameStateManager.change(GameStateManager.GameState.MAIN);
             PauseManager.Instance.pause(false);
+        }
+
+        public static MenuTabPage getTabPage(string name) {
+            return self().tab_pages.FirstOrDefault(p => p.tab_name.en == name);
+        }
+
+        public static string getCurrentSelectedName() {
+            if ( self().canvas && self().canvas.enabled ) {
+                var obj = self().es.currentSelectedGameObject;
+                if ( obj )
+                    return obj.name;
+                return "No selected ui objects";
+            }
+            return "Canvas is disabled";
         }
     }
 }

@@ -14,6 +14,10 @@ namespace MyUnityChan {
             StartCoroutine(loadAll());
         }
 
+        public static bool isNowLoading() {
+            return self().now_loading;
+        }
+
         public static Object get(Const.ID.AssetBundle id, string key) {
             if ( self().now_loading )
                 return null;

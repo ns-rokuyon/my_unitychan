@@ -15,7 +15,7 @@ namespace MyUnityChan {
 
         public Const.Language language {
             get {
-                return SettingManager.get<Const.Language>(Settings.Select.LANG);
+                return SettingManager.isSetupDone() ? SettingManager.get<Const.Language>(Settings.Select.LANG) : Const.Language.JP;
             }
         }
 
@@ -33,6 +33,10 @@ namespace MyUnityChan {
 
         public static GameState now() {
             return self().state;
+        }
+
+        public static bool isLoadingInBackground() {
+            return AssetBundleManager.isNowLoading();
         }
 
         public static void change(GameState st) {

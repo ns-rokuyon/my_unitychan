@@ -39,7 +39,7 @@ namespace MyUnityChan {
                     obj.transform.localRotation = area.gameObject.transform.localRotation;
 
                     // Set area ref
-                    obj.GetComponent<MapAreaElement>().area_object = area.gameObject;
+                    obj.GetComponent<MapAreaElement>().area_path = area.gameObject.getHierarchyPath();
                 }
 
                 Dictionary<GameObject, GameObject> gate_connectionpoint_map = new Dictionary<GameObject, GameObject>(); // gate object -> map connection object
@@ -50,7 +50,7 @@ namespace MyUnityChan {
                     gatepoint.AddComponent<MapConnectionPointElement>();
                     gatepoint.layer = builder.layer();
                     gatepoint.transform.position = gate.gameObject.transform.position;
-                    gatepoint.GetComponent<MapConnectionPointElement>().gate = gate.gameObject;
+                    gatepoint.GetComponent<MapConnectionPointElement>().gate_path = gate.gameObject.getHierarchyPath();
                     gate_connectionpoint_map.Add(gate.gameObject, gatepoint);
                 }
 

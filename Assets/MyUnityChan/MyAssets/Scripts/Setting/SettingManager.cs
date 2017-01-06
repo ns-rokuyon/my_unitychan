@@ -35,10 +35,12 @@ namespace MyUnityChan {
             // Instantiate flag settings
             foreach ( var setting in pm.status.setting.flags ) {
                 GameObject toggle = PrefabInstantiater.create(Const.Prefab.UI["TOGGLE"]);
+                RectTransform rt = toggle.GetComponent<RectTransform>();
                 toggle.GetComponentInChildren<Text>().text = setting.Value.title.get();
                 toggle.setParent(scroll_content);
-                toggle.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
                 toggle.GetComponent<MenuToggle>().setFlagKey(setting.Key);
+                rt.localScale = new Vector3(1, 1, 1);
+                rt.localPosition = rt.localPosition.changeZ(0.0f);
                 if ( setting.Value.value == true ) {
                     toggle.GetComponent<Toggle>().isOn = true;
                 }
@@ -49,12 +51,14 @@ namespace MyUnityChan {
             // Instantiate select settings
             foreach ( var setting in pm.status.setting.selects ) {
                 GameObject dropdown = PrefabInstantiater.create(Const.Prefab.UI["DROPDOWN"]);
+                RectTransform rt = dropdown.GetComponent<RectTransform>();
                 dropdown.GetComponentInChildren<Text>().text = setting.Value.title.get();
                 dropdown.setParent(scroll_content);
-                dropdown.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
                 dropdown.GetComponent<MenuDropdownButton>().key = setting.Key;
                 dropdown.GetComponent<MenuDropdownButton>().created_by_settingmanager = true;
                 dropdown.GetComponentInChildren<Dropdown>().options.Clear();
+                rt.localScale = new Vector3(1, 1, 1);
+                rt.localPosition = rt.localPosition.changeZ(0.0f);
                 foreach ( var option in setting.Value.item_texts ) {
                     dropdown.GetComponentInChildren<Dropdown>().options.Add(new Dropdown.OptionData(option.get()));
                 }

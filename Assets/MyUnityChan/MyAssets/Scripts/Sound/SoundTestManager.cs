@@ -7,7 +7,7 @@ using UniRx.Triggers;
 namespace MyUnityChan {
     [RequireComponent(typeof(SoundPlayer))]
     public class SoundTestManager : SingletonObjectBase<SoundTestManager> {
-        public GameObject category_dropdown_object;
+        public GameObject category_dropdown_selector_object;
         public GameObject title_text_object;
         
         public SoundPlayer sound_player { get; protected set; }
@@ -18,7 +18,7 @@ namespace MyUnityChan {
 
         void Start() {
             cursor = 0;
-            category_dropdown = category_dropdown_object.GetComponent<Dropdown>();
+            category_dropdown = category_dropdown_selector_object.GetComponent<Dropdown>();
             title_text = title_text_object.GetComponent<Text>();
             sound_player = GetComponent<SoundPlayer>();
             this.ObserveEveryValueChanged(_ => category_dropdown.value)

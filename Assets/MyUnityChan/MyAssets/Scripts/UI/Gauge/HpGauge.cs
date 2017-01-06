@@ -4,20 +4,22 @@ using System.Collections;
 using UniRx;
 using UniRx.Triggers;
 using EnergyBarToolkit;
+using DG.Tweening;
 
 namespace MyUnityChan {
     [RequireComponent(typeof(EnergyBar))]
     public class HpGauge : GUIObjectBase {
-        protected EnergyBar energybar;
-        protected FilledRendererUGUI renderer;
-        protected Slider slider;
-        protected Character character;
+        public EnergyBar energybar { get; protected set; }
+        public Character character { get; protected set; }
+        public FilledRendererUGUI renderer { get; protected set; }
+        public RectTransform rect_transform { get; protected set; }
 
         public bool auto_hidden;
 
         void Awake() {
-            energybar = GetComponent<EnergyBar>();
             renderer = GetComponent<FilledRendererUGUI>();
+            energybar = GetComponent<EnergyBar>();
+            rect_transform = GetComponent<RectTransform>();
             character = null;
         }
 
@@ -40,7 +42,7 @@ namespace MyUnityChan {
 
             // Reset alpha to 1.0
             this.ObserveEveryValueChanged(_ => energybar.valueCurrent)
-                .Where(_ => renderer != null)
+                .Where(_ => auto_hidden && renderer != null)
                 .Subscribe(_ => {
                     renderer.spriteBarColor.a = 1.0f;
                     foreach ( var s in renderer.spritesForeground ) {
@@ -58,7 +60,11 @@ namespace MyUnityChan {
         }
 
         public void setPosition(Vector3 pos) {
-            GetComponent<RectTransform>().anchoredPosition = pos;
+            rect_transform.anchoredPosition = pos;
+        }
+
+        public void shake() {
+            rect_transform.DOShakePosition(0.5f);
         }
     }
 }

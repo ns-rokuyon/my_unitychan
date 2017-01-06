@@ -171,6 +171,7 @@ namespace MyUnityChan {
             status.invincible.enable(10);
             status.hp -= dam;
             manager.camera.shake();
+            manager.hpgauge.shake();
             voice(Const.ID.PlayerVoice.DAMAGED);
         }
 
@@ -374,7 +375,7 @@ namespace MyUnityChan {
             GUI.Label(new Rect(Screen.width - 245, 150, 250, 30), "(x,y,z): " + transform.position);
             GUI.Label(new Rect(Screen.width - 245, 170, 250, 30), "capsule_center: " + cc.bounds.center);
             GUI.Label(new Rect(Screen.width - 245, 190, 250, 30), "capsule_height: " + cc.height);
-            GUI.Label(new Rect(Screen.width - 245, 210, 250, 30), "areaname: " + area_name);
+            GUI.Label(new Rect(Screen.width - 245, 210, 250, 30), "areaname: " + getAreaName());
             GUI.Label(new Rect(Screen.width - 245, 230, 250, 30), "animspeed: " + animator.speed);
             GUI.Label(new Rect(Screen.width - 245, 250, 250, 30), "focus ui: " + MenuManager.getCurrentSelectedName());
         }

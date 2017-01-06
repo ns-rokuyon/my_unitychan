@@ -4,6 +4,8 @@ using System.Linq;
 
 namespace MyUnityChan {
     public class AreaManager : SingletonObjectBase<AreaManager> {
+        public bool debug;
+
         public Dictionary<string, Area> areas { get; private set; }
         private string now_area_name;
 
@@ -17,6 +19,12 @@ namespace MyUnityChan {
                     Debug.LogError("duplicate area name = " + name);
                 }
                 areas[name] = area;
+            }
+
+            if ( debug ) {
+                foreach ( var item in areas ) {
+                    DebugManager.log("" + item.Key + ": " + item.Value.gameObject.transform.position);
+                }
             }
         }
 

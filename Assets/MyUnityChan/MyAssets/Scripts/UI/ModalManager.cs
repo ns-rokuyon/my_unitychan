@@ -4,10 +4,10 @@ using UnityEngine.UI;
 
 namespace MyUnityChan {
     public class ModalManager : SingletonObjectBase<ModalManager> {
-        public GameObject canvas;
-        public GameObject modal;
-        public Text modal_title;
-        public Text modal_desc;
+        public GameObject canvas { get; protected set; }
+        public GameObject modal { get; protected set; }
+        public Text modal_title { get; protected set; }
+        public Text modal_desc { get; protected set; }
 
         void Start() {
             canvas = GUIObjectBase.getCanvas(Const.Canvas.GAME_CAMERA_CANVAS);

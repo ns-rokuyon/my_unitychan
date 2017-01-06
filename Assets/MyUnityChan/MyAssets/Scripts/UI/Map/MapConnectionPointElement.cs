@@ -6,9 +6,10 @@ using UniRx.Triggers;
 namespace MyUnityChan {
     public class MapConnectionPointElement : MapElement {
         public GameObject pair;     // Preseted by MapBuilder
-        public GameObject gate;       // Preseted by MapBuilder
+        public string gate_path; 
         
         public GameObject connection_visualizer { get; set; }
+        public GameObject gate { get; set; }
         public AreaGate _gate { get; set; }
 
         void Awake() {
@@ -21,6 +22,7 @@ namespace MyUnityChan {
             comp.pointA = this.gameObject;
             comp.pointB = pair;
 
+            gate = GameObject.Find(gate_path);
             _gate = gate.GetComponent<AreaGate>();
         }
 

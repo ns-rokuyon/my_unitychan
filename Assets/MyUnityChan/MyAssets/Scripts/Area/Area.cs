@@ -7,6 +7,7 @@ using UnityEditor;
 
 namespace MyUnityChan {
     [ExecuteInEditMode]
+    [RequireComponent(typeof(MeshRenderer))]
     public class Area : ObjectBase {
         // set true to limit player moving in this area
         public bool roof;

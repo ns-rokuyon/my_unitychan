@@ -5,11 +5,11 @@ using Vectrosity;
 
 namespace MyUnityChan {
     public class MapViewer : SingletonObjectBase<MapViewer> {
+        public string map_pagetab_name;
 
-        public GameObject map_pagetab;
-
-        public GameObject mapview_camera { get; private set; }
         public GameObject map { get; private set; }
+        public GameObject mapview_camera { get; private set; }
+        public MenuTabPage map_pagetab { get; protected set; }
         public Controller controller { get; private set; }
         public Canvas canvas { get; private set; }
 
@@ -17,7 +17,14 @@ namespace MyUnityChan {
             map = GetComponentInChildren<MapBuilder>().gameObject;
             mapview_camera = GetComponentInChildren<ModelViewCamera>().gameObject;
             controller = null;
-            canvas = map_pagetab.GetComponent<Canvas>();
+        }
+
+        void Start() {
+            map_pagetab = MenuManager.getTabPage(map_pagetab_name);
+            if ( map_pagetab )
+                canvas = map_pagetab.GetComponent<Canvas>();
+            else
+                DebugManager.warn("the MapViewer Could not find MapPageTab : " + map_pagetab_name);
         }
 
         void Update() {
