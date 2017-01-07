@@ -25,19 +25,19 @@ namespace MyUnityChan {
 
         */
 
-        public Vector3 upshift { get; set; }
+        public Vector3 shift { get; set; }
         public float radius { get; set; }
 
-        private RaycastHit ghit;
+        protected RaycastHit ghit;
 
         // Use this for initialization
         void Start() {
             radius = transform.lossyScale.x * sphere_scale;
-            upshift = Vector3.up * (radius + delta + start_y_offset);
+            shift = Vector3.up * (radius + delta + start_y_offset);
         }
 
         public bool isGrounded() {
-            return Physics.SphereCast(transform.position + upshift,
+            return Physics.SphereCast(transform.position + shift,
                                       radius, Vector3.down, out ghit, max_distance);
         }
 
@@ -46,7 +46,7 @@ namespace MyUnityChan {
         }
 
         void OnDrawGizmos() {
-            Gizmos.DrawRay(transform.position + upshift, Vector3.down * max_distance);
+            Gizmos.DrawRay(transform.position + shift, Vector3.down * max_distance);
             if ( isGrounded() ) 
                 Gizmos.DrawWireSphere(ghit.point, radius);
         }

@@ -52,14 +52,13 @@ namespace MyUnityChan {
                 // jump (ground jump or air jump)
                 player.getAnimator().Play("Jump", -1, 0.0f);
             }
-            player.voice(Const.ID.PlayerVoice.JUMP);
             player.setAnimSpeedDefault();
             player.getAnimator().SetBool("OnGround", false);
             player.lockInput(2);
         }
 
         public override bool condition() {
-            return controller.keyJump() && player.isGrounded() && !player.isGuarding();
+            return controller.keyJump() && player.isGrounded() && !player.isHitRoof() && !player.isGuarding();
         }
 
         public override void effect() {
@@ -117,6 +116,7 @@ namespace MyUnityChan {
                     rigidbody.velocity = Vector3.zero;
                     rigidbody.angularVelocity = Vector3.zero;
                     player.GetComponent<Rigidbody>().AddForce(secondjumpF[player.character_name], ForceMode.Impulse);
+                    player.voice(Const.ID.PlayerVoice.JUMP);
                 }
             }
         }
@@ -138,7 +138,8 @@ namespace MyUnityChan {
 
         public override bool condition() {
             return controller.keyJump() &&
-                readyToJump() && !air_jumped && !player.isGuarding();
+                readyToJump() && !air_jumped &&
+                !player.isHitRoof() && !player.isGuarding();
         }
 
         public override void end() {
@@ -170,6 +171,7 @@ namespace MyUnityChan {
     public class PlayerWallJump : PlayerAction {
         protected Vector3 effect_offset = new Vector3(0.0f, 0.2f, 0.0f);
         protected Const.ID.Effect effect_name = Const.ID.Effect.JUMP_SMOKE_PUFF;
+        protected Rigidbody rigidbody;
 
         private readonly Dictionary<Const.CharacterName, Vector3> jumpF = new Dictionary<Const.CharacterName, Vector3>{
             { Const.CharacterName.UNITYCHAN, new Vector3(0, 600.0f, 0) },       // Mass: 46kg
@@ -184,6 +186,7 @@ namespace MyUnityChan {
 
         public PlayerWallJump(Character character)
             : base(character) {
+            rigidbody = player.GetComponent<Rigidbody>();
         }
 
         public override string name() {
@@ -204,8 +207,8 @@ namespace MyUnityChan {
 
         public override void performFixed() {
             // Wall jump
-            player.GetComponent<Rigidbody>().velocity = Vector3.zero;
-            player.GetComponent<Rigidbody>().AddForce(F, ForceMode.Impulse);
+            rigidbody.velocity = Vector3.zero;
+            rigidbody.AddForce(F, ForceMode.Impulse);
             player.lookBack();
         }
 
@@ -215,6 +218,7 @@ namespace MyUnityChan {
             player.getAnimator().Play("Jump", -1, 0.0f);
             player.setAnimSpeedDefault();
             player.getAnimator().SetBool("OnGround", false);
+            player.voice(Const.ID.PlayerVoice.JUMP);
             player.lockInput(20);
         }
 

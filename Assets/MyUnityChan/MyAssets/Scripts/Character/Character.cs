@@ -15,6 +15,8 @@ namespace MyUnityChan {
         public Const.CharacterName character_name { get; set; }
         public CharacterStatus status { get; set; }
         public GroundChecker ground_checker { get; protected set; }
+        public RoofChecker roof_checker { get; protected set; }
+        public Rigidbody rigid_body { get; protected set; }
         public float height { get; protected set; }
         public float width { get; protected set; }
 
@@ -38,6 +40,8 @@ namespace MyUnityChan {
             }
 
             ground_checker = GetComponent<GroundChecker>();
+            roof_checker = GetComponent<RoofChecker>();
+            rigid_body = GetComponent<Rigidbody>();
             locker = null;
 
             awake();
@@ -116,22 +120,20 @@ namespace MyUnityChan {
 
         protected IEnumerator hitstopping(int frame) {
             hitstop_counts = frame;
-            var rigidbody = GetComponent<Rigidbody>();
             var animator = GetComponent<Animator>();
-            Vector3 v = rigidbody.velocity;
-            DebugManager.log("keep=" + rigidbody.velocity);
+            Vector3 v = rigid_body.velocity;
+            DebugManager.log("keep=" + rigid_body.velocity);
             while ( isHitstopping() ) {
-                if ( rigidbody )
-                    rigidbody.velocity = Vector3.zero;
+                if ( rigid_body )
+                    rigid_body.velocity = Vector3.zero;
                 if ( animator )
                     animator.speed = 0.1f;
                 yield return null;
             }
-            if ( rigidbody )
-                rigidbody.velocity = v;
+            if ( rigid_body )
+                rigid_body.velocity = v;
             if ( animator )
                 animator.speed = 1.0f;
-            DebugManager.log(rigidbody.velocity);
         }
 
         public bool isHitstopping() {
@@ -157,12 +159,11 @@ namespace MyUnityChan {
             if ( power_y == 0.0f ) {
                 return;
             }
-            Rigidbody rigidbody = GetComponent<Rigidbody>();
-            if ( rigidbody ) {
+            if ( rigid_body ) {
                 if ( isGrounded() )
-                    rigidbody.AddForce(new Vector3(0.0f, power_y, 0.0f), ForceMode.Impulse);
+                    rigid_body.AddForce(new Vector3(0.0f, power_y, 0.0f), ForceMode.Impulse);
                 else 
-                    rigidbody.velocity = Vector3.zero;
+                    rigid_body.velocity = Vector3.zero;
             }
         }
 
@@ -175,21 +176,19 @@ namespace MyUnityChan {
         }
 
         public float getVx(bool abs=false) {
-            Rigidbody rigidbody = GetComponent<Rigidbody>();
-            if ( rigidbody ) {
+            if ( rigid_body ) {
                 if ( abs )
-                    return Mathf.Abs(GetComponent<Rigidbody>().velocity.x);
-                return GetComponent<Rigidbody>().velocity.x;
+                    return Mathf.Abs(rigid_body.velocity.x);
+                return rigid_body.velocity.x;
             }
             return 0.0f;    // TODO
         }
 
         public float getVy(bool abs=false) {
-            Rigidbody rigidbody = GetComponent<Rigidbody>();
-            if ( rigidbody ) {
+            if ( rigid_body ) {
                 if ( abs ) 
-                    return Mathf.Abs(GetComponent<Rigidbody>().velocity.y);
-                return GetComponent<Rigidbody>().velocity.y;
+                    return Mathf.Abs(rigid_body.velocity.y);
+                return rigid_body.velocity.y;
             }
             return 0.0f;
         }
@@ -242,6 +241,12 @@ namespace MyUnityChan {
 
         public virtual bool isGrounded() {
             throw new System.NotImplementedException();
+        }
+
+        public virtual bool isHitRoof() {
+            if ( roof_checker )
+                return roof_checker.isHitRoof();
+            return false;
         }
 
         public virtual void defeatSomeone(Character character) {
