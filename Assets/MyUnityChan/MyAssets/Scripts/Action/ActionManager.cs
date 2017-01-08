@@ -28,12 +28,21 @@ namespace MyUnityChan {
                     continue;
                 }
 
+                if ( !action.initialized ) {
+                    action.init();
+                    action.initialized = true;
+                }
+
                 // call action methods in Update() constantly
                 action.constant_perform();
 
                 if ( action.flag == null ) {
                     if ( action.condition() ) {
                         action.perform();
+
+                        if ( action.perform_callbacks.Count > 0 ) {
+                            action.perform_callbacks.ForEach(callback => callback());
+                        }
 
                         if ( action.skip_lower_priority ) {
                             // If action.skip_lower_priority is true,
@@ -53,6 +62,10 @@ namespace MyUnityChan {
 
                     // call action methods in Update()
                     action.perform();
+
+                    if ( action.perform_callbacks.Count > 0 ) {
+                        action.perform_callbacks.ForEach(callback => callback());
+                    }
 
                     // ready_to_update flag : true -> false
                     action.flag.doneUpdate();
@@ -140,6 +153,12 @@ namespace MyUnityChan {
                 return null;
             }
             return actions[name];
+        }
+
+        public T getAction<T>(string name) where T : class {
+            if ( !actions.ContainsKey(name) )
+                return null;
+            return actions[name] as T;
         }
 
         public List<string> getAllActionKeys() {

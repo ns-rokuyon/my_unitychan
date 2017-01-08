@@ -37,6 +37,7 @@ namespace MyUnityChan {
             command_recorder = controller.getCommandRecorder();
             priority = 0;
             skip_lower_priority = false;
+            perform_callbacks = new List<System.Action>();
         }
 
         public abstract Const.PlayerAction id();

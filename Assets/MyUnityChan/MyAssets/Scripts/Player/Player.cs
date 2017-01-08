@@ -12,6 +12,7 @@ using UniRx;
 namespace MyUnityChan {
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(GroundChecker))]
+    [RequireComponent(typeof(RoofChecker))]
     [RequireComponent(typeof(WallChecker))]
     public class Player : Character {
 
@@ -118,6 +119,8 @@ namespace MyUnityChan {
                     action_manager.registerAction(new PlayerGuard(this)); break;
                 case Const.PlayerAction.SWITCH_BEAM:
                     action_manager.registerAction(new PlayerSwitchBeam(this)); break;
+                case Const.PlayerAction.GRAPPLE:
+                    action_manager.registerAction(new PlayerGrapple(this)); break;
                 case Const.PlayerAction.HADOUKEN:
                     action_manager.registerAction(new PlayerHadouken(this)); break;
                 case Const.PlayerAction.JUMP:
@@ -361,16 +364,13 @@ namespace MyUnityChan {
 
             Vector3 fw = transform.forward;
             Quaternion rot = transform.rotation;
-            Vector3 targetDirection = new Vector3(Input.GetAxis("Horizontal"), 0, 0);
-            float vx = GetComponent<Rigidbody>().velocity.x;
-            float vy = GetComponent<Rigidbody>().velocity.y;
             CapsuleCollider cc = GetComponent<CapsuleCollider>();
             GUI.Box(new Rect(Screen.width - 260, 10, 250, 300), "Interaction");
             GUI.Label(new Rect(Screen.width - 245, 30, 250, 30), "forward: " + fw);
-            GUI.Label(new Rect(Screen.width - 245, 50, 250, 30), "vx: " + vx);
-            GUI.Label(new Rect(Screen.width - 245, 70, 250, 30), "vy: " + vy);
-            GUI.Label(new Rect(Screen.width - 245, 90, 250, 30), "targetDirection: " + targetDirection);
-            GUI.Label(new Rect(Screen.width - 245, 110, 250, 30), "on_ground: " + isGrounded());
+            GUI.Label(new Rect(Screen.width - 245, 50, 250, 30), "vx: " + getVx());
+            GUI.Label(new Rect(Screen.width - 245, 70, 250, 30), "vy: " + getVx());
+            GUI.Label(new Rect(Screen.width - 245, 90, 250, 30), "on_ground: " + isGrounded());
+            GUI.Label(new Rect(Screen.width - 245, 110, 250, 30), "is_hit_roof: " + isHitRoof());
             GUI.Label(new Rect(Screen.width - 245, 130, 250, 30), "touched_wall: " + isTouchedWall());
             GUI.Label(new Rect(Screen.width - 245, 150, 250, 30), "(x,y,z): " + transform.position);
             GUI.Label(new Rect(Screen.width - 245, 170, 250, 30), "capsule_center: " + cc.bounds.center);

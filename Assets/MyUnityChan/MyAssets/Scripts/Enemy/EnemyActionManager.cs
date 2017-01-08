@@ -19,6 +19,7 @@ namespace MyUnityChan {
             controller = (AIController)enemy.getController();
             priority = 0;
             skip_lower_priority = false;
+            perform_callbacks = new List<System.Action>();
         }
 
     }

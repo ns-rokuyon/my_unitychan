@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace MyUnityChan {
     public abstract class Action : StructBase {
@@ -9,8 +9,10 @@ namespace MyUnityChan {
 
         public bool activation = true;
 
+        public bool initialized { get; set; }
         public int priority { get; protected set; }
         public bool skip_lower_priority { get; protected set; }
+        public List<System.Action> perform_callbacks { get; set; }
 
         // define action name
         public abstract string name();
@@ -26,6 +28,8 @@ namespace MyUnityChan {
         public virtual void constant_performFixed() { }     // action method in FixedUpdate() constantly 
 
         public virtual void performLate() { }       // action method in LateUpdate()
+
+        public virtual void init() { }      // action method in Start()
 
         public virtual void prepare() { }
         public virtual void end() { }

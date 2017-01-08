@@ -18,12 +18,18 @@ namespace MyUnityChan {
             { Const.CharacterName.MINI_UNITYCHAN, new Vector3(30.0f, 120.0f, 0) }
         };
 
+        protected PlayerGrapple grappling;
+
         public PlayerJump(Character character)
             : base(character) {
         }
 
         public override string name() {
             return "JUMP";
+        }
+
+        public override void init() {
+            grappling = player.action_manager.getAction<PlayerGrapple>("GRAPPLE");
         }
 
         public override Const.PlayerAction id() {
@@ -58,6 +64,9 @@ namespace MyUnityChan {
         }
 
         public override bool condition() {
+            if ( grappling != null && grappling.grappled && controller.keyJump() ) {
+                return true;
+            }
             return controller.keyJump() && player.isGrounded() && !player.isHitRoof() && !player.isGuarding();
         }
 

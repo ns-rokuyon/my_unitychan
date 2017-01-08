@@ -99,7 +99,6 @@ namespace MyUnityChan {
 
         public override void perform() {
             player.getAnimator().Play("PunchL");
-            player.voice(Const.ID.PlayerVoice.ATTACK, true, 3);
             player.lockInput(6);
             Observable.TimerFrame(3)
                 .Subscribe(_ => createHitbox());
@@ -151,7 +150,7 @@ namespace MyUnityChan {
 
         public override void perform() {
             player.getAnimator().Play("PunchR");
-            player.voice(Const.ID.PlayerVoice.ATTACK6, true, 6);
+            player.voice(Const.ID.PlayerVoice.ATTACK, true, 6);
             player.lockInput(10);
             Observable.TimerFrame(6)
                 .Subscribe(_ => createHitbox());
