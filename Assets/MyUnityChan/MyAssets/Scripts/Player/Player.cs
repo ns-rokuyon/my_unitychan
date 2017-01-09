@@ -39,11 +39,13 @@ namespace MyUnityChan {
         public PlayerActionManager action_manager { get; set; }
         public List<Const.BeamName> beam_slot { get; set; }
         public WallChecker wall_checker { get; set; }
+        public UnityChanBoneManager bone_manager { get; set; }
 
         // Awake
         protected override void awake() {
             // animation
             animator = GetComponent<Animator>();
+            bone_manager = GetComponent<UnityChanBoneManager>();
             beam_slot = new List<Const.BeamName>();
         }
 
@@ -60,7 +62,8 @@ namespace MyUnityChan {
             registerActions(new List<Const.PlayerAction>{
                 Const.PlayerAction.ACCEL, Const.PlayerAction.BRAKE, Const.PlayerAction.DOWN,
                 Const.PlayerAction.JUMP, Const.PlayerAction.LIMIT_SPEED, Const.PlayerAction.TURN,
-                Const.PlayerAction.SWITCH_BEAM, Const.PlayerAction.WALL_JUMP
+                Const.PlayerAction.SWITCH_BEAM, Const.PlayerAction.WALL_JUMP,
+                Const.PlayerAction.TRANSFORM
             });
 
             // player infomation for NPC
@@ -131,6 +134,8 @@ namespace MyUnityChan {
                     action_manager.registerAction(new PlayerMissile(this)); break;
                 case Const.PlayerAction.SLIDING:
                     action_manager.registerAction(new PlayerSliding(this)); break;
+                case Const.PlayerAction.TRANSFORM:
+                    action_manager.registerAction(new PlayerTransform(this)); break;
                 case Const.PlayerAction.TURN:
                     action_manager.registerAction(new PlayerTurn(this)); break;
                 default:
@@ -322,7 +327,6 @@ namespace MyUnityChan {
 
         private void performTest() {
             Debug.Log("performTest");
-            manager.switchPlayerCharacter();
         }
 
         /*

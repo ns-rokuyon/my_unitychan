@@ -29,7 +29,7 @@ namespace MyUnityChan {
         void Update() {
             line.SetPosition(0, hook.transform.position);
             if ( player )
-                line.SetPosition(1, player.transform.position);
+                line.SetPosition(1, player.bone_manager.position(Const.ID.UnityChanBone.RIGHT_HAND));
             else
                 line.SetPosition(1, hand.transform.position);
         }

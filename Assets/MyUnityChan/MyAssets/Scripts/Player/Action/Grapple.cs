@@ -11,6 +11,11 @@ namespace MyUnityChan {
 
         private RaycastHit ghit;
 
+        // Bone refs
+        private Transform right_arm;
+        private Transform right_fore_arm;
+        private Transform right_hand;
+
         public PlayerGrapple(Character ch) : base(ch) {
             radius = 0.2f;
             grappled = false;
@@ -20,7 +25,7 @@ namespace MyUnityChan {
             'max_distance' should be matched grappling length.
             (match to LocalPosition.y of Hand object in GrapplingHook prefab)
             */
-            max_distance = 4.0f;    
+            max_distance = 4.0f;
         }
 
         public bool raycast() {
@@ -40,8 +45,27 @@ namespace MyUnityChan {
             }
         }
 
+        public override void constant_performLate() {
+            if ( !grappled )
+                return;
+
+            if ( player.isLookAhead() ) {
+                right_arm.rotation = Quaternion.AngleAxis(250.0f, new Vector3(0, 0, 1));
+                right_fore_arm.localRotation = Quaternion.AngleAxis(90.0f, new Vector3(1, 0, 0));
+                right_hand.localRotation = Quaternion.AngleAxis(45.0f, new Vector3(0, 1, 0));
+            }
+            else {
+                right_arm.rotation = Quaternion.AngleAxis(0.0f, new Vector3(0, 0, 1));
+                right_fore_arm.localRotation = Quaternion.AngleAxis(90.0f, new Vector3(1, 0, 0));
+                right_hand.localRotation = Quaternion.AngleAxis(-45.0f, new Vector3(0, 1, 0));
+            }
+        }
+
         public override void init() {
             player.action_manager.getAction("JUMP").perform_callbacks.Add(disconnect);
+            right_arm = player.bone_manager.bone(Const.ID.UnityChanBone.RIGHT_ARM).transform;
+            right_fore_arm = player.bone_manager.bone(Const.ID.UnityChanBone.RIGHT_FORE_ARM).transform;
+            right_hand = player.bone_manager.bone(Const.ID.UnityChanBone.RIGHT_HAND).transform;
         }
 
         public void disconnect() {

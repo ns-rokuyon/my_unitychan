@@ -7,17 +7,15 @@ namespace MyUnityChan {
         private BeamTurret shooter;
 
         // bone refs
-        private string left_shoulder_path = 
-            "unitychan_dynamic/Character1_Reference/Character1_Hips/Character1_Spine/Character1_Spine1/Character1_Spine2/Character1_LeftShoulder/";
         private Transform left_arm;
         private Transform left_fore_arm;
         private Transform left_hand;
 
         public PlayerBeam(Character character)
             : base(character) {
-            left_arm = player.transform.Find(left_shoulder_path + "Character1_LeftArm");
-            left_fore_arm = player.transform.Find(left_shoulder_path + "Character1_LeftArm/Character1_LeftForeArm");
-            left_hand = player.transform.Find(left_shoulder_path + "Character1_LeftArm/Character1_LeftForeArm/Character1_LeftHand");
+            left_arm = player.bone_manager.bone(Const.ID.UnityChanBone.LEFT_ARM).transform;
+            left_fore_arm = player.bone_manager.bone(Const.ID.UnityChanBone.LEFT_FORE_ARM).transform;
+            left_hand = player.bone_manager.bone(Const.ID.UnityChanBone.LEFT_HAND).transform;
 
             shooter = character.GetComponent<BeamTurret>();
         }

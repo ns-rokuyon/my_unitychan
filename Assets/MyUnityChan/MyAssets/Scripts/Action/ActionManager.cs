@@ -118,6 +118,9 @@ namespace MyUnityChan {
         void LateUpdate() {
             foreach ( KeyValuePair<string, Action> pair in actions ) {
                 Action action = pair.Value;
+
+                action.constant_performLate();
+
                 if ( action.condition() ) {
                     action.performLate();
                 }

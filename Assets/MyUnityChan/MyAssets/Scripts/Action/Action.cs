@@ -20,14 +20,14 @@ namespace MyUnityChan {
 
         public virtual void perform() { }           // action method in Update()
         public virtual void performFixed() { }      // action method in FixedUpdate()
+        public virtual void performLate() { }       // action method in LateUpdate()
 
         public virtual void off_perform() { }               // action method in Update()
         public virtual void off_performFixed() { }          // action method in FixedUpdate()
 
         public virtual void constant_perform() { }          // action method in Update() constantly (update)
         public virtual void constant_performFixed() { }     // action method in FixedUpdate() constantly 
-
-        public virtual void performLate() { }       // action method in LateUpdate()
+        public virtual void constant_performLate() { }      // action method in LateUpdate() constantly
 
         public virtual void init() { }      // action method in Start()
 

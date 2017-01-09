@@ -16,6 +16,7 @@ namespace MyUnityChan {
             SWITCH_BEAM,
             GRAPPLE,
             PAUSE,
+            TRANSFORM,
             TEST,
             CANCEL,
             DOWN,
@@ -80,6 +81,7 @@ namespace MyUnityChan {
         public bool keySwitchBeam() { return inputs[(int)InputCode.SWITCH_BEAM]; }
         public bool keyGrapple() { return inputs[(int)InputCode.GRAPPLE]; }
         public bool keyTest() { return inputs[(int)InputCode.TEST]; }
+        public bool keyTransform() { return inputs[(int)InputCode.TRANSFORM]; }
         public bool keyUp() { return inputs[(int)InputCode.UP]; }
         public bool keyDown() { return inputs[(int)InputCode.DOWN]; }
         public bool keyLeft() { return inputs[(int)InputCode.LEFT]; }
