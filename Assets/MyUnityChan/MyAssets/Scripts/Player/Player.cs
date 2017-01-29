@@ -16,8 +16,6 @@ namespace MyUnityChan {
     [RequireComponent(typeof(WallChecker))]
     public class Player : Character {
 
-        public string player_name = null;
-
         [SerializeField]
         public PlayerCameraPosition player_camera_position;
 
@@ -41,6 +39,18 @@ namespace MyUnityChan {
         public WallChecker wall_checker { get; set; }
         public UnityChanBoneManager bone_manager { get; set; }
 
+        public bool playable {
+            get {
+                return manager.playable;
+            }
+        }
+
+        public string player_name {
+            get {
+                return manager.player_name;
+            }
+        }
+
         // Awake
         protected override void awake() {
             // animation
@@ -51,7 +61,6 @@ namespace MyUnityChan {
 
         // Start
         protected override void start() {
-            player_name = "player1";
             player_root = transform.parent.gameObject;
 
             anim_speed_default = animator.speed * 1.2f;
@@ -66,21 +75,22 @@ namespace MyUnityChan {
                 Const.PlayerAction.TRANSFORM
             });
 
-            // player infomation for NPC
-            NPCharacter.setPlayers();
-
             // init sound player
             setupSoundPlayer();
 
             //player = gameObject;
             position_history = new RingBuffer<Vector3>(10);
+
+            if ( playable ) {
+                // player infomation for NPC
+                NPCharacter.setPlayers();
+            }
+
         }
 
         protected override void update() {
-            float horizontal = ((PlayerController)controller).keyHorizontal();
             float vy = GetComponent<Rigidbody>().velocity.y;
 
-            animator.SetFloat("Speed", Mathf.Abs(horizontal));
             if ( vy <= 0 && isGrounded() ) {
                 // landing
                 animator.SetBool("OnGround", true);
@@ -178,9 +188,11 @@ namespace MyUnityChan {
             //lockInput(50);
             status.invincible.enable(10);
             status.hp -= dam;
-            manager.camera.shake();
-            manager.hpgauge.shake();
             voice(Const.ID.PlayerVoice.DAMAGED);
+            if ( playable ) {
+                manager.camera.shake();
+                manager.hpgauge.shake();
+            }
         }
 
         public override bool isTouchedWall() {
@@ -249,6 +261,12 @@ namespace MyUnityChan {
             PlayerGuard guard = ((PlayerGuard)action_manager.getAction("GUARD"));
             if ( guard == null ) return false;
             return guard.guarding;
+        }
+
+        public bool isGrappling() {
+            PlayerGrapple grapple = action_manager.getAction<PlayerGrapple>("GRAPPLE");
+            if ( grapple == null ) return false;
+            return grapple.grappled;
         }
 
         public bool isAnimState(string anim_name) {

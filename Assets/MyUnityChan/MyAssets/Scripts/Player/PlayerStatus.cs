@@ -31,18 +31,34 @@ namespace MyUnityChan {
         public int missile_tanks { get; set; }
         public Dictionary<Ability.Id, PlayerAbility> abilities { get; set; }
         public PlayerSetting setting { get; private set; }
+        public PlayerManager manager { get; set; }
 
         protected override void awake() {
             base.awake();
-            abilities = new Dictionary<Ability.Id, PlayerAbility>();
-            foreach ( var def in Ability.Defs ) {
-                abilities.Add(def.Key, new PlayerAbility(def.Value));
-            }
-
             setting = new PlayerSetting();
         }
 
+        protected override void start() {
+            base.start();
+
+            // Init ability
+            foreach ( var ability in abilities ) {
+                if ( ability.Value.def.init_status == Ability.Status.ON ) {
+                    setAbilityStatus(ability.Value.def.id, Ability.Status.ON);
+                }
+            }
+        }
+
         protected override void update() {
+        }
+
+        public void setupAbilities() {
+            if ( !manager )
+                DebugManager.error("manager is null");
+            abilities = new Dictionary<Ability.Id, PlayerAbility>();
+            foreach ( var def in Ability.Defs ) {
+                abilities.Add(def.Key, new PlayerAbility(def.Value, manager));
+            }
         }
 
         public void addEnergyTank() {
@@ -62,7 +78,7 @@ namespace MyUnityChan {
 
         public void setAbilityStatus(Ability.Id id, Ability.Status st) {
             if ( abilities[id].status == Ability.Status.NO_GET ) {
-                abilities[id].def.on(GameStateManager.getPlayer().manager, true);
+                abilities[id].def.on(manager, true);
             }
             abilities[id].status = st;
         }

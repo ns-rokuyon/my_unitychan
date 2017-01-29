@@ -13,6 +13,9 @@ namespace MyUnityChan {
         [SerializeField]
         public Const.ID.Controller controller_name;
 
+        public bool playable;
+        public string player_name;
+
         private Dictionary<Const.CharacterName, GameObject> switchable_player_characters;
         private Const.CharacterName now;
 
@@ -26,43 +29,47 @@ namespace MyUnityChan {
         void Awake() {
             switchable_player_characters = new Dictionary<Const.CharacterName, GameObject>();
 
-            //default_unitychan.GetComponent<Player>().manager = this;
             switchable_player_characters.Add(Const.CharacterName.UNITYCHAN, default_unitychan);
             now = Const.CharacterName.UNITYCHAN;
             Player now_player = getNowPlayer().GetComponent<Player>();
             now_player.character_name = now;
 
-            // camera setup
-            GameObject camera_obj = GameObject.Find("Camera/PlayerCamera");
-            if ( camera_obj ) {
-                camera = camera_obj.GetComponent<PlayerCamera>();
-            }
-            else {
-                camera = PrefabInstantiater.createAndGetComponent<PlayerCamera>(Const.Prefab.Camera["PLAYER_CAMERA"], Hierarchy.Layout.CAMERA);
-            }
-            camera.player_manager = this;
-
             // player status setup
             status = GetComponent<PlayerStatus>();
-            //status.addEnergyTank();
+            status.manager = this;
+            status.setupAbilities();
 
             // controller setup
             controller = PrefabInstantiater.create(prefabPath(controller_name), this.gameObject).GetComponent<Controller>();
             controller.setSelf(now_player);
 
-            // HP gauge setup
-            if ( hpgauge_object_ref )
-                hpgauge = hpgauge_object_ref.GetComponent<HpGauge>();
+            if ( playable ) {
+                // camera setup
+                GameObject camera_obj = GameObject.Find("Camera/PlayerCamera");
+                if ( camera_obj ) {
+                    camera = camera_obj.GetComponent<PlayerCamera>();
+                }
+                else {
+                    camera = PrefabInstantiater.createAndGetComponent<PlayerCamera>(Const.Prefab.Camera["PLAYER_CAMERA"], Hierarchy.Layout.CAMERA);
+                }
+                camera.player_manager = this;
 
-            if ( reserved_hpgauge_object_ref )
-                reserved_hpgauge = reserved_hpgauge_object_ref.GetComponent<ReservedHpGauge>();
+                // HP gauge setup
+                if ( hpgauge_object_ref )
+                    hpgauge = hpgauge_object_ref.GetComponent<HpGauge>();
+
+                if ( reserved_hpgauge_object_ref )
+                    reserved_hpgauge = reserved_hpgauge_object_ref.GetComponent<ReservedHpGauge>();
+
+                // set player to GameStateManager
+                GameStateManager.self().player_manager = this;
+            }
 
             // Initialize player
             initPlayer(now_player);
 
-            // set player to GameStateManager
-            GameStateManager.self().player_manager = this;
-
+            // TODO
+            addPlayerCharacter(Const.CharacterName.MINI_UNITYCHAN);
         }
 
         void Start() {
@@ -73,11 +80,11 @@ namespace MyUnityChan {
                 Const.PlayerAction.GUARD, Const.PlayerAction.HADOUKEN, Const.PlayerAction.SLIDING, Const.PlayerAction.GRAPPLE
             });
 
-            hpgauge.setCharacter(now_player);
-            reserved_hpgauge.setCharacter(now_player);
+            if ( playable ) {
+                hpgauge.setCharacter(now_player);
+                reserved_hpgauge.setCharacter(now_player);
+            }
 
-            // TODO
-            addPlayerCharacter(Const.CharacterName.MINI_UNITYCHAN);
         }
 
         public GameObject getNowPlayer() {
@@ -89,6 +96,10 @@ namespace MyUnityChan {
         }
 
         public Player getPlayer(Const.CharacterName name) {
+            DebugManager.log("chname=" + name + ", playername=" + player_name);
+            foreach ( var key in switchable_player_characters.Keys ) {
+                DebugManager.log("chkey=" + key);
+            }
             return switchable_player_characters[name].GetComponent<Player>();
         }
 
@@ -108,11 +119,13 @@ namespace MyUnityChan {
                     // Switch controller's focus to next player object
                     controller.setSelf(next_player);
 
-                    // Switch player object for hp gauge
-                    hpgauge.setCharacter(next_player);
-
                     // Replace character name
                     now = name;
+
+                    if ( playable ) {
+                        // Switch player object for hp gauge
+                        hpgauge.setCharacter(next_player);
+                    }
                 }
                 else {
                     pair.Value.SetActive(false);
@@ -126,6 +139,7 @@ namespace MyUnityChan {
         }
 
         public void addPlayerCharacter(Const.CharacterName name) {
+            DebugManager.log("addPlayerCharacter player_name=" + player_name);
             Player new_player = null;
             switch (name) {
                 case Const.CharacterName.MINI_UNITYCHAN:

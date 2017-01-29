@@ -5,25 +5,22 @@ using UniRx.Triggers;
 
 namespace MyUnityChan {
     public class PlayerAbility : StructBase {
-        public AbilityDef def { get; private set; }
         public Ability.Status status { get; set; }
+        public AbilityDef def { get; private set; }
+        public PlayerManager manager { get; private set; }
 
-        public PlayerAbility(AbilityDef _def) {
+        public PlayerAbility(AbilityDef _def, PlayerManager _manager) {
+            manager = _manager;
             def = _def;
-            status = def.init_status;
+            status = Ability.Status.NO_GET;
 
             var status_changed = Observable.EveryUpdate().Select(_ => status).DistinctUntilChanged();
             status_changed.Where(s => s == Ability.Status.ON).Subscribe(_ => {
-                def.on(GameStateManager.getPlayer().manager);
+                def.on(manager);
             });
             status_changed.Where(s => s == Ability.Status.OFF).Subscribe(_ => {
-                def.off(GameStateManager.getPlayer().manager);
+                def.off(manager);
             });
-        }
-
-        public PlayerAbility(AbilityDef _def, Ability.Status _status) {
-            def = _def;
-            status = _status;
         }
 
         public void toggleStatus() {

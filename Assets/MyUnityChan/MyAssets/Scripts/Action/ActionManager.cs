@@ -140,6 +140,10 @@ namespace MyUnityChan {
         }
 
         public void registerAction(Action action) {
+            if ( actions.ContainsKey(action.name()) ) {
+                DebugManager.warn(action.name() + " is already registered");
+                return;
+            }
             actions[action.name()] = action;
         }
 
