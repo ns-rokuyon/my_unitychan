@@ -176,7 +176,9 @@ namespace MyUnityChan {
                 player.last_entrypoint = player.gameObject.transform.position;
 
                 // Adjust player's camera position to that in this area
-                player.getPlayerCamera().setPositionInArea(this);
+                var camera = player.getPlayerCamera();
+                if ( camera )
+                    camera.setPositionInArea(this);
 
                 if ( before_area != player.getAreaName() ) {
                     // Activate, Activate(respawn), or Deactivate enemies
