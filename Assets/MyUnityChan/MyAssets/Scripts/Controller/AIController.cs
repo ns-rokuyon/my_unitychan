@@ -21,20 +21,6 @@ namespace MyUnityChan {
                     ai.debug = true;
                 ai.build();
             }
-
-            // Common routines
-            // TODO: merge AI class
-            if ( self is ZakoAirTypeBase ) {
-                // Keep inputs for flapping
-                int flap_interval = (self as ZakoAirTypeBase).param.flap_interval;
-                this.UpdateAsObservable().Select(x => x).Skip(flap_interval)
-                    .FirstOrDefault()
-                    .RepeatUntilDestroy(gameObject)
-                    .Where(_ => (self as ZakoAirTypeBase).flight_level > self.transform.position.y)
-                    .Subscribe(_ => {
-                        inputKey(InputCode.JUMP);
-                    });
-            }
         }
 
         // Update is called once per frame
