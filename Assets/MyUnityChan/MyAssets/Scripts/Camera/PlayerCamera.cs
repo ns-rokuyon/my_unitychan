@@ -17,8 +17,9 @@ namespace MyUnityChan {
         private PlayerCameraPosition default_camera_position;
         public PlayerCameraPosition now_camera_position { get; set; }
         private Dictionary<ViewportCorner, Vector3> viewport_corners_in_world;
-        private Camera camera_component;
         private UnityStandardAssets.ImageEffects.MotionBlur blur;
+        private Camera camera_component;
+        private Camera worldspace_ui_camera_component;
 
         // Temp flags
         private bool keep_zooming;
@@ -32,9 +33,9 @@ namespace MyUnityChan {
 
         // Use this for initialization
         void Awake() {
-            //GameObject.Find(Const.Canvas.GAME_CAMERA_CANVAS).GetComponent<Canvas>().worldCamera = this.gameObject.GetComponent<Camera>();
-
             camera_component = GetComponent<Camera>();
+            worldspace_ui_camera_component = transform.FindChild("WorldUICamera").GetComponent<Camera>();
+
             blur = GetComponent<UnityStandardAssets.ImageEffects.MotionBlur>();
 
             default_camera_position = PlayerCameraPosition.getDefault();
@@ -43,6 +44,8 @@ namespace MyUnityChan {
             viewport_corners_in_world = new Dictionary<ViewportCorner, Vector3>();
 
             keep_zooming = false;
+
+            GUIObjectBase.getCanvas(Const.Canvas.WORLD_SPACE_CANVAS).GetComponent<Canvas>().worldCamera = worldspace_ui_camera_component;
         }
 
         // Update is called once per frame
