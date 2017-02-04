@@ -31,13 +31,13 @@ namespace MyUnityChan {
 
             // accelerate
             if ( !enemy.isTouchedWall() ) {
-                enemy.GetComponent<Rigidbody>().AddForce(horizontal * moveF);
+                enemy.rigid_body.AddForce(horizontal * moveF);
             }
 
-            float vx = enemy.GetComponent<Rigidbody>().velocity.x;
-            float vy = enemy.GetComponent<Rigidbody>().velocity.y;
+            float vx = enemy.rigid_body.velocity.x;
+            float vy = enemy.rigid_body.velocity.y;
             if ( Mathf.Abs(vx) > maxspeed ) {
-                enemy.GetComponent<Rigidbody>().velocity = new Vector3(Mathf.Sign(vx) * maxspeed, vy);
+                enemy.rigid_body.velocity = new Vector3(Mathf.Sign(vx) * maxspeed, vy);
             }
 
             if ( enemy is IEnemyWalk )

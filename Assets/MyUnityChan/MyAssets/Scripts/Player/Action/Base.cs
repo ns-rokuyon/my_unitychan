@@ -25,26 +25,26 @@ namespace MyUnityChan {
 
         public override void performFixed() {
             Vector3 fw = player.transform.forward;
-            float vx = player.GetComponent<Rigidbody>().velocity.x;
+            float vx = player.rigid_body.velocity.x;
 
             if ( Mathf.Abs(vx) < 0.001f ) {
-                player.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-                player.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                player.rigid_body.angularVelocity = Vector3.zero;
+                player.rigid_body.velocity = Vector3.zero;
                 return;
             }
 
             // brake down if no input
             if ( Mathf.Sign(fw.x) == Mathf.Sign(vx) ) {
-                player.GetComponent<Rigidbody>().AddForce(fw * -1 * brake_power);
+                player.rigid_body.AddForce(fw * -1 * brake_power);
             }
             else {
-                player.GetComponent<Rigidbody>().AddForce(fw * brake_power);
+                player.rigid_body.AddForce(fw * brake_power);
             }
         }
 
         public override bool condition() {
             float horizontal = controller.keyHorizontal();
-            float vx = player.GetComponent<Rigidbody>().velocity.x;
+            float vx = player.rigid_body.velocity.x;
             return player.isGrounded() &&
                 !player.isInputLocked() &&
                 (Mathf.Abs(horizontal) < 0.2 && Mathf.Abs(vx) > 0.2f);
@@ -55,6 +55,7 @@ namespace MyUnityChan {
         private float maxspeed = 5.0f;
         private float terminal_velocity = 10.0f;
         private Vector3 moveF;
+        private Rigidbody rb;
 
         private readonly Dictionary<Const.CharacterName, Vector3> __moveF = new Dictionary<Const.CharacterName, Vector3>{
             { Const.CharacterName.UNITYCHAN, new Vector3(4000f, 0, 0) },
@@ -64,6 +65,7 @@ namespace MyUnityChan {
         public PlayerAccel(Character character)
             : base(character) {
             moveF = __moveF[character.character_name];
+            rb = player.rigid_body;
         }
 
         public override string name() {
@@ -75,35 +77,34 @@ namespace MyUnityChan {
         }
 
         public override void performFixed() {
-            Rigidbody rigidbody = player.GetComponent<Rigidbody>();
             float horizontal = controller.keyHorizontal();
             Vector3 fw = player.transform.forward;
-            float vx = rigidbody.velocity.x;
+            float vx = rb.velocity.x;
 
             //if ( Mathf.Abs(horizontal) >= 0.2 && horizontal * vx < maxspeed ) {
             if ( Mathf.Abs(horizontal) >= 0.2 ) {
                 if ( player.isGrounded() && Mathf.Sign(horizontal) != Mathf.Sign(vx) && Mathf.Abs(vx) > 0.1f ) {
                     // when player is turning, add low force
                     if ( player.isDash() ) {
-                        rigidbody.AddForce(horizontal * moveF / 8.0f);
+                        rb.AddForce(horizontal * moveF / 8.0f);
                     }
                     else {
-                        rigidbody.AddForce(horizontal * moveF / 4.0f);
+                        rb.AddForce(horizontal * moveF / 4.0f);
                     }
                 }
                 else {
                     // accelerate
                     if ( !player.isTouchedWall() ) {
-                       rigidbody.AddForce(horizontal * moveF);
+                       rb.AddForce(horizontal * moveF);
                     }
                 }
             }
 
             if ( !player.isGrounded() ) {
-                if ( rigidbody.velocity.y > -terminal_velocity) {
+                if ( rb.velocity.y > -terminal_velocity) {
                     float coef = 23.9f;
                     // Quick falling down
-                    player.GetComponent<Rigidbody>().AddForce(Vector3.down * coef * rigidbody.mass, ForceMode.Force);
+                    player.GetComponent<Rigidbody>().AddForce(Vector3.down * coef * rb.mass, ForceMode.Force);
                 }
             }
         }
@@ -111,6 +112,8 @@ namespace MyUnityChan {
         public override void perform() {
             float horizontal = controller.keyHorizontal();
             float vx = player.GetComponent<Rigidbody>().velocity.x;
+
+            player.getAnimator().SetFloat("Speed", Mathf.Abs(horizontal));
 
             //if ( Mathf.Abs(horizontal) >= 0.2 && horizontal * vx < maxspeed ) {
             if ( Mathf.Abs(horizontal) >= 0.2 ) {
@@ -128,7 +131,7 @@ namespace MyUnityChan {
         }
 
         public override bool condition() {
-            return !player.isInputLocked() && !player.isGuarding();
+            return !player.isInputLocked() && !player.isGuarding() && !player.isGrappling();
         }
     }
 

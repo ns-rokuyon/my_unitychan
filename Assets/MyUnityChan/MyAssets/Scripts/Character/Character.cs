@@ -16,7 +16,7 @@ namespace MyUnityChan {
         public CharacterStatus status { get; set; }
         public GroundChecker ground_checker { get; protected set; }
         public RoofChecker roof_checker { get; protected set; }
-        public Rigidbody rigid_body { get; protected set; }
+        //public Rigidbody rigid_body { get; protected set; }
         public float height { get; protected set; }
         public float width { get; protected set; }
 
@@ -41,7 +41,6 @@ namespace MyUnityChan {
 
             ground_checker = GetComponent<GroundChecker>();
             roof_checker = GetComponent<RoofChecker>();
-            rigid_body = GetComponent<Rigidbody>();
             locker = null;
 
             awake();
@@ -124,14 +123,12 @@ namespace MyUnityChan {
             Vector3 v = rigid_body.velocity;
             DebugManager.log("keep=" + rigid_body.velocity);
             while ( isHitstopping() ) {
-                if ( rigid_body )
-                    rigid_body.velocity = Vector3.zero;
+                rigid_body.velocity = Vector3.zero;
                 if ( animator )
                     animator.speed = 0.1f;
                 yield return null;
             }
-            if ( rigid_body )
-                rigid_body.velocity = v;
+            rigid_body.velocity = v;
             if ( animator )
                 animator.speed = 1.0f;
         }
@@ -159,12 +156,10 @@ namespace MyUnityChan {
             if ( power_y == 0.0f ) {
                 return;
             }
-            if ( rigid_body ) {
-                if ( isGrounded() )
-                    rigid_body.AddForce(new Vector3(0.0f, power_y, 0.0f), ForceMode.Impulse);
-                else 
-                    rigid_body.velocity = Vector3.zero;
-            }
+            if ( isGrounded() )
+                rigid_body.AddForce(new Vector3(0.0f, power_y, 0.0f), ForceMode.Impulse);
+            else 
+                rigid_body.velocity = Vector3.zero;
         }
 
         public float distanceXTo(Character to) {
@@ -176,21 +171,15 @@ namespace MyUnityChan {
         }
 
         public float getVx(bool abs=false) {
-            if ( rigid_body ) {
-                if ( abs )
-                    return Mathf.Abs(rigid_body.velocity.x);
-                return rigid_body.velocity.x;
-            }
-            return 0.0f;    // TODO
+            if ( abs )
+                return Mathf.Abs(rigid_body.velocity.x);
+            return rigid_body.velocity.x;
         }
 
         public float getVy(bool abs=false) {
-            if ( rigid_body ) {
-                if ( abs ) 
-                    return Mathf.Abs(rigid_body.velocity.y);
-                return rigid_body.velocity.y;
-            }
-            return 0.0f;
+            if ( abs ) 
+                return Mathf.Abs(rigid_body.velocity.y);
+            return rigid_body.velocity.y;
         }
 
         protected void recordPosition() {

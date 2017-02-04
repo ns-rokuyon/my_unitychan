@@ -56,7 +56,7 @@ namespace MyUnityChan {
         }
 
         public override bool condition() {
-            return !player.isGuarding();
+            return !player.isGuarding() && !player.isGrappling() && !player.isHitstopping();
         }
     }
 }

@@ -6,6 +6,24 @@ namespace MyUnityChan {
 
         protected SoundPlayer sound;
 
+        private TimeControllable _tc;
+        public TimeControllable time_control {
+            get { return _tc ?? (_tc = GetComponent<TimeControllable>()); }
+        }
+
+        private RigidbodyWrapper _rb;
+        public RigidbodyWrapper rigid_body {
+            get {
+                if ( !_rb ) {
+                    if ( time_control && time_control is ChronosTimeControllable )
+                        _rb = new ChronosRigidbodyWrapper(gameObject);
+                    else
+                        _rb = new RigidbodyWrapper(gameObject);
+                }
+                return _rb;
+            }
+        }
+
         public void adjustZtoBaseline() {
             Area area = AreaManager.Instance.getAreaFromMemberObject(this.gameObject);
             if ( !area.isEmptyBaselineZ() ) {

@@ -7,8 +7,6 @@ namespace MyUnityChan {
         public Vector3 flapF { get; private set; }
         public Vector3 flyF { get; private set; }
 
-        private Rigidbody rigidbody { get; set; }
-
         public override string name() {
             return "FLY";
         }
@@ -18,7 +16,6 @@ namespace MyUnityChan {
             flyF = _flyF;
             flapF = _flapF;
             maxspeed = _maxspeed;
-            rigidbody = enemy.GetComponent<Rigidbody>();
         }
 
         public void setParam(ZakoAirTypeBase.Param param) {
@@ -34,19 +31,19 @@ namespace MyUnityChan {
 
             // accelerate
             if ( !enemy.isTouchedWall() ) {
-                rigidbody.AddForce(horizontal * flyF);
+                enemy.rigid_body.AddForce(horizontal * flyF);
             }
 
             // Flap
             if ( flap ) {
-                rigidbody.AddForce(flapF, ForceMode.Impulse);
+                enemy.rigid_body.AddForce(flapF, ForceMode.Impulse);
             }
 
             if ( maxspeed > 0.0f ) {
-                float vx = rigidbody.velocity.x;
-                float vy = rigidbody.velocity.y;
+                float vx = enemy.rigid_body.velocity.x;
+                float vy = enemy.rigid_body.velocity.y;
                 if ( Mathf.Abs(vx) > maxspeed ) {
-                    rigidbody.velocity = new Vector3(Mathf.Sign(vx) * maxspeed, vy);
+                    enemy.rigid_body.velocity = new Vector3(Mathf.Sign(vx) * maxspeed, vy);
                 }
             }
         }

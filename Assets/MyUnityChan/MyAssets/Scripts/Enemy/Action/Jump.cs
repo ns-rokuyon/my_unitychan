@@ -19,7 +19,7 @@ namespace MyUnityChan {
         }
 
         public override void performFixed() {
-            enemy.GetComponent<Rigidbody>().AddForce(new Vector3(enemy.transform.forward.x * jumpFx, jumpFy, 0), ForceMode.Impulse);
+            enemy.rigid_body.AddForce(new Vector3(enemy.transform.forward.x * jumpFx, jumpFy, 0), ForceMode.Impulse);
         }
 
         public override bool condition() {
