@@ -11,7 +11,8 @@ namespace MyUnityChan {
             initialize();
 
             Observable.TimerFrame(frame)
-                .Subscribe(_ => destroy());
+                .Subscribe(_ => destroy())
+                .AddTo(gameObject);
         }
 
         public void destroy() {

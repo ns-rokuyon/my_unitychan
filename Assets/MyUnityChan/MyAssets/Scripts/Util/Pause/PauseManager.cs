@@ -1,6 +1,12 @@
-﻿using UnityEngine;
+﻿#define USE_CHRONOS
+using UnityEngine;
 using UnityChan;
+using System.Linq;
 using System.Collections;
+
+#if USE_CHRONOS
+using Chronos;
+#endif
 
 namespace MyUnityChan {
     public class PauseManager : SingletonObjectBase<PauseManager> {
@@ -11,12 +17,17 @@ namespace MyUnityChan {
         public PauseControlMethod control_on_pause;
 
         public int delay_control_count = 2;
+        public bool paused = false;
 
         public void pause(bool on, PauseControlMethod control=null, PauseOffCallBack callback=null) {
             if ( on ) {
-                Time.timeScale = 0;
+                paused = on;
+
+                changeTimeScaleOnPause();
+
                 pause_off_callback = callback;
                 control_on_pause = control;
+
                 GUIObjectBase.getCanvas("Canvas_HUD").GetComponent<Canvas>().enabled = false;
                 GameStateManager.self().player_manager.getNowPlayer()
                     .GetComponent<SpringManager>().enabled = false;
@@ -24,7 +35,9 @@ namespace MyUnityChan {
             else {
                 GameStateManager.self().player_manager.getNowPlayer()
                     .GetComponent<SpringManager>().enabled = true;
-                Time.timeScale = 1.0f;
+
+                changeTimeScaleOnResume();
+
                 if ( pause_off_callback != null ) {
                     pause_off_callback();
                 }
@@ -32,7 +45,28 @@ namespace MyUnityChan {
                 pause_off_callback = null; 
                 control_on_pause = null;
                 delay_control_count = 2;
+                paused = false;
             }
+        }
+
+        private void changeTimeScaleOnPause() {
+#if USE_CHRONOS
+            Const.TimeScaleChronosClockNames.ForEach(key => {
+                Timekeeper.instance.Clock(key).localTimeScale = 0.0f;
+            });
+#else
+            Time.timeScale = 0.0f;
+#endif
+        }
+
+        private void changeTimeScaleOnResume() {
+#if USE_CHRONOS
+            Const.TimeScaleChronosClockNames.ForEach(key => {
+                Timekeeper.instance.Clock(key).localTimeScale = 1.0f;
+            });
+#else
+            Time.timeScale = 1.0f;
+#endif
         }
 
         public static void setPauseControlMethod(PauseControlMethod control) {
@@ -58,10 +92,39 @@ namespace MyUnityChan {
         }
 
         public static bool isPausing() {
-            if ( Time.timeScale > 0 ) {
-                return false;
+            return Instance.paused;
+            //if ( Time.timeScale > 0 ) {
+            //    return false;
+            //}
+            //return true;
+        }
+    }
+
+    public class PauseState : StructBase {
+
+    }
+
+    public class RigidbodyPauseState : PauseState {
+        public Vector3 velocity { get; set; }
+        public Vector3 angular_velocity { get; set; }
+
+        public RigidbodyPauseState(Rigidbody rb) : base() {
+            set(rb);
+        }
+
+        public void set(Rigidbody rb) {
+            if ( rb ) {
+                velocity = rb.velocity;
+                angular_velocity = rb.angularVelocity;
             }
-            return true;
+            else {
+                velocity = Vector3.zero;
+                angular_velocity = Vector3.zero;
+            }
+        }
+
+        public void pause(Rigidbody rb) {
+            set(rb);
         }
     }
 }

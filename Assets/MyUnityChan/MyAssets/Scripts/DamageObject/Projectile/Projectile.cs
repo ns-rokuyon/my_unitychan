@@ -70,18 +70,16 @@ namespace MyUnityChan {
         }
 
         protected void projectileCommonUpdate(string resource_path) {
-            if ( PauseManager.isPausing() ) return;
-
             if ( waiting_for_destroying ) return;
 
             if ( !use_physics ) {
                 if ( acceleration > 0.0f ) {
-                    velocity = velocity + acceleration * Time.deltaTime;
+                    velocity = velocity + acceleration * time_control.deltaTime;
                     if ( terminal_velocity > 0.0f ) {
                         velocity = terminal_velocity;
                     }
                 }
-                transform.Translate(target_dir * velocity, Space.World);
+                transform.Translate(target_dir * velocity * time_control.deltaTime, Space.World);
             }
 
             distance_moved = Mathf.Abs(transform.position.x - start_position.x);
@@ -101,7 +99,7 @@ namespace MyUnityChan {
 
         protected IEnumerator destroy(string resource_path) {
             if ( waiting_time_for_destroying > 0.0f ) {
-                if ( GetComponent<Rigidbody>() ) GetComponent<Rigidbody>().velocity = Vector3.zero;
+                if ( rigid_body ) rigid_body.velocity = Vector3.zero;
                 foreach ( var component_enabler in component_to_disable_in_waiting ) {
                     component_enabler(false);
                 }

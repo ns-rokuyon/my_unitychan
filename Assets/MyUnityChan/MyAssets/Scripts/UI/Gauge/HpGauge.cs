@@ -31,7 +31,7 @@ namespace MyUnityChan {
 
             // Decrement alpha in bar color
             this.UpdateAsObservable()
-                .Where(_ => auto_hidden && renderer != null)
+                .Where(_ => auto_hidden && !PauseManager.isPausing() && renderer != null)
                 .Where(_ => renderer.spriteBarColor.a > 0.0f)
                 .Subscribe(_ => {
                     renderer.spriteBarColor.a -= Const.Unit.HP_BAR_ALPHA_DECREASE_SPEED;
@@ -42,7 +42,7 @@ namespace MyUnityChan {
 
             // Reset alpha to 1.0
             this.ObserveEveryValueChanged(_ => energybar.valueCurrent)
-                .Where(_ => auto_hidden && renderer != null)
+                .Where(_ => auto_hidden && !PauseManager.isPausing() && renderer != null)
                 .Subscribe(_ => {
                     renderer.spriteBarColor.a = 1.0f;
                     foreach ( var s in renderer.spritesForeground ) {
