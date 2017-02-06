@@ -3,7 +3,11 @@ using System.Collections;
 
 namespace MyUnityChan {
     public class TimeControllable : ObjectBase {
-        public bool paused { get; protected set; }
+        public virtual bool paused {
+            get {
+                return Time.timeScale == 0.0f;
+            }
+        }
 
         public virtual float deltaTime {
             get {

@@ -12,6 +12,12 @@ namespace MyUnityChan {
             }
         }
 
+        public override bool paused {
+            get {
+                return timeline.timeScale == 0.0f;
+            }
+        }
+
         public override float deltaTime {
             get {
                 return timeline.deltaTime;

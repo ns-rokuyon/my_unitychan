@@ -10,12 +10,16 @@ namespace MyUnityChan {
         protected abstract void start();
         protected abstract void update();
 
+        void Awake() {
+            character = GetComponent<Character>();
+        }
+
         void Start() {
             start();
         }
 
         void Update() {
-            if ( PauseManager.isPausing() )
+            if ( character.time_control.paused )
                 return;
 
             // Orider by each action priority
