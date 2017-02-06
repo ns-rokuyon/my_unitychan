@@ -10,9 +10,14 @@ namespace MyUnityChan {
         [SerializeField]
         public GameText tab_name;
         public GameObject prior_selectable;
+        public Const.ID.MenuTabPage tab_id;
+
+        public float side_cover_offset;
+        public float side_cover_deg;
 
         public int id { get; set; }
         public List<Selectable> selectables { get; private set; }
+        public MenuNavbarButtonTabPage nav { get; set; }
         private Canvas canvas;
         private EventSystem es;
 
@@ -24,6 +29,7 @@ namespace MyUnityChan {
             foreach ( Selectable selectable in canvas.GetComponentsInChildren<Selectable>() ) {
                 selectables.Add(selectable);
             }
+
         }
 
         void Start() {

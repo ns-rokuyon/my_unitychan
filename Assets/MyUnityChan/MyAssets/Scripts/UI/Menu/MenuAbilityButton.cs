@@ -8,6 +8,7 @@ using UniRx.Triggers;
 using DG.Tweening;
 
 namespace MyUnityChan {
+    [RequireComponent(typeof(SoundPlayer))]
     public class MenuAbilityButton : GUIObjectBase, ISelectHandler, IDeselectHandler {
         [SerializeField]
         public Ability.Id ability_id;
@@ -16,24 +17,39 @@ namespace MyUnityChan {
         private Text description;
 
         public PlayerAbility ability { get; set; } 
+        public Button button { get; protected set; }
+        public RawImage icon { get; protected set; }
+
+        private Color32 icon_default_color;
 
         void Awake() {
             setupSoundPlayer();
             rect_transform = GetComponent<RectTransform>();
             description = transform.parent.GetComponentInChildren<Text>();
+            button = GetComponent<Button>();
+            icon = GetComponentInChildren<RawImage>();
+            if ( icon )
+                icon_default_color = icon.color;
         }
 
         void Start() {
+            button.onClick.AddListener(press);
+
             ability = GameStateManager.self().player_manager.status.getAbility(ability_id);
             this.ObserveEveryValueChanged(_ => ability.status)
                 .Subscribe(s => {
                     if ( s == Ability.Status.NO_GET ) {
-                        GetComponent<RawImage>().enabled = false;
+                        icon.enabled = false;
                     }
                     else if ( s == Ability.Status.OFF ) {
+                        icon.color = new Color32(icon_default_color.r,
+                                                 icon_default_color.g,
+                                                 icon_default_color.b,
+                                                 16);
                     }
                     else if ( s == Ability.Status.ON ) {
-                        GetComponent<RawImage>().enabled = true;
+                        icon.enabled = true;
+                        icon.color = icon_default_color;
                     }
                 });
         }
@@ -43,9 +59,11 @@ namespace MyUnityChan {
             rect_transform.localPosition = rect_transform.localPosition.add(0, 0, -10.0f);
             if ( ability.status == Ability.Status.NO_GET ) {
                 description.text = "?????";
+                MenuManager.Instance.player_demo.play(ability.def.demo);
             }
             else {
                 description.text = ability.def.name.get();
+                MenuManager.Instance.player_demo.play(ability.def.demo);
             }
         }
 

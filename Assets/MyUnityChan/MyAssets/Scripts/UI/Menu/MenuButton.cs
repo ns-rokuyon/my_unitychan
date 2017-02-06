@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 using System.Collections;
 
 namespace MyUnityChan {
+    [RequireComponent(typeof(SoundPlayer))]
     public class MenuButton : GUIObjectBase, ISelectHandler {
 
         protected virtual void Awake() {
