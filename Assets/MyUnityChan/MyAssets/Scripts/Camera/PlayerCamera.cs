@@ -21,6 +21,8 @@ namespace MyUnityChan {
         private Camera camera_component;
         private Camera worldspace_ui_camera_component;
 
+        public CameraEffect effect { get; protected set; }
+
         // Temp flags
         private bool keep_zooming;
 
@@ -35,6 +37,7 @@ namespace MyUnityChan {
         void Awake() {
             camera_component = GetComponent<Camera>();
             worldspace_ui_camera_component = transform.FindChild("WorldUICamera").GetComponent<Camera>();
+            effect = GetComponent<CameraEffect>();
 
             blur = GetComponent<UnityStandardAssets.ImageEffects.MotionBlur>();
 
