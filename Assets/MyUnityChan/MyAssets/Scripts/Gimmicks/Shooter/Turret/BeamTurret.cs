@@ -25,6 +25,7 @@ namespace MyUnityChan {
             obj.setParent(Hierarchy.Layout.PROJECTILE);
 
             Beam beam = obj.GetComponent<Beam>();
+            beam.time_control.changeClock(owner.time_control.clockName);
             beam.setDir(angle());
             beam.setStartPosition(this.gameObject.transform.position);
 

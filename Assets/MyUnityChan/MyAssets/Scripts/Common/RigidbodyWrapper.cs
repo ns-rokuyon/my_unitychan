@@ -20,6 +20,11 @@ namespace MyUnityChan {
             set { rb.angularVelocity = value; }
         }
 
+        public virtual bool isKinematic {
+            get { return rb.isKinematic; }
+            set { rb.isKinematic = value; }
+        }
+
 		public virtual void AddForce(Vector3 force, ForceMode mode = ForceMode.Force) {
             rb.AddForce(force, mode);
         }
@@ -51,6 +56,11 @@ namespace MyUnityChan {
         public override Vector3 angularVelocity {
             get { return crb.angularVelocity; }
             set { crb.angularVelocity = value; }
+        }
+
+        public override bool isKinematic {
+            get { return crb.isKinematic; }
+            set { crb.isKinematic = value; }
         }
 
 		public override void AddForce(Vector3 force, ForceMode mode = ForceMode.Force) {

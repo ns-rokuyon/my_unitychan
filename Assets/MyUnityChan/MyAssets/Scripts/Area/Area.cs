@@ -159,10 +159,12 @@ namespace MyUnityChan {
             gameobjects.ForEach(obj => obj.SetActive(false));
         }
 
-        public void OnTriggerEnter(Collider colliderInfo) {
+        public virtual void OnTriggerEnter(Collider colliderInfo) {
             if ( colliderInfo.gameObject.tag == "Player" ) {
                 // Player entered into this area or player switched in this area
                 Player player = colliderInfo.gameObject.GetComponent<Player>();
+                if ( !player.playable )
+                    return;
                 string before_area = player.getAreaName();
                 player.setAreaName(this.gameObject.name);
                 string name = player.gameObject.name;

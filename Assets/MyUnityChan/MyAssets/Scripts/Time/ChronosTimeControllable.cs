@@ -23,5 +23,15 @@ namespace MyUnityChan {
                 return timeline.deltaTime;
             }
         }
+
+        public override string clockName {
+            get {
+                return timeline.globalClockKey;
+            }
+        }
+
+        public override void changeClock(string clock_name) {
+            timeline.globalClockKey = clock_name;
+        }
     }
 }

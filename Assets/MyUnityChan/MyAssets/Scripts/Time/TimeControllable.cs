@@ -14,5 +14,14 @@ namespace MyUnityChan {
                 return Time.deltaTime;
             }
         }
+
+        public virtual string clockName {
+            get {
+                return "Time";
+            }
+        }
+
+        public virtual void changeClock(string clock_name) {
+        }
     }
 }

@@ -19,6 +19,11 @@ namespace MyUnityChan {
         public PlayerAbility ability { get; set; } 
         public Button button { get; protected set; }
         public RawImage icon { get; protected set; }
+        public PlayerDemo demo {
+            get {
+                return MenuManager.Instance.player_demo;
+            }
+        }
 
         private Color32 icon_default_color;
 
@@ -57,18 +62,22 @@ namespace MyUnityChan {
         public void OnSelect(BaseEventData eventData) {
             se(Const.ID.SE.BUTTON_SELECT);
             rect_transform.localPosition = rect_transform.localPosition.add(0, 0, -10.0f);
+            demo.setDemoCameraDistance(ability.def.demo_camera_distance);
+            ability.def.onSelectAbilityButton(demo.pm);
             if ( ability.status == Ability.Status.NO_GET ) {
                 description.text = "?????";
-                MenuManager.Instance.player_demo.play(ability.def.demo);
+                demo.play(ability.def.demo);
             }
             else {
                 description.text = ability.def.name.get();
-                MenuManager.Instance.player_demo.play(ability.def.demo);
+                demo.play(ability.def.demo);
             }
         }
 
         public void OnDeselect(BaseEventData eventData) {
             rect_transform.localPosition = rect_transform.localPosition.add(0, 0, 10.0f);
+            ability.def.onDeSelectAbilityButton(demo.pm);
+            demo.centering();
         }
 
         public void press() {

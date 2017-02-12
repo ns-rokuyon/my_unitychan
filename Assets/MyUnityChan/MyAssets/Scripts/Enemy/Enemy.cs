@@ -83,7 +83,7 @@ namespace MyUnityChan {
 
         // Update is called once per frame
         protected override void update() {
-            if ( PauseManager.isPausing() ) return;
+            if ( time_control.paused ) return;
             if ( !controller ) return;
 
             if ( SettingManager.get(Settings.Flag.ENEMY_STOP) ) {

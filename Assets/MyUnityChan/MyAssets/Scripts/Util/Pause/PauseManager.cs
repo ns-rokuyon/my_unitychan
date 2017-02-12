@@ -18,6 +18,11 @@ namespace MyUnityChan {
 
         public int delay_control_count = 2;
         public bool paused = false;
+        public PlayerManager pm {
+            get {
+                return GameStateManager.self().player_manager;
+            }
+        }
 
         public void pause(bool on, PauseControlMethod control=null, PauseOffCallBack callback=null) {
             if ( on ) {
@@ -29,12 +34,12 @@ namespace MyUnityChan {
                 control_on_pause = control;
 
                 GUIObjectBase.getCanvas("Canvas_HUD").GetComponent<Canvas>().enabled = false;
-                GameStateManager.self().player_manager.getNowPlayer()
-                    .GetComponent<SpringManager>().enabled = false;
+                pm.getNowPlayer().GetComponent<SpringManager>().enabled = false;
+                pm.camera.effect.setPauseMenuEffect();
             }
             else {
-                GameStateManager.self().player_manager.getNowPlayer()
-                    .GetComponent<SpringManager>().enabled = true;
+                pm.getNowPlayer().GetComponent<SpringManager>().enabled = true;
+                pm.camera.effect.restore();
 
                 changeTimeScaleOnResume();
 

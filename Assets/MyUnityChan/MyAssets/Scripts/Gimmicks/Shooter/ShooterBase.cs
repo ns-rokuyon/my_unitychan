@@ -79,7 +79,7 @@ namespace MyUnityChan {
         }
 
         public void baseUpdate() {
-            if ( PauseManager.isPausing() ) return;
+            if ( owner.time_control.paused ) return;
 
             if ( owner != null && (owner.isFrozen() || owner.isStunned()) ) 
                 return;

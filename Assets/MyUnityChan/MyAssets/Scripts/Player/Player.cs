@@ -38,6 +38,7 @@ namespace MyUnityChan {
         public List<Const.BeamName> beam_slot { get; set; }
         public WallChecker wall_checker { get; set; }
         public UnityChanBoneManager bone_manager { get; set; }
+        public BeamTurret beam_turret { get; protected set; }
 
         public bool playable {
             get {
@@ -56,6 +57,7 @@ namespace MyUnityChan {
             // animation
             animator = GetComponent<Animator>();
             bone_manager = GetComponent<UnityChanBoneManager>();
+            beam_turret = GetComponent<BeamTurret>();
             beam_slot = new List<Const.BeamName>();
         }
 
