@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UniRx;
 using UniRx.Triggers;
 using EnergyBarToolkit;
+using DG.Tweening;
 
 namespace MyUnityChan {
     [RequireComponent(typeof(EnergyBar))]
@@ -12,9 +13,21 @@ namespace MyUnityChan {
         public GameText caption;
         [SerializeField]
         public Const.ID.Progress target;
+        public bool bar_animation;
 
         protected EnergyBar bar;
         protected Text caption_text;
+
+        public float progress {
+            get {
+                return bar.valueCurrent;    // percent
+            }
+            set {
+                bar.valueCurrent = (int)value;   // percent
+            }
+        }
+
+        protected float BAR_ANIMATION_SEC = 0.5f;
 
         void Awake() {
             bar = GetComponent<EnergyBar>();
@@ -23,17 +36,25 @@ namespace MyUnityChan {
         }
 
         void Start() {
-            Observable.EveryUpdate()
-                .Where(_ => GameStateManager.now() == GameStateManager.GameState.MENU)
-                .Subscribe(_ => bar.valueMax = getMax());
+            parent_canvas.ObserveEveryValueChanged(c => PauseManager.isPausing() && c.enabled)
+                .Where(b => b)
+                .Subscribe(_ => {
+                    caption_text.text = caption.get();
+                    bar.valueMax = 100;     // percent
+                    if ( bar_animation ) {
+                        progress = 0;
+                        DOTween.To(() => progress, (x) => progress = x, getPercent(), BAR_ANIMATION_SEC)
+                            .SetUpdate(true)
+                            .SetEase(Ease.Linear);
+                    }
+                    else {
+                        progress = getPercent();
+                    }
+                });
+        }
 
-            Observable.EveryUpdate()
-                .Where(_ => GameStateManager.now() == GameStateManager.GameState.MENU)
-                .Subscribe(_ => bar.valueCurrent = getCurrent());
-
-            Observable.EveryUpdate()
-                .Where(_ => GameStateManager.now() == GameStateManager.GameState.MENU)
-                .Subscribe(_ => caption_text.text = caption.get());
+        public float getPercent() {
+            return getCurrent() / (float)getMax() * 100.0f;
         }
 
         public int getCurrent() {
