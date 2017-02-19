@@ -18,6 +18,9 @@ namespace MyUnityChan {
                 MeshFilter mf = null;
                 Area[] found = FindObjectsOfType<Area>();
                 foreach ( Area area in found ) {
+                    if ( area is SystemArea )
+                        continue;
+
                     string name = area.gameObject.name;
                     GameObject obj = PrefabInstantiater.create("Prefabs/UI/Map/MapAreaElement", builder.build_to);
                     obj.name = name + "__map";

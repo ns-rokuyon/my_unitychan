@@ -16,9 +16,6 @@ namespace MyUnityChan {
             point_sets = new List<Tuple<GameObject, GameObject>>();
             pass_monitoring = new PassMonitoring();
             area_object = GameObject.Find(area_path);
-        }
-
-        void Start() {
             area = area_object.GetComponent<Area>();
         }
 

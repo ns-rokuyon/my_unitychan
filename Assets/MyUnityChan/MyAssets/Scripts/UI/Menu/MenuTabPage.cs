@@ -60,5 +60,9 @@ namespace MyUnityChan {
             canvas.enabled = false;
             es.SetSelectedGameObject(null);
         }
+
+        public GameObject findUIObjectInChildren(string name) {
+            return GameObject.Find(Hierarchy.getHierarchyPath(this.gameObject) + "/" + name);
+        }
     }
 }

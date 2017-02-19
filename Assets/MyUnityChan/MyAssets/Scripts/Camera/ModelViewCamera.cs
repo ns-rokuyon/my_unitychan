@@ -13,6 +13,8 @@ namespace MyUnityChan {
         public bool orbital_reverse;
         public float orbital_speed_scaling = 40.0f;
 
+        private Camera _camera;
+
         public Vector3 target_position_offseted {
             get {
                 return target.transform.position.add(offset.x, offset.y, offset.z);
@@ -57,5 +59,12 @@ namespace MyUnityChan {
             transform.position = transform.position.add(offset.x, offset.y, offset.z);
             gameObject.transform.rotation = Quaternion.Euler(angle);
         }
+
+        public Camera getCamera() {
+            if ( !_camera )
+                _camera = GetComponent<Camera>();
+            return _camera;
+        }
+
     }
 }
