@@ -104,14 +104,14 @@ namespace MyUnityChan {
                 if ( rb.velocity.y > -terminal_velocity) {
                     float coef = 23.9f;
                     // Quick falling down
-                    player.GetComponent<Rigidbody>().AddForce(Vector3.down * coef * rb.mass, ForceMode.Force);
+                    rb.AddForce(Vector3.down * coef * rb.mass, ForceMode.Force);
                 }
             }
         }
 
         public override void perform() {
             float horizontal = controller.keyHorizontal();
-            float vx = player.GetComponent<Rigidbody>().velocity.x;
+            float vx = rb.velocity.x;
 
             player.getAnimator().SetFloat("Speed", Mathf.Abs(horizontal));
 
@@ -170,7 +170,7 @@ namespace MyUnityChan {
         public override void performFixed() {
             float horizontal = controller.keyHorizontal();
             if ( !player.isTouchedWall() ) {
-                player.GetComponent<Rigidbody>().AddForce(horizontal * moveF);
+                player.rigid_body.AddForce(horizontal * moveF);
             }
         }
 
@@ -232,16 +232,15 @@ namespace MyUnityChan {
         }
 
         private void limitSpeed(float speed) {
-            float vx = player.GetComponent<Rigidbody>().velocity.x;
-            float vy = player.GetComponent<Rigidbody>().velocity.y;
+            float vx = player.rigid_body.velocity.x;
+            float vy = player.rigid_body.velocity.y;
             if ( Mathf.Abs(vx) > speed ) {
-                player.GetComponent<Rigidbody>().velocity = new Vector3(Mathf.Sign(vx) * speed, vy);
+                player.rigid_body.velocity = new Vector3(Mathf.Sign(vx) * speed, vy);
             }
         }
 
         public override bool condition() {
             return true;
         }
-
     }
 }

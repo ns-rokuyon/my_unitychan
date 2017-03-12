@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UniRx;
+using RootMotion.FinalIK;
 
 namespace MyUnityChan {
     [RequireComponent(typeof(Animator))]
@@ -39,6 +40,7 @@ namespace MyUnityChan {
         public WallChecker wall_checker { get; set; }
         public UnityChanBoneManager bone_manager { get; set; }
         public BeamTurret beam_turret { get; protected set; }
+        public FullBodyBipedIK ik { get; protected set; }
 
         public bool playable {
             get {
@@ -57,6 +59,7 @@ namespace MyUnityChan {
             // animation
             animator = GetComponent<Animator>();
             bone_manager = GetComponent<UnityChanBoneManager>();
+            ik = GetComponent<FullBodyBipedIK>();
             beam_turret = GetComponent<BeamTurret>();
             beam_slot = new List<Const.BeamName>();
         }
@@ -91,7 +94,7 @@ namespace MyUnityChan {
         }
 
         protected override void update() {
-            float vy = GetComponent<Rigidbody>().velocity.y;
+            float vy = rigid_body.velocity.y;
 
             if ( vy <= 0 && isGrounded() ) {
                 // landing
@@ -183,7 +186,7 @@ namespace MyUnityChan {
                 EffectManager.self().createEffect(Const.ID.Effect.GUARD_01, transform.position, 40, true);
 
                 // Reaction force
-                GetComponent<Rigidbody>().AddForce(transform.forward * (-10.0f), ForceMode.VelocityChange);
+                rigid_body.AddForce(transform.forward * (-10.0f), ForceMode.VelocityChange);
                 return;
             }
             animator.SetTrigger("Damaged");

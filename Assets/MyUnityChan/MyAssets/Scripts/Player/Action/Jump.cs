@@ -40,11 +40,11 @@ namespace MyUnityChan {
             jump_start_y = player.transform.position.y;
             if ( player.isDash() ) {
                 // dashdump (ground jump)
-                player.GetComponent<Rigidbody>().AddForce(dashJumpF[player.character_name].mul(player.transform.forward.x, 1, 1), ForceMode.Impulse);
+                player.rigid_body.AddForce(dashJumpF[player.character_name].mul(player.transform.forward.x, 1, 1), ForceMode.Impulse);
             }
             else {
                 // jump (ground jump or air jump)
-                player.GetComponent<Rigidbody>().AddForce(jumpF[player.character_name], ForceMode.Impulse);
+                player.rigid_body.AddForce(jumpF[player.character_name], ForceMode.Impulse);
             }
         }
 
@@ -113,18 +113,17 @@ namespace MyUnityChan {
             jump_start_y = player.transform.position.y;
             if ( player.isDash() ) {
                 // dashdump (ground jump)
-                player.GetComponent<Rigidbody>().AddForce(dashJumpF[player.character_name].mul(player.transform.forward.x, 1, 1), ForceMode.Impulse);
+                player.rigid_body.AddForce(dashJumpF[player.character_name].mul(player.transform.forward.x, 1, 1), ForceMode.Impulse);
             }
             else {
                 // jump (ground jump or air jump)
                 if ( player.isGrounded() ) {
-                    player.GetComponent<Rigidbody>().AddForce(jumpF[player.character_name], ForceMode.Impulse);
+                    player.rigid_body.AddForce(jumpF[player.character_name], ForceMode.Impulse);
                 }
                 else {
-                    Rigidbody rigidbody = player.GetComponent<Rigidbody>();
-                    rigidbody.velocity = Vector3.zero;
-                    rigidbody.angularVelocity = Vector3.zero;
-                    player.GetComponent<Rigidbody>().AddForce(secondjumpF[player.character_name], ForceMode.Impulse);
+                    player.rigid_body.velocity = Vector3.zero;
+                    player.rigid_body.angularVelocity = Vector3.zero;
+                    player.rigid_body.AddForce(secondjumpF[player.character_name], ForceMode.Impulse);
                     player.voice(Const.ID.PlayerVoice.JUMP);
                 }
             }
@@ -168,7 +167,7 @@ namespace MyUnityChan {
                 return true;
             }
 
-            float scvy = Mathf.Abs(player.GetComponent<Rigidbody>().velocity.y);
+            float scvy = Mathf.Abs(player.rigid_body.velocity.y);
             if ( scvy < 16.0f ) {
                 return true;
             }
@@ -180,7 +179,6 @@ namespace MyUnityChan {
     public class PlayerWallJump : PlayerAction {
         protected Vector3 effect_offset = new Vector3(0.0f, 0.2f, 0.0f);
         protected Const.ID.Effect effect_name = Const.ID.Effect.JUMP_SMOKE_PUFF;
-        protected Rigidbody rigidbody;
 
         private readonly Dictionary<Const.CharacterName, Vector3> jumpF = new Dictionary<Const.CharacterName, Vector3>{
             { Const.CharacterName.UNITYCHAN, new Vector3(0, 600.0f, 0) },       // Mass: 46kg
@@ -195,7 +193,6 @@ namespace MyUnityChan {
 
         public PlayerWallJump(Character character)
             : base(character) {
-            rigidbody = player.GetComponent<Rigidbody>();
         }
 
         public override string name() {
@@ -216,8 +213,8 @@ namespace MyUnityChan {
 
         public override void performFixed() {
             // Wall jump
-            rigidbody.velocity = Vector3.zero;
-            rigidbody.AddForce(F, ForceMode.Impulse);
+            player.rigid_body.velocity = Vector3.zero;
+            player.rigid_body.AddForce(F, ForceMode.Impulse);
             player.lookBack();
         }
 
