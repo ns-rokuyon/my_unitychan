@@ -4,7 +4,7 @@ using UnityChan;
 
 using UnityEngine;
 using System;
-//using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UniRx;
@@ -183,20 +183,34 @@ namespace MyUnityChan {
             if ( status.invincible.now() ) return;
             if ( isGuarding() ) {
                 // Guard effect
-                EffectManager.self().createEffect(Const.ID.Effect.GUARD_01, transform.position, 40, true);
+                EffectManager.createEffect(Const.ID.Effect.GUARD_01, transform.position, 40, true);
 
                 // Reaction force
                 rigid_body.AddForce(transform.forward * (-10.0f), ForceMode.VelocityChange);
                 return;
             }
-            animator.SetTrigger("Damaged");
-            //lockInput(50);
             status.invincible.enable(10);
             status.hp -= dam;
             voice(Const.ID.PlayerVoice.DAMAGED);
             if ( playable ) {
                 manager.camera.shake();
                 manager.hpgauge.shake();
+            }
+        }
+
+        public override void knockback(int dam) {
+            if ( dam < 10 )
+                return;
+
+            if ( dam < 30 ) {
+                lockInput(50);
+                animator.SetTrigger("Damaged");
+                return;
+            }
+
+            if ( dam < 60 ) {
+                animator.CrossFade("Down", 0.2f);
+                lockInput(80);
             }
         }
 
@@ -275,6 +289,7 @@ namespace MyUnityChan {
         }
 
         public bool isAnimState(string anim_name) {
+            // anim_name is an animator state name starts with "Base Layer." instead of clip name
             AnimatorStateInfo anim_state = animator.GetCurrentAnimatorStateInfo(0);
             return anim_state.nameHash == Animator.StringToHash(anim_name);
         }
@@ -335,7 +350,7 @@ namespace MyUnityChan {
             transform.position = dst;
             RaycastHit ground;
             Physics.Raycast(transform.position, Vector3.down, out ground, 5.0f);
-            EffectManager.self().createEffect(Const.ID.Effect.RESURRECTION_01, ground.point, 240, false);
+            EffectManager.createEffect(Const.ID.Effect.RESURRECTION_01, ground.point, 240, false);
             yield return new WaitForSeconds(0.5f);
             resume();
         }

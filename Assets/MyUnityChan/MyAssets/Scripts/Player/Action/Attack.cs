@@ -75,6 +75,7 @@ namespace MyUnityChan {
                 stun = 0;
                 hitstop = 5;
                 frame = 5;
+                knockback = 20;
                 launch_fy = 5.0f;
                 hit_se = Const.ID.SE.HIT_1;
                 effect_name = Const.ID.Effect.IMPACT_02;
@@ -126,6 +127,7 @@ namespace MyUnityChan {
                 stun = 0;
                 hitstop = 8;
                 frame = 5;
+                knockback = 22;
                 launch_fy = 7.0f;
                 hit_se = Const.ID.SE.HIT_2;
                 effect_name = Const.ID.Effect.IMPACT_02;
@@ -178,6 +180,7 @@ namespace MyUnityChan {
                 stun = 0;
                 frame = 12;
                 hitstop = 20;
+                knockback = 30;
                 launch_fy = 7.0f;
                 hit_se = Const.ID.SE.HIT_3;
                 effect_name = Const.ID.Effect.IMPACT_01;

@@ -102,13 +102,8 @@ namespace MyUnityChan {
 
         public override void stun(int stun_power) {
             base.stun(stun_power);
-
-            Animator animator = GetComponent<Animator>();
-            Rigidbody rigidbody = GetComponent<Rigidbody>();
-            if ( rigidbody )
-                rigidbody.velocity = Vector3.zero;
-            if ( animator )
-                animator.speed = 0.2f;
+            if ( this is IEnemyStun )
+                (this as IEnemyStun).onStun();
         }
 
         public override void damage(int dam) {
@@ -128,6 +123,17 @@ namespace MyUnityChan {
                 hp_gauge.setCharacter(this);
                 hp_gauge.setMapHp(max_hp);
                 hp_gauge.gameObject.transform.position = gameObject.transform.position.add(0, height, 0);
+            }
+        }
+
+        public override void knockback(int dam) {
+            base.knockback(dam);
+            if ( !(this is IEnemyKnockback) )
+                return;
+
+            var kb = this as IEnemyKnockback;
+            if ( dam >= kb.getKnockbackThreshold() ) {
+                kb.onKnockback();
             }
         }
 

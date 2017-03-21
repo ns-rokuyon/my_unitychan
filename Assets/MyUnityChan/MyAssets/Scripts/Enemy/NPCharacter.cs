@@ -9,12 +9,11 @@ namespace MyUnityChan {
         static protected List<GameObject> players = new List<GameObject>();
         const int PLAYER_TOUCHING_FRAME_OFFSET = 40;
 
-        protected int player_hit_damage = 3;
+        public int touch_damage = 3;
 
         static public void setPlayers() {
             removeNullPlayers();
             foreach ( GameObject pl in GameObject.FindGameObjectsWithTag("Player") ) {
-                Debug.Log(pl.name);
                 players.Add(pl);
             }
         }
@@ -47,6 +46,7 @@ namespace MyUnityChan {
         protected virtual void die() { }
 
         protected void checkPlayerTouched() {
+            if ( touch_damage == 0 ) return;
             if ( isFrozen() || isStunned() || isHitstopping() || isInputLocked() ) return;
 
             foreach ( KeyValuePair<string, int> pair in touching_players ) {
@@ -60,12 +60,14 @@ namespace MyUnityChan {
         }
 
         protected IEnumerator touchPlayer(Player player) {
-            player.damage(player_hit_damage);
+            player.damage(touch_damage);
             yield return null;
             clearTouchingCount(player);
         }
 
         protected void faceForward() {
+            if ( isInputLocked() )
+                return;
             float dir_x = controller.keyHorizontal();
             gameObject.transform.LookAt(new Vector3(gameObject.transform.position.x + dir_x * 100.0f, gameObject.transform.position.y, transform.position.z));
         }

@@ -12,6 +12,7 @@ namespace MyUnityChan {
                 stun = 60;
                 frame = 5;
                 hitstop = 20;
+                knockback = 20;
                 launch_fy = 5.0f;
                 hit_se = Const.ID.SE.HIT_1;
                 effect_name = Const.ID.Effect.HIT_01;

@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace MyUnityChan {
     public interface IEnemyAttack {
-        void attack();
+        int onAttack(RingBuffer<EnemyAttack.Record> history);
     }
 
     public interface IEnemyDead {
@@ -27,5 +27,14 @@ namespace MyUnityChan {
     
     public interface IEnemyTakeDamage {
         void takeDamage(int damage);
+    }
+
+    public interface IEnemyKnockback {
+        void onKnockback();
+        int getKnockbackThreshold();
+    }
+
+    public interface IEnemyStun {
+        void onStun();
     }
 }
