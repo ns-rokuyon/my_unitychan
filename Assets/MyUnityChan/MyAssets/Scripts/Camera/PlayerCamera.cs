@@ -3,11 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
+using UniRx;
 
 namespace MyUnityChan {
     public class PlayerCamera : ObjectBase {
-        public PlayerManager player_manager { get; set; }
         public bool tracking;
+        public float tracking_margin_width;     // 0.0 - 1.0
+        public float tracking_margin_height;
+
+        public PlayerManager player_manager { get; set; }
 
         private GameObject player = null;
         private Player player_component = null;
@@ -22,6 +26,14 @@ namespace MyUnityChan {
         private Camera worldspace_ui_camera_component;
 
         public CameraEffect effect { get; protected set; }
+
+        public float tracking_margin_width_half {
+            get { return tracking_margin_width / 2.0f; }
+        }
+
+        public float tracking_margin_height_half {
+            get { return tracking_margin_height / 2.0f; }
+        }
 
         // Temp flags
         private bool keep_zooming;
@@ -51,6 +63,15 @@ namespace MyUnityChan {
             GUIObjectBase.getCanvas(Const.Canvas.WORLD_SPACE_CANVAS).GetComponent<Canvas>().worldCamera = worldspace_ui_camera_component;
         }
 
+        void Start() {
+            this.ObserveEveryValueChanged(_ => AreaManager.self().now_area_name)
+                .DelayFrame(20)
+                .Subscribe(name => {
+                    DebugManager.log(name);
+                    centralize();
+                });
+        }
+
         // Update is called once per frame
         void LateUpdate() {
             player = player_manager.getNowPlayer();
@@ -59,12 +80,20 @@ namespace MyUnityChan {
             updateViewpointCornersInWorld();
 
             if ( player ) {
-                Vector3 newpos = player.transform.position + 
-                    now_camera_position.position_diff + player_component.player_camera_position.position_diff;
-                newpos = adjustNewPosition(newpos);
-
-                if ( tracking )
-                    transform.position = newpos;    // Update position
+                if ( tracking ) {
+                    Vector3 newpos;
+                    if ( tracking_margin_height <= 0.0f && tracking_margin_width <= 0.0f ) {
+                        centralize();
+                    }
+                    else {
+                        Vector2 point = getPlayerViewportPoint();
+                        if ( !isInTrackingMargin(point) ) {
+                            var diff = getTrackingDirectionDiff(point);
+                            newpos = transform.position.add(diff.x, diff.y, 0.0f);
+                            transform.position = adjustNewPosition(newpos);
+                        }
+                    }
+                }
 
                 if ( blur ) {
                     if ( player_component.isHitstopping() ) {
@@ -106,6 +135,52 @@ namespace MyUnityChan {
             return newpos;
         }
 
+        public Vector2 getPlayerScreenPoint() {
+            if ( !player )
+                return Vector2.zero;
+            return camera_component.WorldToScreenPoint(player.transform.position);
+        }
+
+        public Vector2 getPlayerViewportPoint() {
+            if ( !player )
+                return Vector2.zero;
+            return camera_component.WorldToViewportPoint(player.transform.position);
+        }
+
+        public bool isInTrackingMargin(Vector2 point) {
+            float left_border = 0.5f - tracking_margin_width_half;
+            float right_border = 0.5f + tracking_margin_width_half;
+            float top_border = 0.5f - tracking_margin_height_half;
+            float bottom_border = 0.5f + tracking_margin_height_half;
+
+            if ( left_border < point.x && point.x < right_border && top_border < point.y && point.y < bottom_border ) {
+                return true;
+            }
+            return false;
+        }
+
+        public Vector3 getTrackingDirectionDiff(Vector2 point) {
+            float left_border = 0.5f - tracking_margin_width_half;
+            float right_border = 0.5f + tracking_margin_width_half;
+            float top_border = 0.5f + tracking_margin_height_half;
+            float bottom_border = 0.5f - tracking_margin_height_half;
+
+            float dx = 0.0f, dy = 0.0f;
+            Vector3 diff = player_component.getLatestPositionDiff(in_lateupdate:true);
+
+            if ( point.x < left_border )
+                dx = -diff.x;
+            else if ( right_border < point.x )
+                dx = diff.x;
+
+            if ( point.y < bottom_border )
+                dy = -diff.y;
+            else if ( top_border < point.y )
+                dy = diff.y;
+
+            return new Vector3(dx, dy, 0.0f);
+        }
+
         public void setPlayer(GameObject target) {
             // set target gameobject
             /*
@@ -116,7 +191,7 @@ namespace MyUnityChan {
         }
 
         public void warpByPlayer(Player player) {
-            transform.position = player.gameObject.transform.position;
+            centralize();
             tracking = true;
         }
 
@@ -146,6 +221,15 @@ namespace MyUnityChan {
         public IEnumerator restartTracking(float sec) {
             yield return new WaitForSeconds(sec);
             tracking = true;
+        }
+
+        public void centralize() {
+            if ( !player )
+                return;
+            var newpos = player.transform.position + 
+                now_camera_position.position_diff + player_component.player_camera_position.position_diff;
+            newpos = adjustNewPosition(newpos);
+            transform.position = newpos;    // Update position
         }
 
         private void updateViewpointCornersInWorld() {
