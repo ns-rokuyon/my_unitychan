@@ -15,6 +15,14 @@ namespace MyUnityChan {
             if ( GUILayout.Button("Centralize") ) {
                 cam.centralize();
             }
+
+            if ( GUILayout.Button("FadeOut") ) {
+                cam.effect.fadeOut(60);
+            }
+
+            if ( GUILayout.Button("FadeIn") ) {
+                cam.effect.fadeIn(60);
+            }
         }
     }
 }

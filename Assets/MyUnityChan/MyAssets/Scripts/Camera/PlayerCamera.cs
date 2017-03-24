@@ -213,6 +213,14 @@ namespace MyUnityChan {
             StartCoroutine(restartTracking(0.1f));
         }
 
+        public void fadeOut(int frame, int delay_frame = 0) {
+            delay(delay_frame, () => { effect.fadeOut(frame); });
+        }
+
+        public void fadeIn(int frame, int delay_frame = 0) {
+            delay(delay_frame, () => { effect.fadeIn(frame); });
+        }
+
         public void zoom(Vector3 to, float duration) {
             transform.DOMove(to, duration);
             tracking = false;
