@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using UniRx;
 
 namespace MyUnityChan {
     public class ObjectBase : MonoBehaviour {
@@ -24,6 +27,11 @@ namespace MyUnityChan {
             }
         }
 
+        private Dictionary<string, int> _frame_recorder = null;
+        public Dictionary<string, int> frame_recorder {
+            get { return _frame_recorder ?? (_frame_recorder = new Dictionary<string, int>()); }
+        }
+
         public void adjustZtoBaseline() {
             Area area = AreaManager.Instance.getAreaFromMemberObject(this.gameObject);
             if ( !area.isEmptyBaselineZ() ) {
@@ -33,6 +41,33 @@ namespace MyUnityChan {
                     this.gameObject.transform.position.y,
                     z
                     );
+            }
+        }
+
+        public void delay(int frame, System.Action func) {
+            if ( frame > 0 ) {
+                Observable.TimerFrame(frame)
+                    .Subscribe(_ => {
+                        func();
+                    })
+                    .AddTo(this);
+            }
+            else {
+                func();
+            }
+        }
+
+        public void doPrevInterval(string key, int frame, System.Action func) {
+            if ( !frame_recorder.ContainsKey(key) ) {
+                frame_recorder.Add(key, Time.frameCount);
+                func();
+                return;
+            }
+
+            if ( Time.frameCount - frame_recorder[key] >= frame ) {
+                frame_recorder[key] = Time.frameCount;
+                func();
+                return;
             }
         }
 
@@ -68,6 +103,13 @@ namespace MyUnityChan {
             return Const.Prefab.Item[name];
         }
 
+        public IEnumerator waitFrame(int frame) {
+            while ( frame > 0 ) {
+                yield return null;
+                frame--;
+            }
+        }
+
         public void OnTriggerEnter(Collider other) {
             if ( other.tag == "MovingFloor" ) {
                 other.gameObject.GetComponent<MovingFloor>().getOn(this);
@@ -79,6 +121,5 @@ namespace MyUnityChan {
                 other.gameObject.GetComponent<MovingFloor>().getOff(this);
             }
         }
-
     }
 }
