@@ -49,7 +49,7 @@ namespace MyUnityChan {
             public override void attack(Character character, Hitbox hitbox) {
                 ((Enemy)character).stun(stun);
                 ((Enemy)character).damage(damage);
-                EffectManager.self().createEffect(Const.ID.Effect.HIT_02,
+                EffectManager.createEffect(Const.ID.Effect.HIT_02,
                     hitbox.gameObject.transform.position, 60, true);
             }
         }

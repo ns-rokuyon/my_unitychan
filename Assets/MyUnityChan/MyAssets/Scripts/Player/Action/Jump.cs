@@ -71,7 +71,7 @@ namespace MyUnityChan {
         }
 
         public override void effect() {
-            EffectManager.self().createEffect(
+            EffectManager.createEffect(
                 effect_name,
                 player.transform.position + effect_offset, 60, true);
         }
@@ -229,7 +229,7 @@ namespace MyUnityChan {
         }
 
         public override void effect() {
-            EffectManager.self().createEffect(
+            EffectManager.createEffect(
                 effect_name,
                 player.transform.position + effect_offset, 60, true);
         }

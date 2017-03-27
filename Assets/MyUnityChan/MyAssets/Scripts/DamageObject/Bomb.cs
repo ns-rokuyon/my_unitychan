@@ -15,7 +15,7 @@ namespace MyUnityChan {
             hitbox.ready(gameObject, spec);
 
             // Create effect
-            EffectManager.self().createEffect(
+            EffectManager.createEffect(
                 Const.Prefab.Effect[spec.effect_name],
                 gameObject.transform.position,
                 100,

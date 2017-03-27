@@ -12,7 +12,7 @@ namespace MyUnityChan {
         }
 
         public virtual void broken() {
-            EffectManager.self().createEffect(effect, transform.position, 60, true);
+            EffectManager.createEffect(effect, transform.position, 60, true);
 
             Destroy(gameObject);
         }

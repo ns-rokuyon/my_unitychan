@@ -27,7 +27,7 @@ namespace MyUnityChan {
         }
 
         public override void effect() {
-            EffectManager.self().createEffect(
+            EffectManager.createEffect(
                 effect_name,
                 enemy.transform.position, 60, true);
         }

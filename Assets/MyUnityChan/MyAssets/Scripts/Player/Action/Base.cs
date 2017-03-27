@@ -146,7 +146,7 @@ namespace MyUnityChan {
                 .Where(_ => condition())
                 .Where(_ => player.getVx(abs:true) > 0.1f)
                 .Subscribe(_ => {
-                EffectManager.self().createEffect(
+                EffectManager.createEffect(
                     Const.ID.Effect.DASH_SMOKE_PUFF,
                     player.transform.position.add(0.0f, 0.2f, 0.0f),
                     60, true);
