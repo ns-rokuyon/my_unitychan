@@ -31,6 +31,11 @@ namespace MyUnityChan {
         }  // >= 1
         public int exp { get; set; }
 
+        public override void OnEnable() {
+            base.OnEnable();
+            ((AIController)controller).restart();
+        }
+
         protected void loadAttachedAI() {
             GameObject controller_inst = PrefabInstantiater.create(prefabPath(Const.ID.Controller.AI), gameObject);
             controller = controller_inst.GetComponent<Controller>();

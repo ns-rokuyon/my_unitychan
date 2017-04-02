@@ -3,7 +3,7 @@ using UnityEditor;
 using System.Collections;
 
 namespace MyUnityChan {
-    [CustomEditor(typeof(Area), true)]
+    [CustomEditor(typeof(Area))]
     public class AreaViewer : Editor {
 
         private Area area;
@@ -12,7 +12,7 @@ namespace MyUnityChan {
             area = target as Area;
         }
 
-        void OnSceneGUI() {
+        public void OnSceneGUI() {
             area.sceneGUI();
         }
 
@@ -20,7 +20,11 @@ namespace MyUnityChan {
             area.inspectorGUI();
             DrawDefaultInspector();
         }
-
-
     }
+
+    [CustomEditor(typeof(NormalArea))]
+    public class NormalAreaViewer : AreaViewer { }
+
+    [CustomEditor(typeof(SafeArea))]
+    public class SafeAreaViewer : AreaViewer { }
 }

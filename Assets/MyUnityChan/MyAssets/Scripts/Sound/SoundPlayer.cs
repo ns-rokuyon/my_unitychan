@@ -5,23 +5,27 @@ namespace MyUnityChan {
     [RequireComponent(typeof(AudioSource))]
     public class SoundPlayer : ObjectBase {
         private AudioSource audio_source;
+        public bool locked { get; set; }
 
         void Awake() {
             audio_source = gameObject.GetComponent<AudioSource>();
+            locked = false;
         }
 
         public void play(string resource_path, bool playOneShot=true, int delay = 0) {
+            if ( locked ) return;
             AudioClip clip = SoundManager.Instance.getClip(resource_path);
             play(clip, playOneShot, delay);
         }
 
         public void play(Const.ID.SE sid, bool playOneShot=true, int delay = 0) {
-            if ( sid == Const.ID.SE._NO )
-                return;
+            if ( locked ) return;
+            if ( sid == Const.ID.SE._NO ) return;
             play(Const.Sound.SE[sid], playOneShot, delay);
         }
 
         public void play(AudioClip clip, bool playOneShot = true, int delay = 0) {
+            if ( locked ) return;
             StartCoroutine(_play(clip, playOneShot, delay));
         }
 

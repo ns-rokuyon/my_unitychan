@@ -28,6 +28,10 @@ namespace MyUnityChan {
             return buffer.Count == size;
         }
 
+        public bool isEmpty() {
+            return buffer.Count == 0;
+        }
+
         public int count() {
             return buffer.Count;
         }

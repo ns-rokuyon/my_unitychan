@@ -7,7 +7,7 @@ namespace MyUnityChan {
         public bool debug;
 
         public Dictionary<string, Area> areas { get; private set; }
-        private string now_area_name;
+        public string now_area_name { get; protected set; }
 
         void Awake() {
             areas = new Dictionary<string,Area>();

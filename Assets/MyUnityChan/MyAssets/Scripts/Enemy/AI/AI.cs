@@ -27,10 +27,13 @@ namespace MyUnityChan {
                    .Then(_ => ai.kill())
                    .Break())
               .def(AI.Def.Name("Area checker")
-                   .StopIf(s => ai.self.getAreaName() != s.player.getAreaName()));
+                   .StopIf(s => ai.self.getAreaName() != s.player.getAreaName()))
+              .def(AI.Def.Name("Locked input")
+                   .StopIf(_ => ai.self.isInputLocked()));
             if ( _self is ZakoAirTypeBase ) {
                 ai.def(AI.Def.Name("Flap")
                        .Interval((_self as ZakoAirTypeBase).param.flap_interval)
+                       .If(_ => ai.self.getHP() > 0)
                        .If(_ => !_self.isHitRoof() && (_self as ZakoAirTypeBase).flight_level > _self.transform.position.y)
                        .Then(_ => _controller.inputKey(Controller.InputCode.JUMP)));
             }

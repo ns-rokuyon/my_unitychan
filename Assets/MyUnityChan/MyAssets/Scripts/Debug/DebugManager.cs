@@ -71,5 +71,23 @@ namespace MyUnityChan {
             renderer.SetPosition(1, pb);
         }
 
+        private readonly int idle_state_id = Animator.StringToHash("Base Layer.Idle");
+        private readonly int locomotion_state_id = Animator.StringToHash("Base Layer.Locomotion");
+        private readonly int damage_state_id = Animator.StringToHash("Base Layer.Damage");
+
+        public void printCurrentAnimationStateName(Animator animator) {
+            var info = animator.GetCurrentAnimatorStateInfo(0);
+            var current = info.fullPathHash;
+
+            if ( current == idle_state_id )
+                log("CurrentAnimationStateName = Idle");
+            else if ( current == locomotion_state_id )
+                log("CurrentAnimationStateName = Locomotion");
+            else if ( current == damage_state_id )
+                log("CurrentAnimationStateName = Damage");
+            else
+                warn("CurrentAnimationStateName = OTHERS");
+        }
+
     }
 }

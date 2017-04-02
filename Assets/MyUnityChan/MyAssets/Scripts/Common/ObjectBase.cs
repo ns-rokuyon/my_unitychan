@@ -32,6 +32,11 @@ namespace MyUnityChan {
             get { return _frame_recorder ?? (_frame_recorder = new Dictionary<string, int>()); }
         }
 
+        public virtual void OnEnable() {
+            if ( sound )
+                sound.locked = false;
+        }
+
         public void adjustZtoBaseline() {
             Area area = AreaManager.Instance.getAreaFromMemberObject(this.gameObject);
             if ( !area.isEmptyBaselineZ() ) {

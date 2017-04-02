@@ -8,7 +8,7 @@ namespace MyUnityChan {
             self.Play(anim1);
             Observable.Timer(System.TimeSpan.FromSeconds(self.GetClip(anim1).length))
                 .Subscribe(_ => {
-                    self.Blend(anim2);
+                    self.Play(anim2);
                 });
         }
     }
