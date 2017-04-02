@@ -1,18 +1,43 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
+using UniRx;
 
 namespace MyUnityChan {
     public class EnemyDead : EnemyActionBase {
+        public IDisposable dying;
+
         public override string name() {
             return "ENEMY_DEAD";
         }
 
         public EnemyDead(Character character) : base(character) {
+            dying = null;
+        }
+
+        public override void init() {
+            if ( dying != null )
+                dying.Dispose();
+            dying = null;
         }
 
         public override void perform() {
             enemy.setHP(0);
 
+            if ( enemy is ICharacterDying ) {
+                ICharacterDying en = enemy as ICharacterDying;
+                dying = Observable.FromCoroutine(en.onDying)
+                    .Subscribe(_ => {
+                        onDead();
+                    })
+                    .AddTo(enemy);
+            }
+            else {
+                onDead();
+            }
+        }
+
+        protected void onDead() {
             // OnDead behavior
             if ( enemy is IEnemyDead ) {
                 IEnemyDead en = enemy as IEnemyDead;
@@ -32,7 +57,7 @@ namespace MyUnityChan {
         }
 
         public override bool condition() {
-            return enemy.getHP() <= 0;
+            return enemy.getHP() <= 0 && dying == null;
         }
 
     }

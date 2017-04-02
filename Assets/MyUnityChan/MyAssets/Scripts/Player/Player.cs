@@ -15,7 +15,7 @@ namespace MyUnityChan {
     [RequireComponent(typeof(GroundChecker))]
     [RequireComponent(typeof(RoofChecker))]
     [RequireComponent(typeof(WallChecker))]
-    public class Player : Character {
+    public class Player : Character, ICharacterWalk, ICharacterFootstep {
 
         [SerializeField]
         public PlayerCameraPosition player_camera_position;
@@ -340,8 +340,10 @@ namespace MyUnityChan {
 
         public void comeback(Vector3 dst) {
             interrupt();
-            CameraFade.StartAlphaFade(Color.black, false, 1f, 1f, () => {
+            manager.camera.fadeOut(Const.Frame.PLAYER_COMEBACK_FADE);
+            delay(40, () => {
                 StartCoroutine(doComeback(dst));
+                manager.camera.fadeIn(Const.Frame.PLAYER_COMEBACK_FADE);
             });
         }
 
@@ -361,6 +363,24 @@ namespace MyUnityChan {
 
         public void disableSpringManager() {
             GetComponent<SpringManager>().enabled = false;
+        }
+
+        public void onFootstep(Const.ID.FieldType fieldtype) {
+            doPrevInterval("footsteps", 20, () => {
+                sound.play(Const.ID.SE.FOOTSTEP_1);
+            });
+        }
+
+        public void onForward() {
+            doPrevInterval("walk puff", 40, () => {
+                EffectManager.createEffect(
+                    Const.ID.Effect.DASH_SMOKE_PUFF,
+                    transform.position.add(0.0f, 0.2f, 0.0f),
+                    60, true);
+            });
+        }
+
+        public void onStay() {
         }
 
         private void performTest() {

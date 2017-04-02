@@ -10,5 +10,12 @@ namespace MyUnityChan {
         public string hitbox_name;
         [SerializeField] public Const.ID.SE se_name;
         [SerializeField] public Const.ID.Effect shoot_effect = Const.ID.Effect._NO_EFFECT;
+
+        public override void attack(Character character, Hitbox hitbox) {
+            base.attack(character, hitbox);
+
+            if ( character is IEnemyTakeProjectile )
+                (character as IEnemyTakeProjectile).onTakeProjectile(this);
+        }
     }
 }

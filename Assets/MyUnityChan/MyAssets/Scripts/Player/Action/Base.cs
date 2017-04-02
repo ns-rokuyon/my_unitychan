@@ -123,11 +123,21 @@ namespace MyUnityChan {
                     player.getAnimator().SetBool("Turn", false);
                     player.setTurnDirSwitched(false);
                 }
+
+                if ( player.isGrounded() ) {
+                    (player as ICharacterFootstep).onFootstep(Const.ID.FieldType.ASPHALT);
+                    (player as ICharacterWalk).onForward();
+                }
+
             }
             else {
                 player.getAnimator().SetBool("Turn", false);
                 player.setTurnDirSwitched(false);
             }
+        }
+
+        public override void off_perform() {
+            (player as ICharacterWalk).onStay();
         }
 
         public override bool condition() {

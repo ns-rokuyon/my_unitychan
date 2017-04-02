@@ -40,17 +40,17 @@ namespace MyUnityChan {
                 enemy.rigid_body.velocity = new Vector3(Mathf.Sign(vx) * maxspeed, vy);
             }
 
-            if ( enemy is IEnemyWalk )
-                (enemy as IEnemyWalk).onForward();
+            if ( enemy is ICharacterWalk )
+                (enemy as ICharacterWalk).onForward();
         }
 
         public override void off_perform() {
-            if ( enemy is IEnemyWalk )
-                (enemy as IEnemyWalk).onStay();
+            if ( enemy is ICharacterWalk )
+                (enemy as ICharacterWalk).onStay();
         }
 
         public override bool condition() {
-            return !enemy.isStunned() && !enemy.isHitstopping() && controller.keyHorizontal() != 0.0f;
+            return !enemy.isFlinching() && controller.keyHorizontal() != 0.0f;
         }
     }
 }

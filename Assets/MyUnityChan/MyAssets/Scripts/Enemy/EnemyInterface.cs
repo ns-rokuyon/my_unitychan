@@ -11,11 +11,6 @@ namespace MyUnityChan {
         void createDeadEffect();
     }
 
-    public interface IEnemyWalk {
-        void onForward();
-        void onStay();
-    }
-
     public interface IEnemyItemDrop {
         Const.ID.Item dropItem();
     }
@@ -29,6 +24,10 @@ namespace MyUnityChan {
         void takeDamage(int damage);
     }
 
+    public interface IEnemyTakeProjectile {
+        void onTakeProjectile(ProjectileSpec spec);
+    }
+
     public interface IEnemyKnockback {
         void onKnockback();
         int getKnockbackThreshold();
@@ -37,4 +36,5 @@ namespace MyUnityChan {
     public interface IEnemyStun {
         void onStun();
     }
+
 }

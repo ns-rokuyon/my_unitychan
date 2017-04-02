@@ -137,6 +137,10 @@ namespace MyUnityChan {
             return hitstop_counts > 0;
         }
 
+        public virtual bool isFlinching() {
+            return isHitstopping() || isStunned();
+        }
+
         public virtual int getReservedHP() {
             return 0;
         }
@@ -150,6 +154,9 @@ namespace MyUnityChan {
                 status.invincible.enable(10);
                 status.hp -= dam;
             }
+        }
+
+        public virtual void knockback(int dam) {
         }
 
         public virtual void launch(float power_y) {
@@ -209,6 +216,21 @@ namespace MyUnityChan {
             if ( getPositionHistoryCount() == 0 )
                 return transform.position;
             return position_history.getLast();
+        }
+
+        public Vector3 getLatestPositionDiff(bool in_lateupdate=false) {
+            Vector3 diff = Vector3.zero;
+            if ( in_lateupdate ) {
+                if ( position_history.count() < 2 )
+                    return diff;
+                diff = position_history.getHead() - position_history.getPrev(1);
+            }
+            else {
+                if ( position_history.count() < 1 )
+                    return Vector3.zero;
+                diff = transform.position - position_history.getHead();
+            }
+            return new Vector3(Mathf.Abs(diff.x), Mathf.Abs(diff.y), 0);
         }
 
         public Vector3 getRecentTravelDistance() {
@@ -303,7 +325,5 @@ namespace MyUnityChan {
                 return false;
             return true;
         }
-
-
     }
 }
