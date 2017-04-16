@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -26,7 +27,7 @@ namespace MyUnityChan {
         protected List<AreaConnection> connections;
 
         protected List<Area> connected_areas;
-        protected List<GameObject> gameobjects;
+        public Dictionary<string, GameObject> gameobjects { get; protected set; }
 
         protected float x_harf;
         protected float y_harf;
@@ -43,13 +44,18 @@ namespace MyUnityChan {
             ins = new Dictionary<string, bool>();
             connections = new List<AreaConnection>();
             connected_areas = new List<Area>();
-            gameobjects = new List<GameObject>();
+            gameobjects = new Dictionary<string, GameObject>();
             Bounds bounds = gameObject.GetComponent<MeshRenderer>().bounds;
             x_harf = (float)(bounds.size.x / 2.0);
             y_harf = (float)(bounds.size.y / 2.0);
             z_harf = (float)(bounds.size.z / 2.0);
 
             passed = false;
+
+        }
+
+        void Start() {
+            labeling();
         }
 
         public bool isIn(string name) {
@@ -81,6 +87,49 @@ namespace MyUnityChan {
                 return false;
             }
             return true;
+        }
+
+        public void labeling(GameObject parent = null) {
+            if ( parent == null ) {
+                labeling(transform.parent.gameObject);
+                return;
+            }
+
+            var obs = parent.GetComponents<ObjectBase>();
+            if ( obs.Length > 0 ) {
+                if ( gameobjects.ContainsKey(gameobject2Key(parent))) {
+                    DebugManager.warn("Key(" + gameobject2Key(parent) + ") already exists");
+                }
+                else {
+                    gameobjects.Add(gameobject2Key(parent), parent);
+                }
+            }
+            obs.ToList().ForEach(ob => {
+                ob.parent_area = this;
+            });
+
+            for ( int i = 0; i < parent.transform.childCount; i++ ) {
+                GameObject child = parent.transform.GetChild(i).gameObject;
+                obs = child.GetComponents<ObjectBase>();
+                if ( obs.Length > 0 ) {
+                    if ( gameobjects.ContainsKey(gameobject2Key(child))) {
+                        DebugManager.warn("Key(" + gameobject2Key(child) + ") already exists");
+                    }
+                    else {
+                        gameobjects.Add(gameobject2Key(child), child);
+                    }
+                }
+                obs.ToList().ForEach(ob => {
+                    ob.parent_area = this;
+                });
+                if ( child.transform.childCount > 0 ) {
+                    labeling(parent: child);
+                }
+            }
+        }
+
+        public string gameobject2Key(GameObject o) {
+            return o.getHierarchyPath();
         }
 
         public bool isSetBounds() {
@@ -146,17 +195,20 @@ namespace MyUnityChan {
 
         public void activateGameObjects() {
             List<GameObject> disabled_objs = 
-                gameobjects.FindAll(obj => obj.GetComponent<Character>() && obj.GetComponent<Character>().getHP() > 0);
+                gameobjects.Values.ToList().FindAll(obj => obj.GetComponent<Character>() && obj.GetComponent<Character>().getHP() > 0);
             disabled_objs.ForEach(obj => obj.SetActive(true));
 
             List<GameObject> respawn_objs =
-                gameobjects.FindAll(obj => obj.GetComponent<Spawnable>() && 
+                gameobjects.Values.ToList().FindAll(obj => obj.GetComponent<Spawnable>() && 
                     obj.GetComponent<Enemy>() && obj.GetComponent<Enemy>().getHP() == 0);
             respawn_objs.ForEach(obj => { obj.SetActive(true); obj.GetComponent<Enemy>().spawn(); });
         }
 
         public void deactivateGameObjects() {
-            gameobjects.ForEach(obj => obj.SetActive(false));
+            gameobjects.Values
+                .Where(o => o.GetComponent<NPCharacter>() != null)
+                .ToList()
+                .ForEach(obj => obj.SetActive(false));
         }
 
         public virtual void OnTriggerEnter(Collider colliderInfo) {
@@ -190,7 +242,6 @@ namespace MyUnityChan {
             else if ( colliderInfo.gameObject.tag == "Enemy" ) {
                 Enemy enemy = colliderInfo.gameObject.GetComponent<Enemy>();
                 enemy.setAreaName(this.gameObject.name);
-                gameobjects.Add(enemy.gameObject);
             }
         }
 

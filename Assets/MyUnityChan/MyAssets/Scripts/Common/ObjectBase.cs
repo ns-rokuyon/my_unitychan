@@ -7,7 +7,9 @@ using UniRx;
 namespace MyUnityChan {
     public class ObjectBase : MonoBehaviour {
 
-        protected SoundPlayer sound;
+        public SoundPlayer sound {
+            get; protected set;
+        }
 
         private TimeControllable _tc;
         public TimeControllable time_control {
@@ -31,6 +33,8 @@ namespace MyUnityChan {
         public Dictionary<string, int> frame_recorder {
             get { return _frame_recorder ?? (_frame_recorder = new Dictionary<string, int>()); }
         }
+
+        public Area parent_area { get; set; }
 
         public virtual void OnEnable() {
             if ( sound )
