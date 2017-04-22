@@ -132,6 +132,15 @@ namespace MyUnityChan {
             return o.getHierarchyPath();
         }
 
+        public int getActiveEnemyCount() {
+            return gameobjects.Count(pair => {
+                var en = pair.Value.GetComponent<Enemy>();
+                if ( !en )
+                    return false;
+                return en.gameObject.activeSelf;
+            });
+        }
+
         public bool isSetBounds() {
             if ( bound_objects.Count == 0 ) return false;
             return true;

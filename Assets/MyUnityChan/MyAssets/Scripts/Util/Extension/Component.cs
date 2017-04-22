@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MyUnityChan {
     public static class Component {
@@ -11,5 +13,16 @@ namespace MyUnityChan {
             return self;
         }
 
+        public static T[] GetComponentsInSameArea<T>(this GameObject self) {
+            ObjectBase ob = self.GetComponent<ObjectBase>();
+            if ( ob == null || ob.parent_area == null ) {
+                return new T[0];
+            }
+
+            return ob.parent_area.gameobjects.Values.ToList()
+                .Where(o => o.GetComponent<T>() != null)
+                .Select(o => o.GetComponent<T>())
+                .ToArray();
+        }
     }
 }
