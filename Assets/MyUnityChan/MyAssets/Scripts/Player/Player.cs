@@ -41,6 +41,7 @@ namespace MyUnityChan {
         public UnityChanBoneManager bone_manager { get; set; }
         public BeamTurret beam_turret { get; protected set; }
         public FullBodyBipedIK ik { get; protected set; }
+        public Weapon weapon { get; set; }
 
         public bool playable {
             get {
@@ -76,7 +77,7 @@ namespace MyUnityChan {
             registerActions(new List<Const.PlayerAction>{
                 Const.PlayerAction.ACCEL, Const.PlayerAction.BRAKE, Const.PlayerAction.DOWN,
                 Const.PlayerAction.JUMP, Const.PlayerAction.LIMIT_SPEED, Const.PlayerAction.TURN,
-                Const.PlayerAction.SWITCH_BEAM, Const.PlayerAction.WALL_JUMP,
+                Const.PlayerAction.SWITCH_BEAM, Const.PlayerAction.WALL_JUMP, Const.PlayerAction.PICKUP,
                 Const.PlayerAction.TRANSFORM
             });
 
@@ -153,6 +154,8 @@ namespace MyUnityChan {
                     action_manager.registerAction(new PlayerTransform(this)); break;
                 case Const.PlayerAction.TURN:
                     action_manager.registerAction(new PlayerTurn(this)); break;
+                case Const.PlayerAction.PICKUP:
+                    action_manager.registerAction(new PlayerPickup(this)); break;
                 default:
                     Debug.LogWarning("Undefined player action: id=" + action_class);
                     break;
@@ -420,10 +423,12 @@ namespace MyUnityChan {
         */
 
         void OnGUI() {
-            if ( !SettingManager.get(Settings.Flag.SHOW_DEBUG_WINDOW) ) {
+            if ( !SettingManager.get(Settings.Flag.SHOW_DEBUG_WINDOW) )
                 return;
-            }
+            if ( !playable )
+                return;
 
+            PlayerAttack attack = action_manager.getAction<PlayerAttack>("ATTACK");
             Vector3 fw = transform.forward;
             Quaternion rot = transform.rotation;
             CapsuleCollider cc = GetComponent<CapsuleCollider>();
@@ -440,6 +445,8 @@ namespace MyUnityChan {
             GUI.Label(new Rect(Screen.width - 245, 210, 250, 30), "areaname: " + getAreaName());
             GUI.Label(new Rect(Screen.width - 245, 230, 250, 30), "animspeed: " + animator.speed);
             GUI.Label(new Rect(Screen.width - 245, 250, 250, 30), "focus ui: " + MenuManager.getCurrentSelectedName());
+            if ( attack != null )
+                GUI.Label(new Rect(Screen.width - 245, 270, 250, 30), "active_attack: " + attack.active_attack);
         }
     }
 }

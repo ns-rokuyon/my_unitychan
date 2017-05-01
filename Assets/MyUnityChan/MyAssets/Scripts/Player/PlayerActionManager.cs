@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace MyUnityChan {
     public class PlayerActionManager : ActionManager {
@@ -30,6 +31,12 @@ namespace MyUnityChan {
         protected Player player;
         protected PlayerController controller;
         protected CommandRecorder command_recorder;
+
+        public override Character owner {
+            get {
+                return player;
+            }
+        }
 
         public PlayerAction(Character character) {
             player = (Player)character;

@@ -33,8 +33,9 @@ namespace MyUnityChan {
                     UniqueUpdate();
                 });
 
-            Observable.TimerFrame(frame)
-                .Subscribe(_ => destroy());
+            if ( frame > 0 )
+                Observable.TimerFrame(frame)
+                    .Subscribe(_ => destroy());
         }
 
         public void OnTriggerEnter(Collider other) {

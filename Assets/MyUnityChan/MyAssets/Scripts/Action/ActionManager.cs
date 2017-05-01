@@ -55,7 +55,9 @@ namespace MyUnityChan {
                         }
                     }
                     else {
-                        action.off_perform();
+                        if ( action.transaction == null ) {
+                            action.off_perform();
+                        }
                     }
                     continue;
                 }
@@ -81,7 +83,9 @@ namespace MyUnityChan {
                     }
                 }
                 else {
-                    action.off_perform();
+                    if ( action.transaction == null ) {
+                        action.off_perform();
+                    }
                 }
             }
         }
@@ -101,7 +105,9 @@ namespace MyUnityChan {
                         act(action);
                     }
                     else {
-                        action.off_performFixed();
+                        if ( action.transaction == null ) {
+                            action.off_performFixed();
+                        }
                     }
                     continue;
                 }
@@ -114,7 +120,9 @@ namespace MyUnityChan {
                     action.flag.doneFixedUpdate();
                 }
                 else {
-                    action.off_performFixed();
+                    if ( action.transaction == null ) {
+                        action.off_performFixed();
+                    }
                 }
             }
         }

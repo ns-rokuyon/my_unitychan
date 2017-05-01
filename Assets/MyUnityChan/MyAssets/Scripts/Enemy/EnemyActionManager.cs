@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 namespace MyUnityChan {
     public class EnemyActionManager : ActionManager {
@@ -13,6 +14,12 @@ namespace MyUnityChan {
     public abstract class EnemyActionBase : Action {
         protected Enemy enemy;
         protected AIController controller;
+
+        public override Character owner {
+            get {
+                return enemy;
+            }
+        }
 
         public EnemyActionBase(Character character) {
             enemy = (Enemy)character;

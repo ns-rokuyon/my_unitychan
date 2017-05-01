@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
+using UniRx;
 
 namespace MyUnityChan {
     public abstract class Action : StructBase {
@@ -13,6 +15,12 @@ namespace MyUnityChan {
         public int priority { get; protected set; }
         public bool skip_lower_priority { get; protected set; }
         public List<System.Action> perform_callbacks { get; set; }
+
+        public int transaction_frame_count { get; set; }
+        public virtual bool use_transaction { get; set; }
+        public virtual IDisposable transaction { get; set; }
+
+        public abstract Character owner { get; }
 
         // define action name
         public abstract string name();
@@ -41,6 +49,29 @@ namespace MyUnityChan {
 
         public void disable() {
             activation = false;
+        }
+
+        public bool isFreeTransaction() {
+            if ( !use_transaction ) {
+                DebugManager.warn("use_transaction flag is false, but isFreeTransaction() method was called");
+                return true;
+            }
+            return transaction == null;
+        }
+
+        public void beginTransaction(int frame) {
+            if ( transaction != null )
+                return;
+            DebugManager.log("beginTransaction = " + frame);
+            transaction = Observable.TimerFrame(0, 1)
+                .Take(frame)
+                .Subscribe(f => {
+                    transaction_frame_count = (int)f;
+                }, () => {
+                    transaction = null;
+                    DebugManager.log("endTransaction = " + frame);
+                })
+                .AddTo(owner);
         }
     }
 

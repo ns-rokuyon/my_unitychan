@@ -1,13 +1,27 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using System;
 using UniRx;
 
 namespace MyUnityChan {
     public class PlayerAttack : PlayerAction {
-        private PlayerPunchL left_punch;
-        private PlayerPunchR right_punch;
-        private PlayerSpinKick spinkick;
+        public Const.ID.AttackLevel active_attack { get; set; }
+
+        public PlayerLightAttack light { get; protected set; }
+        public PlayerMiddleAttack middle { get; protected set; }
+        public PlayerHeavyAttack heavy { get; protected set; }
+
+        public override IDisposable transaction {
+            get {
+                var attack = getAttackInTransaction();
+                if ( attack == null )
+                    return null;
+                return attack.action.transaction;
+            }
+            set {
+                base.transaction = null;
+            }
+        }
 
         public override string name() {
             return "ATTACK";
@@ -19,79 +33,104 @@ namespace MyUnityChan {
 
         public PlayerAttack(Character character)
             : base(character) {
-            left_punch = new PlayerPunchL(character);
-            right_punch = new PlayerPunchR(character);
-            spinkick = new PlayerSpinKick(character);
+        }
+
+        public override void init() {
+            light = new PlayerLightAttack(player, this);
+            middle = new PlayerMiddleAttack(player, this);
+            heavy = new PlayerHeavyAttack(player, this);
         }
 
         public override void performFixed() {
-            if ( player.isAnimState("Base Layer.PunchR") ) {
-                spinkick.performFixed();
-            }
-            else if ( player.isAnimState("Base Layer.PunchL") ) {
-                right_punch.performFixed();
-            }
-            else {
-                left_punch.performFixed();
-            }
+            var attack = getTriggeredAttack();
+            if ( attack != null )
+                attack.performFixed();
         }
 
         public override void perform() {
-            if ( player.isAnimState("Base Layer.PunchR") ) {
-                spinkick.perform();
+            var attack = getTriggeredAttack();
+            if ( attack != null ) {
+                attack.perform();
+                active_attack = attack.level;
             }
-            else if ( player.isAnimState("Base Layer.PunchL") ) {
-                right_punch.perform();
-            }
-            else {
-                left_punch.perform();
-            }
+        }
+
+        public override void off_perform() {
+            active_attack = Const.ID.AttackLevel._NO;
         }
 
         public override bool condition() {
-            bool cond = false;
-            if ( player.isAnimState("Base Layer.PunchR") ) {
-                cond = spinkick.condition();
-            }
-            else if ( player.isAnimState("Base Layer.PunchL") ) {
-                cond = right_punch.condition();
-            }
-            else if ( player.isAnimState("Base Layer.SpinKick") ) {
-                cond = false;
-            }
-            else {
-                cond = left_punch.condition();
-            }
-            return cond;
+            return light.condition() || middle.condition() || heavy.condition();
         }
 
+        protected PlayerLevelAttackBase getTriggeredAttack() {
+            if ( light != null && light.condition() ) {
+                return light;
+            }
+            if ( middle != null && middle.condition() ) {
+                return middle;
+            }
+            if ( heavy != null && heavy.condition() ) {
+                return heavy;
+            }
+            return null;
+        }
+
+        protected PlayerLevelAttackBase getAttackInTransaction() {
+            if ( active_attack == Const.ID.AttackLevel._NO )
+                return null;
+            var a = getLevelAttack(active_attack);
+            if ( a == null )
+                return null;
+            if ( a.action.isFreeTransaction() )
+                return null;
+            return a;
+        }
+
+        protected PlayerLevelAttackBase getLevelAttack(Const.ID.AttackLevel level) {
+            PlayerLevelAttackBase a;
+            switch ( active_attack ) {
+                case Const.ID.AttackLevel.LIGHT:
+                    a = light; break;
+                case Const.ID.AttackLevel.MIDDLE:
+                    a = middle; break;
+                case Const.ID.AttackLevel.HEAVY:
+                    a = heavy; break;
+                default:
+                    a = null; break;
+            }
+            return a;
+        }
     }
 
+    // Attack levels
+    // =============================================================
+    public abstract class PlayerLevelAttackBase : PlayerAction {
+        protected PlayerAction _action;     // Current enabled attack action
 
-    public class PlayerPunchL : PlayerAction {
-        public class Spec : AttackSpec {
-            public Spec() {
-                damage = 10;
-                stun = 0;
-                hitstop = 5;
-                frame = 5;
-                knockback = 20;
-                launch_fy = 5.0f;
-                hit_se = Const.ID.SE.HIT_1;
-                effect_name = Const.ID.Effect.IMPACT_02;
+        public PlayerAttack attack_manager { get; set; }
+        public virtual Const.ID.AttackLevel level { get; }
+        public PlayerAction action {
+            get {
+                return _action ?? (_action = getDefaultAction());
+            }
+            set {
+                _action = value;
+            }
+        }
+        public override IDisposable transaction {
+            get {
+                return action.transaction;
+            }
+        }
+        public override bool use_transaction {
+            get {
+                return action.use_transaction;
             }
         }
 
-        public AttackSpec spec = null;
-        private static readonly string hitbox_resource_path = "Prefabs/Hitbox/Punch_Hitbox";
-
-        public PlayerPunchL(Character character)
-            : base(character) {
-            spec = new Spec();
-        }
-
-        public override string name() {
-            return "PUNCH_L";
+        public PlayerLevelAttackBase(Character character, PlayerAttack parent) : base(character) {
+            attack_manager = parent;
         }
 
         public override Const.PlayerAction id() {
@@ -99,130 +138,77 @@ namespace MyUnityChan {
         }
 
         public override void perform() {
-            player.getAnimator().Play("PunchL");
-            player.lockInput(6);
-            Observable.TimerFrame(3)
-                .Subscribe(_ => createHitbox());
+            action.perform();
         }
 
-        public override bool condition() {
-            bool cond =
-                controller.keyAttack() &&
-                !player.getAnimator().GetBool("Turn");
-            return cond;
+        public void switchTo(PlayerAction action) {
+            _action = action;
         }
 
-        private void createHitbox() {
-            Vector3 fw = player.transform.forward;
-            MeleeAttackHitbox hitbox = HitboxManager.self().create<MeleeAttackHitbox>(hitbox_resource_path);
-            hitbox.ready( player.transform.position, fw, new Vector3(0.4f * fw.x, 1.0f, 0.0f), spec);
-            hitbox.setOwner(player.gameObject);
-        }
+        public abstract PlayerAction getDefaultAction();
     }
 
-    public class PlayerPunchR : PlayerAction {
-        public class Spec : AttackSpec {
-            public Spec() {
-                damage = 30;
-                stun = 0;
-                hitstop = 8;
-                frame = 5;
-                knockback = 22;
-                launch_fy = 7.0f;
-                hit_se = Const.ID.SE.HIT_2;
-                effect_name = Const.ID.Effect.IMPACT_02;
-            }
-        }
+    public class PlayerLightAttack : PlayerLevelAttackBase {
+        public override Const.ID.AttackLevel level { get { return Const.ID.AttackLevel.LIGHT; } }
 
-        public AttackSpec spec = null;
-        private static readonly string hitbox_resource_path = "Prefabs/Hitbox/Punch_Hitbox";
-
-        public PlayerPunchR(Character character)
-            : base(character) {
-            spec = new Spec();
+        public PlayerLightAttack(Character character, PlayerAttack parent) : base(character, parent) {
         }
 
         public override string name() {
-            return "PUNCH_R";
-        }
-
-        public override Const.PlayerAction id() {
-            return Const.PlayerAction._UNCLASSIFIED;
-        }
-
-        public override void perform() {
-            player.getAnimator().Play("PunchR");
-            player.voice(Const.ID.PlayerVoice.ATTACK, true, 6);
-            player.lockInput(10);
-            Observable.TimerFrame(6)
-                .Subscribe(_ => createHitbox());
+            return "LIGHT_ATTACK";
         }
 
         public override bool condition() {
-            bool cond =
-                controller.keyAttack() &&
-                !player.getAnimator().GetBool("Turn");
-            return cond;
+            return controller.keyAttack() &&
+                action.condition() &&
+                attack_manager.active_attack == Const.ID.AttackLevel._NO;
         }
 
-        private void createHitbox() {
-            Vector3 fw = player.transform.forward;
-            MeleeAttackHitbox hitbox = HitboxManager.self().create<MeleeAttackHitbox>(hitbox_resource_path);
-            hitbox.ready(player.transform.position, fw, new Vector3(0.6f * fw.x, 1.0f, 0.0f), spec);
-            hitbox.setOwner(player.gameObject);
+        public override PlayerAction getDefaultAction() {
+            return new PlayerPunchL(player);
         }
     }
 
-    public class PlayerSpinKick : PlayerAction {
-        public class Spec : AttackSpec {
-            public Spec() {
-                damage = 70;
-                stun = 0;
-                frame = 12;
-                hitstop = 20;
-                knockback = 30;
-                launch_fy = 7.0f;
-                hit_se = Const.ID.SE.HIT_3;
-                effect_name = Const.ID.Effect.IMPACT_01;
-            }
-        }
+    public class PlayerMiddleAttack : PlayerLevelAttackBase {
+        public override Const.ID.AttackLevel level { get { return Const.ID.AttackLevel.MIDDLE; } }
 
-        public AttackSpec spec = null;
-        private static readonly string hitbox_resource_path = "Prefabs/Hitbox/Kick_Hitbox";
-
-        public PlayerSpinKick(Character character)
-            : base(character) {
-            spec = new Spec();
+        public PlayerMiddleAttack(Character character, PlayerAttack parent) : base(character, parent) {
         }
 
         public override string name() {
-            return "SPIN_KICK";
-        }
-
-        public override Const.PlayerAction id() {
-            return Const.PlayerAction._UNCLASSIFIED;
-        }
-
-        public override void perform() {
-            player.getAnimator().Play("SpinKick");
-            player.voice(Const.ID.PlayerVoice.ATTACK4, true, 20);
-            player.lockInput(45);
-            Observable.TimerFrame(22)
-                .Subscribe(_ => createHitbox());
+            return "MIDDLE_ATTACK";
         }
 
         public override bool condition() {
-            bool cond =
-                controller.keyAttack() &&
-                !player.getAnimator().GetBool("Turn");
-            return cond;
+            return controller.keyAttack() &&
+                action.condition() &&
+                attack_manager.active_attack == Const.ID.AttackLevel.LIGHT;
         }
 
-        private void createHitbox() {
-            Vector3 fw = player.transform.forward;
-            MeleeAttackHitbox hitbox = HitboxManager.self().create<MeleeAttackHitbox>(hitbox_resource_path);
-            hitbox.ready(player.transform.position, fw, new Vector3(0.6f * fw.x, 0.8f, 0.0f), spec);
-            hitbox.setOwner(player.gameObject);
+        public override PlayerAction getDefaultAction() {
+            return new PlayerPunchR(player);
         }
     }
+
+    public class PlayerHeavyAttack : PlayerLevelAttackBase {
+        public override Const.ID.AttackLevel level { get { return Const.ID.AttackLevel.HEAVY; } }
+
+        public PlayerHeavyAttack(Character character, PlayerAttack parent) : base(character, parent) {
+        }
+
+        public override string name() {
+            return "HEAVY_ATTACK";
+        }
+
+        public override bool condition() {
+            return controller.keyAttack() &&
+                action.condition() &&
+                attack_manager.active_attack == Const.ID.AttackLevel.MIDDLE;
+        }
+
+        public override PlayerAction getDefaultAction() {
+            return new PlayerSpinKick(player);
+        }
+    }
+
 }
