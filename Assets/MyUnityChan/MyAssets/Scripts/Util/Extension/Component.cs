@@ -24,5 +24,9 @@ namespace MyUnityChan {
                 .Select(o => o.GetComponent<T>())
                 .ToArray();
         }
+
+        public static T[] GetComponentsInSameArea<T>(this UnityEngine.Component self) {
+            return self.gameObject.GetComponentsInSameArea<T>();
+        }
     }
 }

@@ -62,6 +62,7 @@ namespace MyUnityChan {
         public void OnSelect(BaseEventData eventData) {
             se(Const.ID.SE.BUTTON_SELECT);
             rect_transform.localPosition = rect_transform.localPosition.add(0, 0, -10.0f);
+            demo.centering();
             demo.setDemoCameraDistance(ability.def.demo_camera_distance);
             ability.def.onSelectAbilityButton(demo.pm);
             if ( ability.status == Ability.Status.NO_GET ) {

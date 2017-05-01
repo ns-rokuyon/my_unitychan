@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
+using UniRx;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -51,11 +52,31 @@ namespace MyUnityChan {
             z_harf = (float)(bounds.size.z / 2.0);
 
             passed = false;
-
         }
 
         void Start() {
             labeling();
+
+            // Auto player labeling
+            this.ObserveEveryValueChanged(_ => AreaManager.self().now_area_name)
+                .Subscribe(now_area_name => {
+                    Player p = GameStateManager.getPlayer();
+                    if ( !p )
+                        return;
+                    p.manager.players.Values.ToList().ForEach(obj => {
+                        string key = gameobject2Key(obj);
+                        if ( now_area_name == gameObject.name ) {
+                            Player player = obj.GetComponent<Player>();
+                            player.parent_area = this;
+                            gameobjects.Add(key, obj);
+                        }
+                        else {
+                            if ( gameobjects.ContainsKey(key) ) {
+                                gameobjects.Remove(key);
+                            }
+                        }
+                    });
+                });
         }
 
         public bool isIn(string name) {
@@ -204,7 +225,7 @@ namespace MyUnityChan {
 
         public void activateGameObjects() {
             List<GameObject> disabled_objs = 
-                gameobjects.Values.ToList().FindAll(obj => obj.GetComponent<Character>() && obj.GetComponent<Character>().getHP() > 0);
+                gameobjects.Values.ToList().FindAll(obj => obj.GetComponent<NPCharacter>() && obj.GetComponent<NPCharacter>().getHP() > 0);
             disabled_objs.ForEach(obj => obj.SetActive(true));
 
             List<GameObject> respawn_objs =

@@ -50,7 +50,8 @@ namespace MyUnityChan {
 
         // Global player getter
         public static Player getPlayer() {
-            return getPlayerObject().GetComponent<Player>();
+            var obj = getPlayerObject();
+            return obj == null ? null : obj.GetComponent<Player>();
         }
 
         public static GameObject getPlayerObject() {
