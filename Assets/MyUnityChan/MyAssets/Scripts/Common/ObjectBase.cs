@@ -53,9 +53,9 @@ namespace MyUnityChan {
             }
         }
 
-        public void delay(int frame, System.Action func) {
+        public void delay(int frame, System.Action func, FrameCountType frame_count_type = FrameCountType.Update) {
             if ( frame > 0 ) {
-                Observable.TimerFrame(frame)
+                Observable.TimerFrame(frame, frame_count_type)
                     .Subscribe(_ => {
                         func();
                     })

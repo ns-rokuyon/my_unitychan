@@ -5,7 +5,7 @@ using UniRx;
 using System.Linq;
 
 namespace MyUnityChan {
-    public class Weapon : ObjectBase {
+    public abstract class Weapon : ObjectBase {
         public SensorZone pickup_zone;
         public Collider physics_collider;
         public AttackHitbox hitbox;
@@ -33,10 +33,16 @@ namespace MyUnityChan {
             }
         }
 
-        public void onAttack(int delay_frame, int frame,
+        public abstract void setAttackAction(Player player);
+
+        public virtual void onAttack(int delay_frame, int frame, bool cancel_prev_attack,
                              Action<AttackHitbox, long> hitbox_updater = null, AttackSpec spec = null) {
+            if ( cancel_prev_attack )
+                cancelAttacking();
+
             if ( attacking != null )
                 return;
+
             attacking = Observable.TimerFrame(0, 1)
                 .SkipWhile(f => f < delay_frame)
                 .Select(f => f - delay_frame)
@@ -64,7 +70,7 @@ namespace MyUnityChan {
                 .AddTo(this);
         }
 
-        public void pickup(Character ch) {
+        public virtual void pickup(Character ch) {
             is_owned = true;
             Player player = (ch as Player);
             player.weapon = this;
@@ -80,13 +86,23 @@ namespace MyUnityChan {
             });
         }
 
-        protected void setAttackAction(Player player) {
-            PlayerAttack attack_manager =
-                player.action_manager.getAction<PlayerAttack>("ATTACK");
-
-            PlayerSlashL slash_light = new PlayerSlashL(player);
-            slash_light.spec = getSpec(Const.ID.AttackLevel.LIGHT);
-            attack_manager.light.switchTo(slash_light);
+        public virtual void cancelAttacking(int delay_frame = 0) {
+            if ( delay_frame > 0 ) {
+                delay(delay_frame, () => {
+                    if ( attacking != null ) {
+                        attacking.Dispose();
+                        hitbox.gameObject.SetActive(false); // Disable hitbox
+                        attacking = null;
+                    }
+                });
+            }
+            else {
+                if ( attacking != null ) {
+                    attacking.Dispose();
+                    hitbox.gameObject.SetActive(false); // Disable hitbox
+                    attacking = null;
+                }
+            }
         }
 
         protected MeleeAttackSpec getSpec(Const.ID.AttackLevel level) {

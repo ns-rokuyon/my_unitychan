@@ -42,7 +42,7 @@ namespace MyUnityChan {
         }
 
         public override void performFixed() {
-            var attack = getTriggeredAttack();
+            var attack = getAttackInTransaction();
             if ( attack != null )
                 attack.performFixed();
         }
@@ -139,6 +139,10 @@ namespace MyUnityChan {
 
         public override void perform() {
             action.perform();
+        }
+
+        public override void performFixed() {
+            action.performFixed();
         }
 
         public void switchTo(PlayerAction action) {
