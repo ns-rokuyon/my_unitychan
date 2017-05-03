@@ -63,6 +63,12 @@ namespace MyUnityChan {
             return light.condition() || middle.condition() || heavy.condition();
         }
 
+        public void resetToDefaultAttacks() {
+            light.action = null;
+            middle.action = null;
+            heavy.action = null;
+        }
+
         protected PlayerLevelAttackBase getTriggeredAttack() {
             if ( light != null && light.condition() ) {
                 return light;

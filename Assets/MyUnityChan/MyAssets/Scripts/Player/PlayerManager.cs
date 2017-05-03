@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MyUnityChan {
     public class PlayerManager : ObjectBase {
@@ -13,13 +14,13 @@ namespace MyUnityChan {
         [SerializeField]
         public Const.ID.Controller controller_name;
 
+        public PlayerCamera camera;
         public bool playable;
         public string player_name;
 
         private Dictionary<Const.CharacterName, GameObject> switchable_player_characters;
         private Const.CharacterName now;
 
-        public PlayerCamera camera { get; set; }
         public Controller controller { get; set; }
         public HpGauge hpgauge { get; set; }
         public ReservedHpGauge reserved_hpgauge { get; set; }
@@ -48,13 +49,6 @@ namespace MyUnityChan {
 
             if ( playable ) {
                 // camera setup
-                GameObject camera_obj = GameObject.Find("Camera/PlayerCamera");
-                if ( camera_obj ) {
-                    camera = camera_obj.GetComponent<PlayerCamera>();
-                }
-                else {
-                    camera = PrefabInstantiater.createAndGetComponent<PlayerCamera>(Const.Prefab.Camera["PLAYER_CAMERA"], Hierarchy.Layout.CAMERA);
-                }
                 camera.player_manager = this;
 
                 // HP gauge setup

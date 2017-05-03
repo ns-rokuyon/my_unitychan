@@ -12,7 +12,7 @@ namespace MyUnityChan {
             // Warp
             player.transform.position = warp_to.transform.position - player_down_shift;
             player.freeze(false);
-            player.getPlayerCamera().warpByPlayer(player);
+            player.getPlayerCamera().onChangeArea();
 
             // Callback
             gate.onPass();
