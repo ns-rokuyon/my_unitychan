@@ -66,6 +66,14 @@ namespace MyUnityChan {
             return null;
         }
 
+        public void relabelObject(GameObject obj) {
+            foreach ( KeyValuePair<string, Area> pair in areas ) {
+                if ( pair.Value.isIn(obj.transform.position) ) {
+                    pair.Value.relabel(obj, now_area_name);
+                }
+            }
+        }
+
         public void registerAreaConnectionInfo(GameObject from, GameObject to) {
             Area area = getAreaFromMemberObject(from);
             area.addAreaConnections(from, to);

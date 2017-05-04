@@ -14,6 +14,7 @@ namespace MyUnityChan {
         public bool initialized { get; set; }
         public int priority { get; protected set; }
         public bool skip_lower_priority { get; protected set; }
+        public bool keep_skipping_lower_priority_in_transaction { get; protected set; }
         public List<System.Action> perform_callbacks { get; set; }
 
         public int transaction_frame_count { get; set; }

@@ -13,8 +13,8 @@ namespace MyUnityChan {
         [SerializeField]
         public List<MeleeAttackSpec> specs;
 
-        protected bool is_can_pickup;
-        protected bool is_owned;
+        public bool is_can_pickup;
+        public bool is_owned;
         public IDisposable attacking { get; protected set; }
 
         public bool isCanPickup {
@@ -72,6 +72,7 @@ namespace MyUnityChan {
 
         public virtual void pickup(Character ch) {
             is_owned = true;
+            is_can_pickup = false;
             Player player = (ch as Player);
             player.weapon = this;
             pickup_zone.gameObject.SetActive(false);
@@ -83,6 +84,55 @@ namespace MyUnityChan {
             });
             delay(30, () => {
                 setAttackAction(player);
+            });
+        }
+
+        public virtual void throwout(Character ch, float throw_fx) {
+            Player player = ch as Player;
+            var attack = player.action_manager.getAction<PlayerAttack>("ATTACK");
+
+            // Remove a weapon reference from player
+            player.weapon = null;
+
+            // Set owned flag to false
+            is_owned = false;
+            is_can_pickup = false;
+
+            // Reset attacks
+            attack.resetToDefaultAttacks();
+
+            // Move weapon object to area group in hierarchy
+            transform.parent = player.parent_area.transform.parent;
+            AreaManager.self().relabelObject(gameObject);
+
+            // Enable physics collider
+            delay(2, () => { physics_collider.gameObject.SetActive(true); });
+
+            // Enable hitbox
+            delay(4, () => {
+                hitbox.setOwner(ch.gameObject);
+                hitbox.persistent = true;
+                hitbox.gameObject.SetActive(true);
+            });
+
+            // Enable pickup zone
+            delay(30, () => { pickup_zone.gameObject.SetActive(true); });
+
+            // Throwout this object
+            rigid_body.isKinematic = false;
+            rigid_body.AddForce(
+                new Vector3(player.getFrontVector().x * throw_fx, 10, 0), ForceMode.Impulse);
+
+            // Disable hitbox when velocity is 0
+            delay(4, () => {
+                this.ObserveEveryValueChanged(_ => rigid_body.velocity.x)
+                    .TakeWhile(x => x > 0.01f)
+                    .Subscribe(x => {
+                        DebugManager.log("vx=" + x);
+                    }, () => {
+                        hitbox.gameObject.SetActive(false);
+                    })
+                    .AddTo(this);
             });
         }
 

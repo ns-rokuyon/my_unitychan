@@ -58,6 +58,11 @@ namespace MyUnityChan {
                         if ( action.transaction == null ) {
                             action.off_perform();
                         }
+                        if ( action.skip_lower_priority && 
+                             action.keep_skipping_lower_priority_in_transaction &&
+                             action.transaction != null ) {
+                            break;
+                        }
                     }
                     continue;
                 }
@@ -85,6 +90,11 @@ namespace MyUnityChan {
                 else {
                     if ( action.transaction == null ) {
                         action.off_perform();
+                    }
+                    if ( action.skip_lower_priority && 
+                         action.keep_skipping_lower_priority_in_transaction &&
+                         action.transaction != null ) {
+                        break;
                     }
                 }
             }

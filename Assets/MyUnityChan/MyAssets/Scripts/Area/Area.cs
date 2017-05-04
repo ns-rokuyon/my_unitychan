@@ -64,19 +64,25 @@ namespace MyUnityChan {
                     if ( !p )
                         return;
                     p.manager.players.Values.ToList().ForEach(obj => {
-                        string key = gameobject2Key(obj);
-                        if ( now_area_name == gameObject.name ) {
-                            Player player = obj.GetComponent<Player>();
-                            player.parent_area = this;
-                            gameobjects.Add(key, obj);
-                        }
-                        else {
-                            if ( gameobjects.ContainsKey(key) ) {
-                                gameobjects.Remove(key);
-                            }
-                        }
+                        relabel(obj, now_area_name);
                     });
                 });
+        }
+
+        public void relabel(GameObject obj, string now_area_name) {
+            string key = gameobject2Key(obj);
+            if ( now_area_name == gameObject.name ) {
+                ObjectBase[] comps = obj.GetComponents<ObjectBase>();
+                comps.ToList().ForEach(comp => { comp.parent_area = this; });
+                if ( !gameobjects.ContainsKey(key) ) {
+                    gameobjects.Add(key, obj);
+                }
+            }
+            else {
+                if ( gameobjects.ContainsKey(key) ) {
+                    gameobjects.Remove(key);
+                }
+            }
         }
 
         public bool isIn(string name) {

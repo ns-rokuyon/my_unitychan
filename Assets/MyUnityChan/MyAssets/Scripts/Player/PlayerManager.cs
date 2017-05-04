@@ -74,7 +74,7 @@ namespace MyUnityChan {
 
             now_player.registerActions(new List<Const.PlayerAction> {
                 Const.PlayerAction.ATTACK, Const.PlayerAction.BEAM, Const.PlayerAction.DASH, Const.PlayerAction.MISSILE,
-                Const.PlayerAction.GUARD, Const.PlayerAction.HADOUKEN, Const.PlayerAction.SLIDING, Const.PlayerAction.GRAPPLE
+                Const.PlayerAction.GUARD, Const.PlayerAction.SLIDING, Const.PlayerAction.GRAPPLE
             });
 
             if ( playable ) {

@@ -78,6 +78,7 @@ namespace MyUnityChan {
                 Const.PlayerAction.ACCEL, Const.PlayerAction.BRAKE, Const.PlayerAction.DOWN,
                 Const.PlayerAction.JUMP, Const.PlayerAction.LIMIT_SPEED, Const.PlayerAction.TURN,
                 Const.PlayerAction.SWITCH_BEAM, Const.PlayerAction.WALL_JUMP, Const.PlayerAction.PICKUP,
+                Const.PlayerAction.THROW,
                 Const.PlayerAction.TRANSFORM
             });
 
@@ -156,6 +157,8 @@ namespace MyUnityChan {
                     action_manager.registerAction(new PlayerTurn(this)); break;
                 case Const.PlayerAction.PICKUP:
                     action_manager.registerAction(new PlayerPickup(this)); break;
+                case Const.PlayerAction.THROW:
+                    action_manager.registerAction(new PlayerThrow(this)); break;
                 default:
                     Debug.LogWarning("Undefined player action: id=" + action_class);
                     break;
