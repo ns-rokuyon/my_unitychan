@@ -84,15 +84,12 @@ namespace MyUnityChan {
 
             distance_moved = Mathf.Abs(transform.position.x - start_position.x);
             if ( distance_moved > max_range ) {
-                DebugManager.log("maxrange!");
                 StartCoroutine("destroy", resource_path);
             }
             else if ( area_name == null || !AreaManager.Instance.isInArea(this.gameObject, area_name) ) {
-                DebugManager.log("out of area!");
                 StartCoroutine("destroy", resource_path);
             }
             else if ( !penetration && hit_num > 0 ) {
-                DebugManager.log("hit!");
                 StartCoroutine("destroy", resource_path);
             }
         }

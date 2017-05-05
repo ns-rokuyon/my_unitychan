@@ -26,7 +26,7 @@ namespace MyUnityChan {
             startCountdown(spec.frame);
         }
 
-        public void OnTriggerEnter(Collider other) {
+        public override void OnTriggerEnter(Collider other) {
             // 'other' object must be attached Colider and Rigidbody component
             triggerPlayer(other);
             triggerEnemy(other);
@@ -39,6 +39,7 @@ namespace MyUnityChan {
                 if ( isOwner(other.gameObject) ) return false;
 
                 Enemy enemy = ((Enemy)other.gameObject.GetComponent<Enemy>());
+                DebugManager.log("hit to " + enemy.name);
                 spec.attack(enemy, this);
                 return true;
             }

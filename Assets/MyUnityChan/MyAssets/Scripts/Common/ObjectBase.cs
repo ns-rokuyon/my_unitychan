@@ -119,13 +119,13 @@ namespace MyUnityChan {
             }
         }
 
-        public void OnTriggerEnter(Collider other) {
+        public virtual void OnTriggerEnter(Collider other) {
             if ( other.tag == "MovingFloor" ) {
                 other.gameObject.GetComponent<MovingFloor>().getOn(this);
             }
         }
 
-        public void OnTriggerExit(Collider other) {
+        public virtual void OnTriggerExit(Collider other) {
             if ( other.tag == "MovingFloor" ) {
                 other.gameObject.GetComponent<MovingFloor>().getOff(this);
             }

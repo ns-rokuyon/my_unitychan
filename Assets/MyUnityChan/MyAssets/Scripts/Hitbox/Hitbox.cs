@@ -38,10 +38,7 @@ namespace MyUnityChan {
                     .Subscribe(_ => destroy());
         }
 
-        public void OnTriggerEnter(Collider other) {
-            if ( other.tag == "Enemy" ) {
-                Debug.Log("hit");
-            }
+        public override void OnTriggerEnter(Collider other) {
         }
 
         public virtual void enablePool(string _resource_path) {

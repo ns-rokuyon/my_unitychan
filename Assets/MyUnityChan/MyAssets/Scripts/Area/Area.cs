@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using UniRx;
+using UniRx.Triggers;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -65,6 +66,15 @@ namespace MyUnityChan {
                         return;
                     p.manager.players.Values.ToList().ForEach(obj => {
                         relabel(obj, now_area_name);
+                    });
+                });
+
+            // Cleaner
+            this.UpdateAsObservable()
+                .Subscribe(_ => {
+                    gameobjects.Keys.ToList().ForEach(k => {
+                        if ( gameobjects[k] == null )
+                            gameobjects.Remove(k);
                     });
                 });
         }

@@ -20,7 +20,7 @@ namespace MyUnityChan {
             }
 
             return ob.parent_area.gameobjects.Values.ToList()
-                .Where(o => o.GetComponent<T>() != null)
+                .Where(o => o != null && o.GetComponent<T>() != null)
                 .Select(o => o.GetComponent<T>())
                 .ToArray();
         }

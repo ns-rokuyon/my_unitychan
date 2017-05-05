@@ -37,8 +37,10 @@ namespace MyUnityChan {
         }
 
         public override void open() {
-            if ( door_type == Const.ID.DoorType.LOCKED )
+            if ( door_type == Const.ID.DoorType.LOCKED ) {
+                se(Const.ID.SE.CONCRETE_1);
                 return;
+            }
             GetComponent<Collider>().enabled = false;
             GetComponent<MeshRenderer>().enabled = false;
             se(Const.ID.SE.GATE_OPEN);

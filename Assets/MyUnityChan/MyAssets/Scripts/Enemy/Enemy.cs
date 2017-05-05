@@ -33,7 +33,8 @@ namespace MyUnityChan {
 
         public override void OnEnable() {
             base.OnEnable();
-            ((AIController)controller).restart();
+            if ( controller )
+                ((AIController)controller).restart();
         }
 
         protected void loadAttachedAI() {

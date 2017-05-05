@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UniRx;
 
 namespace MyUnityChan {
     public class EffectManager : PrefabManagerBase<EffectManager> {
@@ -49,6 +50,36 @@ namespace MyUnityChan {
             var fw = ch.getFrontVector();
             var offset = new Vector3(fw.x * frontOffsetX, offsetY, 0.0f);
             return createEffect(effect_name, ch.transform.position, offset, frame, use_objectpool);
+        }
+
+        public static GameObject createEffect(Const.ID.Effect effect_name, GameObject track, int frame, bool use_objectpool = true) {
+            var effect = createEffect(effect_name, track.transform.position, frame, use_objectpool);
+            Observable.IntervalFrame(1)
+                .Take(frame)
+                .Subscribe(_ => {
+                    effect.transform.position = track.transform.position;
+                }).AddTo(track);
+            return effect;
+        }
+
+        public static GameObject createEffect(Const.ID.Effect effect_name, GameObject track,
+                                              float frontOffsetX, float offsetY, int frame, bool use_objectpool = true) {
+            var ch = track.GetComponent<Character>();
+            var effect = createEffect(effect_name, ch, frontOffsetX, offsetY, frame, use_objectpool);
+            Observable.IntervalFrame(1)
+                .Take(frame)
+                .Subscribe(_ => {
+                    var offset = new Vector3();
+                    if ( ch ) {
+                        var fw = ch.getFrontVector();
+                        offset = new Vector3(fw.x * frontOffsetX, offsetY, 0.0f);
+                    }
+                    else {
+                        offset = new Vector3(frontOffsetX, offsetY, 0.0f);
+                    }
+                    effect.transform.position = track.transform.position + offset;
+                }).AddTo(track);
+            return effect;
         }
     }
 }
