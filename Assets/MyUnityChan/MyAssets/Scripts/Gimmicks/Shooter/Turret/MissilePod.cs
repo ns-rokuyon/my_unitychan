@@ -56,6 +56,7 @@ namespace MyUnityChan {
 
             // hitbox
             ProjectileHitbox hitbox = missile.GetComponentInChildren<ProjectileHitbox>();
+            hitbox.depend_on_parent_object = true;
             hitbox.setOwner(gameObject);
             hitbox.setEnabledCollider(true);
             hitbox.ready(obj, missile.spec);

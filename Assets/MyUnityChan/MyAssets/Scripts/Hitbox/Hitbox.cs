@@ -18,6 +18,11 @@ namespace MyUnityChan {
             if ( !RENDER_HITBOX ) {
                 gameObject.GetComponent<MeshRenderer>().enabled = false;
             }
+            if ( LayerMask.LayerToName(gameObject.layer) == "DamageObject" ) {
+                DebugManager.error(
+                    "This hitbox will not be triggered by any characters because hitbox is set DamageObject layer",
+                    gameObject);
+            }
         }
 
         protected virtual void UniqueUpdate() {
@@ -31,11 +36,13 @@ namespace MyUnityChan {
                 .Subscribe(_ => {
                     CommonUpdate();
                     UniqueUpdate();
-                });
+                })
+                .AddTo(this);
 
             if ( frame > 0 )
                 Observable.TimerFrame(frame)
-                    .Subscribe(_ => destroy());
+                    .Subscribe(_ => destroy())
+                    .AddTo(this);
         }
 
         public override void OnTriggerEnter(Collider other) {
@@ -81,14 +88,11 @@ namespace MyUnityChan {
         }
 
         protected void destroy() {
-            //end_timer.destroy();
-
             if ( persistent ) {
                 setEnabledCollider(false);
                 return;
             }
 
-            //end_timer = null;
             if ( use_objectpool ) {
                 ObjectPoolManager.releaseGameObject(this.gameObject, resource_path);
             }

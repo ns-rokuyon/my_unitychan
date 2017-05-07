@@ -3,7 +3,8 @@ using System.Collections;
 
 namespace MyUnityChan {
     public class ProjectileHitbox : AttackHitbox {
-        GameObject projectile;
+        public bool depend_on_parent_object { get; set; }
+        private GameObject projectile;
 
         public override void ready(GameObject proj_, AttackSpec atkspec) {
             projectile = proj_;
@@ -13,6 +14,8 @@ namespace MyUnityChan {
         }
 
         protected override void UniqueUpdate() {
+            if ( depend_on_parent_object )
+                return;
             if ( spec != null ) {
                 if ( projectile != null && projectile.activeSelf ) {
                     transform.position = projectile.transform.position;

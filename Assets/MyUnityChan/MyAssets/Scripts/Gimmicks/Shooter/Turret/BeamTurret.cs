@@ -34,6 +34,7 @@ namespace MyUnityChan {
             if ( beam.has_hitbox_in_children ) {
                 hitbox = beam.gameObject.GetComponentInChildren<ProjectileHitbox>();
                 hitbox.setEnabledCollider(true);
+                hitbox.depend_on_parent_object = true;
             }
             else {
                 hitbox = HitboxManager.self().create<ProjectileHitbox>(Const.Prefab.Hitbox[hitbox_name], use_objectpool:true);
