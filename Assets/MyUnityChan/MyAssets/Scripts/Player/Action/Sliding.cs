@@ -26,6 +26,8 @@ namespace MyUnityChan {
             : base(character) {
             priority = 5;
             skip_lower_priority = true;
+            use_transaction = true;
+            keep_skipping_lower_priority_in_transaction = true;
             hitbox_resource_path = Const.Prefab.Hitbox["KICK"];
             spec = new Spec();
         }
@@ -39,15 +41,16 @@ namespace MyUnityChan {
         }
 
         public override void performFixed() {
-            player.GetComponent<Rigidbody>().AddForce(player.transform.forward * 10.0f, ForceMode.VelocityChange);
+            player.rigid_body.AddForce(player.transform.forward * 10.0f, ForceMode.VelocityChange);
         }
 
         public override void perform() {
+            beginTransaction(40);
+
             player.voice(Const.ID.PlayerVoice.ATTACK3);
             player.getAnimator().CrossFade("Sliding", 0.001f);
             player.lockInput(40);
-            Observable.TimerFrame(6)
-                .Subscribe(_ => createHitbox());
+            player.delay(6, () => { createHitbox(); });
         }
 
         public void createHitbox() {
@@ -58,8 +61,9 @@ namespace MyUnityChan {
         }
 
         public override bool condition() {
-            return controller.keyDown() && controller.keyAttack() && !player.getAnimator().GetBool("Turn") && player.isGrounded();
+            return controller.keyDown() && controller.keyAttack() &&
+                !player.getAnimator().GetBool("Turn") && player.isGrounded() &&
+                isFreeTransaction();
         }
-
     }
 }
