@@ -177,6 +177,14 @@ namespace MyUnityChan {
             actions[name].enable();
         }
 
+        public void disableAllActions() {
+            actions.Values.ToList().ForEach(action => action.disable());
+        }
+
+        public void enableAllActions() {
+            actions.Values.ToList().ForEach(action => action.enable());
+        }
+
         public Action getAction(string name) {
             if ( !actions.ContainsKey(name) ) {
                 return null;

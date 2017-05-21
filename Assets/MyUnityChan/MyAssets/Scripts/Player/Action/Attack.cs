@@ -220,5 +220,4 @@ namespace MyUnityChan {
             return new PlayerSpinKick(player);
         }
     }
-
 }

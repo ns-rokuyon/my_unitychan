@@ -2,11 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using UniRx;
 
 namespace MyUnityChan {
     public class PlayerActionManager : ActionManager {
+        public Player player {
+            get {
+                return character as Player;
+            }
+        }
 
         protected override void start() {
+            this.ObserveEveryValueChanged(_ => player.manager.gameover)
+                .Where(gameover => gameover == true)
+                .Subscribe(_ => disableAllActions());
         }
 
         protected override void update() {

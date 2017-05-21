@@ -74,6 +74,11 @@ namespace MyUnityChan {
         public virtual void shake() {
         }
 
+        public Vector3 getZoomPointFocusTo(Transform tf, float offsetY) {
+            return tf.position.add(0, offsetY,
+                -Mathf.Abs(tf.position.z - transform.position.z / 2.0f));
+        }
+
         public virtual void zoom(Vector3 to, float duration) {
             transform.DOMove(to, duration);
         }

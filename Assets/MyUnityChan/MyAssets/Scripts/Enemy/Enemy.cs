@@ -113,6 +113,9 @@ namespace MyUnityChan {
         }
 
         public override void damage(int dam) {
+            dam = (int)(dam * 
+                GameStateManager.getPlayer().manager.status.setting.ranges[Settings.Range.PLAYER_POWER_SCALE].value);
+
             base.damage(dam);
 
             if ( this is IEnemyTakeDamage ) {

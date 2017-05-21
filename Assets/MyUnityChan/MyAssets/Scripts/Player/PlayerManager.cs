@@ -29,6 +29,14 @@ namespace MyUnityChan {
         public Dictionary<Const.CharacterName, GameObject> players {
             get { return switchable_player_characters; }
         }
+        public bool gameover {
+            get {
+                return status.gameover;
+            }
+            set {
+                status.gameover = value;
+            }
+        }
 
         void Awake() {
             switchable_player_characters = new Dictionary<Const.CharacterName, GameObject>();

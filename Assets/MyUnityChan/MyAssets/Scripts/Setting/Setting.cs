@@ -5,7 +5,7 @@ using System;
 namespace MyUnityChan {
     public class Setting<T> : StructBase where T : struct {
         public T value { get; set; }
-        private T default_value;
+        public T default_value { get; protected set; }
         public GameText title { get; private set; }
         public GameText desc { get; private set; }
         public Settings.Category category { get; private set; }
@@ -50,6 +50,16 @@ namespace MyUnityChan {
 
         public void select(int v) {
             value = v;
+        }
+    }
+
+    public class SettingRange : Setting<float> {
+        public float min { get; protected set; }
+        public float max { get; protected set; }
+
+        public SettingRange(SettingRangeRuleElement rule) : base(rule) {
+            min = rule.min;
+            max = rule.max;
         }
     }
 }

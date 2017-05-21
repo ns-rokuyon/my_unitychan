@@ -29,6 +29,7 @@ namespace MyUnityChan {
         public int reserved_hp { get; private set; }
         public int energy_tanks { get; private set; }
         public int missile_tanks { get; set; }
+        public bool gameover { get; set; }
         public Dictionary<Ability.Id, PlayerAbility> abilities { get; set; }
         public PlayerSetting setting { get; private set; }
         public PlayerManager manager { get; set; }

@@ -16,7 +16,6 @@ namespace MyUnityChan {
         public CharacterStatus status { get; set; }
         public GroundChecker ground_checker { get; protected set; }
         public RoofChecker roof_checker { get; protected set; }
-        //public Rigidbody rigid_body { get; protected set; }
         public float height { get; protected set; }
         public float width { get; protected set; }
 

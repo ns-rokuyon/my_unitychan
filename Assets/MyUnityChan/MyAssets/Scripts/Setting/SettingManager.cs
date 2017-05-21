@@ -14,6 +14,7 @@ namespace MyUnityChan {
 
         private Dictionary<Setting<bool>, GameObject> flag_setting_objects;
         private Dictionary<SettingSelect, GameObject> select_setting_objects;
+        private Dictionary<SettingRange, GameObject> range_setting_objects;
 
         public Settings.Category focus_category { get; set; }
         public Dictionary<Settings.Flag, System.IDisposable> flag_setting_callbacks { get; set; }
@@ -23,6 +24,7 @@ namespace MyUnityChan {
             setup_done = false;
             flag_setting_objects = new Dictionary<Setting<bool>, GameObject>();
             select_setting_objects = new Dictionary<SettingSelect, GameObject>();
+            range_setting_objects = new Dictionary<SettingRange, GameObject>();
             es = EventSystem.current;
             focus_category = Settings.Category.GENERAL;
 
@@ -66,6 +68,25 @@ namespace MyUnityChan {
                 select_setting_objects.Add(setting.Value, dropdown);
             }
 
+            // Instantiate range settings
+            foreach ( var setting in pm.status.setting.ranges ) {
+                GameObject obj = PrefabInstantiater.create(Const.Prefab.UI["RANGE"]);
+                MenuRange range = obj.GetComponent<MenuRange>();
+                RectTransform rt = obj.GetComponent<RectTransform>();
+                obj.GetComponentInChildren<Text>().text = setting.Value.title.get();
+                obj.setParent(scroll_content);
+
+                range.key = setting.Key;
+                range.min = setting.Value.min;
+                range.max = setting.Value.max;
+                range.default_value = setting.Value.default_value;
+
+                rt.localScale = new Vector3(1, 1, 1);
+                rt.localPosition = rt.localPosition.changeZ(0.0f);
+
+                range_setting_objects.Add(setting.Value, obj);
+            }
+
             // Instantiate other settings
             // ...
 
@@ -82,6 +103,14 @@ namespace MyUnityChan {
 
                     // select settings
                     foreach ( var kv in select_setting_objects ) {
+                        if ( kv.Key.category == focus_category )
+                            kv.Value.SetActive(true);
+                        else
+                            kv.Value.SetActive(false);
+                    }
+
+                    // range settings
+                    foreach ( var kv in range_setting_objects ) {
                         if ( kv.Key.category == focus_category )
                             kv.Value.SetActive(true);
                         else
@@ -109,6 +138,9 @@ namespace MyUnityChan {
             foreach ( var kv in select_setting_objects ) {
                 kv.Value.GetComponentInChildren<Text>().text = kv.Key.title.get();
             }
+            foreach ( var kv in range_setting_objects ) {
+                kv.Value.GetComponentInChildren<Text>().text = kv.Key.title.get();
+            }
         }
 
         public static bool isSetupDone() {
@@ -129,6 +161,11 @@ namespace MyUnityChan {
             Instance.pm.status.setting.selects[key].select(v);
         }
 
+        // Set range setting value
+        public static void set(Settings.Range key, float v) {
+            Instance.pm.status.setting.ranges[key].value = v;
+        }
+
         // Get flag setting value
         public static bool get(Settings.Flag key) {
             return Instance.pm.status.setting.flags[key].value;
@@ -137,6 +174,11 @@ namespace MyUnityChan {
         // Get select setting value
         public static T get<T>(Settings.Select key) {
             return Instance.pm.status.setting.selects[key].selected<T>();
+        }
+
+        // Get range setting value
+        public static float get(Settings.Range key) {
+            return Instance.pm.status.setting.ranges[key].value;
         }
 
         // Add callback which invokes 'func(bool flag)' when it's flag changes

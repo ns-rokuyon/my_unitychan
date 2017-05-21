@@ -78,8 +78,7 @@ namespace MyUnityChan {
                 Const.PlayerAction.ACCEL, Const.PlayerAction.BRAKE, Const.PlayerAction.DOWN,
                 Const.PlayerAction.JUMP, Const.PlayerAction.LIMIT_SPEED, Const.PlayerAction.TURN,
                 Const.PlayerAction.SWITCH_BEAM, Const.PlayerAction.WALL_JUMP, Const.PlayerAction.PICKUP,
-                Const.PlayerAction.THROW,
-                Const.PlayerAction.TRANSFORM
+                Const.PlayerAction.THROW, Const.PlayerAction.TRANSFORM, Const.PlayerAction.DEAD
             });
 
             // init sound player
@@ -159,6 +158,8 @@ namespace MyUnityChan {
                     action_manager.registerAction(new PlayerPickup(this)); break;
                 case Const.PlayerAction.THROW:
                     action_manager.registerAction(new PlayerThrow(this)); break;
+                case Const.PlayerAction.DEAD:
+                    action_manager.registerAction(new PlayerDead(this)); break;
                 default:
                     Debug.LogWarning("Undefined player action: id=" + action_class);
                     break;
@@ -187,6 +188,7 @@ namespace MyUnityChan {
 
         public override void damage(int dam) {
             if ( status.invincible.now() ) return;
+            if ( manager.gameover ) return;
             if ( isGuarding() ) {
                 // Guard effect
                 EffectManager.createEffect(Const.ID.Effect.GUARD_01, transform.position, 40, true);
@@ -196,6 +198,11 @@ namespace MyUnityChan {
                 return;
             }
             status.invincible.enable(10);
+
+            // Scaling
+            dam = (int)(dam * manager.status.setting.ranges[Settings.Range.ENEMY_POWER_SCALE].value);
+
+            // Apply
             status.hp -= dam;
             voice(Const.ID.PlayerVoice.DAMAGED);
             if ( playable ) {
@@ -448,8 +455,7 @@ namespace MyUnityChan {
             GUI.Label(new Rect(Screen.width - 245, 210, 250, 30), "areaname: " + getAreaName());
             GUI.Label(new Rect(Screen.width - 245, 230, 250, 30), "animspeed: " + animator.speed);
             GUI.Label(new Rect(Screen.width - 245, 250, 250, 30), "focus ui: " + MenuManager.getCurrentSelectedName());
-            if ( attack != null )
-                GUI.Label(new Rect(Screen.width - 245, 270, 250, 30), "active_attack: " + attack.active_attack);
+            GUI.Label(new Rect(Screen.width - 245, 270, 250, 30), "gameover: " + manager.gameover);
         }
     }
 }

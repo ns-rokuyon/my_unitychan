@@ -18,8 +18,7 @@ namespace MyUnityChan {
         }
 
         public override Vector3 getZoomPointOnChangeArea() {
-            return player.transform.position.add(0, 1.0f,
-                -Mathf.Abs(player.transform.position.z - transform.position.z / 2.0f));
+            return getZoomPointFocusTo(player.transform, 1.0f);
         }
 
         public override void shake() {
