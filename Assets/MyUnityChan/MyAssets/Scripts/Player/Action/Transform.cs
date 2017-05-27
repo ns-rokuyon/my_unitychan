@@ -8,7 +8,14 @@ namespace MyUnityChan {
         }
 
         public override void perform() {
-            player.manager.switchPlayerCharacter();
+            player.delay(5, () => { player.manager.switchPlayerCharacter(); });
+            player.manager.lockInput(30);
+            EffectManager.createEffect(Const.ID.Effect.SWITCHING_PLAYER, player.ground_checker.point(), 60, true);
+        }
+
+        public override void performFixed() {
+            player.rigid_body.velocity = Vector3.zero;
+            player.rigid_body.angularVelocity = Vector3.zero;
         }
 
         public override bool condition() {

@@ -312,10 +312,12 @@ namespace MyUnityChan {
 
             if ( frame > 0 )
                 locker = Observable.TimerFrame(frame)
-                    .Subscribe(_ => unlockInput());
+                    .Subscribe(_ => unlockInput())
+                    .AddTo(this);
             else
                 locker = Observable.EveryUpdate()
-                    .Subscribe(_ => { });
+                    .Subscribe(_ => { })
+                    .AddTo(this);
         }
 
         public bool isInputLocked() {

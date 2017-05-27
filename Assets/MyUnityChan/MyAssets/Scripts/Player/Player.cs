@@ -212,6 +212,9 @@ namespace MyUnityChan {
         }
 
         public override void knockback(int dam) {
+            if ( status.invincible.now() ) return;
+            if ( manager.gameover ) return;
+
             if ( dam < 10 )
                 return;
 

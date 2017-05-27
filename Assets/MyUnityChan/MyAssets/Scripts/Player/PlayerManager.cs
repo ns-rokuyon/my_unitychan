@@ -171,5 +171,11 @@ namespace MyUnityChan {
             player.setController(controller);
             player.action_manager = player.gameObject.GetComponent<PlayerActionManager>();
         }
+
+        public void lockInput(int frame = 0) {
+            players.Values.ToList().ForEach(obj => {
+                obj.GetComponent<Player>().lockInput(frame);
+            });
+        }
     }
 }

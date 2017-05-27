@@ -154,6 +154,13 @@ namespace MyUnityChan {
                 }
                 var enemy = this as IEnemyLevelUp;
                 if ( exp >= enemy.getMaxExp() ) {
+                    Vector3 effect_position;
+                    if ( ground_checker && ground_checker.isGrounded() )
+                        effect_position = ground_checker.point();
+                    else
+                        effect_position = transform.position;
+                    EffectManager.createEffect(Const.ID.Effect.ENEMY_LEVEL_UP, effect_position, 60, true);
+
                     exp = 0;
                     changeForm();
                     deactivate();
