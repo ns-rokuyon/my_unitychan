@@ -17,6 +17,10 @@ namespace MyUnityChan {
             camera_component.gameObject.transform.position = camera_component.gameObject.transform.position.changeZ(-14);
         }
 
+        public override void onTransformPlayer(Player active_player) {
+            procam.CameraTargets[0].TargetTransform = active_player.transform;
+        }
+
         public override Vector3 getZoomPointOnChangeArea() {
             return getZoomPointFocusTo(player.transform, 1.0f);
         }

@@ -49,6 +49,9 @@ namespace MyUnityChan {
         public virtual void onChangeArea() {
         }
 
+        public virtual void onTransformPlayer(Player active_player) {
+        }
+
         public virtual void centralize() {
         }
 

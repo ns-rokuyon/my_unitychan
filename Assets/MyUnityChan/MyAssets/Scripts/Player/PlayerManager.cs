@@ -118,11 +118,15 @@ namespace MyUnityChan {
                     pair.Value.SetActive(true);
 
                     // Copy position
-                    pair.Value.transform.position = player.gameObject.transform.position;
+                    pair.Value.transform.position = player.transform.position;
+                    pair.Value.transform.rotation = player.transform.rotation;
                     next_player.last_entrypoint = player.last_entrypoint;
 
                     // Switch controller's focus to next player object
                     controller.setSelf(next_player);
+
+                    // Switch camera's target
+                    camera.onTransformPlayer(next_player);
 
                     // Replace character name
                     now = name;
