@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UniRx;
 
 namespace MyUnityChan {
-    public class MenuRange : GUIObjectBase {
+    public class MenuRange : GUIObjectBase, ISelectHandler, IDeselectHandler {
         public Text value_text;
 
         public Slider slider { get; protected set; }
@@ -50,6 +50,7 @@ namespace MyUnityChan {
 
         void Awake() {
             slider = GetComponent<Slider>();
+            setupSoundPlayer();
         }
 
         void Start() {
@@ -68,6 +69,13 @@ namespace MyUnityChan {
 
         public float approximate(float v) {
             return Mathf.Round(v * 100) / 100.0f;
+        }
+
+        public void OnSelect(BaseEventData event_data) {
+            se(Const.ID.SE.BUTTON_SELECT);
+        }
+
+        public void OnDeselect(BaseEventData event_data) {
         }
     }
 }

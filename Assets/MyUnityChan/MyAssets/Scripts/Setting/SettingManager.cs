@@ -17,6 +17,7 @@ namespace MyUnityChan {
         private Dictionary<SettingRange, GameObject> range_setting_objects;
 
         public Settings.Category focus_category { get; set; }
+        public Dictionary<Settings.Category, GameObject> corresponding_parent_buttons { get; protected set; }
         public Dictionary<Settings.Flag, System.IDisposable> flag_setting_callbacks { get; set; }
         public bool setup_done { get; set; }
 
@@ -28,6 +29,7 @@ namespace MyUnityChan {
             es = EventSystem.current;
             focus_category = Settings.Category.GENERAL;
 
+            corresponding_parent_buttons = new Dictionary<Settings.Category, GameObject>();
             flag_setting_callbacks = new Dictionary<Settings.Flag, System.IDisposable>();
         }
 
@@ -119,6 +121,27 @@ namespace MyUnityChan {
 
                     // other settings
                     // ...
+
+
+                    // Explicit navigations
+                    List<Selectable> selectables = getActiveSelectables();
+                    for ( int i = 0; i < selectables.Count; i++ ) {
+                        var next = i + 1 >= selectables.Count ? selectables[0] : selectables[i + 1];
+                        var prev = i - 1 < 0 ? selectables[selectables.Count - 1] : selectables[i - 1];
+                        var navigation = selectables[i].navigation;
+                        // Set navigations
+                        navigation.selectOnDown = next;
+                        navigation.selectOnUp = prev;
+                        if ( corresponding_parent_buttons.ContainsKey(focus_category) ) {
+                            var corresponding = corresponding_parent_buttons[focus_category].GetComponent<Selectable>();
+                            navigation.selectOnLeft = corresponding;
+
+                            var conav = corresponding.navigation;
+                            conav.selectOnRight = selectables[0];
+                            corresponding.navigation = conav;
+                        }
+                        selectables[i].navigation = navigation;
+                    }
                 });
 
             // If LANG is changed, reset label text for all button
@@ -126,6 +149,14 @@ namespace MyUnityChan {
                 .Subscribe(_ => resetLanguage());
 
             setup_done = true;
+        }
+
+        public List<Selectable> getActiveSelectables() {
+            return scroll_content.GetComponentsInChildren<Selectable>().ToList();
+        }
+
+        public void addCorrespondingParentElement(Settings.Category key, GameObject value) {
+            corresponding_parent_buttons.Add(key, value);
         }
 
         private void resetLanguage() {

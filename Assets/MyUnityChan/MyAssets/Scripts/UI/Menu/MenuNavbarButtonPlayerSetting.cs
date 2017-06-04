@@ -7,11 +7,12 @@ using UniRx.Triggers;
 namespace MyUnityChan {
     [System.Serializable]
     public class MenuNavbarButtonPlayerSetting : MenuNavbarButton<Settings.Category> {
-        private Button button;
+        public Button button { get; protected set; }
 
         void Start() {
             button = GetComponent<Button>();
             button.onClick.AddListener(change);
+            SettingManager.Instance.addCorrespondingParentElement(nav, gameObject);
         }
 
         public override void change() {
