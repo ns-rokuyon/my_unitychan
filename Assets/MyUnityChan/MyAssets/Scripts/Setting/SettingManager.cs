@@ -19,6 +19,7 @@ namespace MyUnityChan {
         public Settings.Category focus_category { get; set; }
         public Dictionary<Settings.Category, GameObject> corresponding_parent_buttons { get; protected set; }
         public Dictionary<Settings.Flag, System.IDisposable> flag_setting_callbacks { get; set; }
+        public bool focus_on_content { get; protected set; }
         public bool setup_done { get; set; }
 
         void Awake() {
@@ -134,7 +135,7 @@ namespace MyUnityChan {
                         navigation.selectOnUp = prev;
                         if ( corresponding_parent_buttons.ContainsKey(focus_category) ) {
                             var corresponding = corresponding_parent_buttons[focus_category].GetComponent<Selectable>();
-                            navigation.selectOnLeft = corresponding;
+                            //navigation.selectOnLeft = corresponding;
 
                             var conav = corresponding.navigation;
                             conav.selectOnRight = selectables[0];
@@ -147,6 +148,34 @@ namespace MyUnityChan {
             // If LANG is changed, reset label text for all button
             this.ObserveEveryValueChanged(_ => get<Const.Language>(Settings.Select.LANG))
                 .Subscribe(_ => resetLanguage());
+
+            // Updater of focus_on_content variable
+            this.UpdateAsObservable()
+                .Subscribe(_ => {
+                    var current_obj = es.currentSelectedGameObject;
+                    if ( !current_obj ) {
+                        focus_on_content = false;
+                        return;
+                    }
+                    var current = current_obj.GetComponent<Selectable>();
+                    if ( !current ) {
+                        focus_on_content = false;
+                        return;
+                    }
+                    focus_on_content = getActiveSelectables().Contains(current);
+                })
+                .AddTo(this);
+
+            // Controller
+            this.UpdateAsObservable()
+                .Where(_ => focus_on_content)
+                .Subscribe(_ => {
+                    if ( GameStateManager.Instance.player_manager.controller.keyCancel() ) {
+                        // Back to sidebar menu from focused content
+                        corresponding_parent_buttons[focus_category].GetComponent<Selectable>().Select();
+                    }
+                })
+                .AddTo(this);
 
             setup_done = true;
         }
