@@ -7,8 +7,13 @@ namespace MyUnityChan {
         protected Character character;
         protected Dictionary<string, Action> actions = new Dictionary<string, Action>();
 
+        protected List<Action> adhoc_perform_actions = new List<Action>();
+        protected List<Action> adhoc_performFixed_actions = new List<Action>();
+        protected List<Action> adhoc_performLate_actions = new List<Action>();
+
         protected abstract void start();
         protected abstract void update();
+
 
         void Awake() {
             character = GetComponent<Character>();
@@ -35,6 +40,17 @@ namespace MyUnityChan {
                 if ( !action.initialized ) {
                     action.init();
                     action.initialized = true;
+                }
+
+                int adhoc = adhoc_perform_actions.IndexOf(action);
+                if ( adhoc >= 0 ) {
+                    // Force action
+                    action.perform();
+                    if ( action.perform_callbacks.Count > 0 ) {
+                        action.perform_callbacks.ForEach(callback => callback());
+                    }
+                    adhoc_perform_actions.RemoveAt(adhoc);
+                    continue;
                 }
 
                 // call action methods in Update() constantly
@@ -109,6 +125,14 @@ namespace MyUnityChan {
                 // call action methods in Update() constantly
                 action.constant_performFixed();
 
+                int adhoc = adhoc_performFixed_actions.IndexOf(action);
+                if ( adhoc >= 0 ) {
+                    // Force action
+                    act(action);
+                    adhoc_performFixed_actions.RemoveAt(adhoc);       // Remove adhoc action from list
+                    continue;
+                }
+
                 if ( action.flag == null ) {
                     if ( action.condition() ) {
                         // call action methods in FixedUpdate()
@@ -143,6 +167,14 @@ namespace MyUnityChan {
 
                 action.constant_performLate();
 
+                int adhoc = adhoc_performLate_actions.IndexOf(action);
+                if ( adhoc >= 0 ) {
+                    // Force action
+                    action.performLate();
+                    adhoc_performLate_actions.RemoveAt(adhoc);       // Remove adhoc action from list
+                    continue;
+                }
+
                 if ( action.condition() ) {
                     action.performLate();
                 }
@@ -159,6 +191,12 @@ namespace MyUnityChan {
         public void act(string action_name) {
             Action action = actions[action_name];
             act(action);
+        }
+
+        public void forceAction(string action_name) {
+            adhoc_perform_actions.Add(getAction(action_name));
+            adhoc_performFixed_actions.Add(getAction(action_name));
+            adhoc_performLate_actions.Add(getAction(action_name));
         }
 
         public void registerAction(Action action) {

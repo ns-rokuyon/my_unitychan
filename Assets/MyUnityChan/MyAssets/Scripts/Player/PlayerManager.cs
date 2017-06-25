@@ -125,13 +125,13 @@ namespace MyUnityChan {
                     // Switch controller's focus to next player object
                     controller.setSelf(next_player);
 
-                    // Switch camera's target
-                    camera.onTransformPlayer(next_player);
-
                     // Replace character name
                     now = name;
 
                     if ( playable ) {
+                        // Switch camera's target
+                        camera.onTransformPlayer(next_player);
+
                         // Switch player object for hp gauge
                         hpgauge.setCharacter(next_player);
                     }

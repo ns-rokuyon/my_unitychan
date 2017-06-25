@@ -23,12 +23,15 @@ namespace MyUnityChan {
             }
         }
 
-        public void play(Func<IObserver<Controller.InputCode>, IEnumerator> co) {
+        public void play(Func<IObserver<string>, IEnumerator> co) {
             if ( demo != null )
                 demo.Dispose();
 
-            demo = Observable.FromCoroutine<Controller.InputCode>(observer => co(observer))
-                .Subscribe(code => pm.controller.inputKey(code, frame: 10));
+            pm.controller.clearAllInputs();
+            demo = Observable.FromCoroutine<string>(observer => co(observer))
+                .Subscribe(action_name => {
+                    pm.getNowPlayerComponent().action_manager.forceAction(action_name);
+                });
         }
 
         public void centering() {

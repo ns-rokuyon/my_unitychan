@@ -14,7 +14,6 @@ namespace MyUnityChan {
         public Ability.Id ability_id;
 
         private RectTransform rect_transform;
-        private Text description;
 
         public PlayerAbility ability { get; set; } 
         public Button button { get; protected set; }
@@ -30,7 +29,6 @@ namespace MyUnityChan {
         void Awake() {
             setupSoundPlayer();
             rect_transform = GetComponent<RectTransform>();
-            description = transform.parent.GetComponentInChildren<Text>();
             button = GetComponent<Button>();
             icon = GetComponentInChildren<RawImage>();
             if ( icon )
@@ -66,11 +64,10 @@ namespace MyUnityChan {
             demo.setDemoCameraDistance(ability.def.demo_camera_distance);
             ability.def.onSelectAbilityButton(demo.pm);
             if ( ability.status == Ability.Status.NO_GET ) {
-                description.text = "?????";
-                demo.play(ability.def.demo);
+                PlayerAbilityManager.updateDescription("?????");
             }
             else {
-                description.text = ability.def.name.get();
+                PlayerAbilityManager.updateDescription(ability.def.name.get());
                 demo.play(ability.def.demo);
             }
         }
@@ -78,7 +75,7 @@ namespace MyUnityChan {
         public void OnDeselect(BaseEventData eventData) {
             rect_transform.localPosition = rect_transform.localPosition.add(0, 0, 10.0f);
             ability.def.onDeSelectAbilityButton(demo.pm);
-            demo.centering();
+            delay(1, () => demo.centering());
         }
 
         public void press() {
