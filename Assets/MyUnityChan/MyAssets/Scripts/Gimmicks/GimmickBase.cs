@@ -6,11 +6,16 @@ using System;
 namespace MyUnityChan {
     public class MovingFloor : ObjectBase {
         public List<ObjectBase> members = new List<ObjectBase>();
+        public Dictionary<ObjectBase, Transform> parents = new Dictionary<ObjectBase, Transform>();
 
         public virtual void getOn(ObjectBase ob) {
             if ( ob.GetComponent<Player>() ) {
                 ob = ob.GetComponent<Player>().manager;
             }
+            // Memorize the parent to back later
+            parents.Add(ob, ob.transform.parent);
+
+            // Set member
             ob.transform.parent = gameObject.transform;
             members.Add(ob);
         }
@@ -19,12 +24,23 @@ namespace MyUnityChan {
             if ( ob.GetComponent<Player>() ) {
                 ob = ob.GetComponent<Player>().manager;
             }
-            ob.transform.parent = null;
+
+            if ( parents.ContainsKey(ob) ) {
+                ob.transform.parent = null;
+            }
+            else {
+                ob.transform.parent = parents[ob];
+            }
             members.Remove(ob);
+            parents.Remove(ob);
         }
 
         public PlayerManager getPlayerManager() {
             return members.Where(m => m.GetComponent<PlayerManager>()).FirstOrDefault() as PlayerManager;
+        }
+
+        public bool isMember(ObjectBase obj) {
+            return members.Contains(obj);
         }
 
     }

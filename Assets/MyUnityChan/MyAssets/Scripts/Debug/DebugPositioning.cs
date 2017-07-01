@@ -7,7 +7,7 @@ namespace MyUnityChan {
         public int index;
         public bool on;
 
-        void Awake() {
+        void Start() {
             if ( !on )
                 return;
             if ( positions.Count == 0 )

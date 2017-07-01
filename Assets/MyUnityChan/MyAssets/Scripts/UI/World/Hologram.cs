@@ -5,8 +5,8 @@ namespace MyUnityChan {
     public class Hologram : ObjectBase {
         public SensorZone zone { get; set; }
 
-        public virtual void appear() { }
-        public virtual void disappear() { }
+        public virtual void appear(Player player = null, Collider collider = null) { }
+        public virtual void disappear(Player player = null, Collider collider = null) { }
 
         public virtual void Start() {
             if ( zone ) {

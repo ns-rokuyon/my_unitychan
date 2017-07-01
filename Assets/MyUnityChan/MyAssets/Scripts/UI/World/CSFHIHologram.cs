@@ -9,11 +9,11 @@ namespace MyUnityChan {
             manager = GetComponent<InterfaceAnimManager>();
         }
 
-        public override void appear() {
+        public override void appear(Player player = null, Collider collider = null) {
             manager.startAppear();
         }
 
-        public override void disappear() {
+        public override void disappear(Player player = null, Collider collider = null) {
             manager.startDisappear();
         }
     }

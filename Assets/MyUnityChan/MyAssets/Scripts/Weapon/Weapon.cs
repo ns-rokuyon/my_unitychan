@@ -28,8 +28,8 @@ namespace MyUnityChan {
         public virtual void Awake() {
             attacking = null;
             if ( pickup_zone ) {
-                pickup_zone.onPlayerEnterCallback = () => { is_can_pickup = true; };
-                pickup_zone.onPlayerExitCallback = () => { is_can_pickup = false; };
+                pickup_zone.onPlayerEnterCallback = (Player p, Collider c) => { is_can_pickup = true; };
+                pickup_zone.onPlayerExitCallback = (Player p, Collider c) => { is_can_pickup = false; };
             }
         }
 

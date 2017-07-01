@@ -14,7 +14,7 @@ namespace MyUnityChan {
             onPlayerExitCallback = null;
         }
 
-        public override void doLock() {
+        public override void doLock(Player player = null, Collider collider = null) {
             base.doLock();
             enemy_count = parent_area.getActiveEnemyCount();
             this.ObserveEveryValueChanged(_ => parent_area.getActiveEnemyCount())

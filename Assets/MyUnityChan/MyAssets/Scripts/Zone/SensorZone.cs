@@ -3,29 +3,41 @@ using System.Collections;
 
 namespace MyUnityChan {
     public class SensorZone : Zone {
-        public System.Action onPlayerEnterCallback { get; set; }
-        public System.Action onPlayerExitCallback { get; set; }
-        public System.Action onEnemyEnterCallback { get; set; }
-        public System.Action onEnemyExitCallback { get; set; }
+        public System.Action<Player, Collider> onPlayerEnterCallback { get; set; }
+        public System.Action<Player, Collider> onPlayerStayCallback { get; set; }
+        public System.Action<Player, Collider> onPlayerExitCallback { get; set; }
+        public System.Action<Enemy, Collider> onEnemyEnterCallback { get; set; }
+        public System.Action<Enemy, Collider> onEnemyStayCallback { get; set; }
+        public System.Action<Enemy, Collider> onEnemyExitCallback { get; set; }
 
-        protected override void onPlayerEnter(Player player) {
+        protected override void onPlayerEnter(Player player, Collider colliderInfo) {
             if ( onPlayerEnterCallback == null ) return;
-            onPlayerEnterCallback();
+            onPlayerEnterCallback(player, colliderInfo);
         }
 
-        protected override void onPlayerExit(Player player) {
+        protected override void onPlayerStay(Player player, Collider colliderInfo) {
+            if ( onPlayerStayCallback == null ) return;
+            onPlayerStayCallback(player, colliderInfo);
+        }
+
+        protected override void onPlayerExit(Player player, Collider colliderInfo) {
             if ( onPlayerExitCallback == null ) return;
-            onPlayerExitCallback();
+            onPlayerExitCallback(player, colliderInfo);
         }
 
-        protected override void onEnemyEnter(Enemy enemy) {
+        protected override void onEnemyEnter(Enemy enemy, Collider colliderInfo) {
             if ( onEnemyEnterCallback == null ) return;
-            onEnemyEnterCallback();
+            onEnemyEnterCallback(enemy, colliderInfo);
         }
 
-        protected override void onEnemyExit(Enemy enemy) {
+        protected override void onEnemyStay(Enemy enemy, Collider colliderInfo) {
+            if ( onEnemyStayCallback == null ) return;
+            onEnemyStayCallback(enemy, colliderInfo);
+        }
+
+        protected override void onEnemyExit(Enemy enemy, Collider colliderInfo) {
             if ( onEnemyExitCallback == null ) return;
-            onEnemyExitCallback();
+            onEnemyExitCallback(enemy, colliderInfo);
         }
     }
 }

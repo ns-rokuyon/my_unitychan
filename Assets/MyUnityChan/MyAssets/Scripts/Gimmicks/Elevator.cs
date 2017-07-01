@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UniRx;
+using UniRx.Triggers;
 
 namespace MyUnityChan {
     public class Elevator : MovingFloor {
@@ -25,57 +27,73 @@ namespace MyUnityChan {
             else {
                 state = State.WAITING_TOP;
             }
-        }
 
-        // Update is called once per frame
-        void Update() {
-            if ( state == State.GOING_UP ) {
-                // Move
-                transform.localPosition = transform.localPosition.add(0, speed * Time.deltaTime, 0);
-                if ( transform.localPosition.y > top.y ) {
-                    // Stop
-                    transform.localPosition = top;
-                    state = State.WAITING_TOP;
-                    freePlayer();
-                }
-            }
-            else if ( state == State.GOING_DOWN ) {
-                // Move
-                transform.localPosition = transform.localPosition.add(0, -speed * Time.deltaTime, 0);
-                if ( transform.localPosition.y < bottom.y ) {
-                    // Stop
-                    transform.localPosition = bottom;
-                    state = State.WAITING_BOTTOM;
-                    freePlayer();
-                }
+            var zone = GetComponentInChildren<SensorZone>();
+            if ( zone ) {
+                zone.onPlayerStayCallback = (Player player, Collider collider) => {
+                    if ( isMember(player.manager) )
+                        return;
+
+                    if ( state == State.WAITING_BOTTOM && player.getController().keyUp() ) {
+                        // Start
+                        getOn(player);
+                        lockMembers();
+                        state = State.GOING_UP;
+                    }
+                    else if ( state == State.WAITING_TOP && player.getController().keyDown() ) {
+                        // Start
+                        getOn(player);
+                        lockMembers();
+                        state = State.GOING_DOWN;
+                    }
+                };
             }
             else {
-                PlayerManager pm = getPlayerManager();
-                if ( pm ) {
-                    if ( pm.controller.keyUp() && state == State.WAITING_BOTTOM ) {
-                        // Start
-                        state = State.GOING_UP;
-                        lockPlayer();
-                    }
-                    else if ( pm.controller.keyDown() && state == State.WAITING_TOP ) {
-                        // Start
-                        state = State.GOING_DOWN;
-                        lockPlayer();
-                    }
-                }
+                DebugManager.warn("SensorZone component is not in children. This elevetor cannot move");
             }
+
+            this.UpdateAsObservable()
+                .Where(_ => state == State.GOING_UP)
+                .Subscribe(_ => {
+                    // Move
+                    transform.localPosition = transform.localPosition.add(0, speed * Time.deltaTime, 0);
+                    if ( transform.localPosition.y > top.y ) {
+                        // Stop
+                        transform.localPosition = top;
+                        freeMembers();
+                        state = State.WAITING_TOP;
+                    }
+                }).AddTo(this);
+
+            this.UpdateAsObservable()
+                .Where(_ => state == State.GOING_DOWN)
+                .Subscribe(_ => {
+                    // Move
+                    transform.localPosition = transform.localPosition.add(0, -speed * Time.deltaTime, 0);
+                    if ( transform.localPosition.y < bottom.y ) {
+                        // Stop
+                        transform.localPosition = bottom;
+                        state = State.WAITING_BOTTOM;
+                        freeMembers();
+                    }
+                }).AddTo(this);
         }
 
-        protected void lockPlayer() {
-            PlayerManager pm = getPlayerManager();
-            if ( pm )
-                pm.getNowPlayerComponent().freeze();
+        protected void lockMembers() {
+            members.ForEach(m => {
+                if ( m is PlayerManager ) {
+                    (m as PlayerManager).getNowPlayerComponent().freeze();
+                }
+            });
         }
 
-        protected void freePlayer() {
-            PlayerManager pm = getPlayerManager();
-            if ( pm )
-                pm.getNowPlayerComponent().freeze(false);
+        protected void freeMembers() {
+            members.ForEach(m => {
+                if ( m is PlayerManager ) {
+                    (m as PlayerManager).getNowPlayerComponent().freeze(false);
+                }
+                getOff(m);
+            });
         }
     }
 

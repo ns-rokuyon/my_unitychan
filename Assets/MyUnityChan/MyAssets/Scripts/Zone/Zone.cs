@@ -4,32 +4,52 @@ using UniRx;
 
 namespace MyUnityChan {
     public class Zone : ObjectBase {
-        virtual protected void onPlayerEnter(Player player) {
-            Debug.Log("Enter:" + player.name);
+        virtual protected void onPlayerEnter(Player player, Collider colliderInfo) {
         }
 
-        virtual protected void onPlayerExit(Player player) {
-            Debug.Log("Exit:" + player.name);
+        virtual protected void onPlayerStay(Player player, Collider colliderInfo) {
         }
 
-        virtual protected void onEnemyEnter(Enemy enemy) {
-            Debug.Log("Enter:" + enemy.name);
+        virtual protected void onPlayerExit(Player player, Collider colliderInfo) {
         }
 
-        virtual protected void onEnemyExit(Enemy enemy) {
-            Debug.Log("Exit:" + enemy.name);
+        virtual protected void onEnemyEnter(Enemy enemy, Collider colliderInfo) {
         }
+
+        virtual protected void onEnemyStay(Enemy enemy, Collider colliderInfo) {
+        }
+
+        virtual protected void onEnemyExit(Enemy enemy, Collider colliderInfo) {
+        }
+
 
         public void OnTriggerEnter(Collider colliderInfo) {
             switch ( colliderInfo.gameObject.tag ) {
                 case "Player":
                     Player player = colliderInfo.gameObject.GetComponent<Player>();
-                    onPlayerEnter(player);
+                    onPlayerEnter(player, colliderInfo);
                     break;
 
                 case "Enemy":
                     Enemy enemy = colliderInfo.gameObject.GetComponent<Enemy>();
-                    onEnemyEnter(enemy);
+                    onEnemyEnter(enemy, colliderInfo);
+                    break;
+            
+                default:
+                    break;
+            }
+        }
+
+        public void OnTriggerStay(Collider colliderInfo) {
+            switch ( colliderInfo.gameObject.tag ) {
+                case "Player":
+                    Player player = colliderInfo.gameObject.GetComponent<Player>();
+                    onPlayerStay(player, colliderInfo);
+                    break;
+
+                case "Enemy":
+                    Enemy enemy = colliderInfo.gameObject.GetComponent<Enemy>();
+                    onEnemyStay(enemy, colliderInfo);
                     break;
             
                 default:
@@ -41,12 +61,12 @@ namespace MyUnityChan {
             switch ( colliderInfo.gameObject.tag ) {
                 case "Player":
                     Player player = colliderInfo.gameObject.GetComponent<Player>();
-                    onPlayerExit(player);
+                    onPlayerExit(player, colliderInfo);
                     break;
 
                 case "Enemy":
                     Enemy enemy = colliderInfo.gameObject.GetComponent<Enemy>();
-                    onEnemyExit(enemy);
+                    onEnemyExit(enemy, colliderInfo);
                     break;
             
                 default:

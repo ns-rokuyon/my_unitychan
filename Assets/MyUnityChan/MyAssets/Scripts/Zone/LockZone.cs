@@ -22,11 +22,11 @@ namespace MyUnityChan {
             onPlayerExitCallback = doUnlock;
         }
 
-        public virtual void doLock() {
+        public virtual void doLock(Player player = null, Collider collider = null) {
             targets.ForEach(t => t.doLock());
         }
 
-        public virtual void doUnlock() {
+        public virtual void doUnlock(Player player = null, Collider collider = null) {
             targets.ForEach(t => t.doUnlock());
         }
     }
