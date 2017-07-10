@@ -25,7 +25,7 @@ namespace MyUnityChan {
             inputs[(int)InputCode.WEAPON] = Input.GetKey("f");
             inputs[(int)InputCode.DASH] = Input.GetKey("v");
             inputs[(int)InputCode.GUARD] = Input.GetKey("z");
-            inputs[(int)InputCode.SWITCH_BEAM] = Input.GetKeyDown("g");
+            inputs[(int)InputCode.SWITCH_BEAM] = Input.GetKey("g");
             inputs[(int)InputCode.GRAPPLE] = Input.GetKeyDown("h");
             inputs[(int)InputCode.PAUSE] = Input.GetKeyDown("p");
             inputs[(int)InputCode.TRANSFORM] = Input.GetKeyDown("t");

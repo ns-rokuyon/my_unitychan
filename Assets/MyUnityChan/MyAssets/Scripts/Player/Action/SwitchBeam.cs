@@ -5,6 +5,9 @@ using System;
 
 namespace MyUnityChan {
     public class PlayerSwitchBeam : PlayerAction {
+        /*
+         * Deprecated
+         */
 
         public PlayerSwitchBeam(Character character)
             : base(character) {

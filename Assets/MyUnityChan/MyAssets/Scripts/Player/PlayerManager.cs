@@ -101,9 +101,12 @@ namespace MyUnityChan {
         }
 
         public Player getPlayer(Const.CharacterName name) {
-            DebugManager.log("chname=" + name + ", playername=" + player_name);
-            foreach ( var key in switchable_player_characters.Keys ) {
-                DebugManager.log("chkey=" + key);
+            bool debug = false;
+            if ( debug ) {
+                DebugManager.log("chname=" + name + ", playername=" + player_name);
+                foreach ( var key in switchable_player_characters.Keys ) {
+                    DebugManager.log("chkey=" + key);
+                }
             }
             return switchable_player_characters[name].GetComponent<Player>();
         }

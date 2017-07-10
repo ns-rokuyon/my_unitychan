@@ -1,10 +1,8 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using System.Collections;
 using UnityChan;
-
-using UnityEngine;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UniRx;
@@ -77,8 +75,8 @@ namespace MyUnityChan {
             registerActions(new List<Const.PlayerAction>{
                 Const.PlayerAction.ACCEL, Const.PlayerAction.BRAKE, Const.PlayerAction.DOWN,
                 Const.PlayerAction.JUMP, Const.PlayerAction.LIMIT_SPEED, Const.PlayerAction.TURN,
-                Const.PlayerAction.SWITCH_BEAM, Const.PlayerAction.WALL_JUMP, Const.PlayerAction.PICKUP,
-                Const.PlayerAction.THROW, Const.PlayerAction.TRANSFORM, Const.PlayerAction.DEAD
+                Const.PlayerAction.WALL_JUMP, Const.PlayerAction.PICKUP, Const.PlayerAction.THROW,
+                Const.PlayerAction.TRANSFORM, Const.PlayerAction.DEAD
             });
 
             // init sound player
@@ -445,7 +443,7 @@ namespace MyUnityChan {
             Vector3 fw = transform.forward;
             Quaternion rot = transform.rotation;
             CapsuleCollider cc = GetComponent<CapsuleCollider>();
-            GUI.Box(new Rect(Screen.width - 260, 10, 250, 300), "Interaction");
+            GUI.Box(new Rect(Screen.width - 260, 10, 250, 330), "Interaction");
             GUI.Label(new Rect(Screen.width - 245, 30, 250, 30), "forward: " + fw);
             GUI.Label(new Rect(Screen.width - 245, 50, 250, 30), "vx: " + getVx());
             GUI.Label(new Rect(Screen.width - 245, 70, 250, 30), "vy: " + getVx());
@@ -457,8 +455,9 @@ namespace MyUnityChan {
             GUI.Label(new Rect(Screen.width - 245, 190, 250, 30), "capsule_height: " + cc.height);
             GUI.Label(new Rect(Screen.width - 245, 210, 250, 30), "areaname: " + getAreaName());
             GUI.Label(new Rect(Screen.width - 245, 230, 250, 30), "animspeed: " + animator.speed);
-            GUI.Label(new Rect(Screen.width - 245, 250, 250, 30), "focus ui: " + MenuManager.getCurrentSelectedName());
-            GUI.Label(new Rect(Screen.width - 245, 270, 250, 30), "gameover: " + manager.gameover);
+            GUI.Label(new Rect(Screen.width - 245, 250, 250, 30), "focus ui(menu): " + MenuManager.getCurrentSelectedName());
+            GUI.Label(new Rect(Screen.width - 245, 270, 250, 30), "focus ui: " + UIHelper.getCurrentSelectedUIObjectName());
+            GUI.Label(new Rect(Screen.width - 245, 290, 250, 30), "gameover: " + manager.gameover);
         }
     }
 }
