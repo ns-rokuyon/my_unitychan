@@ -20,5 +20,20 @@ namespace MyUnityChan {
         public static T createAndGetComponent<T>(string resource_path, string parent = null) {
             return create(resource_path, parent).GetComponent<T>();
         }
+
+        public static T createAndGetComponent<T>(string resource_path, GameObject parent) {
+            return create(resource_path, parent).GetComponent<T>();
+        }
+
+        public static GameObject createUI(string resource_path, GameObject parent) {
+            RectTransform rt = createAndGetComponent<RectTransform>(resource_path, parent);
+            rt.localScale = new Vector3(1, 1, 1);
+            rt.localPosition = rt.localPosition.changeZ(0.0f);
+            return rt.gameObject;
+        }
+
+        public static T createUIAndGetComponent<T>(string resource_path, GameObject parent) {
+            return createUI(resource_path, parent).GetComponent<T>();
+        }
     }
 }
