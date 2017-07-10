@@ -5,7 +5,6 @@ using System.Collections;
 namespace MyUnityChan {
 #if UNITY_EDITOR
     [ExecuteInEditMode]
-    [RequireComponent(typeof(MeshFilter))]
     [CustomEditor(typeof(ConvexMesh))]
     class ConvexMeshEditor : Editor {
         public override void OnInspectorGUI() {
@@ -25,11 +24,13 @@ namespace MyUnityChan {
                 }
 
                 Mesh mesh = ConvexHull.createMesh(target_meshfilter.sharedMesh.vertices);
-                obj.GetComponent<MeshFilter>().sharedMesh = mesh;
+                obj.GetComponent<MeshFilter>().mesh = mesh;
+                obj.GetComponent<MeshCollider>().sharedMesh = mesh;
             }
 
             if ( GUILayout.Button("Reset mesh") ) {
-                obj.GetComponent<MeshFilter>().sharedMesh.Clear();
+                obj.GetComponent<MeshFilter>().mesh.Clear();
+                obj.GetComponent<MeshCollider>().sharedMesh.Clear();
             }
         }
     }
