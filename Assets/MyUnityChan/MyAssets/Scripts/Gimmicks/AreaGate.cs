@@ -16,13 +16,13 @@ namespace MyUnityChan {
             pass = false;
             door = GetComponentInChildren<GateDoor>();
 
-            entrance = this.transform.FindChild("GateDestination").gameObject;
+            entrance = this.transform.Find("GateDestination").gameObject;
 
             if ( gate_pair ) {
-                dst = gate_pair.transform.FindChild("GateDestination").gameObject;
+                dst = gate_pair.transform.Find("GateDestination").gameObject;
 
                 // set destination to gate start collision
-                var warp = transform.FindChild("GateStart").gameObject.GetComponent<Warp>();
+                var warp = transform.Find("GateStart").gameObject.GetComponent<Warp>();
                 warp.warp_to = dst;
                 (warp as AreaGateWarpCollision).gate = this;
             }

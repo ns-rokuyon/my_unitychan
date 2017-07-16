@@ -5,14 +5,17 @@ using System.Reflection;
 using UnityStandardAssets.ImageEffects;
 using UniRx;
 using DG.Tweening;
+using UnityEngine.PostProcessing;
 
 namespace MyUnityChan {
     public class CameraEffect : ObjectBase {
-        // Image effects
-        public Bloom bloom { get; protected set; }
-        public DepthOfField dof { get; protected set; }
-        public CameraMotionBlur blur { get; protected set; }
-        public VignetteAndChromaticAberration vignette { get; protected set; }
+        // Post-processing(Unity >= 5.6)
+        public PostProcessingBehaviour post_processing { get; protected set; }
+
+        public BloomModel bloom { get; protected set; }
+        public DepthOfFieldModel dof { get; protected set; }
+        public MotionBlurModel blur { get; protected set; }
+        public VignetteModel vignette { get; protected set; }
 
         // Fadeout/in
         public FadeImage fade { get; protected set; }
@@ -22,10 +25,12 @@ namespace MyUnityChan {
         public bool _restore { get; set; }
 
         void Awake() {
-            bloom = GetComponent<Bloom>();
-            dof = GetComponent<DepthOfField>();
-            blur = GetComponent<CameraMotionBlur>();
-            vignette = GetComponent<VignetteAndChromaticAberration>();
+            post_processing = GetComponent<PostProcessingBehaviour>();
+
+            bloom = post_processing.profile.bloom;
+            dof = post_processing.profile.depthOfField;
+            blur = post_processing.profile.motionBlur;
+            vignette = post_processing.profile.vignette;
 
             fade = GUIObjectBase.getCanvas(Const.Canvas.FADE_CANVAS).GetComponent<FadeImage>();
             fader = null;
@@ -36,19 +41,24 @@ namespace MyUnityChan {
         }
 
         public void setPauseMenuEffect() {
-            float _aperture = dof.aperture;
-            float _vignetting = vignette.intensity;
+            var _dof_settings = dof.settings;
+            var _vignetting_settings = vignette.settings;
 
-            dof.aperture = 1.0f;
-            vignette.intensity = 0.4f;
+            var dof_settings = dof.settings;
+            dof_settings.aperture = 1.0f;
+            dof.settings = dof_settings;
+
+            var vignette_settings = vignette.settings;
+            vignette_settings.intensity = 0.4f;
+            vignette.settings = vignette_settings;
 
             // Restore
             this.ObserveEveryValueChanged(_ => _restore)
                 .Where(f => f)
                 .First()
                 .Subscribe(_ => {
-                    dof.aperture = _aperture;
-                    vignette.intensity = _vignetting;
+                    dof.settings = _dof_settings;
+                    vignette.settings = _vignetting_settings;
                     _restore = false;
                 });
         }

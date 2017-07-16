@@ -7,6 +7,7 @@ using System.Linq;
 namespace MyUnityChan {
     public class MenuManager : SingletonObjectBase<MenuManager> {
         public GameObject canvas_object;
+        public GameObject pause_menu_body_object;
         public GameObject tab_title_object;
         public GameObject side_cover_object;
         public GameObject player_demo_object;
@@ -22,6 +23,12 @@ namespace MyUnityChan {
         public int focused_tab_index {
             get {
                 return tab_pages.FindIndex(t => t.isFocused());
+            }
+        }
+
+        public bool isOpenedMenu {
+            get {
+                return canvas.enabled;
             }
         }
 
@@ -52,8 +59,13 @@ namespace MyUnityChan {
                 tab_pages.Add(tabpage);
                 tab_pages.Last().id = tab_pages.Count - 1;
             }
+        }
 
+        void Start() {
             canvas.enabled = false;
+
+            // TODO
+            delay(2, () => pause_menu_body_object.SetActive(false));
         }
 
         void Update() {
@@ -95,12 +107,14 @@ namespace MyUnityChan {
 
         public void enter() {
             canvas.enabled = true;
+            pause_menu_body_object.SetActive(true);
             focus(focused_tab_index);
         }
 
         public void quit() {
             es.SetSelectedGameObject(null); // unfocus current selected button
             canvas.enabled = false;
+            pause_menu_body_object.SetActive(false);
         }
 
         public void suspend() {

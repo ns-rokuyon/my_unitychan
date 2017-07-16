@@ -29,7 +29,7 @@ namespace MyUnityChan {
 
         public virtual void Awake() {
             camera_component = GetComponent<Camera>();
-            worldspace_ui_camera_component = transform.FindChild("WorldUICamera").GetComponent<Camera>();
+            worldspace_ui_camera_component = transform.Find("WorldUICamera").GetComponent<Camera>();
             effect = GetComponent<CameraEffect>();
             GUIObjectBase.getCanvas(Const.Canvas.WORLD_SPACE_CANVAS).GetComponent<Canvas>().worldCamera = worldspace_ui_camera_component;
         }

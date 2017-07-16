@@ -20,7 +20,7 @@ namespace MyUnityChan {
             // Close door
             if ( door == null ) {
                 // Cache
-                door = gameObject.transform.parent.gameObject.transform.FindChild("Door").GetComponent<Door>();
+                door = gameObject.transform.parent.gameObject.transform.Find("Door").GetComponent<Door>();
             }
             door.close();
         }

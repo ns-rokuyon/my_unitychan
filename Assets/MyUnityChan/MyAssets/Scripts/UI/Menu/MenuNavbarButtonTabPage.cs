@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 using UniRx;
+using UniRx.Triggers;
 using DG.Tweening;
 
 namespace MyUnityChan {
@@ -28,9 +29,11 @@ namespace MyUnityChan {
 
             rect_transform = GetComponent<RectTransform>();
         }
-
+        
         void Start() {
-            this.ObserveEveryValueChanged(_ => tabpage.isFocused())
+            this.UpdateAsObservable()
+                .Where(_ => MenuManager.self().isOpenedMenu )
+                .Select(_ => tabpage.isFocused())
                 .Subscribe(f => {
                     if ( f )
                         highlight();
