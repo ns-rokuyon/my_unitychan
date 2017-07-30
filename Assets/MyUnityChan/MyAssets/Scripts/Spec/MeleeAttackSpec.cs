@@ -5,6 +5,6 @@ namespace MyUnityChan {
     [System.Serializable]
     public class MeleeAttackSpec : AttackSpec {
         [SerializeField]
-        public Const.ID.AttackLevel level;
+        public Const.ID.AttackSlotType slot;
     }
 }

@@ -72,19 +72,19 @@ namespace MyUnityChan {
         }
     }
 
-    // Heavy attacks
+    // Up attacks
     // =============================================================
-    public class PlayerSlashH : PlayerSlashBase {
+    public class PlayerSlashUp : PlayerSlashBase {
         public override int input_lock_frame { get { return 20; } }
         public override int hitbox_delay_frame { get { return 20; } }
-        public override string anim_state_name { get { return "SwordSlashH"; } }
+        public override string anim_state_name { get { return "SwordSlashUp"; } }
 
-        public PlayerSlashH(Character character)
+        public PlayerSlashUp(Character character)
             : base(character) {
         }
 
         public override string name() {
-            return "SLASH_H";
+            return "SLASH_UP";
         }
 
         public override void perform() {

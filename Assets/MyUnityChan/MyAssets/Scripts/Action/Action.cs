@@ -77,9 +77,9 @@ namespace MyUnityChan {
     }
 
     public class ActionFlag {
-        public bool condition = false;
-        public bool ready_to_update = false;
-        public bool ready_to_fixedupdate = false;
+        public bool condition { get; protected set; }
+        public bool ready_to_update { get; protected set; }
+        public bool ready_to_fixedupdate { get; protected set; }
 
         public void setAll() {
             condition = true;

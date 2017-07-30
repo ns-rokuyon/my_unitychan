@@ -8,17 +8,23 @@ namespace MyUnityChan {
             PlayerAttack attack_manager =
                 player.action_manager.getAction<PlayerAttack>("ATTACK");
 
-            PlayerSlashL slashL = new PlayerSlashL(player);
-            slashL.spec = getSpec(Const.ID.AttackLevel.LIGHT);
-            attack_manager.light.switchTo(slashL);
-
-            PlayerSlashM slashM = new PlayerSlashM(player);
-            slashM.spec = getSpec(Const.ID.AttackLevel.MIDDLE);
-            attack_manager.middle.switchTo(slashM);
-
-            PlayerSlashH slashH = new PlayerSlashH(player);
-            slashH.spec = getSpec(Const.ID.AttackLevel.HEAVY);
-            attack_manager.heavy.switchTo(slashH);
+            specs.ForEach(spec => {
+                PlayerSlashBase slash = null;
+                PlayerAttackSlotBase slot = null;
+                switch ( spec.slot ) {
+                    case Const.ID.AttackSlotType.LIGHT:
+                        slash = new PlayerSlashL(player); slot = attack_manager.light; break;
+                    case Const.ID.AttackSlotType.MIDDLE:
+                        slash = new PlayerSlashM(player); slot = attack_manager.middle; break;
+                    case Const.ID.AttackSlotType.UP:
+                        slash = new PlayerSlashUp(player); slot = attack_manager.up; break;
+                    default: break;
+                }
+                if ( slash != null && slot != null ) {
+                    slash.spec = spec;
+                    slot.switchTo(slash);
+                }
+            });
         }
     }
 }

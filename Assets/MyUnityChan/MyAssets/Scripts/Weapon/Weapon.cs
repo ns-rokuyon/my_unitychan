@@ -155,8 +155,8 @@ namespace MyUnityChan {
             }
         }
 
-        protected MeleeAttackSpec getSpec(Const.ID.AttackLevel level) {
-            return specs.First(s => s.level == level);
+        protected MeleeAttackSpec getSpec(Const.ID.AttackSlotType slot) {
+            return specs.First(s => s.slot == slot);
         }
     }
 }

@@ -5,11 +5,12 @@ using UniRx;
 
 namespace MyUnityChan {
     public class PlayerAttack : PlayerAction {
-        public Const.ID.AttackLevel active_attack { get; set; }
+        public Const.ID.AttackSlotType active_attack { get; set; }
 
-        public PlayerLightAttack light { get; protected set; }
-        public PlayerMiddleAttack middle { get; protected set; }
-        public PlayerHeavyAttack heavy { get; protected set; }
+        public PlayerLightAttackSlot light { get; protected set; }
+        public PlayerMiddleAttackSlot middle { get; protected set; }
+        public PlayerHeavyAttackSlot heavy { get; protected set; }
+        public PlayerUpAttackSlot up { get; protected set; }
 
         public override IDisposable transaction {
             get {
@@ -36,9 +37,10 @@ namespace MyUnityChan {
         }
 
         public override void init() {
-            light = new PlayerLightAttack(player, this);
-            middle = new PlayerMiddleAttack(player, this);
-            heavy = new PlayerHeavyAttack(player, this);
+            light = new PlayerLightAttackSlot(player, this);
+            middle = new PlayerMiddleAttackSlot(player, this);
+            heavy = new PlayerHeavyAttackSlot(player, this);
+            up = new PlayerUpAttackSlot(player, this);
         }
 
         public override void performFixed() {
@@ -51,25 +53,30 @@ namespace MyUnityChan {
             var attack = getTriggeredAttack();
             if ( attack != null ) {
                 attack.perform();
-                active_attack = attack.level;
+                active_attack = attack.slot;
             }
         }
 
         public override void off_perform() {
-            active_attack = Const.ID.AttackLevel._NO;
+            active_attack = Const.ID.AttackSlotType._NO;
         }
 
         public override bool condition() {
-            return light.condition() || middle.condition() || heavy.condition();
+            return light.condition() || middle.condition() || heavy.condition() || up.condition();
         }
 
         public void resetToDefaultAttacks() {
             light.action = null;
             middle.action = null;
             heavy.action = null;
+            up.action = null;
         }
 
-        protected PlayerLevelAttackBase getTriggeredAttack() {
+        protected PlayerAttackSlotBase getTriggeredAttack() {
+            if ( up != null && up.condition() ) {
+                return up;
+            }
+
             if ( light != null && light.condition() ) {
                 return light;
             }
@@ -79,13 +86,14 @@ namespace MyUnityChan {
             if ( heavy != null && heavy.condition() ) {
                 return heavy;
             }
+
             return null;
         }
 
-        protected PlayerLevelAttackBase getAttackInTransaction() {
-            if ( active_attack == Const.ID.AttackLevel._NO )
+        protected PlayerAttackSlotBase getAttackInTransaction() {
+            if ( active_attack == Const.ID.AttackSlotType._NO )
                 return null;
-            var a = getLevelAttack(active_attack);
+            var a = getActiveSlot();
             if ( a == null )
                 return null;
             if ( a.action.isFreeTransaction() )
@@ -93,14 +101,16 @@ namespace MyUnityChan {
             return a;
         }
 
-        protected PlayerLevelAttackBase getLevelAttack(Const.ID.AttackLevel level) {
-            PlayerLevelAttackBase a;
+        protected PlayerAttackSlotBase getActiveSlot() {
+            PlayerAttackSlotBase a;
             switch ( active_attack ) {
-                case Const.ID.AttackLevel.LIGHT:
+                case Const.ID.AttackSlotType.UP:
+                    a = up; break;
+                case Const.ID.AttackSlotType.LIGHT:
                     a = light; break;
-                case Const.ID.AttackLevel.MIDDLE:
+                case Const.ID.AttackSlotType.MIDDLE:
                     a = middle; break;
-                case Const.ID.AttackLevel.HEAVY:
+                case Const.ID.AttackSlotType.HEAVY:
                     a = heavy; break;
                 default:
                     a = null; break;
@@ -109,13 +119,14 @@ namespace MyUnityChan {
         }
     }
 
-    // Attack levels
+    // Attack base class
     // =============================================================
-    public abstract class PlayerLevelAttackBase : PlayerAction {
+    public abstract class PlayerAttackSlotBase : PlayerAction {
         protected PlayerAction _action;     // Current enabled attack action
 
+        public virtual Const.ID.AttackSlotType slot { get; }
+
         public PlayerAttack attack_manager { get; set; }
-        public virtual Const.ID.AttackLevel level { get; }
         public PlayerAction action {
             get {
                 return _action ?? (_action = getDefaultAction());
@@ -135,7 +146,7 @@ namespace MyUnityChan {
             }
         }
 
-        public PlayerLevelAttackBase(Character character, PlayerAttack parent) : base(character) {
+        public PlayerAttackSlotBase(Character character, PlayerAttack parent) : base(character) {
             attack_manager = parent;
         }
 
@@ -158,10 +169,48 @@ namespace MyUnityChan {
         public abstract PlayerAction getDefaultAction();
     }
 
-    public class PlayerLightAttack : PlayerLevelAttackBase {
-        public override Const.ID.AttackLevel level { get { return Const.ID.AttackLevel.LIGHT; } }
 
-        public PlayerLightAttack(Character character, PlayerAttack parent) : base(character, parent) {
+    // Directional Attack
+    // =============================================================
+    public abstract class PlayerDirectionalAttackSlotBase : PlayerAttackSlotBase {
+        public PlayerDirectionalAttackSlotBase(Character character, PlayerAttack parent) : base(character, parent) {
+        }
+    }
+
+    public class PlayerUpAttackSlot : PlayerDirectionalAttackSlotBase {
+        public override Const.ID.AttackSlotType slot { get { return Const.ID.AttackSlotType.UP; } }
+
+        public PlayerUpAttackSlot(Character character, PlayerAttack parent) : base(character, parent) {
+        }
+
+        public override bool condition() {
+            return action != null &&
+                controller.keyAttack() &&
+                controller.keyUp() &&
+                action.condition();
+        }
+
+        public override PlayerAction getDefaultAction() {
+            //return null;
+            return new PlayerShoryu(player);
+        }
+
+        public override string name() {
+            return "UP_ATTACK";
+        }
+    }
+
+    // Attack levels
+    // =============================================================
+    public abstract class PlayerLevelAttackSlotBase : PlayerAttackSlotBase {
+        public PlayerLevelAttackSlotBase(Character character, PlayerAttack parent) : base(character, parent) {
+        }
+    }
+
+    public class PlayerLightAttackSlot : PlayerLevelAttackSlotBase {
+        public override Const.ID.AttackSlotType slot { get { return Const.ID.AttackSlotType.LIGHT; } }
+
+        public PlayerLightAttackSlot(Character character, PlayerAttack parent) : base(character, parent) {
         }
 
         public override string name() {
@@ -171,7 +220,7 @@ namespace MyUnityChan {
         public override bool condition() {
             return controller.keyAttack() &&
                 action.condition() &&
-                attack_manager.active_attack == Const.ID.AttackLevel._NO;
+                attack_manager.active_attack == Const.ID.AttackSlotType._NO;
         }
 
         public override PlayerAction getDefaultAction() {
@@ -179,10 +228,10 @@ namespace MyUnityChan {
         }
     }
 
-    public class PlayerMiddleAttack : PlayerLevelAttackBase {
-        public override Const.ID.AttackLevel level { get { return Const.ID.AttackLevel.MIDDLE; } }
+    public class PlayerMiddleAttackSlot : PlayerLevelAttackSlotBase {
+        public override Const.ID.AttackSlotType slot { get { return Const.ID.AttackSlotType.MIDDLE; } }
 
-        public PlayerMiddleAttack(Character character, PlayerAttack parent) : base(character, parent) {
+        public PlayerMiddleAttackSlot(Character character, PlayerAttack parent) : base(character, parent) {
         }
 
         public override string name() {
@@ -192,7 +241,7 @@ namespace MyUnityChan {
         public override bool condition() {
             return controller.keyAttack() &&
                 action.condition() &&
-                attack_manager.active_attack == Const.ID.AttackLevel.LIGHT;
+                attack_manager.active_attack == Const.ID.AttackSlotType.LIGHT;
         }
 
         public override PlayerAction getDefaultAction() {
@@ -200,10 +249,10 @@ namespace MyUnityChan {
         }
     }
 
-    public class PlayerHeavyAttack : PlayerLevelAttackBase {
-        public override Const.ID.AttackLevel level { get { return Const.ID.AttackLevel.HEAVY; } }
+    public class PlayerHeavyAttackSlot : PlayerLevelAttackSlotBase {
+        public override Const.ID.AttackSlotType slot { get { return Const.ID.AttackSlotType.HEAVY; } }
 
-        public PlayerHeavyAttack(Character character, PlayerAttack parent) : base(character, parent) {
+        public PlayerHeavyAttackSlot(Character character, PlayerAttack parent) : base(character, parent) {
         }
 
         public override string name() {
@@ -213,7 +262,7 @@ namespace MyUnityChan {
         public override bool condition() {
             return controller.keyAttack() &&
                 action.condition() &&
-                attack_manager.active_attack == Const.ID.AttackLevel.MIDDLE;
+                attack_manager.active_attack == Const.ID.AttackSlotType.MIDDLE;
         }
 
         public override PlayerAction getDefaultAction() {

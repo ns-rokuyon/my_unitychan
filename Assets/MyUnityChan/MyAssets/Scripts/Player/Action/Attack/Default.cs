@@ -59,6 +59,8 @@ namespace MyUnityChan {
         }
     }
 
+    // Middle attacks
+    // =============================================================
     public class PlayerPunchR : PlayerAction {
         public class Spec : AttackSpec {
             public Spec() {
@@ -113,6 +115,8 @@ namespace MyUnityChan {
         }
     }
 
+    // Heavy attacks
+    // =============================================================
     public class PlayerSpinKick : PlayerAction {
         public class Spec : AttackSpec {
             public Spec() {
@@ -166,5 +170,6 @@ namespace MyUnityChan {
             hitbox.setOwner(player.gameObject);
         }
     }
+
 
 }
