@@ -4,6 +4,7 @@ using System.Collections;
 using System.Reflection;
 using UnityStandardAssets.ImageEffects;
 using UniRx;
+using UniRx.Triggers;
 using DG.Tweening;
 using UnityEngine.PostProcessing;
 
@@ -34,6 +35,16 @@ namespace MyUnityChan {
 
             fade = GUIObjectBase.getCanvas(Const.Canvas.FADE_CANVAS).GetComponent<FadeImage>();
             fader = null;
+        }
+
+        void Start() {
+            this.UpdateAsObservable()
+                .Where(_ => !PauseManager.isPausing())
+                .Subscribe(_ => {
+                    var dof_settings = dof.settings;
+                    dof_settings.focusDistance = Vector3.Distance(transform.position, GameStateManager.getPlayer().transform.position);
+                    dof.settings = dof_settings;
+                });
         }
 
         public void restore() {

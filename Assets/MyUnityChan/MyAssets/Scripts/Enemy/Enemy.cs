@@ -126,9 +126,8 @@ namespace MyUnityChan {
                 if ( !SettingManager.get(Settings.Flag.SHOW_ENEMY_HP_BAR) )
                     return;
 
-                hp_gauge = PrefabInstantiater.create(
-                    Const.Prefab.UI["ENEMY_HP_GAUGE"], 
-                    GUIObjectBase.getCanvas("Canvas_WorldSpace")).GetComponent<HpGauge>();
+                hp_gauge = PrefabInstantiater.createWorldUIAndGetComponent<HpGauge>(
+                    Const.Prefab.UI["ENEMY_HP_GAUGE"], Vector3.one * 0.2f);
                 hp_gauge.setCharacter(this);
                 hp_gauge.setMapHp(max_hp);
                 hp_gauge.gameObject.transform.position = gameObject.transform.position.add(0, height, 0);
