@@ -34,12 +34,14 @@ namespace MyUnityChan {
                 yield return null;
                 delay--;
             }
-            if ( playOneShot ) {
-                audio_source.PlayOneShot(clip);
-            }
-            else {
-                audio_source.clip = clip;
-                audio_source.Play();
+            if ( !SettingManager.get(Settings.Flag.MUTE_SOUND) ) {
+                if ( playOneShot ) {
+                    audio_source.PlayOneShot(clip);
+                }
+                else {
+                    audio_source.clip = clip;
+                    audio_source.Play();
+                }
             }
         }
     }
