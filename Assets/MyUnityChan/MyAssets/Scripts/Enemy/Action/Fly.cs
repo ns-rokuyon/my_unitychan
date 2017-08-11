@@ -27,12 +27,11 @@ namespace MyUnityChan {
         public override void performFixed() {
             bool flap = controller.keyJump();
             float horizontal = controller.keyHorizontal();
+            float vertical = controller.keyVertical();
             Vector3 fw = enemy.transform.forward;
 
             // accelerate
-            if ( !enemy.isTouchedWall() ) {
-                enemy.rigid_body.AddForce(horizontal * flyF);
-            }
+            enemy.rigid_body.AddForce(horizontal * flyF.onlyX() + vertical * flyF.onlyY());
 
             // Flap
             if ( flap ) {

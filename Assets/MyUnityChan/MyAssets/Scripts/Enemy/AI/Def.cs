@@ -79,6 +79,13 @@ namespace MyUnityChan {
                 return def;
             }
 
+            public Def Required(Func<bool> _cond) {
+                if ( _cond() ) {
+                    return this;
+                }
+                throw new Exception();
+            }
+
             public Def If(Func<State, bool> _cond) {
                 conditions.Add(new Condition(_cond));
                 return this;

@@ -45,6 +45,20 @@ namespace MyUnityChan {
             return ghit.point;
         }
 
+        public virtual float getDistance() {
+            RaycastHit _ghit;
+            int ground_layer = 1 << LayerMask.NameToLayer("Ground");
+            Physics.SphereCast(transform.position + shift, radius, Vector3.down, out _ghit, 100.0f, ground_layer);
+            return Vector3.Distance(transform.position, _ghit.point);
+        }
+
+        public virtual Vector3 getSpacingPoint(float space) {
+            RaycastHit _ghit;
+            int ground_layer = 1 << LayerMask.NameToLayer("Ground");
+            Physics.SphereCast(transform.position + shift, radius, Vector3.down, out _ghit, 100.0f, ground_layer);
+            return _ghit.point.add(0.0f, space, 0.0f);
+        }
+
         void OnDrawGizmos() {
             Gizmos.DrawRay(transform.position + shift, Vector3.down * max_distance);
             if ( isGrounded() ) 

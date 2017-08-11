@@ -133,7 +133,7 @@ namespace MyUnityChan {
         public void inputVertical(float y, int frame = 1) {
             if ( vertical_input > 0.0f || vertical_input < 0.0f )
                 return;
-            StartCoroutine(pressAndReleaseHorizontal(y, frame));
+            StartCoroutine(pressAndReleaseVertical(y, frame));
         }
     }
 

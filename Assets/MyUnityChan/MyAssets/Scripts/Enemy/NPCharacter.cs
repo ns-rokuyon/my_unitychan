@@ -5,6 +5,8 @@ using System.Linq;
 
 
 namespace MyUnityChan {
+    [RequireComponent(typeof(ChronosTimeControllable))]
+    [RequireComponent(typeof(SoundPlayer))]
     public class NPCharacter : Character {
         static protected List<GameObject> players = new List<GameObject>();
         const int PLAYER_TOUCHING_FRAME_OFFSET = 40;
