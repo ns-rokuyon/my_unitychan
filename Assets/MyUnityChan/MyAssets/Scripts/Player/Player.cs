@@ -146,8 +146,6 @@ namespace MyUnityChan {
                     action_manager.registerAction(new PlayerLimitSpeed(this)); break;
                 case Const.PlayerAction.MISSILE:
                     action_manager.registerAction(new PlayerMissile(this)); break;
-                case Const.PlayerAction.SLIDING:
-                    action_manager.registerAction(new PlayerSliding(this)); break;
                 case Const.PlayerAction.TRANSFORM:
                     action_manager.registerAction(new PlayerTransform(this)); break;
                 case Const.PlayerAction.TURN:
@@ -162,6 +160,26 @@ namespace MyUnityChan {
                     Debug.LogWarning("Undefined player action: id=" + action_class);
                     break;
             }
+        }
+        
+        public void registerAttack(Const.ID.PlayerAttackType at, Const.ID.AttackSlotType st) {
+            var attack = action_manager.getAction<PlayerAttack>("ATTACK");
+            if ( attack == null )
+                return;
+            switch ( at ) {
+                case Const.ID.PlayerAttackType.SLIDING:
+                    attack.switchTo(new PlayerSliding(this), st);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void clearAttack(Const.ID.AttackSlotType st) {
+            var attack = action_manager.getAction<PlayerAttack>("ATTACK");
+            if ( attack == null )
+                return;
+            attack.clearSlot(st);
         }
 
         public void registerActions(List<Const.PlayerAction> action_class_list) {

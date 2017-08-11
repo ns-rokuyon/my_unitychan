@@ -13,6 +13,7 @@ namespace MyUnityChan {
         protected string resource_path = null;
         protected int time = 0;                         // active time
         public Vector3 forward { get; set; }
+        public System.Action<Hitbox> position_updater { get; set; }
 
         void Awake() {
             if ( !RENDER_HITBOX ) {
@@ -29,6 +30,9 @@ namespace MyUnityChan {
         }
 
         private void CommonUpdate() {
+            if ( position_updater == null )
+                return;
+            position_updater(this);
         }
 
         public void startCountdown(int frame) {
