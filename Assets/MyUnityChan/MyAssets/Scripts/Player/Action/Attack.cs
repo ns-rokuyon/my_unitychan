@@ -7,10 +7,12 @@ namespace MyUnityChan {
     public class PlayerAttack : PlayerAction {
         public Const.ID.AttackSlotType active_attack { get; set; }
 
+        // Slots
         public PlayerLightAttackSlot light { get; protected set; }
         public PlayerMiddleAttackSlot middle { get; protected set; }
         public PlayerHeavyAttackSlot heavy { get; protected set; }
         public PlayerUpAttackSlot up { get; protected set; }
+        public PlayerDownAttackSlot down { get; protected set; }
 
         public override IDisposable transaction {
             get {
@@ -41,6 +43,19 @@ namespace MyUnityChan {
             middle = new PlayerMiddleAttackSlot(player, this);
             heavy = new PlayerHeavyAttackSlot(player, this);
             up = new PlayerUpAttackSlot(player, this);
+            down = new PlayerDownAttackSlot(player, this);
+        }
+
+        public void switchTo(PlayerAction action, Const.ID.AttackSlotType st) {
+            var slot = getSlot(st);
+            if ( slot != null ) return;
+            slot.switchTo(action);
+        }
+
+        public void clearSlot(Const.ID.AttackSlotType st) {
+            var slot = getSlot(st);
+            if ( slot != null ) return;
+            slot.action = null;
         }
 
         public override void performFixed() {
@@ -62,7 +77,7 @@ namespace MyUnityChan {
         }
 
         public override bool condition() {
-            return light.condition() || middle.condition() || heavy.condition() || up.condition();
+            return light.condition() || middle.condition() || heavy.condition() || up.condition() || down.condition();
         }
 
         public void resetToDefaultAttacks() {
@@ -70,11 +85,15 @@ namespace MyUnityChan {
             middle.action = null;
             heavy.action = null;
             up.action = null;
+            down.action = null;
         }
 
         protected PlayerAttackSlotBase getTriggeredAttack() {
             if ( up != null && up.condition() ) {
                 return up;
+            }
+            if ( down != null && down.condition() ) {
+                return down;
             }
 
             if ( light != null && light.condition() ) {
@@ -101,11 +120,25 @@ namespace MyUnityChan {
             return a;
         }
 
+        protected PlayerAttackSlotBase getSlot(Const.ID.AttackSlotType st) {
+            switch ( st ) {
+                case Const.ID.AttackSlotType.UP: return up;
+                case Const.ID.AttackSlotType.DOWN: return down;
+                case Const.ID.AttackSlotType.LIGHT: return light;
+                case Const.ID.AttackSlotType.MIDDLE: return middle;
+                case Const.ID.AttackSlotType.HEAVY: return heavy;
+                default: break;
+            }
+            return null;
+        }
+
         protected PlayerAttackSlotBase getActiveSlot() {
             PlayerAttackSlotBase a;
             switch ( active_attack ) {
                 case Const.ID.AttackSlotType.UP:
                     a = up; break;
+                case Const.ID.AttackSlotType.DOWN:
+                    a = down; break;
                 case Const.ID.AttackSlotType.LIGHT:
                     a = light; break;
                 case Const.ID.AttackSlotType.MIDDLE:
@@ -197,6 +230,29 @@ namespace MyUnityChan {
 
         public override string name() {
             return "UP_ATTACK";
+        }
+    }
+
+    public class PlayerDownAttackSlot : PlayerDirectionalAttackSlotBase {
+        public override Const.ID.AttackSlotType slot { get { return Const.ID.AttackSlotType.DOWN; } }
+
+        public PlayerDownAttackSlot(Character character, PlayerAttack parent) : base(character, parent) {
+        }
+
+        public override bool condition() {
+            return action != null &&
+                controller.keyAttack() &&
+                controller.keyDown() &&
+                action.condition();
+        }
+
+        public override PlayerAction getDefaultAction() {
+            //return null;
+            return new PlayerSliding(player);
+        }
+
+        public override string name() {
+            return "DOWN_ATTACK";
         }
     }
 

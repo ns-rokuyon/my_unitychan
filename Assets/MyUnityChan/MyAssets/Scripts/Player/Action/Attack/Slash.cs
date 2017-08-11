@@ -72,6 +72,27 @@ namespace MyUnityChan {
         }
     }
 
+    // Heavy attacks
+    // =============================================================
+    public class PlayerSlashH : PlayerSlashBase {
+        public override int input_lock_frame { get { return 30; } }
+        public override int hitbox_delay_frame { get { return 8; } }
+        public override string anim_state_name { get { return "SwordSlashH"; } }
+
+        public PlayerSlashH(Character character) : base(character) {
+        }
+
+        public override string name() {
+            return "SLASH_H";
+        }
+
+        public override void performFixed() {
+            player.delay(5,
+                () => { player.rigid_body.AddForce(new Vector3(0, -200, 0), ForceMode.Impulse); },
+                FrameCountType.FixedUpdate);
+        }
+    }
+
     // Up attacks
     // =============================================================
     public class PlayerSlashUp : PlayerSlashBase {

@@ -16,6 +16,8 @@ namespace MyUnityChan {
                         slash = new PlayerSlashL(player); slot = attack_manager.light; break;
                     case Const.ID.AttackSlotType.MIDDLE:
                         slash = new PlayerSlashM(player); slot = attack_manager.middle; break;
+                    case Const.ID.AttackSlotType.HEAVY:
+                        slash = new PlayerSlashH(player); slot = attack_manager.heavy; break;
                     case Const.ID.AttackSlotType.UP:
                         slash = new PlayerSlashUp(player); slot = attack_manager.up; break;
                     default: break;
