@@ -6,6 +6,8 @@ using UniRx.Triggers;
 namespace MyUnityChan {
     public abstract class ShooterBase : ObjectBase {
         public bool auto = false;           // Auto trigger in each shooting frame
+        public bool auto_aim_forward = false;
+        public Vector3 base_direction = new Vector3(1.0f, 0.0f, 0.0f);
 
         private bool triggered = false;     // Flag for specifying shooting frame manually
         protected bool shooting;
@@ -29,17 +31,37 @@ namespace MyUnityChan {
 
         protected string projectile_name;
 
+        // Angle of shooting
+        public virtual Vector3 direction {
+            get { return base_direction; }
+        }
+
         void Start() {
             baseStart();
+
+            /*
+            this.UpdateAsObservable()
+                .Where(_ => auto_aim_forward)
+                .Subscribe(_ => aimForward());
+            */
         }
 
         void Update() {
             baseUpdate();
         }
 
-        // Angle of shooting
-        public virtual Vector3 angle() {
-            return new Vector3(1.0f, 0.0f, 0.0f);
+        public void aimTo(Vector3 pos) {
+            float dx = pos.x - transform.position.x;
+            float dy = pos.y - transform.position.y;
+            float rad = Mathf.Atan2(dy, dx);
+            base_direction = new Vector3(Mathf.Cos(rad), Mathf.Sin(rad), base_direction.z);
+        }
+
+        public void aimForward() {
+            if ( transform.forward.x >= 0 )
+                base_direction = new Vector3(1.0f, 0.0f, 0.0f);
+            else
+                base_direction = new Vector3(-1.0f, 0.0f, 0.0f);
         }
 
         public virtual void shoot() { }

@@ -5,7 +5,6 @@ namespace MyUnityChan {
     public class FlameThrower : LauncherBase {
 
         public float power;
-        public Vector3 base_angle = new Vector3(0.7f, 1.0f, 0.0f);
         public string flame_name;
 
         void Start() {
@@ -13,19 +12,13 @@ namespace MyUnityChan {
             setProjectile(flame_name);
         }
 
-        public override Vector3 angle() {
-            if ( this.gameObject.transform.forward.x >= 0 ) return base_angle;
-            return base_angle.flipX();
-        }
-
-
         public override void shoot() {
             GameObject obj = ObjectPoolManager.getGameObject(Const.Prefab.Projectile[flame_name]);
             obj.setParent(Hierarchy.Layout.PROJECTILE);
-            obj.GetComponent<Rigidbody>().AddForce(angle() * power, ForceMode.Impulse);
+            obj.GetComponent<Rigidbody>().AddForce(direction * power, ForceMode.Impulse);
 
             Flame flame = obj.GetComponent<Flame>();
-            flame.setDir(angle());
+            flame.setDir(direction);
             flame.setStartPosition(this.gameObject.transform.position);
 
             // hitbox

@@ -2,11 +2,6 @@
 using System.Collections;
 
 public static class Vector {
-
-    public static Vector3 flipX(this Vector3 vec) {
-        return new Vector3(-vec.x, vec.y, vec.z);
-    }
-
     public static Vector3 add(this Vector3 vec, float diff_x, float diff_y, float diff_z) {
         return new Vector3(vec.x + diff_x, vec.y + diff_y, vec.z + diff_z);
     }
@@ -41,5 +36,17 @@ public static class Vector {
 
     public static Vector3 onlyZ(this Vector3 vec) {
         return new Vector3(0.0f, 0.0f, vec.z);
+    }
+
+    public static Vector3 flipX(this Vector3 vec) {
+        return new Vector3(-vec.x, vec.y, vec.z);
+    }
+
+    public static Vector3 flipY(this Vector3 vec) {
+        return new Vector3(vec.x, -vec.y, vec.z);
+    }
+
+    public static Vector3 flipZ(this Vector3 vec) {
+        return new Vector3(vec.x, vec.y, -vec.z);
     }
 }

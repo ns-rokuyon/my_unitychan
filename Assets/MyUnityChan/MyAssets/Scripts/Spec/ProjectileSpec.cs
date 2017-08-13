@@ -4,7 +4,7 @@ using System.Collections;
 namespace MyUnityChan {
     [System.Serializable]
     public class ProjectileSpec : AttackSpec {
-        public int n_round_burst;
+        public int n_round_burst = 1;
         public int burst_delta_frame;
         public int interval_frame;
         public string hitbox_name;

@@ -51,7 +51,7 @@ namespace MyUnityChan {
             obj.setParent(Hierarchy.Layout.PROJECTILE);
 
             Missile missile = obj.GetComponent<Missile>();
-            missile.setDir(angle());
+            missile.setDir(direction);
             missile.fire(transform.position, owner.isLookAhead() ? 1.0f : -1.0f);
 
             // hitbox

@@ -33,6 +33,7 @@ namespace MyUnityChan {
         }
 
         public override void perform() {
+            shooter.aimForward();
             shooter.trigger();
         }
 
