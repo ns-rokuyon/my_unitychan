@@ -19,6 +19,10 @@ namespace MyUnityChan {
             }
         }
 
+        public static bool gameover {
+            get { return Instance.player_manager != null ? Instance.player_manager.gameover : false; }
+        }
+
         void Awake() {
             state = GameState.NO_SET;
         }

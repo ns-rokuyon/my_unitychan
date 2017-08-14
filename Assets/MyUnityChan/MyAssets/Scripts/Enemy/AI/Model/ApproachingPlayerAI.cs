@@ -8,6 +8,9 @@ namespace MyUnityChan {
         public bool allow_attack;
         public float close_range;
 
+        [SerializeField]
+        public Controller.InputCode input_to_attack = Controller.InputCode.ATTACK;
+
         public override AI define() {
             if ( hover ) {
                 return AI.root(self, controller)
@@ -17,7 +20,7 @@ namespace MyUnityChan {
                          .StopIf(_ => !allow_attack))
                     .def(AI.Def.Name("Attack")
                          .If(s => self.distanceXTo(s.player) <= close_range)
-                         .Then(_ => controller.inputKey(Controller.InputCode.ATTACK)));
+                         .Then(_ => controller.inputKey(input_to_attack)));
 
             }
             return AI.root(self, controller)
@@ -26,7 +29,7 @@ namespace MyUnityChan {
                      .StopIf(_ => !allow_attack))
                 .def(AI.Def.Name("Attack")
                      .If(s => self.distanceXTo(s.player) <= close_range)
-                     .Then(_ => controller.inputKey(Controller.InputCode.ATTACK)));
+                     .Then(_ => controller.inputKey(input_to_attack)));
         }
     }
 }

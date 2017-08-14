@@ -91,6 +91,11 @@ namespace MyUnityChan {
                 return this;
             }
 
+            public Def Unless(Func<State, bool> _cond) {
+                conditions.Add(new Condition(s => !_cond(s)));
+                return this;
+            }
+
             public Def And(Func<State, bool> _cond) {
                 return If(_cond);
             }

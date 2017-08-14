@@ -10,9 +10,10 @@ namespace MyUnityChan {
                         .Keep(s => model.inputTowardPlayer(s.player));
                 }
 
-                public static Def InputHorizontalTowardPlayer(AIModel model) {
+                public static Def InputHorizontalTowardPlayer(AIModel model, float offset = 0.0f) {
                     return AI.Def.Name("InputHorizontalTowardPlayer")
-                        .Keep(s => model.inputHorizontalTowardPlayer(s.player));
+                        .If(s => model.self.distanceXTo(s.player) >= offset)
+                        .Then(s => model.inputHorizontalTowardPlayer(s.player));
                 }
 
                 public static Def InputVerticalTowardPlayer(AIModel model) {
