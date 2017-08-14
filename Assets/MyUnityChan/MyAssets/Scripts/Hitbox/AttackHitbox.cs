@@ -32,6 +32,7 @@ namespace MyUnityChan {
             triggerEnemy(other);
             triggerDoor(other);
             triggerBlock(other);
+            triggerPhysicsObject(other);
         }
 
         protected bool triggerEnemy(Collider other) {
@@ -41,6 +42,7 @@ namespace MyUnityChan {
                 Enemy enemy = ((Enemy)other.gameObject.GetComponent<Enemy>());
                 DebugManager.log("hit to " + enemy.name);
                 spec.attack(enemy, this);
+                spec.force(enemy.rigid_body.rb, this);
                 return true;
             }
             return false;
@@ -76,6 +78,15 @@ namespace MyUnityChan {
             }
             return false;
         }
-    }
 
+        protected bool triggerPhysicsObject(Collider other) {
+            if ( other.tag == "PhysicsObject" ) {
+                ObjectBase o = other.gameObject.GetComponent<ObjectBase>();
+                if ( o ) {
+                    spec.force(o.rigid_body.rb, this);
+                }
+            }
+            return false;
+        }
+    }
 }
