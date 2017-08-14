@@ -21,7 +21,6 @@ namespace MyUnityChan {
         public int max_hp;
 
         protected EnemyActionManager action_manager;
-
         public HpGauge hp_gauge { get; protected set; }
 
         public int level {
@@ -29,7 +28,13 @@ namespace MyUnityChan {
                 return levelInFamily();
             }
         }  // >= 1
-        public int exp { get; set; }
+
+        [SerializeField, ReadOnly]
+        public int _exp;
+        public int exp {
+            get { return _exp; }
+            set { _exp = value; }
+        }
 
         public override void OnEnable() {
             base.OnEnable();
@@ -161,22 +166,29 @@ namespace MyUnityChan {
                     EffectManager.createEffect(Const.ID.Effect.ENEMY_LEVEL_UP, effect_position, 60, true);
 
                     exp = 0;
-                    changeForm();
-                    deactivate();
+                    createNextLevelEnemy();
+                    deactivate(destroy: true);
                 }
             }
         }
 
-        protected virtual void changeForm() {
+        protected virtual void createNextLevelEnemy() {
+            string create_to = transform.parent.gameObject.getHierarchyPath();
             string next_enemy_prefab_path = Const.Prefab.Enemy[getEnemyIdNextLevel()];
-            GameObject obj = PrefabInstantiater.create(next_enemy_prefab_path, Hierarchy.Layout.ENEMY);
-            obj.transform.position = transform.position;
+            Vector3 last_position = transform.position;
+
+            GameStateManager.self().delay(7, () => {
+                GameObject obj = PrefabInstantiater.create(next_enemy_prefab_path, create_to);
+                obj.transform.position = last_position;
+                AreaManager.self().relabelObject(obj);
+            });
         }
 
-        public void deactivate() {
+        public void deactivate(bool destroy = false) {
             setHP(0);
             destroyHpGauge();
             gameObject.SetActive(false);
+            delay(5, () => Destroy(gameObject));
         }
 
         public int getMaxLevel() {
@@ -192,7 +204,12 @@ namespace MyUnityChan {
         }
 
         public override void defeatSomeone(Character character) {
+            int defeat_id = character.gameObject.GetInstanceID();
+            if ( defeat_records.Contains(defeat_id) )
+                return;
+
             exp += Const.Unit.EXP_ENEMY_DEFEATS_SOMEONE;
+            defeat_records.Add(defeat_id);
         }
 
         public void followHpGauge() {

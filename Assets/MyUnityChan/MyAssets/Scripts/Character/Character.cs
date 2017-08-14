@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UniRx;
 using System;
 
@@ -11,6 +12,7 @@ namespace MyUnityChan {
         // vars
         protected IDisposable locker;
         protected RingBuffer<Vector3> position_history;
+        protected List<int> defeat_records;
 
         public Const.CharacterName character_name { get; set; }
         public CharacterStatus status { get; set; }
@@ -29,7 +31,7 @@ namespace MyUnityChan {
         protected virtual void start() { }
         protected virtual void update() { }
 
-        void Awake() {
+        public void Awake() {
             // Common Awake
             Renderer renderer = GetComponentInChildren<Renderer>();
             if ( renderer ) {
@@ -40,12 +42,13 @@ namespace MyUnityChan {
 
             ground_checker = GetComponent<GroundChecker>();
             roof_checker = GetComponent<RoofChecker>();
+            defeat_records = new List<int>();
             locker = null;
 
             awake();
         }
 
-        void Start() {
+        public void Start() {
             Observable.EveryUpdate()
                 .Where(_ => hitstop_counts > 0)
                 .Subscribe(_ => hitstop_counts--);
@@ -172,8 +175,16 @@ namespace MyUnityChan {
             return Mathf.Abs(to.transform.position.x - transform.position.x);
         }
 
+        public float distanceXTo(Vector3 position) {
+            return Mathf.Abs(position.x - transform.position.x);
+        }
+
         public float distanceYTo(Character to) {
             return Mathf.Abs(to.transform.position.y - transform.position.y);
+        }
+
+        public float distanceYTo(Vector3 position) {
+            return Mathf.Abs(position.y - transform.position.y);
         }
 
         public float getVx(bool abs=false) {
@@ -260,7 +271,7 @@ namespace MyUnityChan {
         }
 
         public virtual void defeatSomeone(Character character) {
-            // Callback method.
+            defeat_records.Add(character.gameObject.GetInstanceID());
         }
 
         public bool isLookAhead() {
