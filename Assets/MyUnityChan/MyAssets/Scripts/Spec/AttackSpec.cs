@@ -18,11 +18,14 @@ namespace MyUnityChan {
 
         [SerializeField, ReadOnly] public Vector3 _force_direction;
         
-        public Vector3 force_direction {
+        public virtual Vector3 force_direction {
             get {
                 _force_direction = Misc.degree2DirectionVector3(force_degree);
                 return _force_direction;
             }
+        }
+
+        public virtual void prepare(Hitbox hitbox) {
         }
 
         public virtual void attack(Character character, Hitbox hitbox) {
@@ -32,7 +35,6 @@ namespace MyUnityChan {
                 character.stun(stun);
                 character.damage(damage);
                 character.knockback(knockback);
-                character.se(hit_se);
                 character.hitstop(hitstop);
                 if ( owner ) {
                     owner.hitstop(hitstop);
@@ -43,13 +45,6 @@ namespace MyUnityChan {
                     (character as NPCharacter).clearTouchingCount(owner as Player);
                 }
             }
-
-            if ( effect_name == Const.ID.Effect._NO_EFFECT )
-                return;
-
-            EffectManager.createEffect(
-                effect_name,
-                hitbox.gameObject.transform.position, 60, true);
         }
 
         public virtual void force(Rigidbody rb, Hitbox hitbox) {
@@ -58,6 +53,19 @@ namespace MyUnityChan {
             if ( owner && owner.isLookBack() )
                 F = F.flipX();
             rb.AddForce(F, ForceMode.Impulse);
+        }
+
+        public virtual void playSound(ObjectBase o, Hitbox hitbox) {
+            o.se(hit_se);
+        }
+
+        public virtual void playEffect(ObjectBase o, Hitbox hitbox) {
+            if ( effect_name == Const.ID.Effect._NO_EFFECT )
+                return;
+
+            EffectManager.createEffect(
+                effect_name,
+                hitbox.gameObject.transform.position, 60, true);
         }
     }
 }

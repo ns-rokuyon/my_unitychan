@@ -41,8 +41,11 @@ namespace MyUnityChan {
 
                 Enemy enemy = ((Enemy)other.gameObject.GetComponent<Enemy>());
                 DebugManager.log("hit to " + enemy.name);
+                spec.prepare(this);
                 spec.attack(enemy, this);
                 spec.force(enemy.rigid_body.rb, this);
+                spec.playEffect(enemy, this);
+                spec.playSound(enemy, this);
                 return true;
             }
             return false;
@@ -53,7 +56,10 @@ namespace MyUnityChan {
                 if ( isOwner(other.gameObject) ) return false;
 
                 Player player = ((Player)other.gameObject.GetComponent<Player>());
+                spec.prepare(this);
                 spec.attack(player, this);
+                spec.playEffect(player, this);
+                spec.playSound(player, this);
                 return true;
             }
             return false;
@@ -63,7 +69,10 @@ namespace MyUnityChan {
             if ( other.tag == "Door" ) {
                 Door door = ((Door)other.gameObject.GetComponent<Door>());
                 door.open();
+                spec.prepare(this);
                 spec.attack(null, this);
+                spec.playEffect(door, this);
+                spec.playSound(door, this);
                 return true;
             }
             return false;
@@ -72,7 +81,10 @@ namespace MyUnityChan {
         protected bool triggerBlock(Collider other) {
             if ( other.tag == "Block" ) {
                 Block block = ((Block)other.gameObject.GetComponent<Block>());
+                spec.prepare(this);
                 spec.attack(null, this);
+                spec.playEffect(block, this);
+                spec.playSound(block, this);
                 block.damage(spec.damage);
                 return true;
             }
@@ -83,8 +95,12 @@ namespace MyUnityChan {
             if ( other.tag == "PhysicsObject" ) {
                 ObjectBase o = other.gameObject.GetComponent<ObjectBase>();
                 if ( o ) {
+                    spec.prepare(this);
                     spec.force(o.rigid_body.rb, this);
+                    spec.playEffect(o, this);
+                    spec.playSound(o, this);
                 }
+                return true;
             }
             return false;
         }

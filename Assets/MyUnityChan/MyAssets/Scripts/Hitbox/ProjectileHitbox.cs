@@ -4,7 +4,7 @@ using System.Collections;
 namespace MyUnityChan {
     public class ProjectileHitbox : AttackHitbox {
         public bool depend_on_parent_object { get; set; }
-        private GameObject projectile;
+        public GameObject projectile { get; protected set; }
 
         public override void ready(GameObject proj_, AttackSpec atkspec) {
             projectile = proj_;
@@ -28,7 +28,9 @@ namespace MyUnityChan {
 
         protected bool triggerGround(Collider other) {
             if ( other.tag == "Ground" ) {
+                spec.prepare(this);
                 spec.attack(null, this);
+                spec.playEffect(null, this);
                 return true;
             }
             return false;
@@ -41,6 +43,7 @@ namespace MyUnityChan {
             if ( triggerDoor(other) ) proj.countHit();
             if ( triggerGround(other) ) proj.countHit();
             if ( triggerBlock(other) ) proj.countHit();
+            if ( triggerPhysicsObject(other) ) proj.countHit();
         }
 
         /*
