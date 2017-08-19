@@ -10,6 +10,11 @@ namespace MyUnityChan {
             rb = obj.GetComponent<Rigidbody>();
         }
 
+        public virtual float mass {
+            get { return rb.mass; }
+            set { rb.mass = value; }
+        }
+
         public virtual Vector3 velocity {
             get { return rb.velocity; }
             set { rb.velocity = value; }
@@ -46,6 +51,11 @@ namespace MyUnityChan {
             if ( timecontrol ) {
                 crb = timecontrol.timeline.rigidbody;
             }
+        }
+
+        public override float mass {
+            get { return crb.mass; }
+            set { crb.mass = value; }
         }
 
         public override Vector3 velocity {

@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace MyUnityChan {
     [System.Serializable]
-    public class AttackSpec {
+    public class AttackSpec : IAttackSpec, IForceSpec, ISoundSpec, IEffectSpec {
         [SerializeField] public string name;
         [SerializeField] public int damage = 0;
         [SerializeField] public int stun = 0;      // time enemy is stuned
@@ -14,6 +14,7 @@ namespace MyUnityChan {
         [SerializeField] public Const.ID.SE hit_se = Const.ID.SE._NO;
         [SerializeField] public Const.ID.Effect effect_name;
         [SerializeField] public float force_power = 0;
+        [SerializeField] public bool use_raw_force_direction = false;
         [SerializeField, Range(-90, 90)] public float force_degree = 0;
 
         [SerializeField, ReadOnly] public Vector3 _force_direction;
@@ -50,7 +51,7 @@ namespace MyUnityChan {
         public virtual void force(Rigidbody rb, Hitbox hitbox) {
             var F = force_power * force_direction;
             var owner = hitbox.getOwner<Character>();
-            if ( owner && owner.isLookBack() )
+            if ( !use_raw_force_direction && owner && owner.isLookBack() )
                 F = F.flipX();
             rb.AddForce(F, ForceMode.Impulse);
         }
