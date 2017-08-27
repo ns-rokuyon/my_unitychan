@@ -42,7 +42,7 @@ namespace MyUnityChan {
         public bool passed { get; set; }
 
 
-        void Awake() {
+        public virtual void Awake() {
             ins = new Dictionary<string, bool>();
             connections = new List<AreaConnection>();
             connected_areas = new List<Area>();
@@ -55,7 +55,7 @@ namespace MyUnityChan {
             passed = false;
         }
 
-        void Start() {
+        public virtual void Start() {
             labeling();
 
             // Auto player labeling
@@ -127,6 +127,7 @@ namespace MyUnityChan {
         }
 
         public void labeling(GameObject parent = null) {
+            DebugManager.log("labeling on " + name);
             if ( parent == null ) {
                 labeling(transform.parent.gameObject);
                 return;
