@@ -62,12 +62,14 @@ namespace MyUnityChan {
                 case "Ground":
                     {
                         spec.playSound(this);
+                        spec.playEffect();
                         break;
                     }
                 case "Player":
                     {
                         Player player = collision.collider.gameObject.GetComponent<Player>();
                         spec.attack(player);
+                        spec.playEffect(player);
                         spec.playSound();
                         break;
                     }
@@ -75,6 +77,7 @@ namespace MyUnityChan {
                     {
                         Enemy enemy = collision.collider.gameObject.GetComponent<Enemy>();
                         spec.attack(enemy);
+                        spec.playEffect(enemy);
                         spec.playSound();
                         break;
                     }
