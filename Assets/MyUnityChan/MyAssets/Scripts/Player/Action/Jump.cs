@@ -215,7 +215,7 @@ namespace MyUnityChan {
             // Wall jump
             player.rigid_body.velocity = Vector3.zero;
             player.rigid_body.AddForce(F, ForceMode.Impulse);
-            player.lookBack();
+            player.flipDirection();
         }
 
         public override void perform() {

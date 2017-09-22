@@ -19,8 +19,8 @@ namespace MyUnityChan {
         public string player_name;
 
         private Dictionary<Const.CharacterName, GameObject> switchable_player_characters;
-        private Const.CharacterName now;
 
+        public Const.CharacterName now { get; protected set; }
         public Controller controller { get; set; }
         public HpGauge hpgauge { get; set; }
         public ReservedHpGauge reserved_hpgauge { get; set; }

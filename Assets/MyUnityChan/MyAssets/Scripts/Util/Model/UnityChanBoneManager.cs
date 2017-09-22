@@ -10,6 +10,8 @@ namespace MyUnityChan {
             player = GetComponent<Player>();
             bones = new Dictionary<Const.ID.UnityChanBone, Bone>();
 
+            Bone.register(Const.ID.UnityChanBone.HEAD, this);
+
             Bone.register(Const.ID.UnityChanBone.LEFT_SHOULDER, this);
             Bone.register(Const.ID.UnityChanBone.LEFT_ARM, this);
             Bone.register(Const.ID.UnityChanBone.LEFT_FORE_ARM, this);
@@ -19,6 +21,31 @@ namespace MyUnityChan {
             Bone.register(Const.ID.UnityChanBone.RIGHT_ARM, this);
             Bone.register(Const.ID.UnityChanBone.RIGHT_FORE_ARM, this);
             Bone.register(Const.ID.UnityChanBone.RIGHT_HAND, this);
+
+            Bone.register(Const.ID.UnityChanBone.RIGHT_HAND_THUMB_1, this);
+            Bone.register(Const.ID.UnityChanBone.RIGHT_HAND_THUMB_2, this);
+            Bone.register(Const.ID.UnityChanBone.RIGHT_HAND_THUMB_3, this);
+            Bone.register(Const.ID.UnityChanBone.RIGHT_HAND_THUMB_4, this);
+
+            Bone.register(Const.ID.UnityChanBone.RIGHT_HAND_INDEX_1, this);
+            Bone.register(Const.ID.UnityChanBone.RIGHT_HAND_INDEX_2, this);
+            Bone.register(Const.ID.UnityChanBone.RIGHT_HAND_INDEX_3, this);
+            Bone.register(Const.ID.UnityChanBone.RIGHT_HAND_INDEX_4, this);
+
+            Bone.register(Const.ID.UnityChanBone.RIGHT_HAND_MIDDLE_1, this);
+            Bone.register(Const.ID.UnityChanBone.RIGHT_HAND_MIDDLE_2, this);
+            Bone.register(Const.ID.UnityChanBone.RIGHT_HAND_MIDDLE_3, this);
+            Bone.register(Const.ID.UnityChanBone.RIGHT_HAND_MIDDLE_4, this);
+
+            Bone.register(Const.ID.UnityChanBone.RIGHT_HAND_RING_1, this);
+            Bone.register(Const.ID.UnityChanBone.RIGHT_HAND_RING_2, this);
+            Bone.register(Const.ID.UnityChanBone.RIGHT_HAND_RING_3, this);
+            Bone.register(Const.ID.UnityChanBone.RIGHT_HAND_RING_4, this);
+
+            Bone.register(Const.ID.UnityChanBone.RIGHT_HAND_PINKY_1, this);
+            Bone.register(Const.ID.UnityChanBone.RIGHT_HAND_PINKY_2, this);
+            Bone.register(Const.ID.UnityChanBone.RIGHT_HAND_PINKY_3, this);
+            Bone.register(Const.ID.UnityChanBone.RIGHT_HAND_PINKY_4, this);
         }
 
         public Bone bone(Const.ID.UnityChanBone name) {
@@ -47,6 +74,9 @@ namespace MyUnityChan {
         }
 
         public static Bone register(Const.ID.UnityChanBone _id, UnityChanBoneManager manager) {
+            if ( !Const.UnityChanBone.ContainsKey(_id) ) {
+                return null;
+            }
             return new Bone(_id, manager);
         }
     }

@@ -171,6 +171,11 @@ namespace MyUnityChan {
                 rigid_body.velocity = Vector3.zero;
         }
 
+        public void zeroVelocity() {
+            rigid_body.velocity = Vector3.zero;
+            rigid_body.angularVelocity = Vector3.zero;
+        }
+
         public float distanceXTo(Character to) {
             return Mathf.Abs(to.transform.position.x - transform.position.x);
         }
@@ -293,8 +298,18 @@ namespace MyUnityChan {
             return -1.0f * getFrontVector();
         }
 
-        public void lookBack() {
+        public void flipDirection() {
             transform.LookAt(transform.position + getBackVector());
+        }
+
+        public void lookBack() {
+            if ( isLookAhead() )
+                flipDirection();
+        }
+
+        public void lookAhead() {
+            if ( isLookBack() )
+                flipDirection();
         }
 
         // xdir = 1.0f | -1.0f

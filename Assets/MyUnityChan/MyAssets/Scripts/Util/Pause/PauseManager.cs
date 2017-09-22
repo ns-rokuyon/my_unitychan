@@ -33,7 +33,7 @@ namespace MyUnityChan {
                 pause_off_callback = callback;
                 control_on_pause = control;
 
-                GUIObjectBase.getCanvas("Canvas_HUD").GetComponent<Canvas>().enabled = false;
+                GameStateManager.hideHUD();
                 pm.getNowPlayer().GetComponent<SpringManager>().enabled = false;
                 pm.camera.effect.setPauseMenuEffect();
             }
@@ -46,7 +46,7 @@ namespace MyUnityChan {
                 if ( pause_off_callback != null ) {
                     pause_off_callback();
                 }
-                GUIObjectBase.getCanvas("Canvas_HUD").GetComponent<Canvas>().enabled = true;
+                GameStateManager.showHUD();
                 pause_off_callback = null; 
                 control_on_pause = null;
                 delay_control_count = 2;

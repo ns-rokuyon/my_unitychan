@@ -74,6 +74,18 @@ namespace MyUnityChan {
                 });
         }
 
+        public void disableFadeCanvas() {
+            var canvas = GUIObjectBase.getCanvas("Canvas_Fade");
+            if ( canvas )
+                canvas.SetActive(false);
+        }
+
+        public void enableFadeCanvas() {
+            var canvas = GUIObjectBase.getCanvas("Canvas_Fade");
+            if ( canvas )
+                canvas.SetActive(true);
+        }
+
         public void fadeOut(int frame) {
             fade.Range = 0.0f;
             if ( fader != null )

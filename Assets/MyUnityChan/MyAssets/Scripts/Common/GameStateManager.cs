@@ -65,6 +65,14 @@ namespace MyUnityChan {
             return self().player_manager.getNowPlayer();
         }
 
+        public static void hideHUD() {
+            GUIObjectBase.getCanvas("Canvas_HUD").GetComponent<Canvas>().enabled = false;
+        }
+
+        public static void showHUD() {
+            GUIObjectBase.getCanvas("Canvas_HUD").GetComponent<Canvas>().enabled = true;
+        }
+
         private void watchStateTransition() {
             Controller controller = getPlayer().getController();
             switch ( state ) { 
@@ -74,6 +82,8 @@ namespace MyUnityChan {
                          * State: MAIN -> MENU 
                          * Trigger: pause key was pressed
                          */
+                        if ( PauseManager.isPausing() )
+                            return;
                         state = GameState.MENU;
                         PauseManager.Instance.pause(true);
                         MenuManager.Instance.enter();
