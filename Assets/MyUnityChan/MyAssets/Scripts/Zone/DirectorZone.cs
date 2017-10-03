@@ -57,10 +57,25 @@ namespace MyUnityChan {
 
                 // Callback on end
                 onTimelineEnd = (p) => {
+                    // Revert main camera
                     main_camera.gameObject.SetActive(true);
                     main_camera.effect.enableFadeCanvas();
                     main_camera.fadeIn(Const.Frame.PLAYABLE_DIRECTOR_START_TRANSITION_FADE,
                                        Const.Frame.PLAYABLE_DIRECTOR_START_TRANSITION_KEEP_BLACKOUT);
+
+                    // Accept inputs
+                    player.freeze(false);
+
+                    // Enable HUD
+                    GameStateManager.showHUD();
+
+                    if ( parent_area ) {
+                        if ( parent_area is BossArea ) {
+                            // If this DirectorZone is a child component of BossArea,
+                            // change state from "START" to "BATTLE".
+                            (parent_area as BossArea).stateTo(BossArea.State.BATTLE);
+                        }
+                    }
                 };
 
                 // Start playable timeline

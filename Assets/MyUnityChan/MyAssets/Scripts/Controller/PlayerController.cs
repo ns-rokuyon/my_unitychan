@@ -6,6 +6,9 @@ namespace MyUnityChan {
         protected abstract void watchInput();
 
         void Update() {
+            watchInput();
+            updateDirectionKey();
+
             if ( self.isInputLocked() && !PauseManager.isPausing() ) {
                 // ignore any inputs
                 clearAllInputs();
@@ -17,9 +20,6 @@ namespace MyUnityChan {
                 clearAllInputs();
                 return;
             }
-
-            watchInput();
-            updateDirectionKey();
 
             if ( PauseManager.isPausing() ) {
                 PauseManager.controlOnPause();

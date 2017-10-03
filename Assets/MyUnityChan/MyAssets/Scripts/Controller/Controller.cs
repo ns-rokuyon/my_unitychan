@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using UniRx;
@@ -31,23 +32,54 @@ namespace MyUnityChan {
         protected Character self;
 
         protected List<bool> inputs;
+        protected List<bool> raw_inputs;
         protected float horizontal_input;
         protected float vertical_input;
 
         public IObservable<float> keyStreamHorizontal { get; private set; }
         public IObservable<float> keyStreamVertical { get; private set; }
 
+        public bool show_debug_window;
+        public GameObject debug_window { get; private set; }
+        public Text directional_debug_text { get; private set; }
+        public Text buttons_debug_text { get; private set; }
+
         // Use this for initialization
         public virtual void Awake() {
             inputs = new List<bool>();
+            raw_inputs = new List<bool>();
             for ( int i = 0; i < (int)InputCode.len; i++ ) {
                 inputs.Add(false);
+                raw_inputs.Add(false);
             }
             horizontal_input = 0.0f;
             vertical_input = 0.0f;
 
             keyStreamHorizontal = this.UpdateAsObservable().Select(_ => horizontal_input);
             keyStreamVertical = this.UpdateAsObservable().Select(_ => vertical_input);
+        }
+
+        public virtual void Start() {
+            this.UpdateAsObservable()
+                .Where(_ => show_debug_window)
+                .Subscribe(_ => {
+                    if ( !debug_window ) {
+                        debug_window = PrefabInstantiater.createWorldUI("Prefabs/UI/World/ControllerData");
+                        directional_debug_text = debug_window.transform.Find("Directional").gameObject.GetComponent<Text>();
+                        buttons_debug_text = debug_window.transform.Find("Buttons").gameObject.GetComponent<Text>();
+                    }
+                    directional_debug_text.text = getStringDirectionalInputs();
+                    buttons_debug_text.text = "";
+                    debug_window.transform.position = transform.position.add(0, 1.0f, -1.0f);
+                });
+
+            this.ObserveEveryValueChanged(_ => show_debug_window)
+                .Where(f => !f)
+                .Subscribe(_ => {
+                    if ( debug_window ) {
+                        Destroy(debug_window);
+                    }
+                });
         }
 
         public List<bool> getAllInputs() {
@@ -60,14 +92,20 @@ namespace MyUnityChan {
 
         public void clearAllInputs() {
             for ( int i = 0; i < inputs.Count; i++ ) {
+                raw_inputs[i] = inputs[i];  // Copy inputs to raw_inputs before clearing
+                inputs[i] = false;
                 horizontal_input = 0.0f;
                 vertical_input = 0.0f;
-                inputs[i] = false;
             }
         }
 
         public CommandRecorder getCommandRecorder() {
             return GetComponent<CommandRecorder>();
+        }
+
+        public bool getRawInput(InputCode code) {
+            int c = (int)code;
+            return raw_inputs[c] || inputs[c];
         }
 
         public bool keyCancel() { return inputs[(int)InputCode.CANCEL]; }
@@ -135,6 +173,9 @@ namespace MyUnityChan {
                 return;
             StartCoroutine(pressAndReleaseVertical(y, frame));
         }
-    }
 
+        public string getStringDirectionalInputs() {
+            return "Horizontal: " + horizontal_input + "\nVertical: " + vertical_input;
+        }
+    }
 }

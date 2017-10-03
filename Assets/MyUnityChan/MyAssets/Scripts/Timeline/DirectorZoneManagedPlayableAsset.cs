@@ -4,6 +4,8 @@ using System.Collections;
 using System;
 
 namespace MyUnityChan {
+    // To call onTimelineEnd() function at timeline end,
+    // add this PlayableAsset as Playable Track to Timeline.
     public class DirectorZoneManagedPlayableAsset : PlayableAsset {
         public ExposedReference<GameObject> clip;
 
