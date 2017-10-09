@@ -41,6 +41,10 @@ namespace MyUnityChan {
                 sound.locked = false;
         }
 
+        public virtual void OnDisable() {
+            Debug.LogWarning(name + " in " + (parent_area ? parent_area.name : "somewhere") + " has just been disabled");
+        }
+
         public void adjustZtoBaseline() {
             Area area = AreaManager.Instance.getAreaFromMemberObject(this.gameObject);
             if ( !area.isEmptyBaselineZ() ) {
@@ -97,6 +101,8 @@ namespace MyUnityChan {
                 DebugManager.log(name + " doesn't have SoundPlayer component", Const.Loglevel.WARN);
                 return;
             }
+            if ( parent_area && parent_area != AreaManager.self().getNowArea() )
+                return;
             sound.play(sid, playOneShot, delay);
         }
 
@@ -120,15 +126,9 @@ namespace MyUnityChan {
         }
 
         public virtual void OnTriggerEnter(Collider other) {
-            if ( other.tag == "MovingFloor" ) {
-                other.gameObject.GetComponent<MovingFloor>().getOn(this);
-            }
         }
 
         public virtual void OnTriggerExit(Collider other) {
-            if ( other.tag == "MovingFloor" ) {
-                other.gameObject.GetComponent<MovingFloor>().getOff(this);
-            }
         }
     }
 }

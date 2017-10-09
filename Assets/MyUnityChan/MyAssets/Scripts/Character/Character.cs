@@ -15,11 +15,11 @@ namespace MyUnityChan {
         protected List<int> defeat_records;
 
         public Const.CharacterName character_name { get; set; }
-        public CharacterStatus status { get; set; }
         public GroundChecker ground_checker { get; protected set; }
         public RoofChecker roof_checker { get; protected set; }
         public float height { get; protected set; }
         public float width { get; protected set; }
+        public virtual CharacterStatus status { get; set; }
 
         public int hitstop_counts { get; protected set; }
         public Vector3 hitstop_stock_velocity { get; protected set; }

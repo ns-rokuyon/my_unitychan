@@ -58,6 +58,7 @@ namespace MyUnityChan {
                 Player player = ((Player)other.gameObject.GetComponent<Player>());
                 spec.prepare(this);
                 spec.attack(player, this);
+                spec.force(player.rigid_body.rb, this);
                 spec.playEffect(player, this);
                 spec.playSound(player, this);
                 return true;
