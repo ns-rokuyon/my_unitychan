@@ -28,5 +28,13 @@ namespace MyUnityChan {
         public override void shake() {
             ProCamera2DShake.Instance.Shake(0);
         }
+
+        public void addCameraTarget(Transform tf) {
+            procam.AddCameraTarget(tf);
+        }
+
+        public void removeCameraTarget(Transform tf) {
+            procam.RemoveCameraTarget(tf);
+        }
     }
 }

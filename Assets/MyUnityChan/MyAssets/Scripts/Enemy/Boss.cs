@@ -20,10 +20,13 @@ namespace MyUnityChan {
             base.start();
 
             param = default_param;
-
             action_manager.registerAction(new EnemyDead(this));
-
             setHP(max_hp);
+
+            var cam = GameStateManager.getPlayer().manager.camera;
+            if ( cam is PlayerCameraProCamera2D ) {
+                (cam as PlayerCameraProCamera2D).addCameraTarget(transform);
+            }
         }
     }
 }

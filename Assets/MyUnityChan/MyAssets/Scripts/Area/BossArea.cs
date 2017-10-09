@@ -8,10 +8,9 @@ using UnityEditor;
 namespace MyUnityChan {
     public class BossArea : Area {
         public SensorZone start_zone;
-
         [SerializeField, ReadOnly] public BossArea.State state;
 
-        public GameObject boss { get; protected set; }
+        public Boss boss { get; set; }
 
         public enum State {
             STANDBY,
@@ -42,7 +41,7 @@ namespace MyUnityChan {
             boss = null;
         }
 
-        private void stateTo(BossArea.State s) {
+        public void stateTo(BossArea.State s) {
             state = s;
         }
 
