@@ -2,6 +2,8 @@
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System;
 using UniRx;
 using UniRx.Triggers;
 
@@ -26,6 +28,11 @@ namespace MyUnityChan {
             RIGHT,
             PREV_TAB,
             NEXT_TAB,
+            SPECIAL_01,
+            SPECIAL_02,
+            SPECIAL_03,
+            SPECIAL_04,
+            SPECIAL_05,
             len
         };
 
@@ -69,7 +76,7 @@ namespace MyUnityChan {
                         buttons_debug_text = debug_window.transform.Find("Buttons").gameObject.GetComponent<Text>();
                     }
                     directional_debug_text.text = getStringDirectionalInputs();
-                    buttons_debug_text.text = "";
+                    buttons_debug_text.text = getStringButtonInputs();
                     debug_window.transform.position = transform.position.add(0, 1.0f, -1.0f);
                 });
 
@@ -126,6 +133,11 @@ namespace MyUnityChan {
         public bool keyRight() { return inputs[(int)InputCode.RIGHT]; }
         public bool keyPrevTab() { return inputs[(int)InputCode.PREV_TAB]; }
         public bool keyNextTab() { return inputs[(int)InputCode.NEXT_TAB]; }
+        public bool keySpecial01() { return inputs[(int)InputCode.SPECIAL_01]; }
+        public bool keySpecial02() { return inputs[(int)InputCode.SPECIAL_02]; }
+        public bool keySpecial03() { return inputs[(int)InputCode.SPECIAL_03]; }
+        public bool keySpecial04() { return inputs[(int)InputCode.SPECIAL_04]; }
+        public bool keySpecial05() { return inputs[(int)InputCode.SPECIAL_05]; }
         public float keyHorizontal() { return horizontal_input; }
         public float keyVertical() { return vertical_input; }
 
@@ -172,6 +184,20 @@ namespace MyUnityChan {
             if ( vertical_input > 0.0f || vertical_input < 0.0f )
                 return;
             StartCoroutine(pressAndReleaseVertical(y, frame));
+        }
+
+        public string getStringButtonInputs() {
+            List<int> ids = new List<int>();
+            for ( int i = 0; i < (int)InputCode.len; i++ ) {
+                if ( inputs[i] )
+                    ids.Add(i);
+            }
+            string s = "";
+            ids.ForEach(i => {
+                s += Enum.ToObject(typeof(InputCode), i);
+                s += ", ";
+            });
+            return s;
         }
 
         public string getStringDirectionalInputs() {

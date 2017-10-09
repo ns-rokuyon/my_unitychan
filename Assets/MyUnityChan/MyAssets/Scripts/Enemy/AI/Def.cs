@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 namespace MyUnityChan {
     public partial class AI {
@@ -15,6 +16,15 @@ namespace MyUnityChan {
                 conditions = new List<Condition>();
             }
 
+            // Reset all states on each behavior and condition
+            public void reset() {
+                if ( true_behavior != null )
+                    true_behavior.reset();
+                if ( false_behavior != null )
+                    false_behavior.reset();
+                conditions.ForEach(c => c.reset());
+            }
+
             public class Condition {
                 public Func<State, bool> cond { get; set; }
                 public Condition() { }
@@ -24,6 +34,9 @@ namespace MyUnityChan {
 
                 public virtual bool check(State state) {
                     return cond(state);
+                }
+
+                public virtual void reset() {
                 }
             }
 
@@ -36,7 +49,7 @@ namespace MyUnityChan {
 
                 public FrameCondition(Func<State, FrameCondition, bool> _cond) {
                     framecond = _cond;
-                    last_checked = last_false = last_true = 0;
+                    reset();
                 }
 
                 public override bool check(State state) {
@@ -52,12 +65,20 @@ namespace MyUnityChan {
 
             public class Behavior {
                 public Action<State> behavior { get; private set; }
+                public int count { get; protected set; }
+
                 public Behavior(Action<State> _f) {
                     behavior = _f;
+                    count = 0;
                 }
 
                 public virtual void act(State state) {
                     behavior(state);
+                    count++;
+                }
+
+                public virtual void reset() {
+                    count = 0;
                 }
             }
 
@@ -68,8 +89,10 @@ namespace MyUnityChan {
                 }
 
                 public override void act(State state) {
-                    if ( UnityEngine.Random.value <= p )
+                    if ( UnityEngine.Random.value <= p ) {
                         behavior(state);
+                        count++;
+                    }
                 }
             }
 
@@ -142,6 +165,15 @@ namespace MyUnityChan {
             public Def Keep(Action<State> _behavior) {
                 conditions.Add(new Condition(s => true));
                 true_behavior = new Behavior(_behavior);
+                return this;
+            }
+
+            public Def Do(Action<State> _behavior) {
+                return Keep(_behavior);
+            }
+
+            public Def Once() {
+                conditions.Add(new Condition(s => true_behavior.count == 0));
                 return this;
             }
 

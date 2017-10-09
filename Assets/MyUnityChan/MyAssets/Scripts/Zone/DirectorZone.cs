@@ -23,7 +23,7 @@ namespace MyUnityChan {
             }
         }
 
-        public void play(Player player, Collider collider) {
+        public void play(Player player, Collider collider, System.Action callback = null) {
             if ( played )
                 return;
             played = true;
@@ -76,6 +76,9 @@ namespace MyUnityChan {
                             (parent_area as BossArea).stateTo(BossArea.State.BATTLE);
                         }
                     }
+
+                    if ( callback != null )
+                        callback();
                 };
 
                 // Start playable timeline

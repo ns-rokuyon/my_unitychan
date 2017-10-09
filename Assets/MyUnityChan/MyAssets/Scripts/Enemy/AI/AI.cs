@@ -11,6 +11,7 @@ namespace MyUnityChan {
         public AIController controller { get; set; }
         public List<Def> patterns { get; set; }
         public IDisposable brain { get; set; }
+        public bool freeze { get; set; }
         public bool debug { get; set; }     // No used
 
         private AI(Character ch, AIController cont) {
@@ -47,8 +48,9 @@ namespace MyUnityChan {
 
         public AI build() {
             brain = Observable.EveryUpdate()
-                .Where(_ => controller != null)
-                .Where(_ => !controller.isStopped)
+                .Where(_ => controller != null && !controller.isStopped)
+                .Where(_ => !freeze)
+                .Where(_ => !TimelineManager.isPlaying)
                 .Subscribe(_ => think(controller.getObservedState()))
                 .AddTo(controller);
             return this;
@@ -60,6 +62,10 @@ namespace MyUnityChan {
             brain.Dispose();
             brain = null;
             return this;
+        }
+
+        public void reset() {
+            patterns.ForEach(def => def.reset());
         }
 
         private void think(State state) {

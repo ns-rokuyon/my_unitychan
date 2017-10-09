@@ -20,7 +20,16 @@ namespace MyUnityChan {
         public Const.ID.Effect dead_effect;
         public int max_hp;
 
-        protected EnemyActionManager action_manager;
+        protected CharacterStatus _status;
+        public override CharacterStatus status {
+            get {
+                return _status ?? (_status = GetComponent<EnemyStatus>());
+            }
+            set {
+                _status = value;
+            }
+        }
+        public EnemyActionManager action_manager { get; protected set; }
         public HpGauge hp_gauge { get; protected set; }
 
         public int level {
@@ -44,6 +53,7 @@ namespace MyUnityChan {
 
         protected void loadAttachedAI() {
             GameObject controller_inst = PrefabInstantiater.create(prefabPath(Const.ID.Controller.AI), gameObject);
+            controller_inst.transform.localPosition = Vector3.zero;
             controller = controller_inst.GetComponent<Controller>();
 
             ((AIController)controller).setSelf(this);

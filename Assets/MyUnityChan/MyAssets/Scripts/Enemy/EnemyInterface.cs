@@ -6,6 +6,14 @@ namespace MyUnityChan {
         int onAttack(RingBuffer<EnemyAttack.Record> history);
     }
 
+    public interface IEnemySpecialAttack {
+        void onSpecialAttack01(RingBuffer<EnemyAttack.Record> history);
+        void onSpecialAttack02(RingBuffer<EnemyAttack.Record> history);
+        void onSpecialAttack03(RingBuffer<EnemyAttack.Record> history);
+        void onSpecialAttack04(RingBuffer<EnemyAttack.Record> history);
+        void onSpecialAttack05(RingBuffer<EnemyAttack.Record> history);
+    }
+
     public interface IEnemyDead {
         void onDead();
         void createDeadEffect();

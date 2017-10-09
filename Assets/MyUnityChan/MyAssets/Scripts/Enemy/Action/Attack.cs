@@ -44,4 +44,34 @@ namespace MyUnityChan {
             }
         }
     }
+
+    public class EnemySpecialAttack : EnemyAttack {
+        public EnemySpecialAttack(Character character) : base(character) {
+        }
+
+        public override string name() {
+            return "SPECIAL_ATTACK";
+        }
+
+        public override void perform() {
+            if ( !(enemy is IEnemySpecialAttack ) )
+                return;
+            if ( controller.keySpecial01() )
+                (enemy as IEnemySpecialAttack).onSpecialAttack01(history);
+            else if ( controller.keySpecial02() )
+                (enemy as IEnemySpecialAttack).onSpecialAttack02(history);
+            else if ( controller.keySpecial03() )
+                (enemy as IEnemySpecialAttack).onSpecialAttack03(history);
+            else if ( controller.keySpecial04() )
+                (enemy as IEnemySpecialAttack).onSpecialAttack04(history);
+            else if ( controller.keySpecial05() )
+                (enemy as IEnemySpecialAttack).onSpecialAttack05(history);
+        }
+
+        public override bool condition() {
+            bool keyed = controller.keySpecial01() || controller.keySpecial02() || controller.keySpecial03() ||
+                         controller.keySpecial04() || controller.keySpecial05();
+            return keyed && !enemy.isFlinching() && !enemy.isFrozen();
+        }
+    }
 }

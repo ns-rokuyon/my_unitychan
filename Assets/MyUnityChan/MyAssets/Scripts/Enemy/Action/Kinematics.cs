@@ -4,7 +4,8 @@ using System;
 
 namespace MyUnityChan {
     public class EnemyKinematics : EnemyActionBase {
-        private float base_vx, base_vy;
+        public float base_vx { get; set; }
+        public float base_vy { get; set; }
 
         public float vx {
             get { return base_vx * controller.keyHorizontal(); }
