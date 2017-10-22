@@ -27,7 +27,7 @@ namespace MyUnityChan {
             Beam beam = obj.GetComponent<Beam>();
             beam.time_control.changeClock(owner.time_control.clockName);
             beam.setDir(direction);
-            beam.setStartPosition(this.gameObject.transform.position);
+            beam.setStartPosition(this.gameObject.transform.position + muzzle_offset);
 
             // hitbox
             ProjectileHitbox hitbox;

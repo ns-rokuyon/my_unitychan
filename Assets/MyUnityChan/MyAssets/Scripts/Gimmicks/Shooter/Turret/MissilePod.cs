@@ -52,7 +52,7 @@ namespace MyUnityChan {
 
             Missile missile = obj.GetComponent<Missile>();
             missile.setDir(direction);
-            missile.fire(transform.position, owner.isLookAhead() ? 1.0f : -1.0f);
+            missile.fire(transform.position + muzzle_offset, owner.isLookAhead() ? 1.0f : -1.0f);
 
             // hitbox
             ProjectileHitbox hitbox = missile.GetComponentInChildren<ProjectileHitbox>();

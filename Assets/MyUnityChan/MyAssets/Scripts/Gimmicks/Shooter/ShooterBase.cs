@@ -8,9 +8,10 @@ namespace MyUnityChan {
         public bool auto = false;           // Auto trigger in each shooting frame
         public bool auto_aim_forward = false;
         public Vector3 base_direction = new Vector3(1.0f, 0.0f, 0.0f);
+        public Vector3 muzzle_offset = Vector3.zero;
 
         private bool triggered = false;     // Flag for specifying shooting frame manually
-        protected bool shooting;
+        [ReadOnly] public bool shooting;
         protected SoundPlayer sound_player;
         protected Character owner;
 
