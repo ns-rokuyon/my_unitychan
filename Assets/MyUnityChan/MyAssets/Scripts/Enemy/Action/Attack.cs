@@ -6,11 +6,17 @@ namespace MyUnityChan {
     public class EnemyAttack : EnemyActionBase {
         public RingBuffer<EnemyAttack.Record> history { get; protected set; }
 
-        public EnemyAttack(Character character) : base(character) {
+        public EnemyAttack(Character character, bool _use_transaction = false) : base(character) {
+            use_transaction = _use_transaction;
+            if ( use_transaction )
+                keep_skipping_lower_priority_in_transaction = true;
             history = new RingBuffer<Record>(5);
         }
 
         public override void perform() {
+            if ( use_transaction )
+                beginTransaction();
+
             if ( enemy is IEnemyAttack ) {
                 int id = (enemy as IEnemyAttack).onAttack(history);
                 if ( id >= 0 )
@@ -19,7 +25,8 @@ namespace MyUnityChan {
         }
 
         public override bool condition() {
-            return controller.keyAttack() && !enemy.isFlinching() && !enemy.isFrozen();
+            return controller.keyAttack() && !enemy.isFlinching() &&
+                !enemy.isFrozen() && (!use_transaction || isFreeTransaction());
         }
 
         public override string name() {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 using UniRx;
+using UniRx.Triggers;
 
 namespace MyUnityChan {
     public abstract class Action : StructBase {
@@ -60,19 +61,30 @@ namespace MyUnityChan {
             return transaction == null;
         }
 
+        public void beginTransaction() {
+            if ( transaction != null )
+                return;
+            transaction = Observable.Never<long>().Subscribe().AddTo(owner);
+        }
+
         public void beginTransaction(int frame) {
             if ( transaction != null )
                 return;
-            DebugManager.log("beginTransaction = " + frame);
             transaction = Observable.TimerFrame(0, 1)
                 .Take(frame)
                 .Subscribe(f => {
                     transaction_frame_count = (int)f;
                 }, () => {
                     transaction = null;
-                    DebugManager.log("endTransaction = " + frame);
                 })
                 .AddTo(owner);
+        }
+
+        public void closeTransaction() {
+            if ( transaction == null )
+                return;
+            transaction.Dispose();
+            transaction = null;
         }
     }
 

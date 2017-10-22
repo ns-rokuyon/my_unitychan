@@ -20,6 +20,9 @@ namespace MyUnityChan {
 
         public override void perform() {
             shooter.trigger();
+            if ( enemy is IEnemyShoot ) {
+                (enemy as IEnemyShoot).onShoot();
+            }
         }
 
         public override void off_perform() {

@@ -14,6 +14,10 @@ namespace MyUnityChan {
         void onSpecialAttack05(RingBuffer<EnemyAttack.Record> history);
     }
 
+    public interface IEnemyShoot {
+        void onShoot();
+    }
+
     public interface IEnemyDead {
         void onDead();
         void createDeadEffect();

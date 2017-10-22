@@ -68,6 +68,7 @@ namespace MyUnityChan {
             MeleeAttackHitbox hitbox = HitboxManager.self().create<MeleeAttackHitbox>(hitbox_resource_path);
             hitbox.ready(player.transform.position, fw, new Vector3(0.6f * fw.x, 0.8f, 0.0f), spec);
             hitbox.setOwner(player.gameObject);
+            hitbox.rescale(3.0f);
             hitbox.position_updater = (Hitbox hb) => {
                 hb.transform.position = player.bone_manager.position(Const.ID.UnityChanBone.RIGHT_HAND);
             };
@@ -95,6 +96,7 @@ namespace MyUnityChan {
 
         private AttackSpec spec = null;
         private string hitbox_resource_path;
+        private CapsuleCollider collider;
 
         public PlayerSliding(Character character)
             : base(character) {
@@ -104,6 +106,8 @@ namespace MyUnityChan {
             keep_skipping_lower_priority_in_transaction = true;
             hitbox_resource_path = Const.Prefab.Hitbox["KICK"];
             spec = new Spec();
+
+            collider = player.GetComponent<CapsuleCollider>();
         }
 
         public override string name() {
@@ -115,16 +119,24 @@ namespace MyUnityChan {
         }
 
         public override void performFixed() {
-            player.rigid_body.AddForce(player.transform.forward * 10.0f, ForceMode.VelocityChange);
+            player.rigid_body.AddForce(player.transform.forward * 20.0f, ForceMode.VelocityChange);
         }
 
         public override void perform() {
             beginTransaction(40);
 
+            collider.height = 0.8f;
+            collider.center = Vector3.up * 0.4f;
+
             player.voice(Const.ID.PlayerVoice.ATTACK3);
             player.getAnimator().CrossFade("Sliding", 0.001f);
             player.lockInput(40);
-            player.delay(6, () => { createHitbox(); });
+            player.delay(6, () => createHitbox());
+            player.delay(35, () => {
+                // Revert collider size
+                collider.height = 1.6f;
+                collider.center = Vector3.up * 0.8f;
+            });
         }
 
         public void createHitbox() {
