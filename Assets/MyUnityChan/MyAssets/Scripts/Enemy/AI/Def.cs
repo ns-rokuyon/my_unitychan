@@ -135,6 +135,8 @@ namespace MyUnityChan {
             }
 
             public Def Interval(int frame) {
+                if ( frame <= 0 )
+                    return this;
                 conditions.Add(new FrameCondition((s, f) => f.now - f.last_true >= frame));
                 return this;
             }
