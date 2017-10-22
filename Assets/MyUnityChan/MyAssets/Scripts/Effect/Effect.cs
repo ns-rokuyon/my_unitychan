@@ -4,11 +4,19 @@ using UniRx;
 
 namespace MyUnityChan {
     public class Effect : EffectBase {
+        public int total_frame { get; private set; }
+
         public void ready(Vector3 pos, int frame, string _resource_path) {
+            total_frame = frame;
             resource_path = _resource_path;
             transform.position = pos;
 
-            initialize();
+            if ( !managed_by_objectpool ) {
+                // Call initialize() unless non pool object
+                initialize();
+            }
+
+            onReady();
 
             Observable.TimerFrame(frame)
                 .Subscribe(_ => destroy())
@@ -30,6 +38,9 @@ namespace MyUnityChan {
         }
 
         public override void finalize() {
+        }
+
+        protected virtual void onReady() {
         }
     }
 }

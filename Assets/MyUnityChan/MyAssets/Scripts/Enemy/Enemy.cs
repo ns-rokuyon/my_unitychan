@@ -147,6 +147,10 @@ namespace MyUnityChan {
                 hp_gauge.setMapHp(max_hp);
                 hp_gauge.gameObject.transform.position = gameObject.transform.position.add(0, height, 0);
             }
+
+            EffectManager.createTextEffect(dam.ToString(),
+                                           Const.Prefab.Effect[Const.ID.Effect.DAMAGE_INDICATOR],
+                                           transform.position.add(0, height, 0), 60, true);
         }
 
         public override void knockback(int dam) {

@@ -81,5 +81,40 @@ namespace MyUnityChan {
                 }).AddTo(track);
             return effect;
         }
+
+
+        // Create TextEffect
+        // =============================================
+        public static GameObject createTextEffect(string text, string resource_path, Vector3 pos, int frame, bool use_objectpool = false) {
+            GameObject o = createEffect(resource_path, pos, frame, use_objectpool);
+            o.GetComponent<TextEffect>().text = text;
+            return o;
+        }
+
+        public static GameObject createTextEffect(string text, Const.ID.Effect effect_name, Vector3 pos, int frame, bool use_objectpool = false) {
+            GameObject o = createEffect(Const.Prefab.Effect[effect_name], pos, frame, use_objectpool);
+            if ( !o )
+                return null;
+            o.GetComponent<TextEffect>().text = text;
+            return o;
+        }
+
+        public static GameObject createTextEffect(string text, Const.ID.Effect effect_name, Vector3 pos, Vector3 offset, int frame, bool use_objectpool = true) {
+            GameObject o = createEffect(effect_name, offset, frame, use_objectpool);
+            if ( !o )
+                return null;
+            o.GetComponent<TextEffect>().text = text;
+            return o;
+        }
+
+        public static GameObject createTextEffect(string text, Const.ID.Effect effect_name, Character ch,
+                                              float frontOffsetX, float offsetY, int frame, bool use_objectpool = true) {
+            GameObject o = createEffect(effect_name, ch, frontOffsetX, offsetY, frame, use_objectpool);
+            if ( !o )
+                return null;
+            o.GetComponent<TextEffect>().text = text;
+            return o;
+        }
+
     }
 }

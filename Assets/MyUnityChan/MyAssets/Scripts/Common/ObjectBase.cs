@@ -35,6 +35,7 @@ namespace MyUnityChan {
         }
 
         public Area parent_area { get; set; }
+        public bool managed_by_objectpool { get; set; }
 
         public virtual void OnEnable() {
             if ( sound )
@@ -42,7 +43,7 @@ namespace MyUnityChan {
         }
 
         public virtual void OnDisable() {
-            Debug.LogWarning(name + " in " + (parent_area ? parent_area.name : "somewhere") + " has just been disabled");
+            //Debug.LogWarning(name + " in " + (parent_area ? parent_area.name : "somewhere") + " has just been disabled");
         }
 
         public void adjustZtoBaseline() {

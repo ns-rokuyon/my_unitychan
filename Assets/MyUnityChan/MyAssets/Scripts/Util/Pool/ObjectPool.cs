@@ -78,6 +78,7 @@ namespace MyUnityChan {
             if ( comp == null ) {
                 DebugManager.log("Effect script is not found in effect prefab", Const.Loglevel.ERROR);
             }
+            comp.managed_by_objectpool = true;
             comp.setPooled(true);
             comp.initialize();
         }
