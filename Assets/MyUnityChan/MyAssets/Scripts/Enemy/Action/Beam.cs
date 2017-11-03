@@ -4,10 +4,10 @@ using System;
 
 namespace MyUnityChan {
     public class EnemyBeam : EnemyActionBase {
-        private BeamTurret shooter;
+        private ShooterBase shooter;
 
         public EnemyBeam(Character character) : base(character) {
-            shooter = character.GetComponent<BeamTurret>();
+            shooter = character.GetComponent<ShooterBase>();
         }
 
         public override bool condition() {

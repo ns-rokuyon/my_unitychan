@@ -6,6 +6,8 @@ namespace MyUnityChan {
         [SerializeField]
         public AttackSpec spec;
 
+        public bool depend_on_parent_object { get; set; }
+
         protected void initPosition(AttackSpec atkspec) {
             // attack parameter
             spec = atkspec;
@@ -35,12 +37,21 @@ namespace MyUnityChan {
             triggerPhysicsObject(other);
         }
 
+        public override void OnTriggerStay(Collider other) {
+            if ( continuous_hit ) {
+                triggerPlayer(other);
+                triggerEnemy(other);
+                triggerDoor(other);
+                triggerBlock(other);
+                triggerPhysicsObject(other);
+            }
+        }
+
         protected bool triggerEnemy(Collider other) {
             if ( other.tag == "Enemy" ) {
                 if ( isOwner(other.gameObject) ) return false;
 
                 Enemy enemy = ((Enemy)other.gameObject.GetComponent<Enemy>());
-                DebugManager.log("hit to " + enemy.name);
                 spec.prepare(this);
                 spec.attack(enemy, this);
                 spec.force(enemy.rigid_body.rb, this);

@@ -19,8 +19,9 @@ namespace MyUnityChan {
             indicator = indicator_ui_object.GetComponent<Text>();
         }
 
-        void Start() {
-            baseStart();
+        public override void Start() {
+            base.Start();
+
             setProjectile(missile_name);
             missile_num = missile_max;
 
@@ -37,7 +38,6 @@ namespace MyUnityChan {
         }
 
         void Update() {
-            baseUpdate();
             if ( indicator ) indicator.text = "" + missile_num;
         }
 
@@ -52,6 +52,7 @@ namespace MyUnityChan {
 
             Missile missile = obj.GetComponent<Missile>();
             missile.setDir(direction);
+            missile.linkShooter(this);
             missile.fire(transform.position + muzzle_offset, owner.isLookAhead() ? 1.0f : -1.0f);
 
             // hitbox

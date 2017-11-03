@@ -2,6 +2,7 @@
 using System.Collections;
 
 namespace MyUnityChan {
-    public abstract class LauncherBase : ShooterBase {
+    [System.Serializable]
+    public class SpraySpec : AttackSpec {
     }
 }

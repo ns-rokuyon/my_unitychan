@@ -10,6 +10,7 @@ namespace MyUnityChan {
     public class ApproachingPlayerAI : AIModel {
         public bool hover;
         public bool allow_attack;
+        public bool allow_aim;
         public float close_range;
         public int attack_interval;
 
@@ -34,9 +35,11 @@ namespace MyUnityChan {
                         .Then(_ => controller.inputKey(input_to_attack)));
 
             // Keep aiming
-            ShooterBase shooter = GetComponent<ShooterBase>();
-            if ( shooter ) {
-                ai = ai.def(AI.Def.Name("KeepAimForward").Keep(_ => shooter.aimForward()));
+            if ( allow_aim ) {
+                ShooterBase shooter = GetComponent<ShooterBase>();
+                if ( shooter ) {
+                    ai = ai.def(AI.Def.Name("KeepAimForward").Keep(_ => shooter.aimForward()));
+                }
             }
 
             return ai;

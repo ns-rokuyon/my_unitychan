@@ -6,7 +6,7 @@ namespace MyUnityChan {
 
         public bool has_hitbox_in_children;
 
-        void Awake() {
+        public virtual void Awake() {
             commonSetting();
         }
 

@@ -3,12 +3,14 @@ using System.Collections;
 
 namespace MyUnityChan {
     public class ProjectileHitbox : AttackHitbox {
-        public bool depend_on_parent_object { get; set; }
         public GameObject projectile { get; protected set; }
 
-        public override void ready(GameObject proj_, AttackSpec atkspec) {
+        public override void ready(GameObject proj_, AttackSpec atkspec, bool keep_position = false) {
             projectile = proj_;
             initPosition(atkspec);
+
+            if ( keep_position )
+                return;
 
             transform.position = projectile.transform.position;
         }

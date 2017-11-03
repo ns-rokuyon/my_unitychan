@@ -12,6 +12,9 @@ namespace MyUnityChan {
             foreach ( var path in Const.Prefab.Projectile ) {
                 addPool(path.Value);
             }
+            foreach ( var path in Const.Prefab.Spray ) {
+                addPool(path.Value);
+            }
             foreach ( var path in Const.Prefab.Hitbox ) {
                 addPool(path.Value);
             }

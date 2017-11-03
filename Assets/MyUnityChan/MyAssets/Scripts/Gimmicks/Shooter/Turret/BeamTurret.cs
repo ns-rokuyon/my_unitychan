@@ -7,8 +7,8 @@ namespace MyUnityChan {
         [SerializeField]
         public Const.BeamName beam_name;
 
-        void Start() {
-            baseStart();
+        public override void Start() {
+            base.Start();
             //setProjectile(beam_name.ToString());
 
             this.ObserveEveryValueChanged(_ => beam_name)
@@ -28,6 +28,7 @@ namespace MyUnityChan {
             beam.time_control.changeClock(owner.time_control.clockName);
             beam.setDir(direction);
             beam.setStartPosition(this.gameObject.transform.position + muzzle_offset);
+            beam.linkShooter(this);
 
             // hitbox
             ProjectileHitbox hitbox;

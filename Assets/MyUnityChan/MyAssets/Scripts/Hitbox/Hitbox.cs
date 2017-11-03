@@ -8,6 +8,8 @@ namespace MyUnityChan {
 
         public GameObject owner = null;
         public bool persistent;
+        public bool continuous_hit = false;     // Required persistent = true
+        public int continuous_hit_interval_frame = 0;
 
         protected bool use_objectpool = false;
         protected string resource_path = null;
@@ -52,13 +54,16 @@ namespace MyUnityChan {
         public override void OnTriggerEnter(Collider other) {
         }
 
+        public virtual void OnTriggerStay(Collider other) {
+        }
+
         public virtual void enablePool(string _resource_path) {
             resource_path = _resource_path;
             use_objectpool = true;
         }
 
         // hitbox depends on other object
-        public virtual void ready(GameObject obj, AttackSpec spec) { }
+        public virtual void ready(GameObject obj, AttackSpec spec, bool keep_position = false) { }
 
         // static hitbox
         public virtual void ready(Vector3 pos, Vector3 fw, Vector3 offset, AttackSpec spec) { }
@@ -85,6 +90,14 @@ namespace MyUnityChan {
             if ( owner == null ) return false;
             if ( owner == obj ) return true;
             return false;
+        }
+
+        public void rescale(float r) {
+            transform.localScale = Vector3.one * r;
+        }
+
+        public void rescale(Vector3 s) {
+            transform.localScale = s;
         }
 
         public void setEnabledCollider(bool f) {

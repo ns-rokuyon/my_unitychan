@@ -6,6 +6,9 @@ namespace MyUnityChan {
         private GameObject obj;
 
         protected override void UniqueUpdate() {
+            if ( depend_on_parent_object )
+                return;
+
             if ( spec != null ) {
                 if ( obj != null && obj.activeSelf ) {
                     transform.position = obj.transform.position;
@@ -16,9 +19,12 @@ namespace MyUnityChan {
             }
         }
 
-        public override void ready(GameObject _obj, AttackSpec atkspec) {
+        public override void ready(GameObject _obj, AttackSpec atkspec, bool keep_position = false) {
             obj = _obj;
             initPosition(atkspec);
+
+            if ( keep_position )
+                return;
 
             transform.position = obj.transform.position;
         }
