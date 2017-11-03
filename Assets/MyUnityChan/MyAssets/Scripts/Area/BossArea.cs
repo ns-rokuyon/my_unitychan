@@ -8,6 +8,7 @@ using UnityEditor;
 namespace MyUnityChan {
     public class BossArea : Area {
         public SensorZone start_zone;
+        public float baselineY = float.NaN;
         [SerializeField, ReadOnly] public BossArea.State state;
 
         public Boss boss { get; set; }
@@ -50,6 +51,26 @@ namespace MyUnityChan {
 
             if ( start_zone is DirectorZone )
                 (start_zone as DirectorZone).play(player, colliderInfo);
+        }
+
+        public override void sceneGUI() {
+            base.sceneGUI();
+            if ( !isEmptyBaselineZ() && !isEmptyBaselineY() ) {
+                Vector3 area_center = transform.position;
+                Bounds bounds = gameObject.GetComponent<MeshRenderer>().bounds;
+                x_harf = (float)(bounds.size.x / 2.0);
+                Vector3 left_point = new Vector3(area_center.x - x_harf, baselineY, baselineZ);
+                Vector3 right_point = new Vector3(area_center.x + x_harf, baselineY, baselineZ);
+                left_point = Handles.PositionHandle(left_point, Quaternion.identity);
+                right_point = Handles.PositionHandle(right_point, Quaternion.identity);
+                Vector3[] points = new Vector3[] { left_point, right_point };
+                Handles.color = Color.red;
+                Handles.DrawAAPolyLine(10, points);
+            }
+        }
+
+        public bool isEmptyBaselineY() {
+            return float.IsNaN(baselineY);
         }
     }
 }

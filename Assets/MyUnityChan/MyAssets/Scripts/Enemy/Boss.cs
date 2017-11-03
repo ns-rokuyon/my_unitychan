@@ -16,6 +16,12 @@ namespace MyUnityChan {
             get; protected set;
         }
 
+        public BossArea boss_area {
+            get {
+                return parent_area as BossArea;
+            }
+        }
+
         protected override void start() {
             base.start();
 

@@ -127,7 +127,6 @@ namespace MyUnityChan {
         }
 
         public void labeling(GameObject parent = null) {
-            DebugManager.log("labeling on " + name);
             if ( parent == null ) {
                 labeling(transform.parent.gameObject);
                 return;
