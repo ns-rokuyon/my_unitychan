@@ -23,6 +23,14 @@ namespace MyUnityChan {
             get { return Instance.player_manager != null ? Instance.player_manager.gameover : false; }
         }
 
+        public static float fps {
+            get { return 1.0f / Time.deltaTime; }
+        }
+
+        public static int approximatedFps {
+            get { return (int)fps; }
+        }
+
         void Awake() {
             state = GameState.NO_SET;
         }

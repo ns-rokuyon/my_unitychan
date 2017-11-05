@@ -9,11 +9,17 @@ namespace MyUnityChan {
         [SerializeField] public SpraySpec spec;
 
         public List<PSEmissionEaser> easers { get; protected set; }
+        public DamageObjectHitbox hitbox { get; protected set; }
 
         public override void Awake() {
             base.Awake();
 
             easers = GetComponentsInChildren<PSEmissionEaser>().ToList();
+
+            if ( has_hitbox_in_children )
+                hitbox = GetComponentInChildren<DamageObjectHitbox>();
+            else
+                throw new NotImplementedException();
         }
 
         public override void finalize() {

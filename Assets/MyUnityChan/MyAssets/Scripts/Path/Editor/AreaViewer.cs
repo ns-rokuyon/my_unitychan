@@ -27,4 +27,7 @@ namespace MyUnityChan {
 
     [CustomEditor(typeof(SafeArea))]
     public class SafeAreaViewer : AreaViewer { }
+
+    [CustomEditor(typeof(BossArea))]
+    public class BossAreaViewer : AreaViewer { }
 }

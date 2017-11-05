@@ -16,7 +16,7 @@ namespace MyUnityChan {
 
         public TextMeshPro textmesh { get; protected set; }
         public IDisposable transparenter { get; protected set; }
-        public Tweener tweener { get; protected set; }
+        public Sequence tweener { get; protected set; }
 
         public string text {
             set {
@@ -53,7 +53,9 @@ namespace MyUnityChan {
 
             if ( tweener != null )
                 resetTween();
-            tweener = textmesh.rectTransform.DOScale(2.0f, 1.0f);
+
+            tweener = DOTween.Sequence();
+            tweener.Join(textmesh.rectTransform.DOScale(2.0f, 1.0f));
         }
 
         protected override void onReady() {

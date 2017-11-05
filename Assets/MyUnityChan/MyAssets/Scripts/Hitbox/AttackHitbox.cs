@@ -39,11 +39,18 @@ namespace MyUnityChan {
 
         public override void OnTriggerStay(Collider other) {
             if ( continuous_hit ) {
-                triggerPlayer(other);
-                triggerEnemy(other);
-                triggerDoor(other);
-                triggerBlock(other);
-                triggerPhysicsObject(other);
+                System.Action func = () => {
+                    triggerPlayer(other);
+                    triggerEnemy(other);
+                    triggerDoor(other);
+                    triggerBlock(other);
+                    triggerPhysicsObject(other);
+                };
+                if ( continuous_hit_interval_frame == 0 ) {
+                    func();
+                } else {
+                    doPrevInterval("continuous_hit", continuous_hit_interval_frame, func);
+                }
             }
         }
 

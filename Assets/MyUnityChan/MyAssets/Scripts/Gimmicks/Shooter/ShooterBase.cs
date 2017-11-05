@@ -57,6 +57,11 @@ namespace MyUnityChan {
                                 aimTo(GameStateManager.getPlayer().transform.position);
                                 break;
                             }
+                        case Const.ID.AimType.TO_PLAYER_DELAYED:
+                            {
+                                aimTo(GameStateManager.getPlayer().delayedPosition);
+                                break;
+                            }
                         default:
                             break;
                     }

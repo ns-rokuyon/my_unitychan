@@ -9,30 +9,47 @@ namespace MyUnityChan {
     public class Sprayer : ShooterBase {
         [SerializeField]
         public Const.ID.Spray spray_name;
-        public bool easing;
+
+        // Emission easing
+        public bool easing = true;
+        public float easing_duration = 2.0f;
+
+        // The limitation of continuous shooting
+        public int overheat_limit_frame = 0;
+
+        // Waiting frame of canceling overheat
+        public int cooldown_frame = 0;
 
         // Current instantiated spray component
         public Spray spray { get; protected set; }
 
+        // Offset position
         public Vector3 muzzle_point {
             get {
                 return this.gameObject.transform.position + muzzle_offset;
             }
         }
 
+        // Current shooting frame counter
+        public int continuous_shooting_frame;
+
+        // Overheating
+        public bool overheating { get; set; }
+
         public override void Start() {
             base.Start();
 
             // Shooter
-            this.ObserveEveryValueChanged(_ => triggered)
-                .Subscribe(_ => {
-                    if ( triggered && !spray ) {
+            this.ObserveEveryValueChanged(_ => getTriggered())
+                .Subscribe(t => {
+                    if ( t && !spray ) {
                         shoot();
                     }
-                    else if ( !triggered && spray ) {
+                    else if ( !t && spray ) {
                         if ( easing ) {
-                            spray.powerOff(2.0f);
-                            delay(120, () => {
+                            spray.powerOff(easing_duration);
+                            spray.hitbox.setEnabledCollider(false);
+                            delay((int)easing_duration * 60, () => {
                                 ObjectPoolManager.releaseGameObject(spray.gameObject, Const.Prefab.Spray[spray_name]);
                                 spray = null;
                             });
@@ -41,7 +58,8 @@ namespace MyUnityChan {
                             spray = null;
                         }
                     }
-                });
+                })
+                .AddTo(this);
 
             // Rotater
             this.ObserveEveryValueChanged(_ => base_direction)
@@ -53,19 +71,42 @@ namespace MyUnityChan {
                     // Rotate around z-axis
                     float ang = Mathf.Atan2(base_direction.y, base_direction.x) * Mathf.Rad2Deg;
                     spray.transform.Rotate(new Vector3(0.0f, 0.0f, 1.0f), ang);
-                });
+                })
+                .AddTo(this);
 
             // Positioner
             this.UpdateAsObservable()
-                .Where(_ => spray && owner)
+                .Where(_ => spray)
                 .Subscribe(_ => {
+                    // Fix point
                     spray.transform.position = muzzle_point;
-                });
 
+                    // Counter
+                    if ( !overheating )
+                        continuous_shooting_frame++;
+                })
+                .AddTo(this);
+
+            // Overheat manager
+            this.ObserveEveryValueChanged(_ => continuous_shooting_frame)
+                .Where(frame => overheat_limit_frame > 0 && !overheating && frame >= overheat_limit_frame)
+                .Subscribe(_ => {
+                    overheating = true;
+
+                    int cooldown = cooldown_frame + (int)(easing_duration * GameStateManager.fps);
+                    delay(cooldown, () => {
+                        overheating = false;
+                        continuous_shooting_frame = 0;
+                    });
+                })
+                .AddTo(this);
         }
 
         public override void shoot() {
             if ( spray_name == Const.ID.Spray._NO_SET )
+                return;
+
+            if ( overheating )
                 return;
 
             if ( spray )
@@ -78,25 +119,22 @@ namespace MyUnityChan {
             spray.time_control.changeClock(owner.time_control.clockName);
             spray.setStartPosition(muzzle_point);
             spray.linkShooter(this);
-            spray.powerOn(2.0f);
+            spray.powerOn(easing_duration);
 
             // hitbox
-            DamageObjectHitbox hitbox;
-            if ( spray.has_hitbox_in_children ) {
-                hitbox = spray.gameObject.GetComponentInChildren<DamageObjectHitbox>();
-                DebugManager.warn("hitbox pos = " + hitbox.transform.localPosition);
-                hitbox.setEnabledCollider(true);
-                hitbox.setOwner(gameObject);
-                hitbox.ready(obj, spray.spec, keep_position: true);
-                hitbox.depend_on_parent_object = true;
-                DebugManager.warn("hitbox pos (after ready)= " + hitbox.transform.localPosition);
-            }
-            else {
-                throw new NotImplementedException();
-            }
+            spray.hitbox.setEnabledCollider(true);
+            spray.hitbox.setOwner(gameObject);
+            spray.hitbox.ready(obj, spray.spec, keep_position: true);
+            spray.hitbox.depend_on_parent_object = true;
 
             // sound
             sound();
+
+            continuous_shooting_frame = 0;
+        }
+
+        public bool getTriggered() {
+            return overheating ? false : triggered;
         }
     }
 }

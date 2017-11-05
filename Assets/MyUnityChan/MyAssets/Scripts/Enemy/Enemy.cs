@@ -209,6 +209,10 @@ namespace MyUnityChan {
             return Const.EnemyFamily[enemyfamily_id].Count;
         }
 
+        public bool amI(Const.ID.Enemy eid) {
+            return enemy_id == eid;
+        }
+
         public int levelInFamily() {
             return Const.EnemyFamily[enemyfamily_id].IndexOf(enemy_id) + 1;
         }

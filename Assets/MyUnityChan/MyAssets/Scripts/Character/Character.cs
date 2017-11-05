@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UniRx;
 using System;
 
@@ -30,6 +31,17 @@ namespace MyUnityChan {
         protected virtual void awake() { }
         protected virtual void start() { }
         protected virtual void update() { }
+
+        public Vector3 delayedPosition {
+            get {
+                if ( getPositionHistoryCount() < 3 )
+                    return transform.position;
+
+                return position_history.Aggregate(Vector3.zero, (s, t) => {
+                    return s + t;
+                }) / (float)getPositionHistoryCount();
+            }
+        }
 
         public void Awake() {
             // Common Awake
@@ -123,7 +135,6 @@ namespace MyUnityChan {
             hitstop_counts = frame;
             var animator = GetComponent<Animator>();
             Vector3 v = rigid_body.velocity;
-            DebugManager.log("keep=" + rigid_body.velocity);
             while ( isHitstopping() ) {
                 rigid_body.velocity = Vector3.zero;
                 if ( animator )
