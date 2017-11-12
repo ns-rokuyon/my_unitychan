@@ -32,13 +32,14 @@ namespace MyUnityChan {
         public virtual void attack(Character character, Hitbox hitbox) {
             if ( character ) {
                 Character owner = hitbox.getOwner<Character>();
+                int _hitstop = (int)(hitstop * SettingManager.get(Settings.Range.HIT_STOP_SCALE));
                 character.launch(launch_fy);
                 character.stun(stun);
                 character.damage(damage);
                 character.knockback(knockback);
-                character.hitstop(hitstop);
+                character.hitstop(_hitstop);
                 if ( owner ) {
-                    owner.hitstop(hitstop);
+                    owner.hitstop(_hitstop);
                     if ( character.getHP() <= 0 )
                         owner.defeatSomeone(character);
                 }

@@ -54,6 +54,13 @@ namespace MyUnityChan {
         public override string name() {
             return "SLASH_L";
         }
+
+        public override void perform() {
+            base.perform();
+            player.se(Const.ID.SE.SWING_1, false, 2);
+            GameObject obj = EffectManager.createEffect(Const.ID.Effect.LIGHT_SLASH_01, player, 0.5f, 0.5f, 120, true);
+            obj.GetComponent<SlashEffect>().rotate(Const.ID.SlashType.HORIZONTAL, mirror:player.isLookBack());
+        }
     }
 
     // Middle attacks
@@ -70,6 +77,15 @@ namespace MyUnityChan {
         public override string name() {
             return "SLASH_M";
         }
+
+        public override void perform() {
+            base.perform();
+            player.se(Const.ID.SE.SWING_1, false, 6);
+            player.delay(10, () => {
+                GameObject obj = EffectManager.createEffect(Const.ID.Effect.LIGHT_SLASH_01, player, 0.5f, 0.5f, 120, true);
+                obj.GetComponent<SlashEffect>().rotate(Const.ID.SlashType.HORIZONTAL_REV, mirror:player.isLookBack());
+            });
+        }
     }
 
     // Heavy attacks
@@ -84,6 +100,15 @@ namespace MyUnityChan {
 
         public override string name() {
             return "SLASH_H";
+        }
+
+        public override void perform() {
+            base.perform();
+            player.se(Const.ID.SE.SWING_2, false, 5);
+            player.delay(5, () => {
+                GameObject obj = EffectManager.createEffect(Const.ID.Effect.LIGHT_SLASH_01, player, 0.5f, 0.5f, 120, true);
+                obj.GetComponent<SlashEffect>().rotate(Const.ID.SlashType.VERTICAL, mirror: player.isLookBack());
+            });
         }
 
         public override void performFixed() {
@@ -110,9 +135,8 @@ namespace MyUnityChan {
 
         public override void perform() {
             base.perform();
-            player.delay(20, () => {
-                player.voice(Const.ID.PlayerVoice.ATTACK6);
-            });
+            player.voice(Const.ID.PlayerVoice.ATTACK6, true, 20);
+            player.se(Const.ID.SE.SWING_3, false, 10);
         }
 
         public override void performFixed() {
