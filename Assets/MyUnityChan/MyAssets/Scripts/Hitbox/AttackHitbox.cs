@@ -39,6 +39,8 @@ namespace MyUnityChan {
 
         public override void OnTriggerStay(Collider other) {
             if ( continuous_hit ) {
+                if ( PauseManager.isPausing() )
+                    return;
                 System.Action func = () => {
                     triggerPlayer(other);
                     triggerEnemy(other);

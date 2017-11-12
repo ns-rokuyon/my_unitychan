@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 using Chronos;
+using UniRx;
+using System;
+using System.Collections;
 
 namespace MyUnityChan {
     [RequireComponent(typeof(Timeline))]

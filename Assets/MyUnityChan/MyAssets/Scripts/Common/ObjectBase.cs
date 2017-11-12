@@ -60,11 +60,15 @@ namespace MyUnityChan {
 
         public void delay(int frame, System.Action func, FrameCountType frame_count_type = FrameCountType.Update) {
             if ( frame > 0 ) {
-                Observable.TimerFrame(frame, frame_count_type)
-                    .Subscribe(_ => {
-                        func();
-                    })
-                    .AddTo(this);
+                System.Func<int, FrameCountType, IObservable<long>> timer;
+                if ( time_control )
+                    timer = time_control.PausableTimerFrame;
+                else {
+                    timer = Observable.TimerFrame;
+                    DebugManager.warn(name + " has no TimeControllable component, so that delay() uses Observable.TimerFrame (fallback)");
+                }
+
+                timer(frame, frame_count_type).Subscribe(_ => func()).AddTo(this);
             }
             else {
                 func();

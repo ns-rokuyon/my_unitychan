@@ -18,7 +18,7 @@ namespace MyUnityChan {
 
             onReady();
 
-            Observable.TimerFrame(frame)
+            time_control.PausableTimerFrame(frame)
                 .Subscribe(_ => destroy())
                 .AddTo(gameObject);
         }
@@ -34,10 +34,12 @@ namespace MyUnityChan {
         }
 
         public override void initialize() {
+            base.initialize();
             setupSoundPlayer();
         }
 
         public override void finalize() {
+            base.finalize();
         }
 
         protected virtual void onReady() {

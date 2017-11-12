@@ -45,8 +45,10 @@ namespace MyUnityChan {
 
             player.getAnimator().Play("PunchL");
             player.lockInput(6);
-            Observable.TimerFrame(3)
-                .Subscribe(_ => createHitbox());
+            player.delay(3, () => {
+                createHitbox();
+                player.se(Const.ID.SE.SWISH_1);
+            });
         }
 
         public override bool condition() {
@@ -103,8 +105,10 @@ namespace MyUnityChan {
             player.getAnimator().Play("PunchR");
             player.voice(Const.ID.PlayerVoice.ATTACK, true, 6);
             player.lockInput(10);
-            Observable.TimerFrame(6)
-                .Subscribe(_ => createHitbox());
+            player.delay(6, () => {
+                createHitbox();
+                player.se(Const.ID.SE.SWISH_1);
+            });
         }
 
         public override bool condition() {
@@ -161,8 +165,8 @@ namespace MyUnityChan {
             player.getAnimator().Play("SpinKick");
             player.voice(Const.ID.PlayerVoice.ATTACK4, true, 20);
             player.lockInput(45);
-            Observable.TimerFrame(22)
-                .Subscribe(_ => createHitbox());
+            player.se(Const.ID.SE.SWING_3, false, 16);
+            player.delay(22, () => createHitbox());
         }
 
         public override bool condition() {

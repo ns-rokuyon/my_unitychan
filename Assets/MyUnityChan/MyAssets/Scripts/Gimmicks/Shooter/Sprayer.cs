@@ -42,6 +42,8 @@ namespace MyUnityChan {
             // Shooter
             this.ObserveEveryValueChanged(_ => getTriggered())
                 .Subscribe(t => {
+                    if ( time_control.paused )
+                        return;
                     if ( t && !spray ) {
                         shoot();
                     }
@@ -91,6 +93,9 @@ namespace MyUnityChan {
             this.ObserveEveryValueChanged(_ => continuous_shooting_frame)
                 .Where(frame => overheat_limit_frame > 0 && !overheating && frame >= overheat_limit_frame)
                 .Subscribe(_ => {
+                    if ( time_control.paused )
+                        return;
+
                     overheating = true;
 
                     int cooldown = cooldown_frame + (int)(easing_duration * GameStateManager.fps);
