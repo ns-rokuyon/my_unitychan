@@ -74,5 +74,23 @@ namespace MyUnityChan {
                 yield return null;
             }
         }
+
+        // Return EveryUpdate based on TimeControllable.
+        // PausableEveryUpdate does not count a frame when paused == true.
+        public IObservable<long> PausableEveryUpdate() {
+            return Observable.FromMicroCoroutine<long>((observer, cancellationToken) => PausableEveryCycleCore(observer, cancellationToken), FrameCountType.Update);
+        }
+
+        public IEnumerator PausableEveryCycleCore(IObserver<long> observer, CancellationToken cancellationToken) {
+            if ( cancellationToken.IsCancellationRequested ) yield break;
+            var count = 0L;
+            while ( true ) {
+                yield return null;
+                if ( cancellationToken.IsCancellationRequested ) yield break;
+
+                if ( !paused )
+                    observer.OnNext(count++);
+            }
+        }
     }
 }

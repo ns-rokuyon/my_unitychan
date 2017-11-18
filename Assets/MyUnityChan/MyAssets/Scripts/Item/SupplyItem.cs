@@ -2,6 +2,6 @@
 using System.Collections;
 
 namespace MyUnityChan {
-    abstract public class SupplyItem : DropItem {
+    public class SupplyItem : DropItem {
     }
 }

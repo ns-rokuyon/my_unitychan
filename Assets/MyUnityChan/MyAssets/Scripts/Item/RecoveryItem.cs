@@ -2,6 +2,6 @@
 using System.Collections;
 
 namespace MyUnityChan { 
-    abstract public class RecoveryItem : DropItem {
+    public class RecoveryItem : DropItem {
     }
 }

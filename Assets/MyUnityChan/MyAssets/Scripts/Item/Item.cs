@@ -10,13 +10,17 @@ namespace MyUnityChan {
             setupSoundPlayer();
         }
 
+        public abstract void setup();
+
         public abstract void perform(Player player);
 
         public abstract void destroy(Player player);
 
+
         public void setPosition(Vector3 pos) {
             gameObject.transform.position = pos;
             adjustZtoBaseline();
+            setup();
         }
 
         public void OnCollisionStay(Collision collisionInfo) {
