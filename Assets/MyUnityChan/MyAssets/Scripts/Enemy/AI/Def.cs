@@ -179,6 +179,11 @@ namespace MyUnityChan {
                 return this;
             }
 
+            public Def Start(int frame) {
+                conditions.Add(new Condition(s => Time.frameCount >= frame));
+                return this;
+            }
+
             // Deprecated
             public Def RandomThen(Action<State> _behavior, float probability) {
                 true_behavior = new ProbBehavior(_behavior, probability);

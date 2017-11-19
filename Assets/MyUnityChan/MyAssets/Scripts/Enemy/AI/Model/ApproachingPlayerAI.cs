@@ -30,6 +30,7 @@ namespace MyUnityChan {
             // Attack
             ai = ai.def(AI.Def.Name("CheckAllowAttack").StopIf(_ => GameStateManager.gameover || !allow_attack))
                    .def(AI.Def.Name("Attack")
+                        .Start(300)
                         .Interval(attack_interval)
                         .If(s => self.distanceXTo(s.player) <= close_range)
                         .Then(_ => controller.inputKey(input_to_attack)));

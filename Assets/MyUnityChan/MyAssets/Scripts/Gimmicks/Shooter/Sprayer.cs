@@ -36,6 +36,9 @@ namespace MyUnityChan {
         // Overheating
         public bool overheating { get; set; }
 
+        // Waiting to release object
+        public bool shutdowning { get; protected set; }
+
         public override void Start() {
             base.Start();
 
@@ -44,16 +47,21 @@ namespace MyUnityChan {
                 .Subscribe(t => {
                     if ( time_control.paused )
                         return;
+                    if ( shutdowning )
+                        return;
+
                     if ( t && !spray ) {
                         shoot();
                     }
                     else if ( !t && spray ) {
                         if ( easing ) {
+                            shutdowning = true;
                             spray.powerOff(easing_duration);
                             spray.hitbox.setEnabledCollider(false);
                             delay((int)easing_duration * 60, () => {
                                 ObjectPoolManager.releaseGameObject(spray.gameObject, Const.Prefab.Spray[spray_name]);
                                 spray = null;
+                                shutdowning = false;
                             });
                         } else {
                             ObjectPoolManager.releaseGameObject(spray.gameObject, Const.Prefab.Spray[spray_name]);

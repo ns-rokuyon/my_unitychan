@@ -292,8 +292,11 @@ namespace MyUnityChan {
         }
 
         public void OnTriggerExit(Collider colliderInfo) {
-            if ( colliderInfo.gameObject.tag == "Player" ||
-                 colliderInfo.gameObject.tag == "Enemy" ) {
+            if ( colliderInfo.gameObject.tag == "Player" ) {
+                string name = colliderInfo.gameObject.name;
+                ins[name] = false;
+            }
+            if ( colliderInfo.gameObject.tag == "Enemy" ) {
                 string name = colliderInfo.gameObject.name;
                 ins[name] = false;
             }

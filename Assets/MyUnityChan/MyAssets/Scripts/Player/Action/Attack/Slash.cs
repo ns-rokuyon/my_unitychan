@@ -113,7 +113,7 @@ namespace MyUnityChan {
 
         public override void performFixed() {
             player.delay(5,
-                () => { player.rigid_body.AddForce(new Vector3(0, -200, 0), ForceMode.Impulse); },
+                () => { player.rigid_body.AddForce(new Vector3(0, -100, 0), ForceMode.Impulse); },
                 FrameCountType.FixedUpdate);
         }
     }
