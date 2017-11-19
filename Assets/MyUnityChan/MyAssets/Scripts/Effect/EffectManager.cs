@@ -8,6 +8,7 @@ namespace MyUnityChan {
         public override T create<T>(string resource_path, bool use_objectpool=false) {
             if ( use_objectpool ) {
                 T effect = ObjectPoolManager.getGameObject(resource_path).setParent(Hierarchy.Layout.EFFECT).GetComponent<T>();
+                DebugManager.log("EM -> " + effect);
                 (effect as EffectBase).enablePool(resource_path);
                 return effect;
             }
@@ -54,11 +55,16 @@ namespace MyUnityChan {
 
         public static GameObject createEffect(Const.ID.Effect effect_name, GameObject track, int frame, bool use_objectpool = true) {
             var effect = createEffect(effect_name, track.transform.position, frame, use_objectpool);
-            Observable.IntervalFrame(1)
-                .Take(frame)
-                .Subscribe(_ => {
-                    effect.transform.position = track.transform.position;
-                }).AddTo(track);
+
+            IObservable<long> o;
+            if ( frame >= 0 ) {
+                o = Observable.IntervalFrame(1).Take(frame);
+            } else {
+                o = Observable.EveryUpdate();
+            }
+            o.Subscribe(_ => {
+                effect.transform.position = track.transform.position;
+            }).AddTo(track);
             return effect;
         }
 
@@ -66,19 +72,24 @@ namespace MyUnityChan {
                                               float frontOffsetX, float offsetY, int frame, bool use_objectpool = true) {
             var ch = track.GetComponent<Character>();
             var effect = createEffect(effect_name, ch, frontOffsetX, offsetY, frame, use_objectpool);
-            Observable.IntervalFrame(1)
-                .Take(frame)
-                .Subscribe(_ => {
-                    var offset = new Vector3();
-                    if ( ch ) {
-                        var fw = ch.getFrontVector();
-                        offset = new Vector3(fw.x * frontOffsetX, offsetY, 0.0f);
-                    }
-                    else {
-                        offset = new Vector3(frontOffsetX, offsetY, 0.0f);
-                    }
-                    effect.transform.position = track.transform.position + offset;
-                }).AddTo(track);
+
+            IObservable<long> o;
+            if ( frame >= 0 ) {
+                o = Observable.IntervalFrame(1).Take(frame);
+            } else {
+                o = Observable.EveryUpdate();
+            }
+            o.Subscribe(_ => {
+                var offset = new Vector3();
+                if ( ch ) {
+                    var fw = ch.getFrontVector();
+                    offset = new Vector3(fw.x * frontOffsetX, offsetY, 0.0f);
+                }
+                else {
+                    offset = new Vector3(frontOffsetX, offsetY, 0.0f);
+                }
+                effect.transform.position = track.transform.position + offset;
+            }).AddTo(track);
             return effect;
         }
 

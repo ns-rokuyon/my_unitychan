@@ -18,9 +18,12 @@ namespace MyUnityChan {
 
             onReady();
 
-            time_control.PausableTimerFrame(frame)
-                .Subscribe(_ => destroy())
-                .AddTo(gameObject);
+            if ( frame >= 0 ) {
+                // Timer to destroy itself
+                time_control.PausableTimerFrame(frame)
+                    .Subscribe(_ => destroy())
+                    .AddTo(gameObject);
+            }
         }
 
         public void destroy() {

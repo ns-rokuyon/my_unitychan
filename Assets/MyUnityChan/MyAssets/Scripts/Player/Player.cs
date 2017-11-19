@@ -206,12 +206,20 @@ namespace MyUnityChan {
             if ( status.invincible.now() ) return;
             if ( manager.gameover ) return;
             if ( isGuarding() ) {
-                // Guard effect
-                EffectManager.createEffect(Const.ID.Effect.GUARD_01, transform.position, 40, true);
+                // Damage to shield
+                PlayerGuard guard = ((PlayerGuard)action_manager.getAction("GUARD"));
+                guard.damage(dam);
 
-                // Reaction force
-                rigid_body.AddForce(transform.forward * (-10.0f), ForceMode.VelocityChange);
-                return;
+                if ( guard.broken ) {
+                    rigid_body.AddForce(transform.forward * (-20.0f), ForceMode.VelocityChange);
+                }
+                else {
+                    // Successfully guarded
+                    EffectManager.createEffect(Const.ID.Effect.GUARD_01, transform.position, 40, true);
+                    rigid_body.AddForce(transform.forward * (-10.0f), ForceMode.VelocityChange);
+
+                    return;
+                }
             }
             status.invincible.enable(10);
 
@@ -472,7 +480,7 @@ namespace MyUnityChan {
             GUI.Label(new Rect(Screen.width - 245, 170, 250, 30), "capsule_center: " + cc.bounds.center);
             GUI.Label(new Rect(Screen.width - 245, 190, 250, 30), "capsule_height: " + cc.height);
             GUI.Label(new Rect(Screen.width - 245, 210, 250, 30), "areaname: " + getAreaName());
-            GUI.Label(new Rect(Screen.width - 245, 230, 250, 30), "animspeed: " + animator.speed);
+            GUI.Label(new Rect(Screen.width - 245, 230, 250, 30), "fps: " + GameStateManager.approximatedFps);
             GUI.Label(new Rect(Screen.width - 245, 250, 250, 30), "focus ui(menu): " + MenuManager.getCurrentSelectedName());
             GUI.Label(new Rect(Screen.width - 245, 270, 250, 30), "focus ui: " + UIHelper.getCurrentSelectedUIObjectName());
             GUI.Label(new Rect(Screen.width - 245, 290, 250, 30), "gameover: " + manager.gameover);
