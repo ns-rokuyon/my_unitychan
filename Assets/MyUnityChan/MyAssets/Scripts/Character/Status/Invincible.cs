@@ -23,8 +23,9 @@ namespace MyUnityChan {
             is_invincible = true;
             if ( all_time )
                 return;
-            Observable.TimerFrame(frame)
-                .Subscribe(_ => is_invincible = false);
+            time_control.PausableTimerFrame(frame)
+                .Subscribe(_ => is_invincible = false)
+                .AddTo(this);
         }
 
     }
