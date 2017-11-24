@@ -131,6 +131,7 @@ namespace MyUnityChan {
             player.voice(Const.ID.PlayerVoice.ATTACK3);
             player.getAnimator().CrossFade("Sliding", 0.001f);
             player.lockInput(40);
+            player.cancelGuard();
             player.delay(6, () => createHitbox());
             player.delay(35, () => {
                 // Revert collider size

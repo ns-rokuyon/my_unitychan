@@ -54,7 +54,7 @@ namespace MyUnityChan {
         }
 
         public override bool condition() {
-            return controller.keyGuard();
+            return controller.keyGuard() && !player.is_rolling;
         }
 
         public override void perform() {
@@ -75,28 +75,37 @@ namespace MyUnityChan {
 
         public override void off_perform() {
             if ( guarding ) {
-                guarding = false;
-                player.getAnimator().CrossFade("Locomotion", 0.6f);
-                if ( shield_effect ) {
-                    ObjectPoolManager.releaseGameObject(shield_effect_obj,
-                                                        Const.Prefab.Effect[Const.ID.Effect.SHIELD_01]);
-                    shield_effect_obj = null;
-                    shield_effect = null;
-
-                    starting_recoverer = true;
-                    player.delay(60, () => {
-                        starting_recoverer = false;
-                        recoverer = player.time_control
-                            .PausableEveryUpdate()
-                            .Subscribe(_ => {
-                                guard_hp += 1;
-                                if ( guard_hp >= Const.Max.GUARD_HP ) {
-                                    guard_hp = Const.Max.GUARD_HP;
-                                    closeRecoverer();
-                                }
-                            });
-                    });
+                if ( !player.is_rolling ) {
+                    player.getAnimator().CrossFade("Locomotion", 0.6f);
                 }
+                cancel();
+            }
+        }
+
+        public void cancel() {
+            if ( !guarding )
+                return;
+
+            guarding = false;
+            if ( shield_effect ) {
+                ObjectPoolManager.releaseGameObject(shield_effect_obj,
+                                                    Const.Prefab.Effect[Const.ID.Effect.SHIELD_01]);
+                shield_effect_obj = null;
+                shield_effect = null;
+
+                starting_recoverer = true;
+                player.delay(60, () => {
+                    starting_recoverer = false;
+                    recoverer = player.time_control
+                        .PausableEveryUpdate()
+                        .Subscribe(_ => {
+                            guard_hp += 1;
+                            if ( guard_hp >= Const.Max.GUARD_HP ) {
+                                guard_hp = Const.Max.GUARD_HP;
+                                closeRecoverer();
+                            }
+                        });
+                });
             }
         }
 

@@ -31,6 +31,7 @@ namespace MyUnityChan {
         private GameObject sphere_ground_check = null;
 
         public Vector3 last_entrypoint { get; set; }    // player's position in last area change
+        public bool is_rolling { get; set; }
 
         public PlayerManager manager { get; set; }
         public PlayerActionManager action_manager { get; set; }
@@ -40,6 +41,7 @@ namespace MyUnityChan {
         public BeamTurret beam_turret { get; protected set; }
         public FullBodyBipedIK ik { get; protected set; }
         public Weapon weapon { get; set; }
+        public CapsuleCollider collider { get; protected set; }
 
         public bool playable {
             get {
@@ -61,6 +63,7 @@ namespace MyUnityChan {
             ik = GetComponent<FullBodyBipedIK>();
             beam_turret = GetComponent<BeamTurret>();
             beam_slot = new List<Const.BeamName>();
+            collider = GetComponent<CapsuleCollider>();
         }
 
         // Start
@@ -76,7 +79,8 @@ namespace MyUnityChan {
                 Const.PlayerAction.ACCEL, Const.PlayerAction.BRAKE, Const.PlayerAction.DOWN,
                 Const.PlayerAction.JUMP, Const.PlayerAction.LIMIT_SPEED, Const.PlayerAction.TURN,
                 Const.PlayerAction.WALL_JUMP, Const.PlayerAction.PICKUP, Const.PlayerAction.THROW,
-                Const.PlayerAction.TRANSFORM, Const.PlayerAction.DEAD
+                Const.PlayerAction.TRANSFORM, Const.PlayerAction.DEAD,
+                Const.PlayerAction.ROLL_FORWARD, Const.PlayerAction.ROLL_BACKWARD,
             });
 
             // init sound player
@@ -156,6 +160,10 @@ namespace MyUnityChan {
                     action_manager.registerAction(new PlayerThrow(this)); break;
                 case Const.PlayerAction.DEAD:
                     action_manager.registerAction(new PlayerDead(this)); break;
+                case Const.PlayerAction.ROLL_FORWARD:
+                    action_manager.registerAction(new PlayerRollForward(this)); break;
+                case Const.PlayerAction.ROLL_BACKWARD:
+                    action_manager.registerAction(new PlayerRollBackward(this)); break;
                 default:
                     Debug.LogWarning("Undefined player action: id=" + action_class);
                     break;
@@ -233,6 +241,12 @@ namespace MyUnityChan {
                 manager.camera.shake();
                 manager.hpgauge.shake();
             }
+        }
+
+        public void cancelGuard() {
+            PlayerGuard guard = action_manager.getAction<PlayerGuard>("GUARD");
+            if ( guard != null )
+                guard.cancel();
         }
 
         public override void knockback(int dam) {
