@@ -4,23 +4,17 @@ using System;
 
 namespace MyUnityChan {
     public class TimeBomb : Bomb {
-        public float time;
+        public int frame;
 
         void Start() {
             initialize();
         }
 
-        protected IEnumerator startCountDown() {
-            yield return new WaitForSeconds(time);
-            explode();
-        }
-
         public override void initialize() {
-            StartCoroutine("startCountDown");
+            delay(frame, () => explode());
         }
 
         public override void finalize() {
         }
-
     }
 }

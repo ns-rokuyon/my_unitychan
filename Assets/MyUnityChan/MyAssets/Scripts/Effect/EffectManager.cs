@@ -8,11 +8,9 @@ namespace MyUnityChan {
         public override T create<T>(string resource_path, bool use_objectpool=false) {
             if ( use_objectpool ) {
                 T effect = ObjectPoolManager.getGameObject(resource_path).setParent(Hierarchy.Layout.EFFECT).GetComponent<T>();
-                DebugManager.log("EM -> " + effect);
                 (effect as EffectBase).enablePool(resource_path);
                 return effect;
             }
-            Debug.Log("create : " + resource_path);
             return instantiatePrefab(resource_path, Hierarchy.Layout.EFFECT).GetComponent<T>();
         }
 
