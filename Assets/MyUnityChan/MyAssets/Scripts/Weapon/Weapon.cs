@@ -3,34 +3,55 @@ using System;
 using System.Collections.Generic;
 using UniRx;
 using System.Linq;
+using System.Collections;
+using RootMotion.FinalIK;
 
 namespace MyUnityChan {
-    public abstract class Weapon : ObjectBase {
+    [RequireComponent(typeof(InteractionObject))]
+    public abstract class Weapon : ObjectBase, IPickupable {
         public SensorZone pickup_zone;
         public Collider physics_collider;
         public AttackHitbox hitbox;
 
         [SerializeField]
+        public List<Const.ID.PickupSlot> pickup_slots;
+
+        [SerializeField]
         public List<MeleeAttackSpec> specs;
 
-        public bool is_can_pickup;
-        public bool is_owned;
+        public bool can_pickup;
+        public bool owned;
         public IDisposable attacking { get; protected set; }
 
-        public bool isCanPickup {
-            get { return is_can_pickup; }
+        private FullBodyBipedIK ik;
+        private float hold_weight;
+        private InteractionObject iobj;
+        private OffsetPose hold_pose;
+
+        public bool canPickup {
+            get { return can_pickup; }
         }
 
         public bool isOwned {
-            get { return is_owned; }
+            get { return owned; }
         }
 
         public virtual void Awake() {
             attacking = null;
+            iobj = GetComponent<InteractionObject>();
+            hold_pose = GetComponent<OffsetPose>();
+
             if ( pickup_zone ) {
-                pickup_zone.onPlayerEnterCallback = (Player p, Collider c) => { is_can_pickup = true; };
-                pickup_zone.onPlayerExitCallback = (Player p, Collider c) => { is_can_pickup = false; };
+                pickup_zone.onPlayerEnterCallback = (Player p, Collider c) => { can_pickup = true; };
+                pickup_zone.onPlayerExitCallback = (Player p, Collider c) => { can_pickup = false; };
             }
+        }
+
+        void LateUpdate() {
+            if ( ik == null || hold_pose == null )
+                return;
+
+            hold_pose.Apply(ik.solver, hold_weight, ik.transform.rotation);
         }
 
         public abstract void setAttackAction(Player player);
@@ -71,11 +92,16 @@ namespace MyUnityChan {
         }
 
         public virtual void pickup(Character ch) {
-            is_owned = true;
-            is_can_pickup = false;
+            owned = true;
+            can_pickup = false;
+            rigid_body.isKinematic = true;
+            rigid_body.useGravity = false;
+
             Player player = (ch as Player);
             player.weapon = this;
+
             pickup_zone.gameObject.SetActive(false);
+
             delay(30, () => { physics_collider.gameObject.SetActive(false); });
             delay(30, () => {
                 hitbox.setOwner(ch.gameObject);
@@ -89,14 +115,15 @@ namespace MyUnityChan {
 
         public virtual void throwout(Character ch, float throw_fx) {
             Player player = ch as Player;
+            var interaction = player.GetComponent<InteractionSystem>();
             var attack = player.action_manager.getAction<PlayerAttack>("ATTACK");
 
             // Remove a weapon reference from player
             player.weapon = null;
 
             // Set owned flag to false
-            is_owned = false;
-            is_can_pickup = false;
+            owned = false;
+            can_pickup = false;
 
             // Reset attacks
             attack.resetToDefaultAttacks();
@@ -120,6 +147,7 @@ namespace MyUnityChan {
 
             // Throwout this object
             rigid_body.isKinematic = false;
+            rigid_body.useGravity = true;
             rigid_body.AddForce(
                 new Vector3(player.getFrontVector().x * throw_fx, 10, 0), ForceMode.Impulse);
 
@@ -134,6 +162,16 @@ namespace MyUnityChan {
                     })
                     .AddTo(this);
             });
+
+            if ( interaction ) {
+                if ( pickup_slots.Contains(Const.ID.PickupSlot.LEFT_HAND) )
+                    interaction.StopInteraction(FullBodyBipedEffector.LeftHand);
+                if ( pickup_slots.Contains(Const.ID.PickupSlot.RIGHT_HAND) )
+                    interaction.StopInteraction(FullBodyBipedEffector.RightHand);
+            }
+
+            // Decrease hold_weight
+            StartCoroutine(onThrowout());
         }
 
         public virtual void cancelAttacking(int delay_frame = 0) {
@@ -157,6 +195,22 @@ namespace MyUnityChan {
 
         protected MeleeAttackSpec getSpec(Const.ID.AttackSlotType slot) {
             return specs.First(s => s.slot == slot);
+        }
+
+        public IEnumerator onPickup() {
+            DebugManager.log("onPickup!");
+            ik = iobj.lastUsedInteractionSystem.GetComponent<FullBodyBipedIK>();
+            while ( hold_weight < 1f ) {
+                hold_weight += time_control.deltaTime;
+                yield return null;
+            }
+        }
+
+        public IEnumerator onThrowout() {
+            while ( hold_weight > 0f ) {
+                hold_weight -= time_control.deltaTime;
+                yield return null;
+            }
         }
     }
 }

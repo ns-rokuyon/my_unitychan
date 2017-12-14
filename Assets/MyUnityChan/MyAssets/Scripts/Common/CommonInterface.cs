@@ -6,4 +6,8 @@ namespace MyUnityChan {
         void doLock();
         void doUnlock();
     }
+
+    public interface IPickupable {
+        IEnumerator onPickup();
+    }
 }
