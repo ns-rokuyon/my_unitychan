@@ -5,6 +5,7 @@ using UniRx;
 using UniRx.Triggers;
 using EnergyBarToolkit;
 using DG.Tweening;
+using TMPro;
 
 namespace MyUnityChan {
     [RequireComponent(typeof(EnergyBar))]
@@ -13,6 +14,7 @@ namespace MyUnityChan {
         public Character character { get; protected set; }
         public FilledRendererUGUI renderer { get; protected set; }
         public RectTransform rect_transform { get; protected set; }
+        public TextMeshProUGUI sync_label { get; protected set; }
 
         public bool auto_hidden;
 
@@ -20,6 +22,7 @@ namespace MyUnityChan {
             renderer = GetComponent<FilledRendererUGUI>();
             energybar = GetComponent<EnergyBar>();
             rect_transform = GetComponent<RectTransform>();
+            sync_label = GetComponentInChildren<TextMeshProUGUI>();
             character = null;
         }
 
@@ -27,7 +30,11 @@ namespace MyUnityChan {
             // Sync HP
             this.UpdateAsObservable()
                 .Where(_ => character != null && energybar != null)
-                .Subscribe(_ => energybar.SetValueCurrent(character.getHP()));
+                .Subscribe(_ => {
+                    energybar.SetValueCurrent(character.getHP());
+                    if ( sync_label )
+                        sync_label.text = character.getHP().ToString();
+                });
 
             // Decrement alpha in bar color
             this.UpdateAsObservable()
