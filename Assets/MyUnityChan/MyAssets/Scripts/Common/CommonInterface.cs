@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using RootMotion.FinalIK;
 
 namespace MyUnityChan {
     public interface Lockable {
@@ -8,6 +10,26 @@ namespace MyUnityChan {
     }
 
     public interface IPickupable {
-        IEnumerator onPickup();
+        bool canPickup {
+            get;
+        }
+        bool isOwned {
+            get;
+        }
+        Vector3 position {
+            get;
+        }
+        InteractionObject interaction_object {
+            get;
+        }
+        Const.ID.PickupSlot interactionSlot {
+            get;
+        }
+        List<HandTarget> followHandTargets {
+            get;
+        }
+
+        void onPickedUpBy(Character ch);
+        void onThrownOutBy(Character ch, float throw_fx);
     }
 }

@@ -34,6 +34,11 @@ namespace MyUnityChan {
             get { return _frame_recorder ?? (_frame_recorder = new Dictionary<string, int>()); }
         }
 
+        private Dictionary<string, IDisposable> _disposables;
+        public Dictionary<string, IDisposable> disposables {
+            get { return _disposables ?? (_disposables = new Dictionary<string, IDisposable>()); }
+        }
+
         public Area parent_area { get; set; }
         public bool managed_by_objectpool { get; set; }
 
@@ -59,20 +64,40 @@ namespace MyUnityChan {
         }
 
         public void delay(int frame, System.Action func, FrameCountType frame_count_type = FrameCountType.Update) {
-            if ( frame > 0 ) {
-                System.Func<int, FrameCountType, IObservable<long>> timer;
-                if ( time_control )
-                    timer = time_control.PausableTimerFrame;
-                else {
-                    timer = Observable.TimerFrame;
-                    DebugManager.warn(name + " has no TimeControllable component, so that delay() uses Observable.TimerFrame (fallback)");
-                }
-
-                timer(frame, frame_count_type).Subscribe(_ => func()).AddTo(this);
-            }
-            else {
+            if ( frame <= 0 ) {
                 func();
+                return;
             }
+
+            System.Func<int, FrameCountType, IObservable<long>> timer;
+            if ( time_control )
+                timer = time_control.PausableTimerFrame;
+            else {
+                timer = Observable.TimerFrame;
+                DebugManager.warn(name + " has no TimeControllable component, so that delay() uses Observable.TimerFrame (fallback)");
+            }
+
+            timer(frame, frame_count_type).Subscribe(_ => func()).AddTo(this);
+        }
+
+        public void delay(string key, int frame, System.Action func, FrameCountType frame_count_type = FrameCountType.Update) {
+            if ( frame <= 0 ) {
+                func();
+                return;
+            }
+            
+            System.Func<int, FrameCountType, IObservable<long>> timer;
+            if ( time_control )
+                timer = time_control.PausableTimerFrame;
+            else {
+                timer = Observable.TimerFrame;
+                DebugManager.warn(name + " has no TimeControllable component, so that delay() uses Observable.TimerFrame (fallback)");
+            }
+
+            IDisposable d = timer(frame, frame_count_type).Subscribe(_ => func()).AddTo(this);
+            if ( disposables.ContainsKey(key) )
+                disposables[key].Dispose();
+            disposables[key] = d;
         }
 
         public void doPrevInterval(string key, int frame, System.Action func) {

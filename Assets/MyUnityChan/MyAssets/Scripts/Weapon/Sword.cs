@@ -24,6 +24,7 @@ namespace MyUnityChan {
                 }
                 if ( slash != null && slot != null ) {
                     slash.spec = spec;
+                    slash.weapon = this;
                     slot.switchTo(slash);
                 }
             });

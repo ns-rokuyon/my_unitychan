@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using RootMotion.FinalIK;
 
 namespace MyUnityChan {
     public class PlayerThrow : PlayerAction {
@@ -14,7 +15,7 @@ namespace MyUnityChan {
 
         public override void performFixed() {
             if ( player.weapon )
-                player.weapon.throwout(player, throw_fx);
+                player.weapon.onThrownOutBy(player, throw_fx);
         }
 
         public override void perform() {

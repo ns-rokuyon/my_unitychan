@@ -411,6 +411,40 @@ namespace MyUnityChan {
             resume();
         }
 
+        public void moveIKLeftHandTo(GameObject dst_lefthand, int frame = 0) {
+            ik.solver.leftHandEffector.target = dst_lefthand.transform;
+            ik.solver.leftHandEffector.positionWeight = 1;
+            ik.solver.leftHandEffector.rotationWeight = 1;
+            ik.solver.leftHandEffector.Initiate(ik.solver);
+
+            if ( frame > 0 )
+                delay("moveIKLeftHandTo", frame, freeIKLeftHand);
+        }
+
+        public void freeIKLeftHand() {
+            ik.solver.leftHandEffector.target = null;
+            ik.solver.leftHandEffector.positionWeight = 0;
+            ik.solver.leftHandEffector.rotationWeight = 0;
+            ik.solver.leftHandEffector.Initiate(ik.solver);
+        }
+
+        public void moveIKRightHandTo(GameObject dst_righthand, int frame = 0) {
+            ik.solver.rightHandEffector.target = dst_righthand.transform;
+            ik.solver.rightHandEffector.positionWeight = 1;
+            ik.solver.rightHandEffector.rotationWeight = 1;
+            ik.solver.rightHandEffector.Initiate(ik.solver);
+
+            if ( frame > 0 )
+                delay("moveIKRightHandTo", frame, freeIKRightHand);
+        }
+
+        public void freeIKRightHand() {
+            ik.solver.rightHandEffector.target = null;
+            ik.solver.rightHandEffector.positionWeight = 0;
+            ik.solver.rightHandEffector.rotationWeight = 0;
+            ik.solver.rightHandEffector.Initiate(ik.solver);
+        }
+
         public void enableSpringManager() {
             GetComponent<SpringManager>().enabled = true;
         }

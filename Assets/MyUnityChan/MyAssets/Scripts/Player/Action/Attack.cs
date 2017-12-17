@@ -325,4 +325,45 @@ namespace MyUnityChan {
             return new PlayerSpinKick(player);
         }
     }
+
+    // Abstract base class for attack with weapon
+    // =============================================================
+    public abstract class PlayerWeaponAttackBase : PlayerAction {
+        public AttackSpec spec { get; set; }
+        public Weapon weapon { get; set; }
+
+        public virtual int total_frame { get { return hitbox_delay_frame + hitbox_frame; } }
+        public virtual int input_lock_frame { get { return 10; } }
+        public virtual int hitbox_frame { get { return 30; } }
+        public virtual int hitbox_delay_frame { get { return 0; } }
+        public virtual bool cancel_prev_attack { get { return true; } }
+        public virtual float cross_fade_sec { get { return 0.001f; } }
+        public virtual int anim_delay_frame { get { return 0; } }
+
+        public abstract string anim_state_name { get; }
+
+        public PlayerWeaponAttackBase(Character character)
+            : base(character) {
+            spec = null;
+            use_transaction = true;
+        }
+
+        public override Const.PlayerAction id() {
+            return Const.PlayerAction._UNCLASSIFIED;
+        }
+
+        public override bool condition() {
+            return !player.getAnimator().GetBool("Turn") && isFreeTransaction();
+        }
+
+        public override void perform() {
+            beginTransaction(total_frame);
+
+            player.delay(anim_delay_frame, () => player.getAnimator().CrossFade(anim_state_name, cross_fade_sec));
+            player.lockInput(input_lock_frame);
+            player.weapon.onAttack(hitbox_delay_frame, hitbox_frame, cancel_prev_attack, (hitbox, frame) => {
+                hitbox.spec = spec;
+            });
+        }
+    }
 }
