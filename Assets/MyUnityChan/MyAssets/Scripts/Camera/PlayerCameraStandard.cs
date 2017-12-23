@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UniRx;
 using System.Linq;
 using DG.Tweening;
+using UnityEngine.PostProcessing;
 
 namespace MyUnityChan {
     public class PlayerCameraStandard : PlayerCamera {
@@ -16,7 +17,7 @@ namespace MyUnityChan {
         private PlayerCameraPosition default_camera_position;
         public PlayerCameraPosition now_camera_position { get; set; }
         private Dictionary<ViewportCorner, Vector3> viewport_corners_in_world;
-        private UnityStandardAssets.ImageEffects.MotionBlur blur;
+        private MotionBlurModel blur;
 
         public float tracking_margin_width_half {
             get { return tracking_margin_width / 2.0f; }
@@ -40,7 +41,8 @@ namespace MyUnityChan {
         public override void Awake() {
             base.Awake();
 
-            blur = GetComponent<UnityStandardAssets.ImageEffects.MotionBlur>();
+            var post_processing = GetComponent<PostProcessingBehaviour>();
+            blur = post_processing.profile.motionBlur;
 
             default_camera_position = PlayerCameraPosition.getDefault();
             now_camera_position = default_camera_position;
@@ -67,15 +69,6 @@ namespace MyUnityChan {
                             newpos = transform.position.add(diff.x, diff.y, 0.0f);
                             transform.position = adjustNewPosition(newpos);
                         }
-                    }
-                }
-
-                if ( blur ) {
-                    if ( player_component.isHitstopping() ) {
-                        blur.blurAmount = 0.6f;
-                    }
-                    else {
-                        blur.blurAmount = 0.1f;
                     }
                 }
             }
