@@ -10,6 +10,8 @@ namespace MyUnityChan {
             MENU
         };
 
+        public PlayerDemo showcase;
+
         public PlayerManager player_manager { get; set; }
         private GameState state { get; set; }
 

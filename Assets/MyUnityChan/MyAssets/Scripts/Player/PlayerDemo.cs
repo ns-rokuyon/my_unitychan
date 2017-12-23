@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using RootMotion.FinalIK;
 using UniRx;
 
 namespace MyUnityChan {
@@ -34,6 +35,27 @@ namespace MyUnityChan {
                 });
         }
 
+        public void equip(Const.ID.Weapon weapon_id) {
+            Player player = pm.getNowPlayerComponent();
+
+            var o = PrefabInstantiater.create(Const.Prefab.Weapons[weapon_id],
+                                              transform.position,
+                                              Hierarchy.Layout.DAMAGE_OBJECT);
+            var weapon = o.GetComponent<Weapon>();
+            var slot = weapon.interaction_slot;
+            setDemoLayer(o);
+            player.equip(weapon, slot);
+        }
+
+        public void unequip() {
+            DebugManager.log("demo unequip");
+            Player player = pm.getNowPlayerComponent();
+            InteractionObject unequipped = player.unequip();
+            if ( unequipped )
+                DebugManager.log("demo destroy");
+                Destroy(unequipped.gameObject);
+        }
+
         public void centering() {
             foreach ( var kv in pm.players ) {
                 kv.Value.gameObject.transform.position = center_positions[kv.Key];
@@ -43,6 +65,10 @@ namespace MyUnityChan {
         public void setDemoCameraDistance(float z) {
             demo_camera.distance = z;
             demo_camera.setStartPosition();
+        }
+
+        public void setDemoLayer(GameObject obj) {
+            obj.setLayer("ModelViewer");
         }
     }
 }

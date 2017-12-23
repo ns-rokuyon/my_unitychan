@@ -6,9 +6,6 @@ using System.Linq;
 
 namespace MyUnityChan {
     public class PlayerPickup : PlayerAction {
-        private InteractionSystem interaction;
-        private InteractionObject interaction_object;
-
         public PlayerPickup(Character character)
             : base(character) {
             priority = 5;
@@ -23,10 +20,6 @@ namespace MyUnityChan {
             return Const.PlayerAction.PICKUP;
         }
 
-        public override void init() {
-            interaction = player.GetComponent<InteractionSystem>();
-        }
-
         public override void perform() {
             player.lockInput(40);
             List<IPickupable> near_pickupables = player.GetComponentsInSameArea<IPickupable>().Where(w => w.canPickup).ToList();
@@ -35,18 +28,13 @@ namespace MyUnityChan {
 
             // Nearest one
             IPickupable pickupable = near_pickupables.OrderBy(w => player.distanceXTo(w.position)).First();
-
-            if ( pickupable.interactionSlot == Const.ID.PickupSlot.RIGHT_HAND ) {
-                interact(pickupable.interaction_object, Const.ID.PickupSlot.RIGHT_HAND);
-            }
-            else if ( pickupable.interactionSlot == Const.ID.PickupSlot.LEFT_HAND ) {
-                interact(pickupable.interaction_object, Const.ID.PickupSlot.LEFT_HAND);
-            }
-
-            pickupable.onPickedUpBy(player);
+            pickup(pickupable);
         }
 
         public override bool condition() {
+            if ( player.hasEquipment() )
+                return false;
+
             IPickupable[] near_pickupables = player.GetComponentsInSameArea<IPickupable>();
             if ( near_pickupables.Length == 0 )
                 return false;
@@ -54,47 +42,15 @@ namespace MyUnityChan {
             return count > 0 && controller.keyAttack() && !player.getAnimator().GetBool("Turn") && player.isGrounded();
         }
 
-        public bool interact(InteractionObject itobj, Const.ID.PickupSlot slot) {
-            if ( interaction_object != null )
-                return false;
-
-            switch ( slot ) {
-                case Const.ID.PickupSlot.LEFT_HAND:
-                    {
-                        interaction.StartInteraction(FullBodyBipedEffector.LeftHand, itobj, true);
-                        break;
-                    }
-                case Const.ID.PickupSlot.RIGHT_HAND:
-                    {
-                        interaction.StartInteraction(FullBodyBipedEffector.RightHand, itobj, true);
-                        break;
-                    }
-                default:
-                    return false;
+        public void pickup(IPickupable pickupable) {
+            if ( pickupable.interactionSlot == Const.ID.PickupSlot.RIGHT_HAND ) {
+                player.equip(pickupable, Const.ID.PickupSlot.RIGHT_HAND);
             }
-            interaction_object = itobj;
-            return true;
-        }
-
-        public void release(Const.ID.PickupSlot slot) {
-            if ( interaction_object == null )
-                return;
-            
-            switch ( slot ) {
-                case Const.ID.PickupSlot.LEFT_HAND:
-                    {
-                        interaction.StopInteraction(FullBodyBipedEffector.LeftHand);
-                        break;
-                    }
-                case Const.ID.PickupSlot.RIGHT_HAND:
-                    {
-                        interaction.StopInteraction(FullBodyBipedEffector.RightHand);
-                        break;
-                    }
-                default:
-                    return;
+            else if ( pickupable.interactionSlot == Const.ID.PickupSlot.LEFT_HAND ) {
+                player.equip(pickupable, Const.ID.PickupSlot.LEFT_HAND);
             }
-            interaction_object = null;
+
+            pickupable.onPickedUpBy(player);
         }
     }
 }

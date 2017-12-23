@@ -6,6 +6,7 @@ using UniRx;
 namespace MyUnityChan {
     public class PlayerAttack : PlayerAction {
         public Const.ID.AttackSlotType active_attack { get; set; }
+        public bool allowed { get; protected set; }
 
         // Slots
         public PlayerLightAttackSlot light { get; protected set; }
@@ -36,6 +37,7 @@ namespace MyUnityChan {
 
         public PlayerAttack(Character character)
             : base(character) {
+            allowed = true;
         }
 
         public override void init() {
@@ -48,13 +50,13 @@ namespace MyUnityChan {
 
         public void switchTo(PlayerAction action, Const.ID.AttackSlotType st) {
             var slot = getSlot(st);
-            if ( slot != null ) return;
+            if ( slot == null ) return;
             slot.switchTo(action);
         }
 
         public void clearSlot(Const.ID.AttackSlotType st) {
             var slot = getSlot(st);
-            if ( slot != null ) return;
+            if ( slot == null ) return;
             slot.action = null;
         }
 
@@ -67,8 +69,8 @@ namespace MyUnityChan {
         public override void perform() {
             var attack = getTriggeredAttack();
             if ( attack != null ) {
-                attack.perform();
                 active_attack = attack.slot;
+                attack.perform();
             }
         }
 
@@ -77,6 +79,8 @@ namespace MyUnityChan {
         }
 
         public override bool condition() {
+            if ( !allowed )
+                return false;
             return light.condition() || middle.condition() || heavy.condition() || up.condition() || down.condition();
         }
 
@@ -86,6 +90,16 @@ namespace MyUnityChan {
             heavy.action = null;
             up.action = null;
             down.action = null;
+        }
+
+        public void setNotAllowed(int frame) {
+            allowed = false;
+            player.delay("PlayerAttack.setNotAllowed", frame, () => allowed = true);
+        }
+
+        public void breakLevelAttackPhase(int frame) {
+            active_attack = Const.ID.AttackSlotType._NO;
+            setNotAllowed(frame);
         }
 
         protected PlayerAttackSlotBase getTriggeredAttack() {

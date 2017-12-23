@@ -14,13 +14,12 @@ namespace MyUnityChan {
         }
 
         public override void performFixed() {
-            if ( player.weapon )
-                player.weapon.onThrownOutBy(player, throw_fx);
         }
 
         public override void perform() {
             beginTransaction(30);
 
+            throwout();
             player.getAnimator().CrossFade("SwordSlashL", 0.001f);
             player.lockInput(30);
         }
@@ -38,6 +37,14 @@ namespace MyUnityChan {
 
         public override string name() {
             return "THROW";
+        }
+
+        public void throwout() {
+            if ( player.weapon )
+                player.weapon.onThrownOutBy(player, throw_fx);
+
+            // Release current interaction
+            player.unequip();
         }
     }
 }

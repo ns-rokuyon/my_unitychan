@@ -32,4 +32,9 @@ namespace MyUnityChan {
         void onPickedUpBy(Character ch);
         void onThrownOutBy(Character ch, float throw_fx);
     }
+
+    public interface IEquipable {
+        void onEquippedBy(Character ch);
+        void onUnequippedBy(Character ch);
+    }
 }

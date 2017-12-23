@@ -41,7 +41,9 @@ namespace MyUnityChan {
         protected List<bool> inputs;
         protected List<bool> raw_inputs;
         protected float horizontal_input;
+        protected float raw_horizontal_input;
         protected float vertical_input;
+        protected float raw_vertical_input;
 
         public IObservable<float> keyStreamHorizontal { get; private set; }
         public IObservable<float> keyStreamVertical { get; private set; }
@@ -60,7 +62,9 @@ namespace MyUnityChan {
                 raw_inputs.Add(false);
             }
             horizontal_input = 0.0f;
+            raw_horizontal_input = 0.0f;
             vertical_input = 0.0f;
+            raw_vertical_input = 0.0f;
 
             keyStreamHorizontal = this.UpdateAsObservable().Select(_ => horizontal_input);
             keyStreamVertical = this.UpdateAsObservable().Select(_ => vertical_input);
@@ -101,9 +105,11 @@ namespace MyUnityChan {
             for ( int i = 0; i < inputs.Count; i++ ) {
                 raw_inputs[i] = inputs[i];  // Copy inputs to raw_inputs before clearing
                 inputs[i] = false;
-                horizontal_input = 0.0f;
-                vertical_input = 0.0f;
             }
+            raw_horizontal_input = horizontal_input;
+            raw_vertical_input = vertical_input;
+            horizontal_input = 0.0f;
+            vertical_input = 0.0f;
         }
 
         public CommandRecorder getCommandRecorder() {
@@ -113,6 +119,14 @@ namespace MyUnityChan {
         public bool getRawInput(InputCode code) {
             int c = (int)code;
             return raw_inputs[c] || inputs[c];
+        }
+
+        public float getRawHorizontalInput() {
+            return raw_horizontal_input;
+        }
+
+        public float getRawVerticalInput() {
+            return raw_vertical_input;
         }
 
         public bool keyCancel() { return inputs[(int)InputCode.CANCEL]; }

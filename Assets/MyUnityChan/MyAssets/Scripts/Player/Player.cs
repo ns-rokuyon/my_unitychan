@@ -42,6 +42,7 @@ namespace MyUnityChan {
         public FullBodyBipedIK ik { get; protected set; }
         public Weapon weapon { get; set; }
         public CapsuleCollider collider { get; protected set; }
+        public Equipment equipment { get; protected set; }
 
         public bool playable {
             get {
@@ -64,6 +65,7 @@ namespace MyUnityChan {
             beam_turret = GetComponent<BeamTurret>();
             beam_slot = new List<Const.BeamName>();
             collider = GetComponent<CapsuleCollider>();
+            equipment = GetComponent<Equipment>();
         }
 
         // Start
@@ -409,6 +411,23 @@ namespace MyUnityChan {
             EffectManager.createEffect(Const.ID.Effect.RESURRECTION_01, ground.point, 240, false);
             yield return new WaitForSeconds(0.5f);
             resume();
+        }
+
+        public void equip(IPickupable pickupable, Const.ID.PickupSlot slot) {
+            if ( equipment )
+                equipment.equip(pickupable, slot);
+        }
+
+        public InteractionObject unequip() {
+            if ( equipment )
+                return equipment.unequip();
+            return null;
+        }
+
+        public bool hasEquipment() {
+            if ( equipment )
+                return !equipment.acceptable;
+            return false;
         }
 
         public void moveIKLeftHandTo(GameObject dst_lefthand, int frame = 0) {

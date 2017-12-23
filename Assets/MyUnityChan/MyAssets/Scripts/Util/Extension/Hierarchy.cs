@@ -42,6 +42,14 @@ public static class Hierarchy {
         return self;
     }
 
+    public static void setLayer(this GameObject self, string layername) {
+        self.layer = LayerMask.NameToLayer(layername);
+
+        for ( int i = 0; i < self.transform.childCount; i++ ) {
+            self.transform.GetChild(i).gameObject.setLayer(layername);
+        }
+    }
+
     public static class Layout {
         public static readonly string CAMERA = "Camera";
         public static readonly string TIMER = "System/Timer";

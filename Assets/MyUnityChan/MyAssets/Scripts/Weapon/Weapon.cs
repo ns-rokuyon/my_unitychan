@@ -15,7 +15,7 @@ namespace MyUnityChan {
     }
 
     [RequireComponent(typeof(InteractionObject))]
-    public abstract class Weapon : ObjectBase, IPickupable {
+    public abstract class Weapon : ObjectBase, IPickupable, IEquipable {
         public SensorZone pickup_zone;
         public Collider physics_collider;
         public AttackHitbox hitbox;
@@ -28,6 +28,9 @@ namespace MyUnityChan {
 
         [SerializeField]
         public List<MeleeAttackSpec> specs;
+
+        [SerializeField]
+        public Const.ID.Weapon weapon_id;
 
         public bool can_pickup;
         public bool owned;
@@ -111,33 +114,67 @@ namespace MyUnityChan {
         }
 
         public virtual void onPickedUpBy(Character ch) {
+            // Sync showcase
+            if ( GameStateManager.self().showcase ) {
+                GameStateManager.self().showcase.equip(weapon_id);
+            }
+        }
+
+        public virtual void onThrownOutBy(Character ch, float throw_fx) {
+            // Throwout this object
+            delay(2, () => {
+                rigid_body.AddForce(
+                    new Vector3(ch.getFrontVector().x * throw_fx, 10, 0), ForceMode.Impulse);
+            });
+
+            // Disable hitbox when velocity is 0
+            delay(4, () => {
+                this.ObserveEveryValueChanged(_ => rigid_body.velocity.x)
+                    .TakeWhile(x => x > 0.01f)
+                    .Subscribe(x => {
+                        DebugManager.log("vx=" + x);
+                    }, () => {
+                        hitbox.gameObject.SetActive(false);
+                    })
+                    .AddTo(this);
+            });
+
+            // Sync showcase
+            if ( GameStateManager.self().showcase ) {
+                GameStateManager.self().showcase.unequip();
+            }
+        }
+
+        public void onEquippedBy(Character ch) {
             owned = true;
             can_pickup = false;
-            rigid_body.isKinematic = true;
-            rigid_body.useGravity = false;
+            pickup_zone.gameObject.SetActive(false);
 
             Player player = (ch as Player);
             player.weapon = this;
 
-            pickup_zone.gameObject.SetActive(false);
+            rigid_body.isKinematic = true;
+            rigid_body.useGravity = false;
 
-            delay(30, () => { physics_collider.gameObject.SetActive(false); });
             delay(30, () => {
+                // Set attacks of weapon
+                setAttackAction(player);
+
+                // Collider off
+                physics_collider.gameObject.SetActive(false);
+
+                // Activate hitbox
                 hitbox.setOwner(ch.gameObject);
                 hitbox.persistent = true;
                 hitbox.gameObject.SetActive(false);
-            });
-            delay(30, () => {
-                setAttackAction(player);
             });
 
             StartCoroutine(increaseHoldWeight());
         }
 
-        public virtual void onThrownOutBy(Character ch, float throw_fx) {
+        public void onUnequippedBy(Character ch) {
             Player player = ch as Player;
             var attack = player.action_manager.getAction<PlayerAttack>("ATTACK");
-            var pickup = player.action_manager.getAction<PlayerPickup>("PICKUP");
 
             // Remove a weapon reference from player
             player.weapon = null;
@@ -153,11 +190,15 @@ namespace MyUnityChan {
             transform.parent = player.parent_area.transform.parent;
             AreaManager.self().relabelObject(gameObject);
 
-            // Enable physics collider
-            delay(2, () => { physics_collider.gameObject.SetActive(true); });
+            // Revert rigid body settings
+            rigid_body.isKinematic = false;
+            rigid_body.useGravity = true;
 
-            // Enable hitbox
-            delay(4, () => {
+            delay(2, () => {
+                // Enable physics collider
+                physics_collider.gameObject.SetActive(true);
+
+                // Enable hitbox
                 hitbox.setOwner(ch.gameObject);
                 hitbox.persistent = true;
                 hitbox.gameObject.SetActive(true);
@@ -165,30 +206,6 @@ namespace MyUnityChan {
 
             // Enable pickup zone
             delay(30, () => { pickup_zone.gameObject.SetActive(true); });
-
-            // Release current interaction
-            if ( pickup != null ) {
-                pickup.release(Const.ID.PickupSlot.LEFT_HAND);
-                pickup.release(Const.ID.PickupSlot.RIGHT_HAND);
-            }
-
-            // Throwout this object
-            rigid_body.isKinematic = false;
-            rigid_body.useGravity = true;
-            rigid_body.AddForce(
-                new Vector3(player.getFrontVector().x * throw_fx, 10, 0), ForceMode.Impulse);
-
-            // Disable hitbox when velocity is 0
-            delay(4, () => {
-                this.ObserveEveryValueChanged(_ => rigid_body.velocity.x)
-                    .TakeWhile(x => x > 0.01f)
-                    .Subscribe(x => {
-                        DebugManager.log("vx=" + x);
-                    }, () => {
-                        hitbox.gameObject.SetActive(false);
-                    })
-                    .AddTo(this);
-            });
 
             // Decrease hold_weight
             StartCoroutine(decreaseHoldWeight());
@@ -231,5 +248,6 @@ namespace MyUnityChan {
                 yield return null;
             }
         }
+
     }
 }
