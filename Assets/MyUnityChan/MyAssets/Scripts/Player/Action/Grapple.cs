@@ -47,6 +47,12 @@ namespace MyUnityChan {
                 grapplinghook.initPosition(ghit);
                 grapplinghook.length = max_distance;
                 grapplinghook.connect(player);
+                player.ik.solver.leftFootEffector.target = player.leftfoot_anchor;
+                player.ik.solver.leftFootEffector.positionWeight = 0.5f;
+                player.ik.solver.leftFootEffector.Initiate(player.ik.solver);
+                player.ik.solver.rightFootEffector.target = player.rightfoot_anchor;
+                player.ik.solver.rightFootEffector.positionWeight = 0.5f;
+                player.ik.solver.rightFootEffector.Initiate(player.ik.solver);
                 grappled = true;
             }
         }
@@ -80,6 +86,12 @@ namespace MyUnityChan {
                 hook.GetComponentInChildren<GrapplingHook>().disconnect();
                 hook = null;
                 grapplinghook = null;
+                player.ik.solver.leftFootEffector.target = null;
+                player.ik.solver.leftFootEffector.positionWeight = 0.0f;
+                player.ik.solver.leftFootEffector.Initiate(player.ik.solver);
+                player.ik.solver.rightFootEffector.target = null;
+                player.ik.solver.rightFootEffector.positionWeight = 0.0f;
+                player.ik.solver.rightFootEffector.Initiate(player.ik.solver);
                 grappled = false;
             }
         }
@@ -103,6 +115,8 @@ namespace MyUnityChan {
         private PlayerGrapple grapple;
         private Rigidbody rb;
         private Vector3 swingF;
+        private Vector3 leftfoot_anchor_basepoint;
+        private Vector3 rightfoot_anchor_basepoint;
 
         public PlayerSwing(Character ch) : base(ch) {
             grapple = null;
@@ -114,14 +128,33 @@ namespace MyUnityChan {
         public override void init() {
             grapple = player.action_manager.getAction<PlayerGrapple>("GRAPPLE");
             rb = player.GetComponent<Rigidbody>();
+
+            if ( player.leftfoot_anchor )
+                leftfoot_anchor_basepoint = player.leftfoot_anchor.localPosition;
+            if ( player.rightfoot_anchor )
+                rightfoot_anchor_basepoint = player.rightfoot_anchor.localPosition;
         }
 
         public override void performFixed() {
             if ( rb == null )
                 return;
+
             if ( grapple.grapplinghook == null )
                 return;
-            if ( grapple.grapplinghook.getSwingDegree() > swing_deg_limit )
+
+            player.getAnimator().Play("Idle");
+
+            float degree = grapple.grapplinghook.getSwingDegree();
+            float swing_foot_offset_x = player.getFrontVector().x * grapple.grapplinghook.swing_dir * Mathf.Min(4.0f * (degree / 90.0f), 1.0f);
+            float swing_foot_offset_y = Mathf.Min((degree / 90.0f), 1.0f);
+
+            if ( player.ik.solver.leftFootEffector.target )
+                player.leftfoot_anchor.localPosition = leftfoot_anchor_basepoint.add(0.0f, swing_foot_offset_y, swing_foot_offset_x);
+
+            if ( player.ik.solver.rightFootEffector.target )
+                player.rightfoot_anchor.localPosition = rightfoot_anchor_basepoint.add(0.0f, swing_foot_offset_y, swing_foot_offset_x);
+
+            if ( degree > swing_deg_limit )
                 return;
 
             var horizontal = controller.keyHorizontal();
@@ -133,7 +166,7 @@ namespace MyUnityChan {
                 init();
                 return false;
             }
-            return grapple.grappled && controller.keyHorizontal() != 0.0f;
+            return grapple.grappled;
         }
 
         public override Const.PlayerAction id() {

@@ -18,6 +18,9 @@ namespace MyUnityChan {
         [SerializeField]
         public PlayerCameraPosition player_camera_position;
 
+        public Transform leftfoot_anchor;
+        public Transform rightfoot_anchor;
+
         private GameObject player_root;
         private Animator animator;
 

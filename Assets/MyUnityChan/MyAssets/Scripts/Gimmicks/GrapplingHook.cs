@@ -20,6 +20,26 @@ namespace MyUnityChan {
                     hand.transform.localPosition = -hand.transform.localPosition.changeY(length);
             }
         }
+
+        public Vector3 basepoint {
+            get {
+                return hook.transform.position;
+            }
+        }
+
+        public Vector3 handpoint {
+            get {
+                return line.GetPosition(1);
+            }
+        }
+
+        public int swing_dir {
+            get {
+                if ( basepoint.x == handpoint.x )
+                    return 0;
+                return basepoint.x < handpoint.x ? 1 : -1;
+            }
+        }
         public LineRenderer line { get; set; }
         public Player player { get; set; }
         public SpringJoint joint { get; set; }
@@ -71,8 +91,6 @@ namespace MyUnityChan {
         }
 
         public float getSwingDegree() {
-            Vector3 basepoint = hook.transform.position;
-            Vector3 handpoint = line.GetPosition(1);
             return Mathf.Atan2(Mathf.Abs(basepoint.x - handpoint.x),
                                Mathf.Abs(basepoint.y - handpoint.y)) * Mathf.Rad2Deg;
         }
