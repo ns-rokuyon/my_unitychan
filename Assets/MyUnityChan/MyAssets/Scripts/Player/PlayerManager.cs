@@ -39,12 +39,8 @@ namespace MyUnityChan {
         }
 
         void Awake() {
+            now = Const.CharacterName._NO;
             switchable_player_characters = new Dictionary<Const.CharacterName, GameObject>();
-
-            switchable_player_characters.Add(Const.CharacterName.UNITYCHAN, default_unitychan);
-            now = Const.CharacterName.UNITYCHAN;
-            Player now_player = getNowPlayer().GetComponent<Player>();
-            now_player.character_name = now;
 
             // player status setup
             status = GetComponent<PlayerStatus>();
@@ -53,7 +49,10 @@ namespace MyUnityChan {
 
             // controller setup
             controller = PrefabInstantiater.create(prefabPath(controller_name), this.gameObject).GetComponent<Controller>();
-            controller.setSelf(now_player);
+
+            // Setup player characters
+            addPlayerCharacter(Const.CharacterName.UNITYCHAN);
+            addPlayerCharacter(Const.CharacterName.MINI_UNITYCHAN);
 
             if ( playable ) {
                 // camera setup
@@ -69,21 +68,19 @@ namespace MyUnityChan {
                 // set player to GameStateManager
                 GameStateManager.self().player_manager = this;
             }
-
-            // Initialize player
-            initPlayer(now_player);
-
-            // TODO
-            addPlayerCharacter(Const.CharacterName.MINI_UNITYCHAN);
         }
 
         void Start() {
+            // Activate
+            switchPlayerCharacter(now);
             Player now_player = getNowPlayer().GetComponent<Player>();
 
-            now_player.registerActions(new List<Const.PlayerAction> {
-                Const.PlayerAction.ATTACK, Const.PlayerAction.BEAM, Const.PlayerAction.DASH, Const.PlayerAction.MISSILE,
-                Const.PlayerAction.GUARD, Const.PlayerAction.GRAPPLE
-            });
+            if ( now == Const.CharacterName.UNITYCHAN ) {
+                now_player.registerActions(new List<Const.PlayerAction> {
+                    Const.PlayerAction.ATTACK, Const.PlayerAction.BEAM, Const.PlayerAction.DASH, Const.PlayerAction.MISSILE,
+                    Const.PlayerAction.GUARD, Const.PlayerAction.GRAPPLE
+                });
+            }
 
             if ( playable ) {
                 hpgauge.setCharacter(now_player);
@@ -112,18 +109,24 @@ namespace MyUnityChan {
         }
 
         public void switchPlayerCharacter(Const.CharacterName name) {
-            Player player = switchable_player_characters[now].GetComponent<Player>();
+            Player player = null;
+            if ( now != name )
+                player = switchable_player_characters[now].GetComponent<Player>();
+
             foreach ( var pair in switchable_player_characters ) {
                 if ( pair.Key == name ) {
-                    Player next_player = pair.Value.GetComponent<Player>(); 
-
                     // Enable GameObject
                     pair.Value.SetActive(true);
 
+                    Player next_player = pair.Value.GetComponent<Player>();
+                    DebugManager.log("Player = " + next_player);
+
                     // Copy position
-                    pair.Value.transform.position = player.transform.position;
-                    pair.Value.transform.rotation = player.transform.rotation;
-                    next_player.last_entrypoint = player.last_entrypoint;
+                    if ( player ) {
+                        pair.Value.transform.position = player.transform.position;
+                        pair.Value.transform.rotation = player.transform.rotation;
+                        next_player.last_entrypoint = player.last_entrypoint;
+                    }
 
                     // Switch controller's focus to next player object
                     controller.setSelf(next_player);
@@ -151,19 +154,35 @@ namespace MyUnityChan {
         }
 
         public void addPlayerCharacter(Const.CharacterName name) {
-            DebugManager.log("addPlayerCharacter player_name=" + player_name);
+            if ( switchable_player_characters.ContainsKey(name) )
+                return;
+
             Player new_player = null;
             switch (name) {
-                case Const.CharacterName.MINI_UNITYCHAN:
-                    if ( mini_unitychan ) {
-                        mini_unitychan.SetActive(false);
-                        new_player = mini_unitychan.GetComponent<Player>();
-                        new_player.setController(controller);
-                        switchable_player_characters.Add(Const.CharacterName.MINI_UNITYCHAN, mini_unitychan);
-                        new_player.character_name = Const.CharacterName.MINI_UNITYCHAN;
-                        //new_player.registerAction(Const.PlayerAction.BOMB);
+                case Const.CharacterName.UNITYCHAN:
+                    {
+                        if ( default_unitychan ) {
+                            if ( default_unitychan.activeSelf )
+                                now = Const.CharacterName.UNITYCHAN;
+                            default_unitychan.SetActive(false);
+                            new_player = default_unitychan.GetComponent<Player>();
+                            new_player.character_name = Const.CharacterName.UNITYCHAN;
+                            switchable_player_characters.Add(Const.CharacterName.UNITYCHAN, default_unitychan);
+                        }
+                        break;
                     }
-                    break;
+                case Const.CharacterName.MINI_UNITYCHAN:
+                    {
+                        if ( mini_unitychan ) {
+                            if ( mini_unitychan.activeSelf )
+                                now = Const.CharacterName.MINI_UNITYCHAN;
+                            mini_unitychan.SetActive(false);
+                            new_player = mini_unitychan.GetComponent<Player>();
+                            new_player.character_name = Const.CharacterName.MINI_UNITYCHAN;
+                            switchable_player_characters.Add(Const.CharacterName.MINI_UNITYCHAN, mini_unitychan);
+                        }
+                        break;
+                    }
                 default:
                     break;
             }

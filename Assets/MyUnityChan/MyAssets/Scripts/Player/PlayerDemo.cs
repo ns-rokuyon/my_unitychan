@@ -7,6 +7,10 @@ using UniRx;
 
 namespace MyUnityChan {
     public class PlayerDemo : ObjectBase {
+
+        [SerializeField]
+        public Const.CharacterName target_player;
+
         public PlayerManager pm { get; protected set; }
         public IDisposable demo { get; protected set; }
         public Dictionary<Const.CharacterName, Vector3> center_positions { get; protected set; }
@@ -19,6 +23,7 @@ namespace MyUnityChan {
         }
 
         void Start() {
+            pm.switchPlayerCharacter(target_player);
             foreach ( var kv in pm.players ) {
                 center_positions.Add(kv.Key, kv.Value.transform.position);
             }

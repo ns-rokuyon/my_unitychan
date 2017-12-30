@@ -16,7 +16,8 @@ namespace MyUnityChan {
         private Player player = null;
 
         void Awake() {
-            indicator = indicator_ui_object.GetComponent<Text>();
+            if ( indicator_ui_object )
+                indicator = indicator_ui_object.GetComponent<Text>();
         }
 
         public override void Start() {
