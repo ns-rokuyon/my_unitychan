@@ -47,12 +47,11 @@ namespace MyUnityChan {
                 grapplinghook.initPosition(ghit);
                 grapplinghook.length = max_distance;
                 grapplinghook.connect(player);
-                player.ik.solver.leftFootEffector.target = player.leftfoot_anchor;
-                player.ik.solver.leftFootEffector.positionWeight = 0.5f;
-                player.ik.solver.leftFootEffector.Initiate(player.ik.solver);
-                player.ik.solver.rightFootEffector.target = player.rightfoot_anchor;
-                player.ik.solver.rightFootEffector.positionWeight = 0.5f;
-                player.ik.solver.rightFootEffector.Initiate(player.ik.solver);
+
+                player.ik.bind(Const.ID.IKEffectorType.LEFT_FOOT, player.ik.leftfoot_anchor, 0.8f);
+                player.ik.bind(Const.ID.IKEffectorType.RIGHT_FOOT, player.ik.rightfoot_anchor, 0.8f);
+                player.ik.bind(Const.ID.IKEffectorType.BODY, player.ik.body_anchor, 0.5f);
+
                 grappled = true;
             }
         }
@@ -86,12 +85,11 @@ namespace MyUnityChan {
                 hook.GetComponentInChildren<GrapplingHook>().disconnect();
                 hook = null;
                 grapplinghook = null;
-                player.ik.solver.leftFootEffector.target = null;
-                player.ik.solver.leftFootEffector.positionWeight = 0.0f;
-                player.ik.solver.leftFootEffector.Initiate(player.ik.solver);
-                player.ik.solver.rightFootEffector.target = null;
-                player.ik.solver.rightFootEffector.positionWeight = 0.0f;
-                player.ik.solver.rightFootEffector.Initiate(player.ik.solver);
+
+                player.ik.debind(Const.ID.IKEffectorType.LEFT_FOOT);
+                player.ik.debind(Const.ID.IKEffectorType.RIGHT_FOOT);
+                player.ik.debind(Const.ID.IKEffectorType.BODY);
+
                 grappled = false;
             }
         }
@@ -114,25 +112,20 @@ namespace MyUnityChan {
 
         private PlayerGrapple grapple;
         private Rigidbody rb;
+        private Vector3 resistanceF;
         private Vector3 swingF;
-        private Vector3 leftfoot_anchor_basepoint;
-        private Vector3 rightfoot_anchor_basepoint;
 
         public PlayerSwing(Character ch) : base(ch) {
             grapple = null;
             rb = null;
+            resistanceF = new Vector3(4000.0f, 0, 0);
             swingF = new Vector3(2000.0f, 0, 0);
-            swing_deg_limit = 20.0f;
+            swing_deg_limit = 30.0f;
         }
 
         public override void init() {
             grapple = player.action_manager.getAction<PlayerGrapple>("GRAPPLE");
             rb = player.GetComponent<Rigidbody>();
-
-            if ( player.leftfoot_anchor )
-                leftfoot_anchor_basepoint = player.leftfoot_anchor.localPosition;
-            if ( player.rightfoot_anchor )
-                rightfoot_anchor_basepoint = player.rightfoot_anchor.localPosition;
         }
 
         public override void performFixed() {
@@ -145,20 +138,28 @@ namespace MyUnityChan {
             player.getAnimator().Play("Idle");
 
             float degree = grapple.grapplinghook.getSwingDegree();
+            float swing_body_offset_x = player.getFrontVector().x * grapple.grapplinghook.swing_dir * Mathf.Min(0.4f * (degree / 90.0f), 0.5f);
             float swing_foot_offset_x = player.getFrontVector().x * grapple.grapplinghook.swing_dir * Mathf.Min(4.0f * (degree / 90.0f), 1.0f);
-            float swing_foot_offset_y = Mathf.Min((degree / 90.0f), 1.0f);
+            float swing_foot_offset_y = Mathf.Min(1.5f * (degree / 90.0f), 1.0f);
 
-            if ( player.ik.solver.leftFootEffector.target )
-                player.leftfoot_anchor.localPosition = leftfoot_anchor_basepoint.add(0.0f, swing_foot_offset_y, swing_foot_offset_x);
+            // Move IK anchors
+            if ( player.ik.isBinding(Const.ID.IKEffectorType.LEFT_FOOT) )
+                player.ik.leftfoot_anchor.localPosition = player.ik.leftfoot_anchor_basepoint.add(0.0f, swing_foot_offset_y, swing_foot_offset_x);
 
-            if ( player.ik.solver.rightFootEffector.target )
-                player.rightfoot_anchor.localPosition = rightfoot_anchor_basepoint.add(0.0f, swing_foot_offset_y, swing_foot_offset_x);
+            if ( player.ik.isBinding(Const.ID.IKEffectorType.RIGHT_FOOT) )
+                player.ik.rightfoot_anchor.localPosition = player.ik.rightfoot_anchor_basepoint.add(0.0f, swing_foot_offset_y, swing_foot_offset_x);
 
-            if ( degree > swing_deg_limit )
-                return;
+            if ( player.ik.isBinding(Const.ID.IKEffectorType.BODY) )
+                player.ik.body_anchor.localPosition = player.ik.body_anchor_basepoint.add(0.0f, 0.0f, swing_body_offset_x);
 
-            var horizontal = controller.keyHorizontal();
-            rb.AddForce(swingF * horizontal);
+            float rad = grapple.grapplinghook.getSwingRad();
+            Vector3 f = -1.0f * grapple.grapplinghook.swing_dir * rad * swingF;
+            if ( degree <= swing_deg_limit ) {
+                var horizontal = controller.keyHorizontal();
+                f += horizontal * rad * resistanceF;
+            }
+
+            rb.AddForce(f);
         }
 
         public override bool condition() {

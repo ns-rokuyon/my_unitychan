@@ -90,9 +90,13 @@ namespace MyUnityChan {
             Destroy(transform.parent.gameObject);
         }
 
-        public float getSwingDegree() {
+        public float getSwingRad() {
             return Mathf.Atan2(Mathf.Abs(basepoint.x - handpoint.x),
-                               Mathf.Abs(basepoint.y - handpoint.y)) * Mathf.Rad2Deg;
+                               Mathf.Abs(basepoint.y - handpoint.y));
+        }
+
+        public float getSwingDegree() {
+            return getSwingRad() * Mathf.Rad2Deg;
         }
     }
 }

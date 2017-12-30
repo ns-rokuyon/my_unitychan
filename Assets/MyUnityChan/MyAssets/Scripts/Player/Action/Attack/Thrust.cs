@@ -27,7 +27,9 @@ namespace MyUnityChan {
             player.se(Const.ID.SE.SWISH_1, false, 6);
 
             if ( weapon.follow_hand_targets.Count > 0 ) {
-                player.moveIKLeftHandTo(weapon.follow_hand_targets[0].value, total_frame);
+                player.ik.bind(Const.ID.IKEffectorType.LEFT_HAND,
+                               weapon.followHandTargets[0].value.transform,
+                               1.0f, 1.0f, total_frame);
             }
         }
     }
@@ -71,7 +73,9 @@ namespace MyUnityChan {
             }
 
             if ( weapon.follow_hand_targets.Count > 0 ) {
-                player.moveIKLeftHandTo(weapon.follow_hand_targets[0].value, total_frame);
+                player.ik.bind(Const.ID.IKEffectorType.LEFT_HAND,
+                               weapon.followHandTargets[0].value.transform,
+                               1.0f, 1.0f, total_frame);
             }
         }
     }
@@ -98,7 +102,9 @@ namespace MyUnityChan {
             player.se(Const.ID.SE.SWISH_2, false, 22);
 
             if ( weapon.follow_hand_targets.Count > 0 ) {
-                player.moveIKLeftHandTo(weapon.follow_hand_targets[0].value, total_frame);
+                player.ik.bind(Const.ID.IKEffectorType.LEFT_HAND,
+                               weapon.followHandTargets[0].value.transform,
+                               1.0f, 1.0f, total_frame);
             }
         }
     }

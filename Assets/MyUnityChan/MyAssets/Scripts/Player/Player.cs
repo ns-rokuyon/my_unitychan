@@ -13,13 +13,11 @@ namespace MyUnityChan {
     [RequireComponent(typeof(GroundChecker))]
     [RequireComponent(typeof(RoofChecker))]
     [RequireComponent(typeof(WallChecker))]
+    [RequireComponent(typeof(PlayerIK))]
     public class Player : Character, ICharacterWalk, ICharacterFootstep {
 
         [SerializeField]
         public PlayerCameraPosition player_camera_position;
-
-        public Transform leftfoot_anchor;
-        public Transform rightfoot_anchor;
 
         private GameObject player_root;
         private Animator animator;
@@ -42,7 +40,7 @@ namespace MyUnityChan {
         public WallChecker wall_checker { get; set; }
         public UnityChanBoneManager bone_manager { get; set; }
         public BeamTurret beam_turret { get; protected set; }
-        public FullBodyBipedIK ik { get; protected set; }
+        public PlayerIK ik { get; protected set; }
         public Weapon weapon { get; set; }
         public CapsuleCollider collider { get; protected set; }
         public Equipment equipment { get; protected set; }
@@ -64,7 +62,7 @@ namespace MyUnityChan {
             // animation
             animator = GetComponent<Animator>();
             bone_manager = GetComponent<UnityChanBoneManager>();
-            ik = GetComponent<FullBodyBipedIK>();
+            ik = GetComponent<PlayerIK>();
             beam_turret = GetComponent<BeamTurret>();
             beam_slot = new List<Const.BeamName>();
             collider = GetComponent<CapsuleCollider>();
@@ -431,40 +429,6 @@ namespace MyUnityChan {
             if ( equipment )
                 return !equipment.acceptable;
             return false;
-        }
-
-        public void moveIKLeftHandTo(GameObject dst_lefthand, int frame = 0) {
-            ik.solver.leftHandEffector.target = dst_lefthand.transform;
-            ik.solver.leftHandEffector.positionWeight = 1;
-            ik.solver.leftHandEffector.rotationWeight = 1;
-            ik.solver.leftHandEffector.Initiate(ik.solver);
-
-            if ( frame > 0 )
-                delay("moveIKLeftHandTo", frame, freeIKLeftHand);
-        }
-
-        public void freeIKLeftHand() {
-            ik.solver.leftHandEffector.target = null;
-            ik.solver.leftHandEffector.positionWeight = 0;
-            ik.solver.leftHandEffector.rotationWeight = 0;
-            ik.solver.leftHandEffector.Initiate(ik.solver);
-        }
-
-        public void moveIKRightHandTo(GameObject dst_righthand, int frame = 0) {
-            ik.solver.rightHandEffector.target = dst_righthand.transform;
-            ik.solver.rightHandEffector.positionWeight = 1;
-            ik.solver.rightHandEffector.rotationWeight = 1;
-            ik.solver.rightHandEffector.Initiate(ik.solver);
-
-            if ( frame > 0 )
-                delay("moveIKRightHandTo", frame, freeIKRightHand);
-        }
-
-        public void freeIKRightHand() {
-            ik.solver.rightHandEffector.target = null;
-            ik.solver.rightHandEffector.positionWeight = 0;
-            ik.solver.rightHandEffector.rotationWeight = 0;
-            ik.solver.rightHandEffector.Initiate(ik.solver);
         }
 
         public void enableSpringManager() {
