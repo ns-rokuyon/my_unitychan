@@ -237,6 +237,9 @@ namespace MyUnityChan {
             // Scaling
             dam = (int)(dam * manager.status.setting.ranges[Settings.Range.ENEMY_POWER_SCALE].value);
 
+            // Decrease
+            dam = Math.Max(dam - status.DEF, 0);
+
             // Apply
             status.hp -= dam;
             voice(Const.ID.PlayerVoice.DAMAGED);

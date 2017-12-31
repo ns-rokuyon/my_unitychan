@@ -26,6 +26,10 @@ namespace MyUnityChan {
             }
         }
 
+        public virtual int regularizeDamage(int base_damage, Character character) {
+            return base_damage + character.status.ATK;
+        }
+
         public virtual void prepare(Hitbox hitbox) {
         }
 
@@ -33,9 +37,10 @@ namespace MyUnityChan {
             if ( character ) {
                 Character owner = hitbox.getOwner<Character>();
                 int _hitstop = (int)(hitstop * SettingManager.get(Settings.Range.HIT_STOP_SCALE));
+                int _damage = regularizeDamage(damage, character);
                 character.launch(launch_fy);
                 character.stun(stun);
-                character.damage(damage);
+                character.damage(_damage);
                 character.knockback(knockback);
                 character.hitstop(_hitstop);
                 if ( owner ) {

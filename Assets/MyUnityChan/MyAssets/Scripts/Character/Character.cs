@@ -163,10 +163,6 @@ namespace MyUnityChan {
         }
 
         public virtual void damage(int dam) {
-            if ( !status.invincible.now() ) {
-                status.invincible.enable(10);
-                status.hp -= dam;
-            }
         }
 
         public virtual void knockback(int dam) {

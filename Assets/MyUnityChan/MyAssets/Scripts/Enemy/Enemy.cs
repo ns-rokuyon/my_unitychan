@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
+using System;
 using EnergyBarToolkit;
 using UniRx;
-using UniRx.Triggers;
 using System.Collections;
 
 namespace MyUnityChan {
@@ -128,10 +127,18 @@ namespace MyUnityChan {
         }
 
         public override void damage(int dam) {
+            if ( status.invincible.now() ) return;
+
+            status.invincible.enable(10);
+
             dam = (int)(dam * 
                 GameStateManager.getPlayer().manager.status.setting.ranges[Settings.Range.PLAYER_POWER_SCALE].value);
 
-            base.damage(dam);
+            // Decrease
+            dam = Math.Max(dam - status.DEF, 0);
+
+            // Apply
+            status.hp -= dam;
 
             if ( this is IEnemyTakeDamage ) {
                 (this as IEnemyTakeDamage).takeDamage(dam);

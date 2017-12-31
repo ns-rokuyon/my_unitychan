@@ -16,6 +16,10 @@ namespace MyUnityChan {
             get { return _force_direction; }
         }
 
+        public override int regularizeDamage(int base_damage, Character character) {
+            return base_damage + character.status.MATK;
+        }
+
         public override void prepare(Hitbox hitbox) {
             _force_direction = (hitbox as ProjectileHitbox).projectile.GetComponent<Projectile>().target_dir;
         }
