@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UniRx;
+using UniRx.Triggers;
 using System.Linq;
 using System.Collections;
 using RootMotion.FinalIK;
@@ -65,6 +66,8 @@ namespace MyUnityChan {
             get { return follow_hand_targets; }
         }
 
+        public GameObject pickupable_effect { get; protected set; }
+
         public virtual void Awake() {
             attacking = null;
             iobj = GetComponent<InteractionObject>();
@@ -74,6 +77,20 @@ namespace MyUnityChan {
                 pickup_zone.onPlayerEnterCallback = (Player p, Collider c) => { can_pickup = true; };
                 pickup_zone.onPlayerExitCallback = (Player p, Collider c) => { can_pickup = false; };
             }
+
+            this.ObserveEveryValueChanged(_ => canPickup)
+                .Subscribe(b => {
+                    if ( b && pickupable_effect == null ) {
+                        pickupable_effect = EffectManager.createEffect(Const.ID.Effect.PICKUPABLE_CIRCLE,
+                                                                       gameObject, 9999, true);
+                    }
+                    else if ( !b && pickupable_effect != null ) {
+                        ObjectPoolManager.releaseGameObject(pickupable_effect,
+                                                            Const.Prefab.Effect[Const.ID.Effect.PICKUPABLE_CIRCLE]);
+                        pickupable_effect = null;
+                    }
+                })
+                .AddTo(this);
         }
 
         public abstract void setAttackAction(Player player);

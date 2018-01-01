@@ -72,7 +72,7 @@ namespace MyUnityChan {
 
         void Start() {
             // Activate
-            switchPlayerCharacter(now);
+            switchPlayerCharacter(Const.CharacterName.UNITYCHAN);
             Player now_player = getNowPlayer().GetComponent<Player>();
 
             if ( now == Const.CharacterName.UNITYCHAN ) {
@@ -110,7 +110,7 @@ namespace MyUnityChan {
 
         public void switchPlayerCharacter(Const.CharacterName name) {
             Player player = null;
-            if ( now != name )
+            if ( now != Const.CharacterName._NO && now != name )
                 player = switchable_player_characters[now].GetComponent<Player>();
 
             foreach ( var pair in switchable_player_characters ) {
@@ -164,7 +164,7 @@ namespace MyUnityChan {
                         if ( default_unitychan ) {
                             if ( default_unitychan.activeSelf )
                                 now = Const.CharacterName.UNITYCHAN;
-                            default_unitychan.SetActive(false);
+                            default_unitychan.SetActive(true);
                             new_player = default_unitychan.GetComponent<Player>();
                             new_player.character_name = Const.CharacterName.UNITYCHAN;
                             switchable_player_characters.Add(Const.CharacterName.UNITYCHAN, default_unitychan);

@@ -45,6 +45,9 @@ namespace MyUnityChan {
                     foreach ( var s in renderer.spritesForeground ) {
                         s.color.a -= Const.Unit.HP_BAR_ALPHA_DECREASE_SPEED;
                     }
+                    foreach ( var s in renderer.spritesBackground ) {
+                        s.color.a -= Const.Unit.HP_BAR_ALPHA_DECREASE_SPEED;
+                    }
                 });
 
             // Reset alpha to 1.0
@@ -53,6 +56,9 @@ namespace MyUnityChan {
                 .Subscribe(_ => {
                     renderer.spriteBarColor.a = 1.0f;
                     foreach ( var s in renderer.spritesForeground ) {
+                        s.color.a = 1.0f;
+                    }
+                    foreach ( var s in renderer.spritesBackground ) {
                         s.color.a = 1.0f;
                     }
                 });

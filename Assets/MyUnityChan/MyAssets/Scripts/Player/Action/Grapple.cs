@@ -40,6 +40,11 @@ namespace MyUnityChan {
         }
 
         public override void perform() {
+            if ( grappled ) {
+                disconnect();
+                return;
+            }
+
             bool success = raycast();
             if ( !grappled && success ) {
                 hook = PrefabInstantiater.create(Const.Prefab.Gimmick[Const.ID.Gimmick.GRAPPLING_HOOK]);
