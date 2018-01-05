@@ -8,6 +8,11 @@ namespace MyUnityChan {
         }
 
         public override void perform() {
+            if ( player.manager.now == Const.CharacterName.MINI_UNITYCHAN ) {
+                var passage = player.manager.current_passing;
+                if ( passage != null && passage.passing )
+                    return;
+            }
             player.delay(5, () => { player.manager.switchPlayerCharacter(); });
             player.manager.lockInput(30);
             EffectManager.createEffect(Const.ID.Effect.SWITCHING_PLAYER, player.ground_checker.point(), 60, true);

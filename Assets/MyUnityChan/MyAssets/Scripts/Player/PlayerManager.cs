@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UniRx;
+using UniRx.Triggers;
+
 
 namespace MyUnityChan {
     public class PlayerManager : ObjectBase {
@@ -14,7 +17,7 @@ namespace MyUnityChan {
         [SerializeField]
         public Const.ID.Controller controller_name;
 
-        public PlayerCamera camera;
+        public new PlayerCamera camera;
         public bool playable;
         public string player_name;
 
@@ -24,6 +27,7 @@ namespace MyUnityChan {
         public Controller controller { get; set; }
         public HpGauge hpgauge { get; set; }
         public ReservedHpGauge reserved_hpgauge { get; set; }
+        public IPassable current_passing { get; set; }
         public PlayerStatus status { get; set; }
         public string area_name { get; set; }
         public Dictionary<Const.CharacterName, GameObject> players {
@@ -85,8 +89,15 @@ namespace MyUnityChan {
             if ( playable ) {
                 hpgauge.setCharacter(now_player);
                 reserved_hpgauge.setCharacter(now_player);
-            }
 
+                this.UpdateAsObservable()
+                    .Where(_ => current_passing != null)
+                    .Subscribe(_ => {
+                        if ( !current_passing.passing )
+                            current_passing = null;
+                    })
+                    .AddTo(this);
+            }
         }
 
         public GameObject getNowPlayer() {

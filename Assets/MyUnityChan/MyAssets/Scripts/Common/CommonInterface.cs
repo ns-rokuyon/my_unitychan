@@ -37,4 +37,10 @@ namespace MyUnityChan {
         void onEquippedBy(Character ch);
         void onUnequippedBy(Character ch);
     }
+
+    public interface IPassable {
+        bool passing {
+            get;
+        }
+    }
 }
