@@ -7,6 +7,8 @@ using System;
 
 namespace MyUnityChan {
     public class Character : ObjectBase {
+        public Vector3 worldspace_ui_position_offset;
+
         // references to component
         protected Controller controller;
 

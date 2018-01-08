@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System;
 using System.Collections;
 using UniRx;
 using UniRx.Triggers;
@@ -15,6 +16,7 @@ namespace MyUnityChan {
         public FilledRendererUGUI renderer { get; protected set; }
         public RectTransform rect_transform { get; protected set; }
         public TextMeshProUGUI sync_label { get; protected set; }
+        public IDisposable follower { get; protected set; }
 
         public bool auto_hidden;
 
@@ -66,6 +68,24 @@ namespace MyUnityChan {
 
         public virtual void setCharacter(Character ch) {
             character = ch;
+        }
+
+        public void follow(Character ch) {
+            unfollow();
+            setCharacter(ch);
+
+            follower = this.UpdateAsObservable()
+                .Where(_ => character != null && character.gameObject.activeSelf)
+                .Subscribe(_ => {
+                    transform.position = character.transform.position + character.worldspace_ui_position_offset;
+                });
+        }
+
+        public void unfollow() {
+            if ( follower == null )
+                return;
+            follower.Dispose();
+            follower = null;
         }
 
         public void setMapHp(int maxhp) {

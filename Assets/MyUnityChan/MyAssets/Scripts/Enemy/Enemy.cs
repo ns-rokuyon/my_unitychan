@@ -116,7 +116,6 @@ namespace MyUnityChan {
             checkPlayerTouched();
             faceForward();
             recordPosition();
-            followHpGauge();
             leveling();
         }
 
@@ -150,14 +149,14 @@ namespace MyUnityChan {
 
                 hp_gauge = PrefabInstantiater.createWorldUIAndGetComponent<HpGauge>(
                     Const.Prefab.UI["ENEMY_HP_GAUGE"], Vector3.one * 0.2f);
-                hp_gauge.setCharacter(this);
+                hp_gauge.follow(this);
                 hp_gauge.setMapHp(max_hp);
-                hp_gauge.gameObject.transform.position = gameObject.transform.position.add(0, height, 0);
+                hp_gauge.gameObject.transform.position = transform.position;
             }
 
             EffectManager.createTextEffect(dam.ToString(),
                                            Const.Prefab.Effect[Const.ID.Effect.DAMAGE_INDICATOR],
-                                           transform.position.add(0, height, 0), 60, true);
+                                           transform.position + worldspace_ui_position_offset, 60, true);
         }
 
         public override void knockback(int dam) {
@@ -237,11 +236,11 @@ namespace MyUnityChan {
             defeat_records.Add(defeat_id);
         }
 
-        public void followHpGauge() {
-            if ( hp_gauge ) {
-                hp_gauge.gameObject.transform.position = gameObject.transform.position.add(0, height , 0);
-            }
-        }
+        //public void followHpGauge() {
+        //    if ( hp_gauge ) {
+        //        hp_gauge.gameObject.transform.position = gameObject.transform.position.add(0, height , 0);
+        //    }
+        //}
 
         public void destroyHpGauge() {
             if ( hp_gauge ) {
