@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UniRx;
+using UniRx.Triggers;
 using RootMotion.FinalIK;
 
 namespace MyUnityChan {
@@ -44,6 +45,7 @@ namespace MyUnityChan {
         public Weapon weapon { get; set; }
         public CapsuleCollider collider { get; protected set; }
         public Equipment equipment { get; protected set; }
+        public float ground_distance { get; private set; }
 
         public bool playable {
             get {
@@ -78,25 +80,23 @@ namespace MyUnityChan {
             wall_checker = GetComponent<WallChecker>();
 
             // init player actions (required)
-            registerActions(new List<Const.PlayerAction>{
-                Const.PlayerAction.ACCEL, Const.PlayerAction.BRAKE, Const.PlayerAction.DOWN,
-                Const.PlayerAction.JUMP, Const.PlayerAction.LIMIT_SPEED, Const.PlayerAction.TURN,
-                Const.PlayerAction.WALL_JUMP, Const.PlayerAction.PICKUP, Const.PlayerAction.THROW,
-                Const.PlayerAction.TRANSFORM, Const.PlayerAction.DEAD,
-                Const.PlayerAction.ROLL_FORWARD, Const.PlayerAction.ROLL_BACKWARD,
-            });
+            registerActions(Const.PlayerCommonDefaultActions);
 
             // init sound player
             setupSoundPlayer();
 
-            //player = gameObject;
             position_history = new RingBuffer<Vector3>(10);
+
+            this.UpdateAsObservable()
+                .Where(_ => gameObject.activeSelf)
+                .Where(_ => ground_checker)
+                .Subscribe(_ => ground_distance = ground_checker.getDistance())
+                .AddTo(this);
 
             if ( playable ) {
                 // player infomation for NPC
                 NPCharacter.setPlayers();
             }
-
         }
 
         protected override void update() {
@@ -167,6 +167,10 @@ namespace MyUnityChan {
                     action_manager.registerAction(new PlayerRollForward(this)); break;
                 case Const.PlayerAction.ROLL_BACKWARD:
                     action_manager.registerAction(new PlayerRollBackward(this)); break;
+                case Const.PlayerAction.FALL:
+                    action_manager.registerAction(new PlayerFall(this)); break;
+                case Const.PlayerAction.LAND:
+                    action_manager.registerAction(new PlayerLand(this)); break;
                 default:
                     Debug.LogWarning("Undefined player action: id=" + action_class);
                     break;
@@ -348,6 +352,12 @@ namespace MyUnityChan {
             return grapple.grappled;
         }
 
+        public bool isLanding() {
+            PlayerLand land = action_manager.getAction<PlayerLand>("LAND");
+            if ( land == null ) return false;
+            return land.landing;
+        }
+
         public bool isAnimState(string anim_name) {
             // anim_name is an animator state name starts with "Base Layer." instead of clip name
             AnimatorStateInfo anim_state = animator.GetCurrentAnimatorStateInfo(0);
@@ -506,16 +516,16 @@ namespace MyUnityChan {
             Vector3 fw = transform.forward;
             Quaternion rot = transform.rotation;
             CapsuleCollider cc = GetComponent<CapsuleCollider>();
-            GUI.Box(new Rect(Screen.width - 260, 10, 250, 330), "Interaction");
+            GUI.Box(new Rect(Screen.width - 260, 10, 250, 330), "Debug Window");
             GUI.Label(new Rect(Screen.width - 245, 30, 250, 30), "forward: " + fw);
             GUI.Label(new Rect(Screen.width - 245, 50, 250, 30), "vx: " + getVx());
-            GUI.Label(new Rect(Screen.width - 245, 70, 250, 30), "vy: " + getVx());
-            GUI.Label(new Rect(Screen.width - 245, 90, 250, 30), "on_ground: " + isGrounded());
-            GUI.Label(new Rect(Screen.width - 245, 110, 250, 30), "is_hit_roof: " + isHitRoof());
-            GUI.Label(new Rect(Screen.width - 245, 130, 250, 30), "touched_wall: " + isTouchedWall());
+            GUI.Label(new Rect(Screen.width - 245, 70, 250, 30), "vy: " + getVy());
+            GUI.Label(new Rect(Screen.width - 245, 90, 250, 30), "on ground: " + isGrounded());
+            GUI.Label(new Rect(Screen.width - 245, 110, 250, 30), "touched roof: " + isHitRoof());
+            GUI.Label(new Rect(Screen.width - 245, 130, 250, 30), "touched wall: " + isTouchedWall());
             GUI.Label(new Rect(Screen.width - 245, 150, 250, 30), "(x,y,z): " + transform.position);
-            GUI.Label(new Rect(Screen.width - 245, 170, 250, 30), "capsule_center: " + cc.bounds.center);
-            GUI.Label(new Rect(Screen.width - 245, 190, 250, 30), "capsule_height: " + cc.height);
+            GUI.Label(new Rect(Screen.width - 245, 170, 250, 30), "capsule center: " + cc.bounds.center);
+            GUI.Label(new Rect(Screen.width - 245, 190, 250, 30), "ground distance: " + ground_distance);
             GUI.Label(new Rect(Screen.width - 245, 210, 250, 30), "areaname: " + getAreaName());
             GUI.Label(new Rect(Screen.width - 245, 230, 250, 30), "fps: " + GameStateManager.approximatedFps);
             GUI.Label(new Rect(Screen.width - 245, 250, 250, 30), "focus ui(menu): " + MenuManager.getCurrentSelectedName());

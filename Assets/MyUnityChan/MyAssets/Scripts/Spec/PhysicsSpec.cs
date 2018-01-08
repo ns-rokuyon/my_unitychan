@@ -19,6 +19,9 @@ namespace MyUnityChan {
         public PhysicsObject self { get; set; }
 
         public void attack(Character character, Hitbox hitbox = null) {
+            if ( character.status.invincible.now() )
+                return;
+
             if ( self.kinetic_energy < min_energy_threshold )
                 return;
 

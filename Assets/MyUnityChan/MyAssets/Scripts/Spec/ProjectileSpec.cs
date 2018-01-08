@@ -27,8 +27,13 @@ namespace MyUnityChan {
         public override void attack(Character character, Hitbox hitbox) {
             base.attack(character, hitbox);
 
-            if ( character is IEnemyTakeProjectile )
-                (character as IEnemyTakeProjectile).onTakeProjectile(this);
+            if ( character ) {
+                if ( character.status.invincible.now() )
+                    return;
+
+                if ( character is IEnemyTakeProjectile )
+                    (character as IEnemyTakeProjectile).onTakeProjectile(this);
+            }
         }
     }
 }

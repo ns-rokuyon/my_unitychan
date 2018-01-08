@@ -253,4 +253,77 @@ namespace MyUnityChan {
             return !player.isStunned() && !player.isHitstopping();
         }
     }
+
+    public class PlayerFall : PlayerAction {
+        public bool falling { get; private set; }
+        public float falling_distance { get; private set; }
+
+        public PlayerFall(Character character) : base(character) {
+        }
+
+        public override bool condition() {
+            return !player.isGrounded() &&
+                   !player.isGrappling() &&
+                   !player.isFlinching() &&
+                   !player.isLanding() &&
+                   player.ground_distance > 3.0f &&
+                   player.getVy() < -4.0f;
+        }
+
+        public override void perform() {
+            if ( falling )
+                return;
+
+            player.getAnimator().Play("Fall");
+            falling = true;
+        }
+
+        public override void off_perform() {
+            if ( player.isGrounded() )
+                falling = false;
+        }
+
+        public override Const.PlayerAction id() {
+            return Const.PlayerAction.FALL;
+        }
+
+        public override string name() {
+            return "FALL";
+        }
+    }
+
+    public class PlayerLand : PlayerAction {
+        public bool landing { get; private set; }
+        private PlayerFall fall;
+
+        public PlayerLand(Character character) : base(character) {
+            fall = player.action_manager.getAction<PlayerFall>("FALL");
+        }
+
+        public override void perform() {
+            if ( landing )
+                return;
+
+            if ( player.ground_distance < 2.0f ) {
+                player.getAnimator().Play("Locomotion");
+                landing = true;
+            }
+        }
+
+        public override void off_perform() {
+            landing = false;
+        }
+
+        public override bool condition() {
+            return !player.isGrounded() && player.getVy() < 0.0f;
+        }
+
+        public override Const.PlayerAction id() {
+            return Const.PlayerAction.LAND;
+        }
+
+        public override string name() {
+            return "LAND";
+        }
+    }
 }

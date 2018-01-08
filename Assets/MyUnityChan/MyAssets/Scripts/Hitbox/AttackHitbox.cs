@@ -62,10 +62,10 @@ namespace MyUnityChan {
 
                 Enemy enemy = ((Enemy)other.gameObject.GetComponent<Enemy>());
                 spec.prepare(this);
-                spec.attack(enemy, this);
-                spec.force(enemy.rigid_body.rb, this);
+                spec.force(enemy, this);
                 spec.playEffect(enemy, this);
                 spec.playSound(enemy, this);
+                spec.attack(enemy, this);
                 return true;
             }
             return false;
@@ -77,10 +77,10 @@ namespace MyUnityChan {
 
                 Player player = ((Player)other.gameObject.GetComponent<Player>());
                 spec.prepare(this);
-                spec.attack(player, this);
-                spec.force(player.rigid_body.rb, this);
+                spec.force(player, this);
                 spec.playEffect(player, this);
                 spec.playSound(player, this);
+                spec.attack(player, this);
                 return true;
             }
             return false;
@@ -91,9 +91,9 @@ namespace MyUnityChan {
                 Door door = ((Door)other.gameObject.GetComponent<Door>());
                 door.open();
                 spec.prepare(this);
-                spec.attack(null, this);
                 spec.playEffect(door, this);
                 spec.playSound(door, this);
+                spec.attack(null, this);
                 return true;
             }
             return false;
@@ -103,9 +103,9 @@ namespace MyUnityChan {
             if ( other.tag == "Block" ) {
                 Block block = ((Block)other.gameObject.GetComponent<Block>());
                 spec.prepare(this);
-                spec.attack(null, this);
                 spec.playEffect(block, this);
                 spec.playSound(block, this);
+                spec.attack(null, this);
                 block.damage(spec.damage);
                 return true;
             }

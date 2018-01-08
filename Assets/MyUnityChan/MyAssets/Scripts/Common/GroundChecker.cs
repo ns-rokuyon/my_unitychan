@@ -27,6 +27,7 @@ namespace MyUnityChan {
 
         public Vector3 shift { get; set; }
         public float radius { get; set; }
+        public int ground_layer { get; private set; }
 
         protected RaycastHit ghit;
 
@@ -34,6 +35,7 @@ namespace MyUnityChan {
         void Start() {
             radius = transform.lossyScale.x * sphere_scale;
             shift = Vector3.up * (radius + delta + start_y_offset);
+            ground_layer = 1 << LayerMask.NameToLayer("Ground");
         }
 
         public bool isGrounded() {
@@ -47,14 +49,14 @@ namespace MyUnityChan {
 
         public virtual float getDistance() {
             RaycastHit _ghit;
-            int ground_layer = 1 << LayerMask.NameToLayer("Ground");
-            Physics.SphereCast(transform.position + shift, radius, Vector3.down, out _ghit, 100.0f, ground_layer);
+            if ( !Physics.SphereCast(transform.position + shift, radius, Vector3.down, out _ghit, 100.0f, ground_layer) ) {
+                return -1.0f;
+            }
             return Vector3.Distance(transform.position, _ghit.point);
         }
 
         public virtual Vector3 getSpacingPoint(float space) {
             RaycastHit _ghit;
-            int ground_layer = 1 << LayerMask.NameToLayer("Ground");
             Physics.SphereCast(transform.position + shift, radius, Vector3.down, out _ghit, 100.0f, ground_layer);
             return _ghit.point.add(0.0f, space, 0.0f);
         }

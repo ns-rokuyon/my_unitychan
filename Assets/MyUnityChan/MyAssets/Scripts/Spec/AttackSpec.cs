@@ -35,6 +35,9 @@ namespace MyUnityChan {
 
         public virtual void attack(Character character, Hitbox hitbox) {
             if ( character ) {
+                if ( character.status.invincible.now() )
+                    return;
+
                 Character owner = hitbox.getOwner<Character>();
                 int _hitstop = (int)(hitstop * SettingManager.get(Settings.Range.HIT_STOP_SCALE));
                 int _damage = regularizeDamage(damage, character);
@@ -62,12 +65,23 @@ namespace MyUnityChan {
             rb.AddForce(F, ForceMode.Impulse);
         }
 
+        public void force(Character character, Hitbox hitbox) {
+            if ( character.status.invincible.now() )
+                return;
+            force(character.rigid_body.rb, hitbox);
+        }
+
         public virtual void playSound(ObjectBase o, Hitbox hitbox) {
+            if ( o is Character && (o as Character).status.invincible.now() )
+                return;
             o.se(hit_se);
         }
 
         public virtual void playEffect(ObjectBase o, Hitbox hitbox) {
             if ( effect_name == Const.ID.Effect._NO_EFFECT )
+                return;
+
+            if ( o is Character && (o as Character).status.invincible.now() )
                 return;
 
             EffectManager.createEffect(

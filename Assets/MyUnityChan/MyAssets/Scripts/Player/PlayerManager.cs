@@ -79,12 +79,7 @@ namespace MyUnityChan {
             switchPlayerCharacter(Const.CharacterName.UNITYCHAN);
             Player now_player = getNowPlayer().GetComponent<Player>();
 
-            if ( now == Const.CharacterName.UNITYCHAN ) {
-                now_player.registerActions(new List<Const.PlayerAction> {
-                    Const.PlayerAction.ATTACK, Const.PlayerAction.BEAM, Const.PlayerAction.DASH, Const.PlayerAction.MISSILE,
-                    Const.PlayerAction.GUARD, Const.PlayerAction.GRAPPLE
-                });
-            }
+            now_player.registerActions(Const.PlayerDefaultActions[now_player.character_name]);
 
             if ( playable ) {
                 hpgauge.setCharacter(now_player);

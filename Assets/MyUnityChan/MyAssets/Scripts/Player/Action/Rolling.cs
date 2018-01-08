@@ -12,7 +12,7 @@ namespace MyUnityChan {
             skip_lower_priority = true;
             use_transaction = true;
             keep_skipping_lower_priority_in_transaction = true;
-            rolling_power = 500.0f;
+            rolling_power = 800.0f;
             collider = player.GetComponent<CapsuleCollider>();
         }
 
@@ -24,7 +24,7 @@ namespace MyUnityChan {
             player.getAnimator().Play("RollForward");
             player.cancelGuard();
             player.se(Const.ID.SE.SWISH_1);
-            player.status.invincible.enable(5);
+            player.status.invincible.enable(10);
 
             collider.height = 0.8f;
             collider.center = Vector3.up * 0.4f;
@@ -70,7 +70,7 @@ namespace MyUnityChan {
             skip_lower_priority = true;
             use_transaction = true;
             keep_skipping_lower_priority_in_transaction = true;
-            rolling_power = 500.0f;
+            rolling_power = 800.0f;
             collider = player.GetComponent<CapsuleCollider>();
         }
 
@@ -82,7 +82,7 @@ namespace MyUnityChan {
             player.getAnimator().Play("RollBackward");
             player.cancelGuard();
             player.se(Const.ID.SE.SWISH_1);
-            player.status.invincible.enable(5);
+            player.status.invincible.enable(10);
 
             collider.height = 0.8f;
             collider.center = Vector3.up * 0.4f;
