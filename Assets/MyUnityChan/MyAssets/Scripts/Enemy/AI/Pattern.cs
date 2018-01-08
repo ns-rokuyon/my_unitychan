@@ -65,7 +65,7 @@ namespace MyUnityChan {
                         float p = UnityEngine.Random.Range(0.0f, 1.0f);
 
                         // Switch routine
-                        model.current_routine = routines[rs.FindIndex(bp => p < bp)].r;
+                        model.next_routine(routines[rs.FindIndex(bp => p < bp)].r);
 
                         // Reset states
                         model.controller.ai.reset();
@@ -84,13 +84,17 @@ namespace MyUnityChan {
                             i = 0;
 
                         // Switch routine
-                        model.current_routine = routines[i].r;
+                        model.next_routine(routines[i].r);
 
                         // Reset states
                         model.controller.ai.reset();
                         model.controller.sub_ai.Values.ToList().ForEach(ai => ai.reset());
                     })
                     .Interval(interval);
+                }
+
+                public static Def ManualRoutines(AIModel model, params Routine[] routines) {
+                    return AI.Def.Name("ManualRoutines").Empty();
                 }
             }
         }
@@ -104,8 +108,8 @@ namespace MyUnityChan {
                 f = _f;
             }
 
-            public static Routine R(int r, System.Action f = null) {
-                return new Routine(r, f);
+            public static Routine R(object r, System.Action f = null) {
+                return new Routine((int)r, f);
             }
         }
 

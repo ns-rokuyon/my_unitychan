@@ -19,6 +19,8 @@ namespace MyUnityChan {
 
         public AIController controller { get; set; }
         public Enemy self { get; set; }
+
+        [ReadOnly]
         public int current_routine = 0;
 
         public abstract AI define();
@@ -28,6 +30,10 @@ namespace MyUnityChan {
         }
 
         public virtual void init() {
+        }
+
+        public void next_routine(object r) {
+            current_routine = (int)r;
         }
     }
 }

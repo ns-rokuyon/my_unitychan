@@ -174,6 +174,10 @@ namespace MyUnityChan {
                 return Keep(_behavior);
             }
 
+            public Def Empty() {
+                return this;
+            }
+
             public Def Once() {
                 conditions.Add(new Condition(s => true_behavior.count == 0));
                 return this;

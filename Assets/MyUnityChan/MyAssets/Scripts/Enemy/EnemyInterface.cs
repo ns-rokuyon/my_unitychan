@@ -14,6 +14,10 @@ namespace MyUnityChan {
         void onSpecialAttack05(RingBuffer<EnemyAttack.Record> history);
     }
 
+    public interface IEnemyJump {
+        void onJump();
+    }
+
     public interface IEnemyShoot {
         void onShoot();
     }

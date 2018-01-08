@@ -3,6 +3,8 @@ using System.Collections;
 
 namespace MyUnityChan {
     public class EnemyJump : EnemyActionBase {
+        public bool jumping { get; private set; }
+
         private float jumpFx;
         private float jumpFy;
         private Const.ID.Effect effect_name;
@@ -20,6 +22,18 @@ namespace MyUnityChan {
 
         public override void performFixed() {
             enemy.rigid_body.AddForce(new Vector3(enemy.transform.forward.x * jumpFx, jumpFy, 0), ForceMode.Impulse);
+        }
+
+        public override void perform() {
+            if ( !jumping ) {
+                jumping = true;
+                if ( enemy is IEnemyJump )
+                    (enemy as IEnemyJump).onJump();
+            }
+        }
+
+        public override void off_perform() {
+            jumping = false;
         }
 
         public override bool condition() {
