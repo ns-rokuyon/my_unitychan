@@ -14,4 +14,10 @@ namespace MyUnityChan {
         void onForward();
         void onStay();
     }
+
+    public interface ICharacterTargetable {
+        Character target_me {
+            get;
+        }
+    }
 }

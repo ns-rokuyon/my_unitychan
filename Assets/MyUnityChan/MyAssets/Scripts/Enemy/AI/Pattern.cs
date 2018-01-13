@@ -94,7 +94,11 @@ namespace MyUnityChan {
                 }
 
                 public static Def ManualRoutines(AIModel model, params Routine[] routines) {
-                    return AI.Def.Name("ManualRoutines").Empty();
+                    return AI.Def.Name("ManualRoutines").Keep(_ => {
+                        // Reset states
+                        model.controller.ai.reset();
+                        model.controller.sub_ai.Values.ToList().ForEach(ai => ai.reset());
+                    });
                 }
             }
         }

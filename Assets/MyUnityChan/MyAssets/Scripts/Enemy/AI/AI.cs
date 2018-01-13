@@ -14,7 +14,7 @@ namespace MyUnityChan {
         public bool freeze { get; set; }
         public bool debug { get; set; }     // No used
 
-        private AI(Character ch, AIController cont) {
+        protected AI(Character ch, AIController cont) {
             self = ch;
             controller = cont;
             patterns = new List<Def>();

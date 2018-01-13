@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UniRx;
 using UniRx.Triggers;
-
+using System;
 
 namespace MyUnityChan {
-    public class PlayerManager : ObjectBase {
+    public class PlayerManager : ObjectBase, ICharacterTargetable {
         public GameObject default_unitychan;
         public GameObject mini_unitychan;
 
@@ -40,6 +40,10 @@ namespace MyUnityChan {
             set {
                 status.gameover = value;
             }
+        }
+
+        public Character target_me {
+            get { return getNowPlayerComponent(); }
         }
 
         void Awake() {

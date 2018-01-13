@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UniRx;
+using UniRx.Triggers;
+using System;
 
 namespace MyUnityChan {
     public abstract partial class AIModel : ObjectBase {
@@ -19,14 +22,29 @@ namespace MyUnityChan {
 
         public AIController controller { get; set; }
         public Enemy self { get; set; }
+        public int current_routine { get; set; }
 
         [ReadOnly]
-        public int current_routine = 0;
+        public string current_sub_ai_name;
 
         public abstract AI define();
 
-        public virtual Dictionary<int, AI> defineSubAI() {
-            return new Dictionary<int, AI>();
+        public virtual List<SubAI> defineSubAIs(AI main_ai) {
+            return new List<SubAI>();
+        }
+
+        public virtual Type sub_ai_routine_type {
+            get { return null; }
+        }
+
+        void Start() {
+            if ( sub_ai_routine_type != null ) {
+                current_sub_ai_name = getCurrentSubAIName();
+
+                this.ObserveEveryValueChanged(_ => current_routine)
+                    .Subscribe(_ => current_sub_ai_name = getCurrentSubAIName())
+                    .AddTo(this);
+            }
         }
 
         public virtual void init() {
@@ -34,6 +52,12 @@ namespace MyUnityChan {
 
         public void next_routine(object r) {
             current_routine = (int)r;
+        }
+
+        public virtual string getCurrentSubAIName() {
+            if ( sub_ai_routine_type == null )
+                return "";
+            return Enum.ToObject(sub_ai_routine_type, current_routine).ToString();
         }
     }
 }

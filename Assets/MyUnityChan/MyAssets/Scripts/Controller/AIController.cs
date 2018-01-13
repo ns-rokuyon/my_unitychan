@@ -11,7 +11,12 @@ namespace MyUnityChan {
 
         public AIModel model { get; protected set; }
         public AI ai { get; protected set; }
-        public Dictionary<int, AI> sub_ai { get; protected set; }
+        public Dictionary<int, SubAI> sub_ai { get; protected set; }
+
+        public override void Awake() {
+            base.Awake();
+            sub_ai = new Dictionary<int, SubAI>();
+        }
 
         public override void Start() {
             base.Start();
@@ -26,10 +31,10 @@ namespace MyUnityChan {
                 ai.debug = model.debug;
                 ai.build();
 
-                sub_ai = model.defineSubAI();
-                sub_ai.Values.ToList().ForEach(_ai => {
+                model.defineSubAIs(ai).ForEach(_ai => {
                     _ai.debug = model.debug;
                     _ai.build();
+                    sub_ai[_ai.routine_id] = _ai;
                 });
             }
         }
@@ -63,7 +68,7 @@ namespace MyUnityChan {
                     _ai.kill();
                     _ai = null;
                 });
-                sub_ai = new Dictionary<int, AI>();
+                sub_ai = new Dictionary<int, SubAI>();
             }
             Start();
         }

@@ -25,6 +25,10 @@ namespace MyUnityChan {
             get { return Instance.player_manager != null ? Instance.player_manager.gameover : false; }
         }
 
+        public static PlayerManager pm {
+            get { return Instance.player_manager; }
+        }
+
         public static float fps {
             get { return 1.0f / Time.deltaTime; }
         }

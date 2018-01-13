@@ -9,7 +9,7 @@ namespace MyUnityChan {
     [RequireComponent(typeof(EnemyActionManager))]
     [RequireComponent(typeof(EnemyStatus))]
     [RequireComponent(typeof(GroundChecker))]
-    public abstract class Enemy : NPCharacter {
+    public abstract class Enemy : NPCharacter, ICharacterTargetable {
         /*
             Tag: Enemy
             Layer: Character
@@ -28,6 +28,7 @@ namespace MyUnityChan {
                 _status = value;
             }
         }
+        public Searcher searcher { get; protected set; }
         public EnemyActionManager action_manager { get; protected set; }
         public HpGauge hp_gauge { get; protected set; }
 
@@ -42,6 +43,10 @@ namespace MyUnityChan {
         public int exp {
             get { return _exp; }
             set { _exp = value; }
+        }
+
+        public Character target_me {
+            get { return this; }
         }
 
         public override void OnEnable() {
@@ -82,6 +87,8 @@ namespace MyUnityChan {
             hp_gauge = null;
             exp = 0;
             setupSoundPlayer();
+
+            searcher = GetComponent<Searcher>();
 
             // enemy status setup
             status = GetComponent<EnemyStatus>();
