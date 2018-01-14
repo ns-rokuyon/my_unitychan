@@ -32,6 +32,13 @@ namespace MyUnityChan {
                         });
                 }
 
+                public static Def IfLostPlayerThenSwitchTo(AIModel model, object r) {
+                    return AI.Def.Name("IfLostPlayerThenSwitchTo")
+                        .If(_ => model.self.searcher.lost)
+                        .Then(_ => model.next_routine(r))
+                        .Break();
+                }
+
                 public static Def Hover(AIModel model, float delta_ground, float eps = 0.01f) {
                     return AI.Def.Name("Hover")
                         .Required(() => model.self.rigid_body.isKinematic)

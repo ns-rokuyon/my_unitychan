@@ -54,6 +54,12 @@ namespace MyUnityChan {
             current_routine = (int)r;
         }
 
+        public void next_routine(object r, float p) {
+            if ( UnityEngine.Random.Range(0.0f, 1.0f) <= p ) {
+                current_routine = (int)r;
+            }
+        }
+
         public virtual string getCurrentSubAIName() {
             if ( sub_ai_routine_type == null )
                 return "";
