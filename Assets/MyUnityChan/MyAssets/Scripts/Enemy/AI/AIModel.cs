@@ -19,28 +19,42 @@ namespace MyUnityChan {
 
         */
         public bool debug;      // Debug mode
+        public bool stop;
 
+        public AIDebugger debugger { get; set; }
+
+        public IDisposable brain { get; set; }
         public AIController controller { get; set; }
         public Enemy self { get; set; }
         public int current_routine { get; set; }
 
-        [ReadOnly]
-        public string current_sub_ai_name;
+        public Dictionary<int, AI> ai_table { get; set; }
 
-        public abstract AI define();
-
-        public virtual List<SubAI> defineSubAIs(AI main_ai) {
-            return new List<SubAI>();
+        // Current active AI object
+        public AI ai {
+            get { return ai_table[current_routine]; }
         }
 
         public virtual Type sub_ai_routine_type {
             get { return null; }
         }
 
+        [ReadOnly]
+        public string current_sub_ai_name;
+
+        public abstract void define();
+        
+        void Awake() {
+            ai_table = new Dictionary<int, AI>();
+            self = GetComponent<Enemy>();
+            debugger = GetComponent<AIDebugger>();
+        }
+
         void Start() {
             if ( sub_ai_routine_type != null ) {
                 current_sub_ai_name = getCurrentSubAIName();
 
+                // Sync current_sub_ai_name for inspector
                 this.ObserveEveryValueChanged(_ => current_routine)
                     .Subscribe(_ => current_sub_ai_name = getCurrentSubAIName())
                     .AddTo(this);
@@ -50,7 +64,40 @@ namespace MyUnityChan {
         public virtual void init() {
         }
 
+        public void build() {
+            kill();
+
+            if ( ai_table.Count == 0 )
+                define();
+
+            brain = this.UpdateAsObservable()
+                        .Where(_ => controller != null && !controller.isStopped)
+                        .Where(_ => gameObject.activeSelf)
+                        .Where(_ => !stop)
+                        .Where(_ => !TimelineManager.isPlaying)
+                        .Subscribe(_ => ai.think(controller.getObservedState()))
+                        .AddTo(this);
+        }
+
+        public void kill() {
+            if ( brain == null )
+                return;
+            brain.Dispose();
+            brain = null;
+        }
+
+        public void registerRoutine(AI ai) {
+            int i = ai_table.Count;
+            registerRoutine(i, ai);
+        }
+
+        public void registerRoutine(object i, AI ai) {
+            DebugManager.warn("i=" + (int)i);
+            ai_table.Add((int)i, ai);
+        }
+
         public void next_routine(object r) {
+            debugger.pushLog("next_routine: " + getCurrentSubAIName() + " -> " + r.ToString());
             current_routine = (int)r;
         }
 
@@ -58,6 +105,13 @@ namespace MyUnityChan {
             if ( UnityEngine.Random.Range(0.0f, 1.0f) <= p ) {
                 current_routine = (int)r;
             }
+        }
+
+        public void freeze(int frame) {
+            stop = true;
+            delay("AIModel.freeze", frame, () => {
+                stop = false;
+            });
         }
 
         public virtual string getCurrentSubAIName() {

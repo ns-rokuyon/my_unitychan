@@ -14,10 +14,14 @@ namespace MyUnityChan {
         public float close_range;
         public int attack_interval;
 
+        enum Routines {
+            BASE
+        }
+
         [SerializeField]
         public Controller.InputCode input_to_attack = Controller.InputCode.ATTACK;
 
-        public override AI define() {
+        public override void define() {
             // Keep horizontal input
             AI ai = AI.root(self, controller).def(AI.Def.Pattern.InputHorizontalTowardPlayer(this));
 
@@ -43,7 +47,7 @@ namespace MyUnityChan {
                 }
             }
 
-            return ai;
+            registerRoutine(Routines.BASE, ai);
         }
     }
 }

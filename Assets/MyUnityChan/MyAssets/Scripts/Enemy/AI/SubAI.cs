@@ -14,8 +14,12 @@ namespace MyUnityChan {
             SubAI ai = new SubAI((int)routine_id, main_ai);
 
             // Add common patterns
-            ai.def(AI.Def.Name("SubAI check")
-                   .StopIf(_ => main_ai.controller.model.current_routine != ai.routine_id));
+            ai.def(AI.Def.Name("SubAI check (" + ai.routine_id + ")")
+                   .StopIf(_ => {
+                       if ( main_ai.debugger != null )
+                           main_ai.debugger.pushLog("SubAI(" + ai.routine_id + "): current=" + (main_ai.controller.model.current_routine != ai.routine_id).ToString() + ", main_ai.freeze=" + main_ai.freeze);
+                       return main_ai.controller.model.current_routine != ai.routine_id || main_ai.freeze;
+                   }));
             return ai;
         }
 

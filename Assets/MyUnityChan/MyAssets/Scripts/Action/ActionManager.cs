@@ -223,6 +223,10 @@ namespace MyUnityChan {
             actions.Values.ToList().ForEach(action => action.enable());
         }
 
+        public bool hasAction(string name) {
+            return actions.ContainsKey(name);
+        }
+
         public Action getAction(string name) {
             if ( !actions.ContainsKey(name) ) {
                 return null;

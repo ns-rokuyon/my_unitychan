@@ -27,6 +27,7 @@ namespace MyUnityChan {
 
             param = default_param;
             action_manager.registerAction(new EnemyDead(this));
+            action_manager.registerAction(new EnemyTurn(this));
             setHP(max_hp);
 
             var cam = GameStateManager.getPlayer().manager.camera;

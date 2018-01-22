@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using System;
 
 namespace MyUnityChan {
@@ -8,13 +8,17 @@ namespace MyUnityChan {
         protected TwoPointsPath path;
         public float direction_x;
 
+        public enum Routines {
+            BASE
+        }
+
         public override void init() {
             path = GetComponent<TwoPointsPath>();
             direction_x = self.isLookAhead() ? 1.0f : -1.0f;
         }
 
-        public override AI define() {
-            return AI.root(self, controller)
+        public override void define() {
+            AI ai = AI.root(self, controller)
                 .def(AI.Def.Name("No stay at single point")
                      .If(_ => self.getPositionHistoryCount() >= 10 && self.getRecentTravelDistance().x < 0.05f)
                      .Then(_ => {
@@ -40,6 +44,7 @@ namespace MyUnityChan {
                 .def(AI.Def.Name("Go forward")
                      .Keep(_ => controller.inputHorizontal(direction_x)));
 
+            registerRoutine(Routines.BASE, ai);
         }
     }
 }

@@ -39,6 +39,11 @@ namespace MyUnityChan {
             get { return _disposables ?? (_disposables = new Dictionary<string, IDisposable>()); }
         }
 
+        private HashSet<Zone> _staying_zones;
+        public HashSet<Zone> staying_zones {
+            get { return _staying_zones ?? (_staying_zones = new HashSet<Zone>()); }
+        }
+
         public Area parent_area { get; set; }
         public bool managed_by_objectpool { get; set; }
 
@@ -63,12 +68,7 @@ namespace MyUnityChan {
             }
         }
 
-        public void delay(int frame, System.Action func, FrameCountType frame_count_type = FrameCountType.Update) {
-            if ( frame <= 0 ) {
-                func();
-                return;
-            }
-
+        public IObservable<long> createTimer(int frame, FrameCountType frame_count_type = FrameCountType.Update) {
             System.Func<int, FrameCountType, IObservable<long>> timer;
             if ( time_control )
                 timer = time_control.PausableTimerFrame;
@@ -76,8 +76,16 @@ namespace MyUnityChan {
                 timer = Observable.TimerFrame;
                 DebugManager.warn(name + " has no TimeControllable component, so that delay() uses Observable.TimerFrame (fallback)");
             }
+            return timer(frame, frame_count_type);
+        }
 
-            timer(frame, frame_count_type).Subscribe(_ => func()).AddTo(this);
+        public void delay(int frame, System.Action func, FrameCountType frame_count_type = FrameCountType.Update) {
+            if ( frame <= 0 ) {
+                func();
+                return;
+            }
+
+            createTimer(frame, frame_count_type).Subscribe(_ => func()).AddTo(this);
         }
 
         public void delay(string key, int frame, System.Action func, FrameCountType frame_count_type = FrameCountType.Update) {
@@ -86,15 +94,7 @@ namespace MyUnityChan {
                 return;
             }
             
-            System.Func<int, FrameCountType, IObservable<long>> timer;
-            if ( time_control )
-                timer = time_control.PausableTimerFrame;
-            else {
-                timer = Observable.TimerFrame;
-                DebugManager.warn(name + " has no TimeControllable component, so that delay() uses Observable.TimerFrame (fallback)");
-            }
-
-            IDisposable d = timer(frame, frame_count_type).Subscribe(_ => func()).AddTo(this);
+            IDisposable d = createTimer(frame, frame_count_type).Subscribe(_ => func()).AddTo(this);
             if ( disposables.ContainsKey(key) )
                 disposables[key].Dispose();
             disposables[key] = d;
@@ -112,6 +112,10 @@ namespace MyUnityChan {
                 func();
                 return;
             }
+        }
+
+        public bool isInZone(Zone zone) {
+            return staying_zones.Contains(zone);
         }
 
         public virtual bool assert() {

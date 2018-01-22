@@ -10,12 +10,9 @@ namespace MyUnityChan {
         public bool isStopped = false;
 
         public AIModel model { get; protected set; }
-        public AI ai { get; protected set; }
-        public Dictionary<int, SubAI> sub_ai { get; protected set; }
 
         public override void Awake() {
             base.Awake();
-            sub_ai = new Dictionary<int, SubAI>();
         }
 
         public override void Start() {
@@ -26,16 +23,7 @@ namespace MyUnityChan {
                 model.self = self as Enemy;
                 model.controller = this;
                 model.init();
-
-                ai = model.define();
-                ai.debug = model.debug;
-                ai.build();
-
-                model.defineSubAIs(ai).ForEach(_ai => {
-                    _ai.debug = model.debug;
-                    _ai.build();
-                    sub_ai[_ai.routine_id] = _ai;
-                });
+                model.build();
             }
         }
 
@@ -44,38 +32,20 @@ namespace MyUnityChan {
             if ( PauseManager.isPausing() ) isStopped = true;
             else if ( TimelineManager.isPlaying ) isStopped = true;
             else isStopped = false;
-
-            if ( sub_ai != null && sub_ai.Count > 0 ) {
-                // When sub AIs are used, switch sub AIs
-                int sub = model.current_routine;
-                sub_ai.ToList().ForEach(kv => {
-                    var i = kv.Key;
-                    if ( i == sub )
-                        kv.Value.freeze = false;
-                    else
-                        kv.Value.freeze = true;
-                });
-            }
         }
 
         public void restart() {
-            if ( ai != null ) {
-                ai.kill();
-                ai = null;
+            if ( model ) {
+                model.kill();
             }
-            if ( sub_ai != null && sub_ai.Keys.Count > 0 ) {
-                sub_ai.Values.ToList().ForEach(_ai => {
-                    _ai.kill();
-                    _ai = null;
-                });
-                sub_ai = new Dictionary<int, SubAI>();
-            }
+
             Start();
         }
 
         public AI.State getObservedState() {
             AI.State state = new AI.State();
             state.player = GameStateManager.getPlayer();
+            state.model = model;
             return state;
         }
     }

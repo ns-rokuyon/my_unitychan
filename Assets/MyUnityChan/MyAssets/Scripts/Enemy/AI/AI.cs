@@ -10,9 +10,9 @@ namespace MyUnityChan {
         public Character self { get; set; }
         public AIController controller { get; set; }
         public List<Def> patterns { get; set; }
-        public IDisposable brain { get; set; }
         public bool freeze { get; set; }
         public bool debug { get; set; }     // No used
+        public AIDebugger debugger { get; set; }
 
         protected AI(Character ch, AIController cont) {
             self = ch;
@@ -23,18 +23,14 @@ namespace MyUnityChan {
         public static AI root(Character _self, AIController _controller) {
             AI ai = new AI(_self, _controller);
             // Add common patterns
-            ai.def(AI.Def.Name("Abort")
-                   .If(_ => !ai.self.gameObject.activeSelf)
-                   .Then(_ => ai.kill())
-                   .Break())
-              .def(AI.Def.Name("Area checker")
-                   .StopIf(s => ai.self.getAreaName() != s.player.getAreaName()))
+            ai.def(AI.Def.Name("Area checker")
+                   .StopIf(s => s.model.ai.self.getAreaName() != s.player.getAreaName()))
               .def(AI.Def.Name("Locked input")
-                   .StopIf(_ => ai.self.isInputLocked()));
+                   .StopIf(s => s.model.ai.self.isInputLocked()));
             if ( _self is ZakoAirTypeBase ) {
                 ai.def(AI.Def.Name("Flap")
                        .Interval((_self as ZakoAirTypeBase).param.flap_interval)
-                       .If(_ => ai.self.getHP() > 0)
+                       .If(s => s.model.ai.self.getHP() > 0)
                        .If(_ => !_self.isHitRoof() && (_self as ZakoAirTypeBase).flight_level > _self.transform.position.y)
                        .Then(_ => _controller.inputKey(Controller.InputCode.JUMP)));
             }
@@ -46,32 +42,22 @@ namespace MyUnityChan {
             return this;
         }
 
-        public AI build() {
-            brain = Observable.EveryUpdate()
-                .Where(_ => controller != null && !controller.isStopped)
-                .Where(_ => !freeze)
-                .Where(_ => !TimelineManager.isPlaying)
-                .Subscribe(_ => think(controller.getObservedState()))
-                .AddTo(controller);
-            return this;
-        }
-
-        public AI kill() {
-            if ( brain == null )
-                return this;
-            brain.Dispose();
-            brain = null;
-            return this;
-        }
 
         public void reset() {
             patterns.ForEach(def => def.reset());
         }
 
-        private void think(State state) {
+        public void think(State state) {
             state.flagstack.Clear();
 
+            if ( debugger ) {
+                debugger.pushLog("---");
+            }
             foreach ( var def in patterns ) {
+                if ( debugger ) {
+                    debugger.pushLog(this.GetHashCode() + ": " + def.name);
+                }
+
                 bool flag = false;
                 var checks = def.conditions.Select(cond => cond.check(state));
                 if ( !checks.Contains(false) )
@@ -114,6 +100,7 @@ namespace MyUnityChan {
         public class State {
             public Player player { get; set; }
             public Message message { get; set; }
+            public AIModel model { get; set; }
             public List<bool> flagstack { get; set; }
 
             public State() {

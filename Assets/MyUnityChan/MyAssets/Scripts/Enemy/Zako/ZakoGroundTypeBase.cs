@@ -23,6 +23,7 @@ namespace MyUnityChan {
             param = default_param;
 
             action_manager.registerAction(new EnemyWalk(this, new Vector3(param.walk_fx, 0, 0), param.max_speed));
+            action_manager.registerAction(new EnemyTurn(this));
             action_manager.registerAction(new EnemyDead(this));
 
             setHP(max_hp);

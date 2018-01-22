@@ -121,7 +121,6 @@ namespace MyUnityChan {
             }
             updateStunned();
             checkPlayerTouched();
-            faceForward();
             recordPosition();
             leveling();
         }
