@@ -63,6 +63,30 @@ namespace MyUnityChan {
                 }
             }
 
+            public class TimerCondition : Condition {
+                public int max_count { get; private set; }
+                public bool done { get; private set; }
+
+                public TimerCondition(int _max_count) {
+                    max_count = _max_count;
+                }
+
+                public override bool check(State state) {
+                    if ( done ) {
+                        if ( state.model.current_count < max_count )
+                            done = false;
+                        else
+                            return false;
+                    }
+
+                    if ( state.model.current_count >= max_count ) {
+                        done = true;
+                        return true;
+                    }
+                    return false;
+                }
+            }
+
             public class Behavior {
                 public Action<State> behavior { get; private set; }
                 public int count { get; protected set; }
@@ -93,6 +117,43 @@ namespace MyUnityChan {
                         behavior(state);
                         count++;
                     }
+                }
+            }
+
+            public class ResetableBehavior : Behavior {
+                public System.Action reseter { get; private set; }
+
+                public ResetableBehavior(System.Action<State> _f, System.Action _g) : base(_f) {
+                    reseter = _g;
+                }
+
+                public override void reset() {
+                    base.reset();
+                    reseter();
+                }
+            }
+
+            public class ParameterBehavior<T> : Behavior {
+                public T apply { get; private set; }
+                public T restore { get; private set; }
+                public System.Func<T> getter { get; private set; }
+                public System.Action<T> setter { get; private set; }
+
+                public ParameterBehavior(Func<T> _getter, Action<T> _setter, T x) : base(_ => { }) {
+                    apply = x;
+                    getter = _getter;
+                    setter = _setter;
+                    restore = getter();
+                }
+
+                public override void act(State state) {
+                    base.act(state);
+                    setter(apply);
+                }
+
+                public override void reset() {
+                    base.reset();
+                    setter(restore);
                 }
             }
 
@@ -185,6 +246,18 @@ namespace MyUnityChan {
 
             public Def Start(int frame) {
                 conditions.Add(new Condition(s => Time.frameCount >= frame));
+                return this;
+            }
+
+            public Def At(int frame, Action<State> _behavior) {
+                conditions.Add(new TimerCondition(frame));
+                true_behavior = new Behavior(_behavior);
+                return this;
+            }
+
+            public Def Parameter<T>(System.Func<T> getter, System.Action<T> setter, T x) {
+                conditions.Add(new Condition(s => true));
+                true_behavior = new ParameterBehavior<T>(getter, setter, x);
                 return this;
             }
 

@@ -157,7 +157,7 @@ namespace MyUnityChan {
 
         public void inputKey(InputCode code, int frame = 1) {
             inputs[(int)code] = true;
-            delay("inputKey", frame, () => {
+            delay("inputKey_" + code.ToString(), frame, () => {
                 inputs[(int)code] = false;
             });
         }

@@ -50,6 +50,11 @@ namespace MyUnityChan {
                                 model.controller.inputVertical(1.0f);
                         });
                 }
+
+                public static Def ToNextRoutineAt(AIModel model, object r, int frame) {
+                    return AI.Def.Name("ToNextRoutineAt")
+                        .At(frame, (state) => model.next_routine(r));
+                }
             }
         }
 
