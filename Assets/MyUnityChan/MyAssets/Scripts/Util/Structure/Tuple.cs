@@ -25,5 +25,21 @@ namespace MyUnityChan {
             key = k;
             value = v;
         }
+
+        public KV(KV<TKey, TValue> pair) {
+            key = pair.key;
+            value = pair.value;
+        }
+    }
+
+    [System.Serializable]
+    public class KP<TKey> {
+        [SerializeField] public TKey key;
+        [SerializeField, Range(0.0f, 1.0f)] public float prob;
+
+        public KP(TKey k, float p) {
+            key = k;
+            prob = p;
+        }
     }
 }
