@@ -7,6 +7,9 @@ namespace MyUnityChan {
     public class PrefabConfig {
         [SerializeField]
         public GameObject prefab;
+
+        [SerializeField]
+        public bool use_object_pool;
     }
 
     // Representation of one of prefab list row

@@ -4,67 +4,43 @@ using System.Collections.Generic;
 namespace MyUnityChan {
     public class ObjectPoolManager : SingletonObjectBase<ObjectPoolManager> {
 
-        private Dictionary<string, ObjectPool> pools;
+        private Dictionary<GameObject, ObjectPool> pools;   // Key: prefab, Value: ObjectPool
 
         void Awake() {
-            pools = new Dictionary<string, ObjectPool>();
-            // To manage object using ObjectPool, add calling addPool method here
-            foreach ( var path in Const.Prefab.Projectile ) {
-                addPool(path.Value);
-            }
-            foreach ( var path in Const.Prefab.Spray ) {
-                addPool(path.Value);
-            }
-            foreach ( var path in Const.Prefab.Hitbox ) {
-                addPool(path.Value);
-            }
-            foreach ( var path in Const.Prefab.Effect ) {
-                addPool(path.Value);
-            }
-            foreach ( var path in Const.Prefab.DamageObject ) {
-                addPool(path.Value);
-            }
-            addPool(Const.Prefab.Item[Const.ID.Item.HP_RECOVERY]);
-            addPool(Const.Prefab.Item[Const.ID.Item.MISSILE_SUPPLY]);
-            addPool(Const.Prefab.Timer["FRAME_TIMER"]);
+            pools = new Dictionary<GameObject, ObjectPool>();
         }
 
-        // Use this for initialization
-        void Start() {
+        public static void releaseGameObject(GameObject go) {
+            var po = go.GetComponent<PoolObjectBase>();
+            releaseGameObject(po);
         }
 
-        public static void releaseGameObject(GameObject go, string resource_path) {
-            self().pools[resource_path].releaseGameObject(go);
+        public static void releaseGameObject(PoolObjectBase po) {
+            Instance.pools[po.prefab].releaseGameObject(po.gameObject);
         }
 
-        public static GameObject getGameObject(string resource_path) {
-            return self().pools[resource_path].getGameObject();
+        public static GameObject getGameObject(GameObject prefab) {
+            if ( !Instance.hasPool(prefab) )
+                Instance.addPool(prefab);
+            return Instance.pools[prefab].getGameObject();
         }
 
-        public static int getObjectIndex(GameObject go, string resource_path) {
-            return self().pools[resource_path].getObjectIndex(go);
+        public static GameObject getGameObject(PoolObjectBase po) {
+            return getGameObject(po.prefab);
         }
 
-        // add new object pool for prefab in resource_path
-        private bool addPool(string resource_path) {
-            GameObject prefab = Resources.Load(resource_path) as GameObject;
-            if ( !prefab ) {
-                Debug.LogError("prefab notfound: " + resource_path);
-                return false;
-            }
-
-            if ( pools.ContainsKey(resource_path) ) {
-                Debug.LogError("object pool already exists (key=" + resource_path + ")");
-                return false;
-            }
-
-            GameObject pool = new GameObject("ObjectPool_" + prefab.name);
-            pool.setParent(Hierarchy.Layout.OBJECT_POOL);
-            pools[resource_path] = pool.AddComponent<ObjectPool>();
-            pools[resource_path].setPrefab(prefab);
-
-            return true;
+        public static ObjectPool getPool(GameObject prefab) {
+            return Instance.pools[prefab];
         }
 
+        // add new object pool for prefab
+        public void addPool(GameObject prefab) {
+            if ( !hasPool(prefab) )
+                pools[prefab] = new ObjectPool(prefab);
+        }
+
+        public bool hasPool(GameObject prefab) {
+            return pools.ContainsKey(prefab);
+        }
     }
 }

@@ -6,9 +6,8 @@ namespace MyUnityChan {
     public class Effect : EffectBase {
         public int total_frame { get; private set; }
 
-        public void ready(Vector3 pos, int frame, string _resource_path) {
+        public void ready(Vector3 pos, int frame) {
             total_frame = frame;
-            resource_path = _resource_path;
             transform.position = pos;
 
             if ( !managed_by_objectpool ) {
@@ -31,7 +30,7 @@ namespace MyUnityChan {
                 return;
 
             if ( pooled )
-                ObjectPoolManager.releaseGameObject(gameObject, resource_path);
+                ObjectPoolManager.releaseGameObject(this);
             else
                 Destroy(gameObject);
         }

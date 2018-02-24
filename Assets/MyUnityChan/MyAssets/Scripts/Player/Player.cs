@@ -37,7 +37,7 @@ namespace MyUnityChan {
 
         public PlayerManager manager { get; set; }
         public PlayerActionManager action_manager { get; set; }
-        public List<Const.BeamName> beam_slot { get; set; }
+        public List<Const.ID.Projectile.Beam> beam_slot { get; set; }
         public WallChecker wall_checker { get; set; }
         public UnityChanBoneManager bone_manager { get; set; }
         public BeamTurret beam_turret { get; protected set; }
@@ -66,7 +66,7 @@ namespace MyUnityChan {
             bone_manager = GetComponent<UnityChanBoneManager>();
             ik = GetComponent<PlayerIK>();
             beam_turret = GetComponent<BeamTurret>();
-            beam_slot = new List<Const.BeamName>();
+            beam_slot = new List<Const.ID.Projectile.Beam>();
             collider = GetComponent<CapsuleCollider>();
             equipment = GetComponent<Equipment>();
         }
@@ -145,8 +145,6 @@ namespace MyUnityChan {
                     action_manager.registerAction(new PlayerSwitchBeam(this)); break;
                 case Const.PlayerAction.GRAPPLE:
                     action_manager.registerAction(new PlayerGrapple(this)); break;
-                case Const.PlayerAction.HADOUKEN:
-                    action_manager.registerAction(new PlayerHadouken(this)); break;
                 case Const.PlayerAction.JUMP:
                     action_manager.registerAction(new PlayerJump(this)); break;
                 case Const.PlayerAction.LIMIT_SPEED:

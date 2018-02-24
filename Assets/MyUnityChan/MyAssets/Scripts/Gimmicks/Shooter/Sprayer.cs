@@ -59,12 +59,12 @@ namespace MyUnityChan {
                             spray.powerOff(easing_duration);
                             spray.hitbox.setEnabledCollider(false);
                             delay((int)easing_duration * 60, () => {
-                                ObjectPoolManager.releaseGameObject(spray.gameObject, Const.Prefab.Spray[spray_name]);
+                                ObjectPoolManager.releaseGameObject(spray);
                                 spray = null;
                                 shutdowning = false;
                             });
                         } else {
-                            ObjectPoolManager.releaseGameObject(spray.gameObject, Const.Prefab.Spray[spray_name]);
+                            ObjectPoolManager.releaseGameObject(spray);
                             spray = null;
                         }
                     }
@@ -125,7 +125,9 @@ namespace MyUnityChan {
             if ( spray )
                 return;
 
-            GameObject obj = ObjectPoolManager.getGameObject(Const.Prefab.Spray[spray_name]);
+            GameObject obj = ObjectPoolManager.getGameObject(
+                ConfigTableManager.Spray.getPrefabConfig(spray_name).prefab);
+
             obj.setParent(Hierarchy.Layout.PROJECTILE);
 
             spray = obj.GetComponent<Spray>();

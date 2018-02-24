@@ -24,7 +24,6 @@ namespace MyUnityChan {
 
         public AttackSpec spec = null;
         protected int total_frame = 20;
-        private static readonly string hitbox_resource_path = "Prefabs/Hitbox/Punch_Hitbox";
 
         public PlayerPunchL(Character character)
             : base(character) {
@@ -57,7 +56,7 @@ namespace MyUnityChan {
 
         private void createHitbox() {
             Vector3 fw = player.transform.forward;
-            MeleeAttackHitbox hitbox = HitboxManager.self().create<MeleeAttackHitbox>(hitbox_resource_path);
+            MeleeAttackHitbox hitbox = HitboxManager.createHitbox<MeleeAttackHitbox>(Const.ID.Hitbox.PUNCH);
             hitbox.ready( player.transform.position, fw, new Vector3(0.4f * fw.x, 1.0f, 0.0f), spec);
             hitbox.setOwner(player.gameObject);
         }
@@ -83,7 +82,6 @@ namespace MyUnityChan {
 
         public AttackSpec spec = null;
         protected int total_frame = 20;
-        private static readonly string hitbox_resource_path = "Prefabs/Hitbox/Punch_Hitbox";
 
         public PlayerPunchR(Character character)
             : base(character) {
@@ -117,7 +115,7 @@ namespace MyUnityChan {
 
         private void createHitbox() {
             Vector3 fw = player.transform.forward;
-            MeleeAttackHitbox hitbox = HitboxManager.self().create<MeleeAttackHitbox>(hitbox_resource_path);
+            MeleeAttackHitbox hitbox = HitboxManager.createHitbox<MeleeAttackHitbox>(Const.ID.Hitbox.PUNCH);
             hitbox.ready(player.transform.position, fw, new Vector3(0.6f * fw.x, 1.0f, 0.0f), spec);
             hitbox.setOwner(player.gameObject);
         }
@@ -143,7 +141,6 @@ namespace MyUnityChan {
 
         public AttackSpec spec = null;
         protected int total_frame = 60; 
-        private static readonly string hitbox_resource_path = "Prefabs/Hitbox/Kick_Hitbox";
 
         public PlayerSpinKick(Character character)
             : base(character) {
@@ -175,7 +172,7 @@ namespace MyUnityChan {
 
         private void createHitbox() {
             Vector3 fw = player.transform.forward;
-            MeleeAttackHitbox hitbox = HitboxManager.self().create<MeleeAttackHitbox>(hitbox_resource_path);
+            MeleeAttackHitbox hitbox = HitboxManager.createHitbox<MeleeAttackHitbox>(Const.ID.Hitbox.KICK);
             hitbox.ready(player.transform.position, fw, new Vector3(0.6f * fw.x, 0.8f, 0.0f), spec);
             hitbox.setOwner(player.gameObject);
         }

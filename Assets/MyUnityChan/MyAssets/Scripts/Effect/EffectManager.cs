@@ -1,17 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UniRx;
+using System;
 
 namespace MyUnityChan {
     public class EffectManager : PrefabManagerBase<EffectManager> {
-
-        public override T create<T>(string resource_path, bool use_objectpool=false) {
-            if ( use_objectpool ) {
-                T effect = ObjectPoolManager.getGameObject(resource_path).setParent(Hierarchy.Layout.EFFECT).GetComponent<T>();
-                (effect as EffectBase).enablePool(resource_path);
-                return effect;
+        public override string parent {
+            get {
+                return Hierarchy.Layout.EFFECT;
             }
-            return instantiatePrefab(resource_path, Hierarchy.Layout.EFFECT).GetComponent<T>();
+
         }
 
         public static EffectManager self() {
@@ -20,21 +18,24 @@ namespace MyUnityChan {
 
         // [Usage]
         // (EffectManager.Instance as EffectManager).createEffect(
-        //      resource_path,   : path to prefab
+        //      prefab,          : reference to prefab
         //      pos,             : effect position (XYZ)
         //      frame,           : effect lifetime (frame)
         //      use_objectpool   : if you use object pool for this effect object, set true
         // )
-        public static GameObject createEffect(string resource_path, Vector3 pos, int frame, bool use_objectpool = false) {
-            Effect effect = Instance.create<Effect>(resource_path, use_objectpool);
-            effect.ready(pos, frame, resource_path);
+        public static GameObject createEffect(GameObject prefab, Vector3 pos, int frame, bool use_objectpool = true) {
+            Effect effect = Instance.create<Effect>(prefab, use_objectpool);
+            effect.ready(pos, frame);
             return effect.gameObject;
         }
 
-        public static GameObject createEffect(Const.ID.Effect effect_name, Vector3 pos, int frame, bool use_objectpool = false) {
+        public static GameObject createEffect(Const.ID.Effect effect_name, Vector3 pos, int frame, bool use_objectpool = true) {
             if ( effect_name == Const.ID.Effect._NO_EFFECT )
                 return null;
-            return createEffect(Const.Prefab.Effect[effect_name], pos, frame, use_objectpool);
+            return createEffect(ConfigTableManager.Effect.getPrefabConfig(effect_name).prefab,
+                                pos,
+                                frame,
+                                use_objectpool);
         }
 
         public static GameObject createEffect(Const.ID.Effect effect_name, Vector3 pos, Vector3 offset, int frame, bool use_objectpool = true) {
@@ -94,14 +95,17 @@ namespace MyUnityChan {
 
         // Create TextEffect
         // =============================================
-        public static GameObject createTextEffect(string text, string resource_path, Vector3 pos, int frame, bool use_objectpool = false) {
-            GameObject o = createEffect(resource_path, pos, frame, use_objectpool);
+        public static GameObject createTextEffect(string text, GameObject prefab, Vector3 pos, int frame, bool use_objectpool = true) {
+            GameObject o = createEffect(prefab, pos, frame, use_objectpool);
             o.GetComponent<TextEffect>().text = text;
             return o;
         }
 
-        public static GameObject createTextEffect(string text, Const.ID.Effect effect_name, Vector3 pos, int frame, bool use_objectpool = false) {
-            GameObject o = createEffect(Const.Prefab.Effect[effect_name], pos, frame, use_objectpool);
+        public static GameObject createTextEffect(string text, Const.ID.Effect effect_name, Vector3 pos, int frame, bool use_objectpool = true) {
+            GameObject o = createEffect(ConfigTableManager.Effect.getPrefabConfig(effect_name).prefab,
+                                        pos,
+                                        frame,
+                                        use_objectpool);
             if ( !o )
                 return null;
             o.GetComponent<TextEffect>().text = text;

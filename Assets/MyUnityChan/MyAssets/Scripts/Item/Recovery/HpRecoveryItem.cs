@@ -15,8 +15,8 @@ namespace MyUnityChan {
         public override void destroy(Player player) {
             base.destroy(player);
 
-            if ( isPooledObject() ) {
-                ObjectPoolManager.releaseGameObject(this.gameObject, prefabPath(Const.ID.Item.HP_RECOVERY));
+            if ( pooled ) {
+                ObjectPoolManager.releaseGameObject(this);
             }
             else {
                 Destroy(this.gameObject);

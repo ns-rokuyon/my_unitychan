@@ -4,7 +4,10 @@ using System.Collections;
 namespace MyUnityChan {
     [System.Serializable]
     public class BombSpec : AttackSpec {
-        public string hitbox_name;
+        [SerializeField]
+        public Const.ID.Hitbox hitbox_id;
+
+        [SerializeField]
         public string se_name;
     }
 }

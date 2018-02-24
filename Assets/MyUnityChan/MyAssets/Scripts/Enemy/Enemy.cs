@@ -161,7 +161,7 @@ namespace MyUnityChan {
             }
 
             EffectManager.createTextEffect(dam.ToString(),
-                                           Const.Prefab.Effect[Const.ID.Effect.DAMAGE_INDICATOR],
+                                           Const.ID.Effect.DAMAGE_INDICATOR,
                                            transform.position + worldspace_ui_position_offset, 60, true);
         }
 

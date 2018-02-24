@@ -111,7 +111,7 @@ namespace MyUnityChan {
             }
 
             if ( use_objectpool ) {
-                ObjectPoolManager.releaseGameObject(this.gameObject, resource_path);
+                ObjectPoolManager.releaseGameObject(this);
             }
             else {
                 Destroy(this.gameObject);

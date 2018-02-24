@@ -33,13 +33,10 @@ namespace MyUnityChan {
 
         public override void perform() {
             if ( stock > 0 ) {
-                GameObject obj = ObjectPoolManager.getGameObject(Const.Prefab.DamageObject["BOMB"]);
-                obj.setParent(Hierarchy.Layout.DAMAGE_OBJECT);
-                obj.GetComponent<TimeBomb>().setStartPosition(
-                    player.transform.position.add(player.transform.forward.x * 0.5f, 0, 0));
+                var bomb = DamageObjectManager.createDamageObject<TimeBomb>(Const.ID.DamageObject.BOMB);
 
+                bomb.setStartPosition(player.transform.position.add(player.transform.forward.x * 0.5f, 0, 0));
                 stock--;
-
                 player.lockInput(10);
             }
         }

@@ -1,16 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 namespace MyUnityChan {
     public class HitboxManager : PrefabManagerBase<HitboxManager> {
-
-        public override T create<T>(string resource_path, bool use_objectpool=false) {
-            if ( use_objectpool ) {
-                T hitbox = ObjectPoolManager.getGameObject(resource_path).setParent(Hierarchy.Layout.HITBOX).GetComponent<T>();
-                (hitbox as Hitbox).enablePool(resource_path);
-                return hitbox;
+        public override string parent {
+            get {
+                return Hierarchy.Layout.HITBOX;
             }
-            return instantiatePrefab(resource_path, Hierarchy.Layout.HITBOX).GetComponent<T>();
+        }
+
+        public static T createHitbox<T>(Const.ID.Hitbox hitbox_id, bool use_objectpool = true) {
+            return Instance.create<T>(ConfigTableManager.Hitbox.getPrefabConfig(hitbox_id).prefab,
+                                      use_objectpool);
         }
     }
 }

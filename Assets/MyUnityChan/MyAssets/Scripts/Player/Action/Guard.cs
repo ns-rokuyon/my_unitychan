@@ -88,8 +88,7 @@ namespace MyUnityChan {
 
             guarding = false;
             if ( shield_effect ) {
-                ObjectPoolManager.releaseGameObject(shield_effect_obj,
-                                                    Const.Prefab.Effect[Const.ID.Effect.SHIELD_01]);
+                ObjectPoolManager.releaseGameObject(shield_effect);
                 shield_effect_obj = null;
                 shield_effect = null;
 

@@ -22,8 +22,6 @@ namespace MyUnityChan {
         public AttackSpec spec = null;
         protected int total_frame = 60;
         protected int delay_fixedupdate = 10;
-        private static readonly string hitbox_resource_path = "Prefabs/Hitbox/Kick_Hitbox";
-
 
         public PlayerShoryu(Character character)
             : base(character) {
@@ -65,7 +63,7 @@ namespace MyUnityChan {
 
         private void createHitbox() {
             Vector3 fw = player.transform.forward;
-            MeleeAttackHitbox hitbox = HitboxManager.self().create<MeleeAttackHitbox>(hitbox_resource_path);
+            MeleeAttackHitbox hitbox = HitboxManager.createHitbox<MeleeAttackHitbox>(Const.ID.Hitbox.KICK);
             hitbox.ready(player.transform.position, fw, new Vector3(0.6f * fw.x, 0.8f, 0.0f), spec);
             hitbox.setOwner(player.gameObject);
             hitbox.rescale(3.0f);
@@ -104,7 +102,6 @@ namespace MyUnityChan {
             skip_lower_priority = true;
             use_transaction = true;
             keep_skipping_lower_priority_in_transaction = true;
-            hitbox_resource_path = Const.Prefab.Hitbox["KICK"];
             spec = new Spec();
 
             collider = player.GetComponent<CapsuleCollider>();
@@ -142,7 +139,7 @@ namespace MyUnityChan {
 
         public void createHitbox() {
             Vector3 fw = player.transform.forward;
-            MeleeAttackHitbox hitbox = HitboxManager.self().create<MeleeAttackHitbox>(hitbox_resource_path);
+            MeleeAttackHitbox hitbox = HitboxManager.createHitbox<MeleeAttackHitbox>(Const.ID.Hitbox.KICK);
             hitbox.ready(player.transform.position, fw, new Vector3(0.7f * fw.x, 0.0f, 0.0f), spec);
             hitbox.setOwner(player.gameObject);
         }

@@ -3,6 +3,8 @@ using System.Collections;
 
 namespace MyUnityChan {
     public class Beam : Projectile  {
+        public Const.ID.Projectile.Beam resource_name;
+
         private TrailRenderer trail;
 
         // Use this for initialization
@@ -13,7 +15,7 @@ namespace MyUnityChan {
 
         // Update is called once per frame
         void Update() {
-            projectileCommonUpdate(Const.Prefab.Projectile[resource_name]);
+            projectileCommonUpdate();
         }
 
         public override void setStartPosition(Vector3 pos) {

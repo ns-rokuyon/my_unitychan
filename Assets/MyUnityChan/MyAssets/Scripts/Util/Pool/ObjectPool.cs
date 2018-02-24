@@ -5,31 +5,26 @@ using System.Collections.Generic;
 namespace MyUnityChan {
 
     public abstract class PoolObjectBase : ObjectBase {
-        protected bool pooled = false;
+        // Base prefab reference for this object
+        public GameObject prefab;
+
+        public bool pooled { get; set; }
+        public string prefab_name { get; set; }
 
         public abstract void initialize();
         public abstract void finalize();
-
-        public void setPooled(bool flag) {
-            pooled = flag;
-        }
-
-        public bool isPooledObject() {
-            return pooled;
-        }
-
     }
 
 
-    public class ObjectPool : ObjectBase {
-
-        public bool debug;
+    public class ObjectPool {
+        public bool debug { get; set; }
+        public GameObject prefab { get; private set; }  // Original
 
         private List<PoolObjectBase> objects;
-        private GameObject prefab;
 
-        void Awake() {
+        public ObjectPool(GameObject _prefab) {
             objects = new List<PoolObjectBase>();
+            prefab = _prefab;
         }
 
         public GameObject getGameObject() {
@@ -44,18 +39,16 @@ namespace MyUnityChan {
                 if ( !go.activeInHierarchy ) {
                     go.SetActive(true);
                     initializeObject(go);
-                    if ( debug )
-                        DebugManager.log(gameObject.name + ": Return pooled object (i=" + i + "/" + objects.Count + ")");
+                    debugLog("Return pooled object (i=" + i + "/" + objects.Count + ")");
                     return go;
                 }
             }
 
-            go = Instantiate(prefab) as GameObject;
+            go = PrefabInstantiater.create(prefab);
             initializeObject(go);
             objects.Add(go.GetComponent<PoolObjectBase>());
 
-            if ( debug )
-                DebugManager.log(gameObject.name + ": Return new pooled object (pooled=" + objects.Count + ")");
+            debugLog("Return new pooled object (pooled=" + objects.Count + ")");
 
             return go;
         }
@@ -76,16 +69,22 @@ namespace MyUnityChan {
         private void initializeObject(GameObject go) {
             PoolObjectBase comp = go.GetComponent<PoolObjectBase>();
             if ( comp == null ) {
-                DebugManager.log("Effect script is not found in effect prefab", Const.Loglevel.ERROR);
+                DebugManager.log("No PoolObjectBase attached: " + go, Const.Loglevel.ERROR);
             }
+            comp.prefab_name = prefab.name;
             comp.managed_by_objectpool = true;
-            comp.setPooled(true);
+            comp.pooled = true;
             comp.initialize();
         }
 
         private void finalizeObject(GameObject go) {
             PoolObjectBase comp = go.GetComponent<PoolObjectBase>();
             comp.finalize();
+        }
+
+        private void debugLog(string message) {
+            if ( debug )
+                DebugManager.log("ObjectPool[" + prefab.name + "]: " + message);
         }
     }
 }

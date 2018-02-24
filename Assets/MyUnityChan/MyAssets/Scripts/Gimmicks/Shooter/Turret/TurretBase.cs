@@ -5,8 +5,6 @@ using UniRx.Triggers;
 
 namespace MyUnityChan {
     public abstract class TurretBase : ShooterBase {
-        protected string projectile_name;
-
         public override void Start() {
             base.Start();
 
@@ -16,18 +14,6 @@ namespace MyUnityChan {
                 .Where(_ => !owner.time_control.paused && !owner.isFrozen() && !owner.isFlinching())
                 .Where(_ => auto || triggered)
                 .Subscribe(_ => StartCoroutine(shootByTrigger()));
-        }
-
-        protected void setProjectile(string name) {
-            projectile_name = name;
-            Projectile proj = (Resources.Load(Const.Prefab.Projectile[projectile_name]) as GameObject).GetComponent<Projectile>();
-            ProjectileSpec spec = proj.spec;
-
-            n_round_burst = spec.n_round_burst;
-            burst_delta_frame = spec.burst_delta_frame;
-            interval_frame = spec.interval_frame;
-            se_name = spec.se_name;
-            hitbox_name = spec.hitbox_name;
         }
 
         protected IEnumerator shootByTrigger() {

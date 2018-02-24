@@ -26,8 +26,8 @@ namespace MyUnityChan {
         protected int n_round_burst;
         protected int burst_delta_frame;
         protected int interval_frame;
-        protected string hitbox_name;
-        protected Const.ID.SE se_name;
+        protected Const.ID.Hitbox hitbox_id;
+        protected Const.ID.SE se_id;
 
 
         // Angle of shooting
@@ -85,7 +85,7 @@ namespace MyUnityChan {
         public abstract void shoot();
 
         public virtual void sound() {
-            if ( se_name == Const.ID.SE._NO ) {
+            if ( se_id == Const.ID.SE._NO ) {
                 return;
             }
             if ( sound_player == null ) {
@@ -94,7 +94,7 @@ namespace MyUnityChan {
             if ( sound_player == null ) {
                 return;
             }
-            sound_player.play(se_name);
+            sound_player.play(se_id);
         }
 
         public void trigger(bool t=true) {

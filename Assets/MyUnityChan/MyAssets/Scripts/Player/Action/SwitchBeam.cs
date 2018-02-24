@@ -22,7 +22,7 @@ namespace MyUnityChan {
         }
 
         public override void perform() {
-            Const.BeamName bname;
+            Const.ID.Projectile.Beam bname;
             if ( player.beam_slot.Count > 1 ) {
                 // Beam rotation
                 bname = player.beam_slot[0];
@@ -32,7 +32,7 @@ namespace MyUnityChan {
 
             if ( player.beam_slot.Count == 0 ) {
                 // Empty slot
-                bname = Const.BeamName._NOT_SET;
+                bname = Const.ID.Projectile.Beam._NO_SET;
             }
             else {
                 // Head beam in slot

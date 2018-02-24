@@ -6,7 +6,7 @@ using UniRx.Triggers;
 
 namespace MyUnityChan {
     public class MissilePod : TurretBase {
-        public string missile_name;
+        public Const.ID.Projectile.Missile missile_id;
         public int missile_max;
         public GameObject indicator_ui_object;
 
@@ -23,7 +23,7 @@ namespace MyUnityChan {
         public override void Start() {
             base.Start();
 
-            setProjectile(missile_name);
+            setProjectile(missile_id);
             missile_num = missile_max;
 
             player = GetComponent<Player>();
@@ -48,10 +48,7 @@ namespace MyUnityChan {
             }
             missile_num--;
 
-            GameObject obj = ObjectPoolManager.getGameObject(Const.Prefab.Projectile[missile_name]);
-            obj.setParent(Hierarchy.Layout.PROJECTILE);
-
-            Missile missile = obj.GetComponent<Missile>();
+            Missile missile = ProjectileManager.createMissile<Missile>(missile_id);
             missile.setDir(direction);
             missile.linkShooter(this);
             missile.fire(transform.position + muzzle_offset, owner.isLookAhead() ? 1.0f : -1.0f);
@@ -61,10 +58,22 @@ namespace MyUnityChan {
             hitbox.depend_on_parent_object = true;
             hitbox.setOwner(gameObject);
             hitbox.setEnabledCollider(true);
-            hitbox.ready(obj, missile.spec);
+            hitbox.ready(missile.gameObject, missile.spec);
 
             // sound
             sound();
+        }
+
+        public void setProjectile(Const.ID.Projectile.Missile id) {
+            missile_id = id;
+            Projectile proj = (Resources.Load(Const.Prefab.Projectile.Missile[missile_id]) as GameObject).GetComponent<Projectile>();
+            ProjectileSpec spec = proj.spec;
+
+            n_round_burst = spec.n_round_burst;
+            burst_delta_frame = spec.burst_delta_frame;
+            interval_frame = spec.interval_frame;
+            se_id = spec.se_id;
+            hitbox_id = spec.hitbox_id;
         }
 
         public void addMissile(int n) {

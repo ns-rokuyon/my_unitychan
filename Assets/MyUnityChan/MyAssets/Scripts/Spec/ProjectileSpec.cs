@@ -7,9 +7,9 @@ namespace MyUnityChan {
         public int n_round_burst = 1;
         public int burst_delta_frame;
         public int interval_frame;
-        public string hitbox_name;
         public bool copy_target_dir_to_force_degree = true;
-        [SerializeField] public Const.ID.SE se_name;
+        [SerializeField] public Const.ID.Hitbox hitbox_id;
+        [SerializeField] public Const.ID.SE se_id;
         [SerializeField] public Const.ID.Effect shoot_effect = Const.ID.Effect._NO_EFFECT;
 
         public override Vector3 force_direction {

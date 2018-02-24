@@ -85,8 +85,7 @@ namespace MyUnityChan {
                                                                        gameObject, 9999, true);
                     }
                     else if ( !b && pickupable_effect != null ) {
-                        ObjectPoolManager.releaseGameObject(pickupable_effect,
-                                                            Const.Prefab.Effect[Const.ID.Effect.PICKUPABLE_CIRCLE]);
+                        ObjectPoolManager.releaseGameObject(pickupable_effect);
                         pickupable_effect = null;
                     }
                 })

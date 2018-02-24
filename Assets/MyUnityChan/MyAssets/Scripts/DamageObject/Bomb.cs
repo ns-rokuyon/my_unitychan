@@ -10,19 +10,19 @@ namespace MyUnityChan {
 
         public virtual void explode() {
             // Create hitbox
-            DamageObjectHitbox hitbox = 
-                HitboxManager.self().create<DamageObjectHitbox>(Const.Prefab.Hitbox[spec.hitbox_name], true);
+            DamageObjectHitbox hitbox =
+                HitboxManager.createHitbox<DamageObjectHitbox>(spec.hitbox_id);
             hitbox.ready(gameObject, spec);
 
             // Create effect
             EffectManager.createEffect(
-                Const.Prefab.Effect[spec.effect_name],
+                spec.effect_name,
                 gameObject.transform.position,
                 100,
                 true);
 
             // Delete this object
-            ObjectPoolManager.releaseGameObject(this.gameObject, Const.Prefab.Hitbox[spec.hitbox_name]);
+            ObjectPoolManager.releaseGameObject(this);
         }
 
     }

@@ -60,7 +60,7 @@ namespace MyUnityChan {
 
         protected override Button getFirstSelected() {
             Player player = GameStateManager.getPlayer().manager.getPlayer(Const.CharacterName.UNITYCHAN);
-            var ba = button_ability_map.Where(kv => kv.Value.beam_name == player.beam_turret.beam_name).FirstOrDefault();
+            var ba = button_ability_map.Where(kv => kv.Value.beam_name == player.beam_turret.beam_id).FirstOrDefault();
             if ( ba.Equals(default(Dictionary<Button, BeamAbility>)) ) {
                 return null;
             }
@@ -78,9 +78,9 @@ namespace MyUnityChan {
             player.beam_turret.switchBeam(button_ability_map[selected_button].beam_name);
         }
 
-        private MenuAbilityButton getBeamAbilityButtonByBeamName(Const.BeamName bn) {
+        private MenuAbilityButton getBeamAbilityButtonByBeamName(Const.ID.Projectile.Beam beam_id) {
             MenuAbilityButton b = abs.buttons.Find(_b => {
-                return (_b.ability.def as BeamAbility).beam_name == bn;
+                return (_b.ability.def as BeamAbility).beam_name == beam_id;
             });
             return b;
         }

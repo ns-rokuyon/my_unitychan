@@ -5,6 +5,19 @@ namespace MyUnityChan {
     public class PrefabInstantiater : SingletonObjectBase<PrefabInstantiater> {
         // World object
         //=================================================================================================
+        public static GameObject create(GameObject prefab) {
+            GameObject obj = Instantiate(prefab) as GameObject;
+            return obj;
+        }
+
+        public static GameObject create(GameObject prefab, string parent) {
+            GameObject obj = Instantiate(prefab) as GameObject;
+            obj.setParent(parent);
+            return obj;
+        }
+
+
+
         public static GameObject create(string resource_path, string parent = null) {
             GameObject obj = (Instantiate(Resources.Load(resource_path)) as GameObject);
             if ( parent != null ) {

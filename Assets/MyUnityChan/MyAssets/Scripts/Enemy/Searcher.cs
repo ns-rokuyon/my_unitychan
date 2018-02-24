@@ -8,15 +8,11 @@ namespace MyUnityChan {
         public SensorZone sensor;
         public bool auto_target_to_player;
         public bool appear_found_effect;
-        public float found_delay_frame; // TODO
-        public float lost_delay_frame;  // TODO
 
         public ICharacterTargetable target { get; private set; }
         public Enemy self { get; private set; }
         public bool captured { get; private set; }
         public bool lost { get { return !captured; } }
-        public int finding_frame { get; private set; }  // TODO
-        public int losing_frame { get; private set; }   // TODO
 
         void Awake() {
             self = GetComponent<Enemy>();
