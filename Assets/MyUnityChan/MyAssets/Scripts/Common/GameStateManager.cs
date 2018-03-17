@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MyUnityChan {
     public class GameStateManager : SingletonObjectBase<GameStateManager> {
@@ -14,6 +15,7 @@ namespace MyUnityChan {
 
         public PlayerManager player_manager { get; set; }
         private GameState state { get; set; }
+        private RandomNumberGenerator rng { get; set; }
 
         public Const.Language language {
             get {
@@ -37,8 +39,13 @@ namespace MyUnityChan {
             get { return (int)fps; }
         }
 
+        public static RandomNumberGenerator RNG {
+            get { return Instance.rng; }
+        }
+
         void Awake() {
             state = GameState.NO_SET;
+            rng = new RandomNumberGenerator();
         }
 
         void Start() {
@@ -120,6 +127,49 @@ namespace MyUnityChan {
                 default:
                     break;
             }
+        }
+    }
+
+    public class RandomNumberGenerator : StructBase {
+        public RandomNumberGenerator() {
+        }
+
+        public float value {
+            get { return Random.value; }
+        }
+
+        public void setSeed(int seed) {
+            Random.InitState(seed);
+        }
+
+        public bool prob(float p) {
+            return prob(p, value);
+        }
+
+        public bool prob(float p, float rand) {
+            if ( p <= 0.0f )
+                return false;
+            if ( p >= 1.0f )
+                return true;
+            if ( p <= rand )
+                return false;
+            return true;
+        }
+
+        public T prob<S, T>(List<S> candidates) where S : KP<T>  {
+            if ( candidates.Select(c => c.prob).Sum() > (float)candidates.Count ) {
+                throw new System.Exception("Invalid prob");
+            }
+
+            var cs = candidates.OrderBy(c => c.prob);
+
+            float rand = value;
+            foreach( var c in cs ) {
+                if ( prob(c.prob, rand) ) {
+                    return c.key;
+                }
+            }
+            return default(T);
         }
     }
 }
