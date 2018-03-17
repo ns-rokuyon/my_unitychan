@@ -25,6 +25,7 @@ namespace MyUnityChan {
         public override void perform() {
             base.perform();
             player.se(Const.ID.SE.SWISH_1, false, 6);
+            player.lockInput(total_frame - 5);
 
             if ( weapon.follow_hand_targets.Count > 0 ) {
                 player.ik.bind(Const.ID.IKEffectorType.LEFT_HAND,
@@ -71,6 +72,7 @@ namespace MyUnityChan {
             } else {
                 player.se(Const.ID.SE.SWISH_1, false, 20);
             }
+            player.lockInput(total_frame - 5);
 
             if ( weapon.follow_hand_targets.Count > 0 ) {
                 player.ik.bind(Const.ID.IKEffectorType.LEFT_HAND,

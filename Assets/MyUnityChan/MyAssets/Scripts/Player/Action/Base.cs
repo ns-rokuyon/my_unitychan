@@ -23,6 +23,10 @@ namespace MyUnityChan {
             return Const.PlayerAction.BRAKE;
         }
 
+        public override void perform() {
+            player.getAnimator().Play("Locomotion");
+        }
+
         public override void performFixed() {
             Vector3 fw = player.transform.forward;
             float vx = player.rigid_body.velocity.x;
@@ -48,6 +52,51 @@ namespace MyUnityChan {
             return player.isGrounded() &&
                 !player.isInputLocked() &&
                 (Mathf.Abs(horizontal) < 0.2 && Mathf.Abs(vx) > 0.2f);
+        }
+    }
+
+    public class PlayerStop : PlayerAction {
+        public int stop_count { get; private set; }
+        public bool auto_rest { get; private set; }
+
+        public PlayerStop(Character character)
+            : base(character) {
+            flag = null;
+            auto_rest = true;
+        }
+
+        public override string name() {
+            return "STOP";
+        }
+
+        public override Const.PlayerAction id() {
+            return Const.PlayerAction.STOP;
+        }
+
+        public override void perform() {
+            if ( stop_count == 0 ) {
+                player.getAnimator().Play("Idle");
+            }
+            else {
+                if ( auto_rest && stop_count % Const.Frame.PLAYER_REST_TRANSITION_INTERVAL == 0 )
+                    player.getAnimator().Play("Rest");
+            }
+            stop_count++;
+        }
+
+        public override void end_perform() {
+            stop_count = 0;
+            player.getAnimator().Play("Locomotion");
+        }
+
+        public override bool condition() {
+            float horizontal = Mathf.Abs(controller.keyHorizontal());
+            float vx = player.getVx(abs: true);
+            float vy = player.getVy(abs: true);
+
+            return player.isGrounded() &&
+                   horizontal < 0.01f &&
+                   vx < 0.01f && vy < 0.01f;
         }
     }
 
@@ -118,6 +167,7 @@ namespace MyUnityChan {
             //if ( Mathf.Abs(horizontal) >= 0.2 && horizontal * vx < maxspeed ) {
             if ( Mathf.Abs(horizontal) >= 0.2 ) {
                 if ( Mathf.Sign(horizontal) != Mathf.Sign(vx) && Mathf.Abs(vx) > 0.1f ) {
+                    player.getAnimator().Play("Locomotion");
                 }
                 else {
                     player.getAnimator().SetBool("Turn", false);
@@ -186,14 +236,8 @@ namespace MyUnityChan {
 
         public override void off_perform() {
             player.getAnimator().speed = player.getAnimSpeedDefault();
-            if ( dash ) {
-                Observable.TimerFrame(3)
-                    .Subscribe(_ => offDash());
-                if ( player.getAnimator().GetBool("Jump") ) {
-                    return;
-                }
-                //player.getAnimator().CrossFade("Locomotion", 0.01f);
-            }
+            if ( dash )
+                player.delay(3, offDash);
         }
 
         public override bool condition() {
@@ -266,6 +310,7 @@ namespace MyUnityChan {
                    !player.isGrappling() &&
                    !player.isFlinching() &&
                    !player.isLanding() &&
+                   !player.isAttacking() &&
                    player.ground_distance > 3.0f &&
                    player.getVy() < -4.0f;
         }
@@ -293,6 +338,7 @@ namespace MyUnityChan {
     }
 
     public class PlayerLand : PlayerAction {
+        // Between a short time before landing and until landing is completed
         public bool landing { get; private set; }
         private PlayerFall fall;
 
@@ -304,8 +350,7 @@ namespace MyUnityChan {
             if ( landing )
                 return;
 
-            if ( player.ground_distance < 2.0f ) {
-                player.getAnimator().Play("Locomotion");
+            if ( player.ground_distance < 1.0f ) {
                 landing = true;
             }
         }

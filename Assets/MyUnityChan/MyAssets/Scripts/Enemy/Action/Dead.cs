@@ -47,9 +47,13 @@ namespace MyUnityChan {
 
             // DropItem
             if ( enemy is IEnemyItemDrop ) {
-                Const.ID.Item itemname = (enemy as IEnemyItemDrop).dropItem();
-                DropItem item = DropItemManager.createItem<DropItem>(itemname, true);
-                item.setPosition(enemy.transform.position + Vector3.up);
+                //Const.ID.Item itemname = (enemy as IEnemyItemDrop).dropItem();
+                //DropItem item = DropItemManager.createItem<DropItem>(itemname, true);
+                //item.setPosition(enemy.transform.position + Vector3.up);
+                var dropper = enemy.GetComponent<ItemDropper>();
+                if ( dropper ) {
+                    dropper.drop();
+                }
             }
 
             // Discard

@@ -47,13 +47,10 @@ namespace MyUnityChan {
             }
         }
 
-        public PlayerAction(Character character) {
+        public PlayerAction(Character character) : base() {
             player = (Player)character;
             controller = (PlayerController)player.getController();
             command_recorder = controller.getCommandRecorder();
-            priority = 0;
-            skip_lower_priority = false;
-            perform_callbacks = new List<System.Action>();
         }
 
         public abstract Const.PlayerAction id();

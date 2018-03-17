@@ -17,6 +17,10 @@ namespace MyUnityChan {
         public bool skip_lower_priority { get; protected set; }
         public bool keep_skipping_lower_priority_in_transaction { get; protected set; }
         public List<System.Action> perform_callbacks { get; set; }
+        
+        // List of callback functions on the end_perform phase.
+        // This list will be cleared at first frame of perform phase.
+        public List<System.Action> end_perform_callbacks { get; set; }
 
         public int transaction_frame_count { get; set; }
         public virtual bool use_transaction { get; set; }
@@ -35,6 +39,9 @@ namespace MyUnityChan {
         public virtual void off_perform() { }               // action method in Update()
         public virtual void off_performFixed() { }          // action method in FixedUpdate()
 
+        public virtual void end_perform() { }
+        public virtual void end_performFixed() { }          // TODO
+
         public virtual void constant_perform() { }          // action method in Update() constantly (update)
         public virtual void constant_performFixed() { }     // action method in FixedUpdate() constantly 
         public virtual void constant_performLate() { }      // action method in LateUpdate() constantly
@@ -44,6 +51,13 @@ namespace MyUnityChan {
         public virtual void prepare() { }
         public virtual void end() { }
         public virtual void effect() { }
+
+        public Action() {
+            priority = 0;
+            skip_lower_priority = false;
+            perform_callbacks = new List<System.Action>();
+            end_perform_callbacks = new List<System.Action>();
+        }
 
         public void enable() {
             activation = true;

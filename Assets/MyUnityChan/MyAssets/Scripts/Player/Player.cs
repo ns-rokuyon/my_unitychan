@@ -100,15 +100,6 @@ namespace MyUnityChan {
         }
 
         protected override void update() {
-            float vy = rigid_body.velocity.y;
-
-            if ( vy <= 0 && isGrounded() ) {
-                // landing
-                animator.SetBool("OnGround", true);
-                animator.speed = anim_speed_default;
-                animator.SetBool("Jump", false);
-            }
-
             updateStunned();
             recordPosition();
 
@@ -169,6 +160,8 @@ namespace MyUnityChan {
                     action_manager.registerAction(new PlayerFall(this)); break;
                 case Const.PlayerAction.LAND:
                     action_manager.registerAction(new PlayerLand(this)); break;
+                case Const.PlayerAction.STOP:
+                    action_manager.registerAction(new PlayerStop(this)); break;
                 default:
                     Debug.LogWarning("Undefined player action: id=" + action_class);
                     break;
@@ -354,6 +347,11 @@ namespace MyUnityChan {
             PlayerLand land = action_manager.getAction<PlayerLand>("LAND");
             if ( land == null ) return false;
             return land.landing;
+        }
+
+        public bool isAttacking() {
+            PlayerAttack attack = action_manager.getAction<PlayerAttack>("ATTACK");
+            return attack.active_attack != Const.ID.AttackSlotType._NO || attack.transaction != null;
         }
 
         public bool isAnimState(string anim_name) {

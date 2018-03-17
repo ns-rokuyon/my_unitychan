@@ -60,6 +60,11 @@ namespace MyUnityChan {
                     if ( action.condition() ) {
                         action.perform();
 
+                        if ( action.end_perform_callbacks.Count == 0 ) {
+                            // Add default end_perform function at first frame of action.condition==true
+                            action.end_perform_callbacks.Add(action.end_perform);
+                        }
+
                         if ( action.perform_callbacks.Count > 0 ) {
                             action.perform_callbacks.ForEach(callback => callback());
                         }
@@ -72,6 +77,12 @@ namespace MyUnityChan {
                     }
                     else {
                         if ( action.transaction == null ) {
+                            if ( action.end_perform_callbacks.Count > 0 ) {
+                                // Call end_perform_callbacks at the first off perform frame
+                                action.end_perform_callbacks.ForEach(callback => callback());
+                                action.end_perform_callbacks.Clear();
+                            }
+
                             action.off_perform();
                         }
                         if ( action.skip_lower_priority && 
@@ -90,6 +101,11 @@ namespace MyUnityChan {
                     // call action methods in Update()
                     action.perform();
 
+                    if ( action.end_perform_callbacks.Count == 0 ) {
+                        // Add default end_perform function at first frame of action.condition==true
+                        action.end_perform_callbacks.Add(action.end_perform);
+                    }
+
                     if ( action.perform_callbacks.Count > 0 ) {
                         action.perform_callbacks.ForEach(callback => callback());
                     }
@@ -105,6 +121,12 @@ namespace MyUnityChan {
                 }
                 else {
                     if ( action.transaction == null ) {
+                        if ( action.end_perform_callbacks.Count > 0 ) {
+                            // Call end_perform_callbacks at the first off perform frame
+                            action.end_perform_callbacks.ForEach(callback => callback());
+                            action.end_perform_callbacks.Clear();
+                        }
+
                         action.off_perform();
                     }
                     if ( action.skip_lower_priority && 

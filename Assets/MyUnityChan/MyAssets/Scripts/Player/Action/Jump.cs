@@ -49,7 +49,6 @@ namespace MyUnityChan {
         }
 
         public override void perform() {
-            player.getAnimator().SetBool("Jump", true);
             if ( player.isDash() ) {
                 // dashdump (ground jump)
                 player.getAnimator().Play("DashJump", -1, 0.0f);
@@ -59,7 +58,6 @@ namespace MyUnityChan {
                 player.getAnimator().Play("Jump", -1, 0.0f);
             }
             player.setAnimSpeedDefault();
-            player.getAnimator().SetBool("OnGround", false);
             player.lockInput(2);
         }
 
@@ -130,7 +128,6 @@ namespace MyUnityChan {
         }
 
         public override void perform() {
-            player.getAnimator().SetBool("Jump", true);
             if ( player.isDash() ) {
                 // dashdump (ground jump)
                 player.getAnimator().Play("DashJump", -1, 0.0f);
@@ -140,7 +137,6 @@ namespace MyUnityChan {
                 player.getAnimator().Play("Jump", -1, 0.0f);
             }
             player.setAnimSpeedDefault();
-            player.getAnimator().SetBool("OnGround", false);
             player.lockInput(2);
         }
 
@@ -219,11 +215,9 @@ namespace MyUnityChan {
         }
 
         public override void perform() {
-            player.getAnimator().SetBool("Jump", true);
             // Wall jump
             player.getAnimator().Play("Jump", -1, 0.0f);
             player.setAnimSpeedDefault();
-            player.getAnimator().SetBool("OnGround", false);
             player.voice(Const.ID.PlayerVoice.JUMP);
             player.lockInput(20);
         }

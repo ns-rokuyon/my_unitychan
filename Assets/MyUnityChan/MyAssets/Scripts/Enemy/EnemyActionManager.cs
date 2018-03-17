@@ -21,13 +21,9 @@ namespace MyUnityChan {
             }
         }
 
-        public EnemyActionBase(Character character) {
+        public EnemyActionBase(Character character) : base() {
             enemy = (Enemy)character;
             controller = (AIController)enemy.getController();
-            priority = 0;
-            skip_lower_priority = false;
-            perform_callbacks = new List<System.Action>();
         }
-
     }
 }
