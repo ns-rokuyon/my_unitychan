@@ -6,6 +6,7 @@ namespace MyUnityChan {
     public class Attractable : ObjectBase {
         public Transform target;
         public float speed = 10.0f;
+        public int delay_frame = 0;
 
         private bool has_rigidbody { get; set; }
         private System.IDisposable updater { get; set; }
@@ -30,6 +31,7 @@ namespace MyUnityChan {
                 return;
             }
             updater = time_control.PausableEveryUpdate()
+                .Skip(delay_frame)
                 .Subscribe(_ => {
                     transform.position = Vector3.MoveTowards(
                         transform.position, target.transform.position,
