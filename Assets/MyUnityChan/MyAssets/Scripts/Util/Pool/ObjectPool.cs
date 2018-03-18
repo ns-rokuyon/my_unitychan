@@ -9,7 +9,6 @@ namespace MyUnityChan {
         public GameObject prefab;
 
         public bool pooled { get; set; }
-        public string prefab_name { get; set; }
 
         public abstract void initialize();
         public abstract void finalize();
@@ -71,7 +70,7 @@ namespace MyUnityChan {
             if ( comp == null ) {
                 DebugManager.log("No PoolObjectBase attached: " + go, Const.Loglevel.ERROR);
             }
-            comp.prefab_name = prefab.name;
+            comp.prefab = prefab;
             comp.managed_by_objectpool = true;
             comp.pooled = true;
             comp.initialize();
