@@ -62,7 +62,11 @@ namespace MyUnityChan {
         public PlayerStop(Character character)
             : base(character) {
             flag = null;
-            auto_rest = true;
+
+            if ( player.playable )
+                auto_rest = true;
+            else
+                auto_rest = false;
         }
 
         public override string name() {
@@ -86,7 +90,6 @@ namespace MyUnityChan {
 
         public override void end_perform() {
             stop_count = 0;
-            player.getAnimator().Play("Locomotion");
         }
 
         public override bool condition() {
@@ -95,6 +98,9 @@ namespace MyUnityChan {
             float vy = player.getVy(abs: true);
 
             return player.isGrounded() &&
+                   !player.isAttacking() &&
+                   !player.isLanding() &&
+                   !player.isInputLocked() &&
                    horizontal < 0.01f &&
                    vx < 0.01f && vy < 0.01f;
         }
@@ -167,7 +173,6 @@ namespace MyUnityChan {
             //if ( Mathf.Abs(horizontal) >= 0.2 && horizontal * vx < maxspeed ) {
             if ( Mathf.Abs(horizontal) >= 0.2 ) {
                 if ( Mathf.Sign(horizontal) != Mathf.Sign(vx) && Mathf.Abs(vx) > 0.1f ) {
-                    player.getAnimator().Play("Locomotion");
                 }
                 else {
                     player.getAnimator().SetBool("Turn", false);
@@ -175,6 +180,7 @@ namespace MyUnityChan {
                 }
 
                 if ( player.isGrounded() ) {
+                    player.getAnimator().Play("Locomotion");
                     (player as ICharacterFootstep).onFootstep(Const.ID.FieldType.ASPHALT);
                     (player as ICharacterWalk).onForward();
                 }

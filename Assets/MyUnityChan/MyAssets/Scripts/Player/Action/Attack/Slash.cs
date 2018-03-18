@@ -50,6 +50,7 @@ namespace MyUnityChan {
         public override void perform() {
             base.perform();
             player.se(Const.ID.SE.SWING_1, false, 5);
+
             player.delay(5, () => {
                 GameObject obj = EffectManager.createEffect(Const.ID.Effect.LIGHT_SLASH_02, player, 0.5f, 0.5f, 120, true);
                 obj.GetComponent<SlashEffect>().rotate(Const.ID.SlashType.HORIZONTAL, mirror: player.isLookBack());
@@ -60,6 +61,8 @@ namespace MyUnityChan {
                                weapon.followHandTargets[0].value.transform,
                                1.0f, 1.0f, total_frame);
             }
+
+            player.lockInput(total_frame - 10);
         }
     }
 
@@ -85,6 +88,8 @@ namespace MyUnityChan {
                 GameObject obj = EffectManager.createEffect(Const.ID.Effect.LIGHT_SLASH_01, player, 0.5f, 0.5f, 120, true);
                 obj.GetComponent<SlashEffect>().rotate(Const.ID.SlashType.HORIZONTAL_REV, mirror:player.isLookBack());
             });
+
+            player.lockInput(total_frame - 10);
         }
     }
 
@@ -117,6 +122,8 @@ namespace MyUnityChan {
                                weapon.followHandTargets[0].value.transform,
                                1.0f, 1.0f, total_frame);
             }
+
+            player.lockInput(total_frame - 10);
         }
     }
 
@@ -142,6 +149,7 @@ namespace MyUnityChan {
                 obj.GetComponent<SlashEffect>().rotate(Const.ID.SlashType.VERTICAL, mirror: player.isLookBack());
             });
 
+            player.lockInput(total_frame - 10);
         }
 
         public override void performFixed() {
@@ -181,6 +189,8 @@ namespace MyUnityChan {
                                weapon.followHandTargets[0].value.transform,
                                1.0f, 1.0f, total_frame);
             }
+
+            player.lockInput(total_frame - 10);
         }
 
         public override void performFixed() {
@@ -209,6 +219,8 @@ namespace MyUnityChan {
             base.perform();
             player.voice(Const.ID.PlayerVoice.ATTACK6, true, 20);
             player.se(Const.ID.SE.SWING_3, false, 10);
+
+            player.lockInput(total_frame - 10);
         }
 
         public override void performFixed() {

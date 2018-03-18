@@ -338,19 +338,20 @@ namespace MyUnityChan {
         }
 
         public bool isGrappling() {
-            PlayerGrapple grapple = action_manager.getAction<PlayerGrapple>("GRAPPLE");
+            PlayerGrapple grapple = action_manager.getAction<PlayerGrapple>();
             if ( grapple == null ) return false;
             return grapple.grappled;
         }
 
         public bool isLanding() {
-            PlayerLand land = action_manager.getAction<PlayerLand>("LAND");
+            PlayerLand land = action_manager.getAction<PlayerLand>();
             if ( land == null ) return false;
             return land.landing;
         }
 
         public bool isAttacking() {
-            PlayerAttack attack = action_manager.getAction<PlayerAttack>("ATTACK");
+            PlayerAttack attack = action_manager.getAction<PlayerAttack>();
+            if ( attack == null ) return false;
             return attack.active_attack != Const.ID.AttackSlotType._NO || attack.transaction != null;
         }
 

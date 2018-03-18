@@ -6,6 +6,7 @@ namespace MyUnityChan {
     public abstract class ActionManager : ObjectBase {
         protected Character character;
         protected Dictionary<string, Action> actions = new Dictionary<string, Action>();
+        protected Dictionary<System.Type, Action> _type_indexed_actions = new Dictionary<System.Type, Action>();
 
         protected List<Action> adhoc_perform_actions = new List<Action>();
         protected List<Action> adhoc_performFixed_actions = new List<Action>();
@@ -254,6 +255,24 @@ namespace MyUnityChan {
                 return null;
             }
             return actions[name];
+        }
+
+        public T getAction<T>() where T : class {
+            System.Type t = typeof(T);
+            Action action;
+
+            if ( _type_indexed_actions.ContainsKey(t) ) {
+                action = _type_indexed_actions[t];
+            }
+            else {
+                action = actions.Values.FirstOrDefault(a => a.GetType() == t);
+                if ( action != null )
+                    _type_indexed_actions.Add(t, action);
+            }
+
+            if ( action == null )
+                return null;
+            return action as T;
         }
 
         public T getAction<T>(string name) where T : class {
