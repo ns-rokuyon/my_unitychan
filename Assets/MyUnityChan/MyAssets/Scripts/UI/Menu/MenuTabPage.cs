@@ -17,6 +17,7 @@ namespace MyUnityChan {
 
         public int id { get; set; }
         public List<Selectable> selectables { get; private set; }
+        public List<IGUIOpenable> openables { get; private set; }
         public MenuNavbarButtonTabPage nav { get; set; }
         private Canvas canvas;
         private EventSystem es;
@@ -25,11 +26,15 @@ namespace MyUnityChan {
             es = EventSystem.current;
             canvas = GetComponent<Canvas>();
             selectables = new List<Selectable>();
+            openables = new List<IGUIOpenable>();
 
             foreach ( Selectable selectable in canvas.GetComponentsInChildren<Selectable>() ) {
                 selectables.Add(selectable);
             }
 
+            foreach ( IGUIOpenable openable in canvas.GetComponentsInChildren<IGUIOpenable>() ) {
+                openables.Add(openable);
+            }
         }
 
         void Start() {
@@ -54,11 +59,15 @@ namespace MyUnityChan {
             var first_selectable = selectables.FirstOrDefault();
             if ( first_selectable )
                 es.SetSelectedGameObject(first_selectable.gameObject);
+
+            openables.ForEach(openable => openable.open());
         }
 
         public void deactivate() {
             canvas.enabled = false;
             es.SetSelectedGameObject(null);
+
+            openables.ForEach(openable => openable.terminate());
         }
 
         public GameObject findUIObjectInChildren(string name) {

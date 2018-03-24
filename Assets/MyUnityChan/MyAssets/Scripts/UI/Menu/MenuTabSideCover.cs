@@ -2,15 +2,16 @@
 using UnityEngine.UI;
 using System.Collections;
 using DG.Tweening;
+using TMPro;
 
 namespace MyUnityChan {
     public class MenuTabSideCover : GUIObjectBase {
-        public Text text { get; set; }
+        public TextMeshProUGUI text { get; set; }
         public RectTransform rect_transform { get; set; }
         public float anchor_x { get; set; }
 
         void Awake() {
-            text = GetComponentInChildren<Text>();
+            text = GetComponentInChildren<TextMeshProUGUI>();
             rect_transform = GetComponent<RectTransform>();
             anchor_x = rect_transform.anchoredPosition.x;
         }

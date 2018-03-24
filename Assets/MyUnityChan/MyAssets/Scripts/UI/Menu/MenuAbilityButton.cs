@@ -13,7 +13,11 @@ namespace MyUnityChan {
         [SerializeField]
         public Ability.Id ability_id;
 
-        private RectTransform rect_transform;
+        private RectTransform rect_transform;           // The whole of button
+        private RectTransform icon_rect_transform;      // Only icon image
+
+        private Tweener scaler;
+        private Sequence rotator;
 
         public PlayerAbility ability { get; set; } 
         public Button button { get; protected set; }
@@ -31,6 +35,7 @@ namespace MyUnityChan {
             rect_transform = GetComponent<RectTransform>();
             button = GetComponent<Button>();
             icon = GetComponentInChildren<RawImage>();
+            icon_rect_transform = icon.GetComponent<RectTransform>();
             if ( icon )
                 icon_default_color = icon.color;
         }
@@ -59,7 +64,22 @@ namespace MyUnityChan {
 
         public void OnSelect(BaseEventData eventData) {
             se(Const.ID.SE.BUTTON_SELECT);
-            rect_transform.localPosition = rect_transform.localPosition.add(0, 0, -10.0f);
+
+            if ( scaler != null )
+                scaler.Kill();
+            // Icon size x1.5
+            scaler = icon_rect_transform.DOScale(new Vector3(1.5f, 1.5f, 1.5f), 0.5f);
+
+            if ( rotator != null ) {
+                rotator.Complete();
+                rotator.Kill();
+            }
+            // Icon rotation
+            rotator = DOTween.Sequence();
+            rotator.AppendInterval(3.0f);
+            rotator.Append(icon_rect_transform.DORotate(new Vector3(0.0f, 0.0f, 360.0f), 1.0f, RotateMode.FastBeyond360).SetEase(Ease.InOutCirc));
+            rotator.SetLoops(-1);
+
             //demo.centering();
             //demo.setDemoCameraDistance(ability.def.demo_camera_distance);
             ability.def.onSelectAbilityButton(demo.pm);
@@ -73,7 +93,18 @@ namespace MyUnityChan {
         }
 
         public void OnDeselect(BaseEventData eventData) {
-            rect_transform.localPosition = rect_transform.localPosition.add(0, 0, 10.0f);
+            if ( scaler != null )
+                scaler.Kill();
+            // Fix icon size
+            icon_rect_transform.DOScale(Vector3.one, 0.1f);
+
+            if ( rotator != null ) {
+                rotator.Complete();
+                rotator.Kill();
+            }
+            // Fix icon to base angle
+            icon_rect_transform.DORotate(new Vector3(0.0f, 0.0f, 0.0f), 1.0f, RotateMode.Fast);
+
             ability.def.onDeSelectAbilityButton(demo.pm);
             delay(1, () => demo.centering());
         }

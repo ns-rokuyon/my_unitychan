@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 
 namespace MyUnityChan {
     public class MenuManager : SingletonObjectBase<MenuManager> {
@@ -14,7 +15,7 @@ namespace MyUnityChan {
         public List<GameObject> tab_page_objects;
 
         public Canvas canvas { get; set; }
-        public Text tab_title { get; private set; }
+        public TextMeshProUGUI tab_title { get; private set; }
         public List<MenuTabPage> tab_pages { get; set; }
         public List<MenuNavbarButtonTabPage> navs { get; set; }
         public MenuTabSideCover side_cover { get; set; }
@@ -44,7 +45,7 @@ namespace MyUnityChan {
             player_demo = player_demo_object.GetComponent<PlayerDemo>();
 
             if ( tab_title_object )
-                tab_title = tab_title_object.GetComponent<Text>();
+                tab_title = tab_title_object.GetComponent<TextMeshProUGUI>();
 
             navs = new List<MenuNavbarButtonTabPage>(FindObjectsOfType<MenuNavbarButtonTabPage>());
 

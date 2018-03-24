@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using RootMotion.FinalIK;
+using DG.Tweening;
 
 namespace MyUnityChan {
     public interface Lockable {
@@ -42,5 +43,11 @@ namespace MyUnityChan {
         bool passing {
             get;
         }
+    }
+
+    public interface IGUIOpenable {
+        void open();
+        void close();
+        void terminate();
     }
 }
