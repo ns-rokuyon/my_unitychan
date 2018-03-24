@@ -95,9 +95,18 @@ namespace MyUnityChan {
             }
             
             IDisposable d = createTimer(frame, frame_count_type).Subscribe(_ => func()).AddTo(this);
-            if ( disposables.ContainsKey(key) )
-                disposables[key].Dispose();
+            cancelDelay(key);
             disposables[key] = d;
+        }
+
+        public void cancelDelay(string key) {
+            if ( disposables.ContainsKey(key) ) {
+                if ( disposables[key] == null ) {
+                    return;
+                }
+                disposables[key].Dispose();
+                disposables[key] = null;
+            }
         }
 
         public void doPrevInterval(string key, int frame, System.Action func) {
