@@ -30,6 +30,14 @@ namespace MyUnityChan {
             key = pair.key;
             value = pair.value;
         }
+
+        public TKey _1 {
+            get { return key; }
+        }
+
+        public TValue _2 {
+            get { return value; }
+        }
     }
 
     [System.Serializable]

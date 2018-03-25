@@ -3,6 +3,7 @@ using System.Collections;
 using System;
 using UniRx;
 using UniRx.Triggers;
+using System.Linq;
 
 namespace MyUnityChan {
     public class DefaultController : PlayerController {
@@ -19,21 +20,10 @@ namespace MyUnityChan {
                 horizontal_input = Input.GetAxisRaw("Horizontal");
                 vertical_input = Input.GetAxisRaw("Vertical");
             }
-            inputs[(int)InputCode.JUMP] = Input.GetKeyDown("space");
-            inputs[(int)InputCode.ATTACK] = Input.GetKeyDown("x");
-            inputs[(int)InputCode.PROJECTILE] = Input.GetKey("c");
-            inputs[(int)InputCode.WEAPON] = Input.GetKey("f");
-            inputs[(int)InputCode.DASH] = Input.GetKey("v");
-            inputs[(int)InputCode.GUARD] = Input.GetKey("z");
-            inputs[(int)InputCode.SWITCH_BEAM] = Input.GetKey("g");
-            inputs[(int)InputCode.GRAPPLE] = Input.GetKeyDown("h");
-            inputs[(int)InputCode.PAUSE] = Input.GetKeyDown("p");
-            inputs[(int)InputCode.TRANSFORM] = Input.GetKeyDown("t");
-            inputs[(int)InputCode.TEST] = Input.GetKeyDown("q");
-            inputs[(int)InputCode.CANCEL] = Input.GetKey("b");
-            inputs[(int)InputCode.PREV_TAB] = Input.GetKeyDown("z");
-            inputs[(int)InputCode.NEXT_TAB] = Input.GetKeyDown("n");
-        }
 
+            foreach ( var code in keyconfig.codes ) {
+                inputs[(int)code] = keyconfig.read(code);
+            }
+        }
     }
 }

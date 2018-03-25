@@ -5,6 +5,14 @@ namespace MyUnityChan {
     public abstract class PlayerController : Controller {
         protected abstract void watchInput();
 
+        public KeyConfig keyconfig { get; set; }
+
+        public override void Awake() {
+            base.Awake();
+
+            keyconfig = GetComponent<KeyConfig>();
+        }
+
         void Update() {
             watchInput();
             updateDirectionKey();
