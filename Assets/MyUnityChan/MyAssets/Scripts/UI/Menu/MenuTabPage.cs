@@ -38,10 +38,12 @@ namespace MyUnityChan {
         }
 
         void Start() {
+            /*
             if ( id == 0 )
                 activate();
             else
                 deactivate();
+            */
         }
 
         public bool isFocused() {

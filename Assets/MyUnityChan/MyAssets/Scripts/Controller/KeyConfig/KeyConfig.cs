@@ -46,10 +46,14 @@ namespace MyUnityChan {
             [SerializeField, ReadOnly]
             public Controller.InputCode code;
 
+            [SerializeField]
+            public bool configurable = true;
+
             public InputSource(Controller.InputCode c) {
                 code = c;
             }
 
+            public abstract string symbol { get; }
             public abstract T read();
         }
 

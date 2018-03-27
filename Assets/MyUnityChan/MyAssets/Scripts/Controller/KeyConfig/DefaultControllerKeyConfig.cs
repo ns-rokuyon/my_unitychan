@@ -36,6 +36,10 @@ namespace MyUnityChan {
                 reader = _reader;
             }
 
+            public override string symbol {
+                get { return keymap.symbol; }
+            }
+
             public override bool read() {
                 return reader(keymap.sign);
             }

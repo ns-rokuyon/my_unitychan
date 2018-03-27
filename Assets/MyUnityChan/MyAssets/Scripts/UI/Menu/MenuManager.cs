@@ -21,6 +21,8 @@ namespace MyUnityChan {
         public MenuTabSideCover side_cover { get; set; }
         public PlayerDemo player_demo { get; protected set; }
 
+        private int enter_count;
+
         public int focused_tab_index {
             get {
                 return tab_pages.FindIndex(t => t.isFocused());
@@ -43,6 +45,7 @@ namespace MyUnityChan {
             canvas = canvas_object.GetComponent<Canvas>();
             side_cover = side_cover_object.GetComponent<MenuTabSideCover>();
             player_demo = player_demo_object.GetComponent<PlayerDemo>();
+            enter_count = 0;
 
             if ( tab_title_object )
                 tab_title = tab_title_object.GetComponent<TextMeshProUGUI>();
@@ -107,6 +110,16 @@ namespace MyUnityChan {
         }
 
         public void enter() {
+            enter_count++;
+
+            if ( enter_count == 1 ) {
+                tab_pages.ForEach(tab_page => {
+                    if ( tab_page.id == 0 )
+                        tab_page.activate();
+                    else
+                        tab_page.deactivate();
+                });
+            }
             canvas.enabled = true;
             pause_menu_body_object.SetActive(true);
             focus(focused_tab_index);
