@@ -14,9 +14,14 @@ namespace MyUnityChan {
         [SerializeField]
         public Controller.InputCode code;
 
+        [SerializeField]
+        private bool no_symbol_text;
+
         public void set(Controller.InputCode _code, string message, KeyConfig keyconfig) {
             code = _code;
             message_text.text = message;
+            if ( no_symbol_text )
+                return;
             symbol_text.text = keyconfig.symbol(code);
         }
 
@@ -32,6 +37,14 @@ namespace MyUnityChan {
 
         public void terminate() {
             close();
+        }
+
+        public bool authorized(object obj) {
+            return true;
+        }
+
+        public GameObject getGameObject() {
+            return gameObject;
         }
     }
 }

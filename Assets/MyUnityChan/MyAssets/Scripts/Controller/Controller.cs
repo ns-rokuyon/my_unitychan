@@ -33,6 +33,9 @@ namespace MyUnityChan {
             SPECIAL_03,
             SPECIAL_04,
             SPECIAL_05,
+            HORIZONTAL,
+            VERTICAL,
+            ANY_AXIS,
             len
         };
 

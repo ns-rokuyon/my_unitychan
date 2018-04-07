@@ -7,7 +7,19 @@ namespace MyUnityChan {
     [System.Serializable]
     public abstract class KeyConfig : ObjectBase {
 
+        public static readonly Controller.InputCode[] fixed_codes = {
+            Controller.InputCode.UP, Controller.InputCode.DOWN,
+            Controller.InputCode.LEFT, Controller.InputCode.RIGHT,
+            Controller.InputCode.HORIZONTAL, Controller.InputCode.VERTICAL
+        };
+
+        public AxisSlot horizontal_axis { get; protected set; }
+        public AxisSlot vertical_axis { get; protected set; }
+
         void Start() {
+            horizontal_axis = new AxisSlot(Controller.InputCode.HORIZONTAL, "Horizontal");
+            vertical_axis = new AxisSlot(Controller.InputCode.VERTICAL, "Vertical");
+
             setDefault();
         }
 
@@ -22,24 +34,6 @@ namespace MyUnityChan {
 
         // Get symbol to display of code
         public abstract string symbol(Controller.InputCode code);
-
-        // Initialize all slots
-        public void initSlots() {
-            var button_codes = new Controller.InputCode[] {
-                Controller.InputCode.ATTACK, Controller.InputCode.CANCEL, Controller.InputCode.DASH,
-                Controller.InputCode.GRAPPLE, Controller.InputCode.GUARD, Controller.InputCode.JUMP,
-                Controller.InputCode.NEXT_TAB, Controller.InputCode.PAUSE, Controller.InputCode.PREV_TAB,
-                Controller.InputCode.PROJECTILE, Controller.InputCode.SPECIAL_01, Controller.InputCode.SPECIAL_02,
-                Controller.InputCode.SPECIAL_03, Controller.InputCode.SPECIAL_04, Controller.InputCode.SPECIAL_05,
-                Controller.InputCode.SWITCH_BEAM, Controller.InputCode.TEST, Controller.InputCode.TRANSFORM,
-                Controller.InputCode.WEAPON
-            };
-
-            var stick_codes = new Controller.InputCode[] {
-                Controller.InputCode.LEFT, Controller.InputCode.RIGHT,
-                Controller.InputCode.UP, Controller.InputCode.DOWN
-            };
-        }
 
         [System.Serializable]
         public abstract class InputSource<T> {
@@ -66,6 +60,31 @@ namespace MyUnityChan {
         [System.Serializable]
         public abstract class StickSlot : InputSource<float> {
             public StickSlot(Controller.InputCode c) : base(c) {
+            }
+        }
+
+        [System.Serializable]
+        public class AxisSlot : StickSlot {
+            public string axis_name { get; private set; }
+
+            public AxisSlot(Controller.InputCode code, string _axis_name) : base(code) {
+                axis_name = _axis_name;
+                configurable = false;
+            }
+
+            public override string symbol {
+                get {
+                    return code.ToString();
+                }
+            }
+
+            public override float read() {
+                if ( Time.timeScale > 0.0f ) {
+                    return Input.GetAxis(axis_name);
+                }
+                else {
+                    return Input.GetAxisRaw(axis_name);
+                }
             }
         }
     }

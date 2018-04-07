@@ -5,6 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UniRx;
 using UniRx.Triggers;
+using TMPro;
 
 namespace MyUnityChan {
     public class SettingManager : SingletonObjectBase<SettingManager> {
@@ -41,7 +42,7 @@ namespace MyUnityChan {
             foreach ( var setting in pm.status.setting.flags ) {
                 GameObject toggle = PrefabInstantiater.create(Const.Prefab.UI["TOGGLE"]);
                 RectTransform rt = toggle.GetComponent<RectTransform>();
-                toggle.GetComponentInChildren<Text>().text = setting.Value.title.get();
+                toggle.GetComponentInChildren<TextMeshProUGUI>().text = setting.Value.title.get();
                 toggle.setParent(scroll_content);
                 toggle.GetComponent<MenuToggle>().setFlagKey(setting.Key);
                 rt.localScale = new Vector3(1, 1, 1);
@@ -57,7 +58,7 @@ namespace MyUnityChan {
             foreach ( var setting in pm.status.setting.selects ) {
                 GameObject dropdown = PrefabInstantiater.create(Const.Prefab.UI["DROPDOWN"]);
                 RectTransform rt = dropdown.GetComponent<RectTransform>();
-                dropdown.GetComponentInChildren<Text>().text = setting.Value.title.get();
+                dropdown.GetComponentInChildren<TextMeshProUGUI>().text = setting.Value.title.get();
                 dropdown.setParent(scroll_content);
                 dropdown.GetComponent<MenuDropdownButton>().key = setting.Key;
                 dropdown.GetComponent<MenuDropdownButton>().created_by_settingmanager = true;
@@ -76,7 +77,7 @@ namespace MyUnityChan {
                 GameObject obj = PrefabInstantiater.create(Const.Prefab.UI["RANGE"]);
                 MenuRange range = obj.GetComponent<MenuRange>();
                 RectTransform rt = obj.GetComponent<RectTransform>();
-                obj.GetComponentInChildren<Text>().text = setting.Value.title.get();
+                obj.GetComponentInChildren<TextMeshProUGUI>().text = setting.Value.title.get();
                 obj.setParent(scroll_content);
 
                 range.key = setting.Key;
@@ -193,13 +194,13 @@ namespace MyUnityChan {
             if ( select_setting_objects == null ) return;
 
             foreach ( var kv in flag_setting_objects ) {
-                kv.Value.GetComponentInChildren<Text>().text = kv.Key.title.get();
+                kv.Value.GetComponentInChildren<TextMeshProUGUI>().text = kv.Key.title.get();
             }
             foreach ( var kv in select_setting_objects ) {
-                kv.Value.GetComponentInChildren<Text>().text = kv.Key.title.get();
+                kv.Value.GetComponentInChildren<TextMeshProUGUI>().text = kv.Key.title.get();
             }
             foreach ( var kv in range_setting_objects ) {
-                kv.Value.GetComponentInChildren<Text>().text = kv.Key.title.get();
+                kv.Value.GetComponentInChildren<TextMeshProUGUI>().text = kv.Key.title.get();
             }
         }
 

@@ -17,6 +17,7 @@ namespace MyUnityChan {
         void Awake() {
             rect_transform = GetComponent<RectTransform>();
             guides = new List<ControllerGuide>();
+            DebugManager.log("GuideBox.Awake!!");
         }
 
         public void open() {
@@ -32,9 +33,9 @@ namespace MyUnityChan {
                 float message_text_width = guide.message_text.rectTransform.rect.width;
                 rt.anchoredPosition = new Vector2(rt.anchoredPosition.x + message_text_width * i,
                                                   rt.anchoredPosition.y);
+                guide.fixed_with_respect_to_dynamic_move = fixed_with_respect_to_dynamic_move;
                 guide.set(guide_def.code, guide_def.message.get(), keyconfig);
                 guides.Add(guide);
-
             }
         }
 
@@ -47,6 +48,14 @@ namespace MyUnityChan {
 
         public void terminate() {
             close();
+        }
+
+        public bool authorized(object obj) {
+            return true;
+        }
+
+        public GameObject getGameObject() {
+            return gameObject;
         }
 
         [System.Serializable]

@@ -14,8 +14,8 @@ namespace MyUnityChan {
         }
 
         void Update() {
+            watchDirectionalInput();
             watchInput();
-            updateDirectionKey();
 
             if ( self.isInputLocked() && !PauseManager.isPausing() ) {
                 // ignore any inputs
@@ -35,7 +35,12 @@ namespace MyUnityChan {
             }
         }
 
-        protected void updateDirectionKey() {
+        protected virtual void watchDirectionalInput() {
+            if ( keyconfig ) {
+                horizontal_input = keyconfig.horizontal_axis.read();
+                vertical_input = keyconfig.vertical_axis.read();
+            }
+
             inputs[(int)InputCode.RIGHT] = false;
             inputs[(int)InputCode.LEFT] = false;
             inputs[(int)InputCode.UP] = false;
@@ -57,8 +62,6 @@ namespace MyUnityChan {
                 inputs[(int)InputCode.UP] = false;
                 inputs[(int)InputCode.DOWN] = true;
             }
-
         }
-
     }
 }
