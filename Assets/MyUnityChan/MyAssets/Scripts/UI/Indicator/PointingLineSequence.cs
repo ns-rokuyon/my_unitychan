@@ -53,7 +53,10 @@ namespace MyUnityChan {
                 if ( seq.IsBackwards() ) {
                     // Finalize at the end of backwards
                     finalize();
+                    return;
                 }
+
+                openLinkedOpenables();
             });
 
             seq.SetAutoKill(false);

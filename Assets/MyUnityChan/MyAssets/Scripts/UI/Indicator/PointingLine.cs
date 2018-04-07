@@ -36,11 +36,27 @@ namespace MyUnityChan {
         [SerializeField]
         protected List<PointingIndicator> end_point_indicators = new List<PointingIndicator>();
 
+        [SerializeField]
+        protected List<GameObject> linked_openable_objects = new List<GameObject>();
+
         public RectTransform rect_transform { get; protected set; }
         public GameObject start_point_indicator_object { get; protected set; }
         public GameObject end_point_indicator_object { get; protected set; }
+        public List<IGUIOpenable> _linked_openables { get; protected set; }
 
         protected Tween tween;
+
+        public List<IGUIOpenable> linked_openables {
+            get {
+                if ( _linked_openables == null ) {
+                    _linked_openables = new List<IGUIOpenable>();
+                    linked_openable_objects.ForEach(go => {
+                        _linked_openables.Add(go.GetComponent<IGUIOpenable>());
+                    });
+                }
+                return _linked_openables;
+            }
+        }
 
         public bool visible {
             get {
@@ -77,7 +93,16 @@ namespace MyUnityChan {
         protected void finalize() {
             tween.Goto(0.0f);
             tween.Pause();
+            closeLinkedOpenables();
             onFinalize();
+        }
+
+        protected void openLinkedOpenables() {
+            linked_openables.ForEach(openable => openable.open());
+        }
+
+        protected void closeLinkedOpenables() {
+            linked_openables.ForEach(openable => openable.close());
         }
 
         public void initPositionToEndOf(PointingLineBuildingBlock prev_line) {
@@ -98,6 +123,14 @@ namespace MyUnityChan {
 
         public virtual void onPlayBackward() { }
         public virtual void onFinalize() { }
+
+        public bool authorized(object obj) {
+            return true;
+        }
+
+        public GameObject getGameObject() {
+            return gameObject;
+        }
     }
 
     [Serializable]
@@ -200,6 +233,8 @@ namespace MyUnityChan {
                         rt.anchoredPosition = new Vector2(length, 0.0f) + offset;
                     });
                 });
+
+                openLinkedOpenables();
             });
 
             tween.SetAutoKill(false);
