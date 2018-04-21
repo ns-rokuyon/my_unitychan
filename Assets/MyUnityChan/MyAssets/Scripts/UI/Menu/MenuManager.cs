@@ -75,13 +75,26 @@ namespace MyUnityChan {
         void Update() {
             if ( !canvas.enabled ) return;
 
-            if ( GameStateManager.Instance.player_manager.controller.keyNextTab() ) {
+            Controller controller = GameStateManager.Instance.player_manager.controller;
+
+            if ( controller.keyRight() ) {
+                MenuTabPage focused_tab = tab_pages[focused_tab_index];
+                focused_tab.goNextPage();
+                return;
+            }
+            else if ( controller.keyLeft() ) {
+                MenuTabPage focused_tab = tab_pages[focused_tab_index];
+                focused_tab.goPrevPage();
+                return;
+            }
+
+            if ( controller.keyNextTab() ) {
                 int next_index = focused_tab_index + 1;
                 if ( next_index == tab_pages.Count )
                     next_index = 0;
                 focus(next_index);
             }
-            else if ( GameStateManager.Instance.player_manager.controller.keyPrevTab() ) {
+            else if ( controller.keyPrevTab() ) {
                 int next_index = focused_tab_index - 1;
                 if ( next_index < 0 )
                     next_index = tab_pages.Count - 1;

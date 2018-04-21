@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace MyUnityChan {
     public class GUIObjectBase : ObjectBase {
+        public bool fixed_with_respect_to_dynamic_move;
+
         private Canvas _parent_canvas;
         public Canvas parent_canvas {
             get {

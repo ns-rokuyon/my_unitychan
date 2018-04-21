@@ -45,9 +45,21 @@ namespace MyUnityChan {
         }
     }
 
-    public interface IGUIOpenable {
+    public interface IOpenable {
         void open();
         void close();
         void terminate();
+        bool authorized(object obj);
+    }
+
+    public interface IGUI {
+        GameObject getGameObject();
+    }
+
+    public interface IGUIOpenable : IOpenable, IGUI {
+    }
+
+    public interface IGUIOpenableGroup : IGUIOpenable {
+        List<IGUIOpenable> openables { get; }
     }
 }

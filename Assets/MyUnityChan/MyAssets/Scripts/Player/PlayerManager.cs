@@ -23,6 +23,7 @@ namespace MyUnityChan {
 
         private Dictionary<Const.CharacterName, GameObject> switchable_player_characters;
 
+        public MenuPagerHandler pager_handler { get; protected set; }
         public Const.CharacterName now { get; protected set; }
         public Controller controller { get; set; }
         public HpGauge hpgauge { get; set; }
@@ -46,8 +47,13 @@ namespace MyUnityChan {
             get { return getNowPlayerComponent(); }
         }
 
+        public IObservable<Const.CharacterName> signal {
+            get { return this.ObserveEveryValueChanged(_ => now); }
+        }
+
         void Awake() {
             now = Const.CharacterName._NO;
+            pager_handler = GetComponent<MenuPagerHandler>();
             switchable_player_characters = new Dictionary<Const.CharacterName, GameObject>();
 
             // player status setup
@@ -150,10 +156,20 @@ namespace MyUnityChan {
 
                         // Switch player object for hp gauge
                         hpgauge.setCharacter(next_player);
+
                     }
                 }
                 else {
                     pair.Value.SetActive(false);
+                }
+            }
+
+            if ( playable && pager_handler ) {
+                if ( name == Const.CharacterName.UNITYCHAN ) {
+                    pager_handler.goPageTo(0);
+                }
+                else {
+                    pager_handler.goPageTo(1);
                 }
             }
         }

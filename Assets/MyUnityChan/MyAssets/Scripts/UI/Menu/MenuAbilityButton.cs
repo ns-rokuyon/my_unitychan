@@ -77,7 +77,7 @@ namespace MyUnityChan {
             // Icon rotation
             rotator = DOTween.Sequence();
             rotator.AppendInterval(3.0f);
-            rotator.Append(icon_rect_transform.DORotate(new Vector3(0.0f, 0.0f, 360.0f), 1.0f, RotateMode.FastBeyond360).SetEase(Ease.InOutCirc));
+            rotator.Append(icon_rect_transform.DORotate(new Vector3(0.0f, 360.0f, 0.0f), 1.0f, RotateMode.FastBeyond360).SetEase(Ease.InOutCirc));
             rotator.SetLoops(-1);
 
             //demo.centering();

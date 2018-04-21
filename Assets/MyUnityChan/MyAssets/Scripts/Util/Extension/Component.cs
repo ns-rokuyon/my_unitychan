@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
+using System.Collections;
 using System.Linq;
 
 namespace MyUnityChan {
@@ -27,6 +29,31 @@ namespace MyUnityChan {
 
         public static T[] GetComponentsInSameArea<T>(this UnityEngine.Component self) {
             return self.gameObject.GetComponentsInSameArea<T>();
+        }
+
+        public static T[] GetComponentsInShallowChildren<T>(this GameObject self, int depth = 1) {
+            if ( depth == 0 ) {
+                return new T[0];
+            }
+
+            List<T> ts = new List<T>();
+            foreach ( Transform tf in self.transform ) {
+                T t = tf.gameObject.GetComponent<T>();
+                if ( t == null )
+                    continue;
+                ts.Add(t);
+                ts.AddRange(tf.gameObject.GetComponentsInShallowChildren<T>(depth - 1));
+            }
+
+            return ts.ToArray();
+        }
+
+        public static T[] GetComponentsInShallowChildren<T>(this UnityEngine.Component self, int depth = 1) {
+            return self.gameObject.GetComponentsInShallowChildren<T>(depth);
+        }
+
+        public static T[] GetComponentsInShallowChildren<T>(this UnityEngine.MonoBehaviour self, int depth = 1) {
+            return self.gameObject.GetComponentsInShallowChildren<T>(depth);
         }
     }
 }

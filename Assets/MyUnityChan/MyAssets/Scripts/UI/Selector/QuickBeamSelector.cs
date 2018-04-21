@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Linq;
 using UnityEngine.EventSystems;
+using TMPro;
 
 namespace MyUnityChan {
     public class QuickBeamSelector : QuickSelector {
@@ -29,7 +30,7 @@ namespace MyUnityChan {
                 if ( button_ability_map.ContainsValue(ability) ) {
                     // Displayed button
                     if ( selected_button )
-                        selected_button.GetComponentInChildren<Text>().text = ability.name.get();
+                        selected_button.GetComponentInChildren<TextMeshProUGUI>().text = ability.name.get();
                     return;
                 }
                 // Instantiate a button
@@ -40,8 +41,11 @@ namespace MyUnityChan {
                 entry.callback.AddListener((data) => onSelect(data));
                 trigger.triggers.Add(entry);
                 RawImage image = button.GetComponentInChildren<RawImage>();
-                image.texture = b.GetComponentInChildren<RawImage>().texture;
-                Text text = button.GetComponentInChildren<Text>();
+                RawImage src_image = b.GetComponentInChildren<RawImage>();
+                image.texture = src_image.texture;
+                image.color = src_image.color;
+                image.material = src_image.material;
+                TextMeshProUGUI text = button.GetComponentInChildren<TextMeshProUGUI>();
                 text.text = ability.name.get();
 
                 button_ability_map.Add(button, ability);
@@ -55,7 +59,7 @@ namespace MyUnityChan {
                 button_ability_map.Remove(b);
             });
             if ( selected_button )
-                selected_button.GetComponentInChildren<Text>().text = "";
+                selected_button.GetComponentInChildren<TextMeshProUGUI>().text = "";
         }
 
         protected override Button getFirstSelected() {
