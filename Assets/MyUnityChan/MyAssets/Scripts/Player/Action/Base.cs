@@ -50,6 +50,7 @@ namespace MyUnityChan {
             float horizontal = controller.keyHorizontal();
             float vx = player.rigid_body.velocity.x;
             return player.isGrounded() &&
+                !player.isGuarding() &&
                 !player.isInputLocked() &&
                 (Mathf.Abs(horizontal) < 0.2 && Mathf.Abs(vx) > 0.2f);
         }
@@ -99,7 +100,9 @@ namespace MyUnityChan {
 
             return player.isGrounded() &&
                    !player.isAttacking() &&
+                   !player.isGuarding() &&
                    !player.isLanding() &&
+                   !player.isTriggering() &&
                    !player.isInputLocked() &&
                    horizontal < 0.01f &&
                    vx < 0.01f && vy < 0.01f;

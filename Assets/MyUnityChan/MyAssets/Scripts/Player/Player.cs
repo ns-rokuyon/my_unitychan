@@ -355,6 +355,12 @@ namespace MyUnityChan {
             return attack.active_attack != Const.ID.AttackSlotType._NO || attack.transaction != null;
         }
 
+        public bool isTriggering() {
+            if ( !beam_turret )
+                return false;
+            return beam_turret.triggered;
+        }
+
         public bool isAnimState(string anim_name) {
             // anim_name is an animator state name starts with "Base Layer." instead of clip name
             AnimatorStateInfo anim_state = animator.GetCurrentAnimatorStateInfo(0);
