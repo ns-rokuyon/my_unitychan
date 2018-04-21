@@ -15,6 +15,7 @@ namespace MyUnityChan {
         public Vector3 top;
         public Vector3 bottom;
         public float speed;
+        public bool lock_control;
 
         public Elevator.State state { get; private set; }
 
@@ -73,24 +74,28 @@ namespace MyUnityChan {
                     if ( transform.localPosition.y < bottom.y ) {
                         // Stop
                         transform.localPosition = bottom;
-                        state = State.WAITING_BOTTOM;
                         freeMembers();
+                        state = State.WAITING_BOTTOM;
                     }
                 }).AddTo(this);
         }
 
         protected void lockMembers() {
             members.ForEach(m => {
-                if ( m is PlayerManager ) {
-                    (m as PlayerManager).getNowPlayerComponent().freeze();
+                if ( lock_control ) {
+                    if ( m is PlayerManager ) {
+                        (m as PlayerManager).getNowPlayerComponent().freeze();
+                    }
                 }
             });
         }
 
         protected void freeMembers() {
             members.ForEach(m => {
-                if ( m is PlayerManager ) {
-                    (m as PlayerManager).getNowPlayerComponent().freeze(false);
+                if ( lock_control ) {
+                    if ( m is PlayerManager ) {
+                        (m as PlayerManager).getNowPlayerComponent().freeze(false);
+                    }
                 }
                 getOff(m);
             });

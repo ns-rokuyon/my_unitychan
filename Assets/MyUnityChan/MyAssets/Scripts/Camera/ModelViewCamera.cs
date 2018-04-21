@@ -2,41 +2,59 @@
 using System.Collections;
 using System.Collections.Generic;
 using UniRx;
+using UniRx.Triggers;
+using AmplifyColor;
+using System;
 
 namespace MyUnityChan {
-    public class ModelViewCamera : ObjectBase {
-        public GameObject target;
-        public float distance;
-        public Vector3 angle;
-        public Vector3 offset;
-        public bool orbit;
-        public bool orbital_reverse;
-        public float orbital_speed_scaling = 40.0f;
+    public class ModelViewCamera : ObjectBase, IOpenable {
+        [SerializeField]
+        private GameObject target;
+
+        [SerializeField]
+        private bool orbit;
+
+        [SerializeField]
+        private bool orbital_reverse;
+
+        [SerializeField]
+        private float orbital_speed_scaling = 40.0f;
+
+        [SerializeField]
+        private Texture focused_lut;
+
+        [SerializeField]
+        private Texture unfocused_lut;
 
         private Camera _camera;
+        public AmplifyColorEffect color_effect { get; private set; }
+        public float distance { get; set; }
+        public bool no_target { get; set; }
+        public PlayerManager pm { get; protected set; }
+        public Vector3 first_position { get; protected set; }
 
-        public Vector3 target_position_offseted {
+        public Vector3 orbital_center_point {
             get {
-                return target.transform.position.add(offset.x, offset.y, offset.z);
+                return target.transform.position.changeY(transform.position.y);
             }
         }
 
         public float angular_velocity {
             get {
-                return (orbital_reverse ? -1.0f : 1.0f) * orbital_speed_scaling * (tc ? tc.deltaTime : Time.deltaTime);
+                return (orbital_reverse ? -1.0f : 1.0f) * orbital_speed_scaling * time_control.deltaTime;
             }
         }
 
-        public TimeControllable tc { get; protected set; }
-        public PlayerManager pm { get; protected set; }
-        public Vector3 first_position { get; protected set; }
-
         void Awake() {
-            tc = GetComponent<TimeControllable>();
-            if ( orbit && !tc ) {
-                DebugManager.warn("Orbit camera requires TimeControllable component");
+            first_position = transform.position;
+            color_effect = GetComponent<AmplifyColorEffect>();
+
+            if ( target ) {
+                pm = target.GetComponent<PlayerManager>();
             }
-            pm = GetComponent<PlayerManager>();
+            else {
+                no_target = true;
+            }
         }
 
         void Start() {
@@ -44,20 +62,16 @@ namespace MyUnityChan {
 
             setStartPosition();
 
-            if ( orbit ) {
-                Observable.EveryLateUpdate()
-                    .Where(_ => orbit)
-                    .Subscribe(_ => {
-                        transform.RotateAround(target_position_offseted, Vector3.up, angular_velocity);
-                        transform.LookAt(target_position_offseted);
-                    });
-            }
+            this.LateUpdateAsObservable()
+                .Where(_ => orbit && !no_target)
+                .Subscribe(_ => {
+                    transform.RotateAround(orbital_center_point, Vector3.up, angular_velocity);
+                    transform.LookAt(orbital_center_point);
+                }).
+                AddTo(this);
         }
 
         public void setStartPosition() {
-            transform.position = new Vector3(target.transform.position.x, target.transform.position.y, target.transform.position.z - distance);
-            transform.position = transform.position.add(offset.x, offset.y, offset.z);
-            gameObject.transform.rotation = Quaternion.Euler(angle);
         }
 
         public Camera getCamera() {
@@ -66,5 +80,22 @@ namespace MyUnityChan {
             return _camera;
         }
 
+        public void open() {
+            if ( focused_lut )
+                color_effect.LutTexture = focused_lut;
+        }
+
+        public void close() {
+            if ( unfocused_lut )
+                color_effect.LutTexture = unfocused_lut;
+        }
+
+        public void terminate() {
+            close();
+        }
+
+        public bool authorized(object obj) {
+            return true;
+        }
     }
 }
