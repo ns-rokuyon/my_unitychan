@@ -37,15 +37,21 @@ namespace MyUnityChan {
 
         public PlayerManager manager { get; set; }
         public PlayerActionManager action_manager { get; set; }
-        public List<Const.ID.Projectile.Beam> beam_slot { get; set; }
         public WallChecker wall_checker { get; set; }
         public UnityChanBoneManager bone_manager { get; set; }
         public BeamTurret beam_turret { get; protected set; }
+        public Bomber bomber { get; protected set; }
         public PlayerIK ik { get; protected set; }
         public Weapon weapon { get; set; }
         public CapsuleCollider collider { get; protected set; }
         public Equipment equipment { get; protected set; }
         public float ground_distance { get; private set; }
+
+        // Available beams
+        public List<Const.ID.Projectile.Beam> beam_slot { get; set; }
+
+        // Available bombs
+        public List<Const.ID.Bomb> bomb_slot { get; set; }
 
         public bool playable {
             get {
@@ -65,10 +71,15 @@ namespace MyUnityChan {
             animator = GetComponent<Animator>();
             bone_manager = GetComponent<UnityChanBoneManager>();
             ik = GetComponent<PlayerIK>();
+            bomber = GetComponent<Bomber>();
             beam_turret = GetComponent<BeamTurret>();
-            beam_slot = new List<Const.ID.Projectile.Beam>();
             collider = GetComponent<CapsuleCollider>();
             equipment = GetComponent<Equipment>();
+
+            if ( beam_slot == null )
+                beam_slot = new List<Const.ID.Projectile.Beam>();
+            if ( bomb_slot == null )
+                bomb_slot = new List<Const.ID.Bomb>();
         }
 
         // Start
@@ -79,8 +90,11 @@ namespace MyUnityChan {
             dist_to_ground = GetComponent<CapsuleCollider>().height;
             wall_checker = GetComponent<WallChecker>();
 
-            // init player actions (required)
+            // Init player actions (required)
             registerActions(Const.PlayerCommonDefaultActions);
+
+            // Init player actions (optional)
+            registerActions(Const.PlayerDefaultActions[character_name]);
 
             // init sound player
             setupSoundPlayer();

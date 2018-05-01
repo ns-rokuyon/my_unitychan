@@ -15,6 +15,8 @@ namespace MyUnityChan {
         protected abstract void start();
         protected abstract void update();
 
+        [SerializeField, ReadOnly]
+        private List<string> registered_action_names = new List<string>();
 
         void Awake() {
             character = GetComponent<Character>();
@@ -228,6 +230,7 @@ namespace MyUnityChan {
                 return;
             }
             actions[action.name()] = action;
+            registered_action_names.Add(action.name());
         }
 
         public void disableAction(string name) {

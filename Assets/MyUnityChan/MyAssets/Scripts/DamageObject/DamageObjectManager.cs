@@ -10,9 +10,9 @@ namespace MyUnityChan {
             }
         }
 
-        public static T createDamageObject<T>(Const.ID.DamageObject damageobject_id, bool use_objectpool = true) {
-            return Instance.create<T>(ConfigTableManager.DamageObject.getPrefabConfig(damageobject_id).prefab,
-                                      use_objectpool);
+        public static Bomb createBomb(Const.ID.Bomb bomb_id, bool use_objectpool = true) {
+            return Instance.create<Bomb>(ConfigTableManager.Bomb.getPrefabConfig(bomb_id).prefab,
+                                         use_objectpool);
         }
     }
 }

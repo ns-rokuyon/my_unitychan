@@ -9,5 +9,14 @@ namespace MyUnityChan {
 
         [SerializeField]
         public string se_name;
+
+        [SerializeField]
+        public int stock_max;
+
+        [SerializeField]
+        public bool auto_reload;
+
+        [SerializeField]
+        public int reload_frame;
     }
 }

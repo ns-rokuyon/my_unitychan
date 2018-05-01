@@ -8,6 +8,8 @@ namespace MyUnityChan {
         [SerializeField]
         public BombSpec spec;
 
+        public abstract Vector3 getInitPosition(Transform owner);
+
         public virtual void explode() {
             // Create hitbox
             DamageObjectHitbox hitbox =
@@ -24,6 +26,9 @@ namespace MyUnityChan {
             // Delete this object
             ObjectPoolManager.releaseGameObject(this);
         }
+    }
 
+    public interface ICommunicatableBomb {
+        bool communicate(Bomber bomber);
     }
 }

@@ -89,7 +89,11 @@ namespace MyUnityChan {
             switchPlayerCharacter(Const.CharacterName.UNITYCHAN);
             Player now_player = getNowPlayer().GetComponent<Player>();
 
-            now_player.registerActions(Const.PlayerDefaultActions[now_player.character_name]);
+            switchable_player_characters.ToList().ForEach(pair => {
+                Const.CharacterName name = pair.Key;
+                Player p = pair.Value.GetComponent<Player>();
+
+            });
 
             if ( playable ) {
                 hpgauge.setCharacter(now_player);

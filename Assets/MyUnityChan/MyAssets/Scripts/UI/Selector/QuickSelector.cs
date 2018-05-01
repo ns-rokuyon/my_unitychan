@@ -37,6 +37,12 @@ namespace MyUnityChan {
             }
         }
 
+        public virtual string selected_button_prefab_path {
+            get {
+                return button_prefab_path;
+            }
+        }
+
         public List<Button> buttons {
             get {
                 return content.GetComponentsInChildren<Button>().ToList();

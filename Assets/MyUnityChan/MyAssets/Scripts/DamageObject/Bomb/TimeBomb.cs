@@ -10,6 +10,10 @@ namespace MyUnityChan {
             initialize();
         }
 
+        public override Vector3 getInitPosition(Transform owner) {
+            return owner.position.add(owner.forward.x * 0.5f, 0.2f, 0);
+        }
+
         public override void initialize() {
             delay(frame, () => explode());
         }

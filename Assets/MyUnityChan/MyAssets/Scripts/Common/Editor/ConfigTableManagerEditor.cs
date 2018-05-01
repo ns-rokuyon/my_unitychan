@@ -18,8 +18,8 @@ namespace MyUnityChan {
                 initPrefabListBasedConfigTable(manager.beam_config_table);
             }
 
-            if ( GUILayout.Button("Set damage_object prefab references automatically") ) {
-                initPrefabListBasedConfigTable(manager.damage_object_config_table);
+            if ( GUILayout.Button("Set bomb prefab references automatically") ) {
+                initPrefabListBasedConfigTable(manager.bomb_config_table);
             }
 
             if ( GUILayout.Button("Set effect prefab references automatically") ) {

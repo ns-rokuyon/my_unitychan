@@ -6,21 +6,12 @@ using System;
 
 namespace MyUnityChan {
     public class PlayerBomb : PlayerAction {
-
-        public int stock { get; private set; }
-        public int stock_max { get; private set; }
-        public int reload_frame { get; private set; }
-
         public PlayerBomb(Character character)
             : base(character) {
-            stock_max = 3;
-            stock = stock_max;
-            reload_frame = 180;
+        }
 
-            Observable.IntervalFrame(reload_frame)
-                .Subscribe(_ => {
-                    if ( stock < stock_max ) stock++;
-                }).AddTo(player.gameObject);
+        public Bomber bomber {
+            get { return player.bomber; }
         }
 
         public override string name() {
@@ -32,11 +23,15 @@ namespace MyUnityChan {
         }
 
         public override void perform() {
-            if ( stock > 0 ) {
-                var bomb = DamageObjectManager.createDamageObject<TimeBomb>(Const.ID.DamageObject.BOMB);
+            bool accepted = bomber.communicate();
+            if ( accepted ) {
+                player.lockInput(10);
+                return;
+            }
 
-                bomb.setStartPosition(player.transform.position.add(player.transform.forward.x * 0.5f, 0, 0));
-                stock--;
+            Vector3 pos = bomber.getInitPosition(player.transform);
+            Bomb bomb = bomber.put(pos);
+            if ( bomb ) {
                 player.lockInput(10);
             }
         }
@@ -44,7 +39,5 @@ namespace MyUnityChan {
         public override bool condition() {
             return controller.keyAttack();
         }
-
     }
-
 }

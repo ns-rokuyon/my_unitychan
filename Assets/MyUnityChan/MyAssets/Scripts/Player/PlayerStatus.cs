@@ -34,6 +34,9 @@ namespace MyUnityChan {
         public PlayerSetting setting { get; private set; }
         public PlayerManager manager { get; set; }
 
+        [SerializeField, ReadOnly]
+        private List<Ability.Id> abilitiy_ids = new List<Ability.Id>();
+
         protected override void awake() {
             base.awake();
             setting = new PlayerSetting();
@@ -59,6 +62,7 @@ namespace MyUnityChan {
             abilities = new Dictionary<Ability.Id, PlayerAbility>();
             foreach ( var def in Ability.Defs ) {
                 abilities.Add(def.Key, new PlayerAbility(def.Value, manager));
+                abilitiy_ids.Add(def.Key);
             }
         }
 

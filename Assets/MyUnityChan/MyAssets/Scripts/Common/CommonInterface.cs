@@ -62,4 +62,8 @@ namespace MyUnityChan {
     public interface IGUIOpenableGroup : IGUIOpenable {
         List<IGUIOpenable> openables { get; }
     }
+
+    public interface IGUIWorldSpaceUILinked {
+        GameObject createWorldUI(Vector3 pos);
+    }
 }

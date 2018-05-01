@@ -2,6 +2,8 @@
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using System.Linq;
+using UniRx;
+using UniRx.Triggers;
 
 namespace MyUnityChan {
     public class GameStateManager : SingletonObjectBase<GameStateManager> {
@@ -29,6 +31,10 @@ namespace MyUnityChan {
 
         public static PlayerManager pm {
             get { return Instance.player_manager; }
+        }
+
+        public static PlayerController controller {
+            get { return Instance.player_manager.controller as PlayerController; }
         }
 
         public static float fps {

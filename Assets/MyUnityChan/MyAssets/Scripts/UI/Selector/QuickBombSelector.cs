@@ -6,10 +6,17 @@ using System.Linq;
 using UnityEngine.EventSystems;
 using TMPro;
 
+
 namespace MyUnityChan {
-    public class QuickBeamSelector : QuickSelector {
+    public class QuickBombSelector : QuickSelector {
+        [SerializeField]
+        private Bomber bomber;
+
+        [SerializeField]
+        private AmmoCount ammo_counter;
+
         public MenuAbilityButtonGroup abs { get; protected set; }
-        public Dictionary<Button, BeamAbility> button_ability_map { get; protected set; }
+        public Dictionary<Button, BombAbility> button_ability_map { get; protected set; }
 
         public override string button_prefab_path {
             get {
@@ -19,20 +26,24 @@ namespace MyUnityChan {
 
         public override bool isPressedKey {
             get {
-                return GameStateManager.pm.now == Const.CharacterName.UNITYCHAN && GameStateManager.pm.controller.keySwitchBeam();
+                return GameStateManager.pm.now == Const.CharacterName.MINI_UNITYCHAN && GameStateManager.pm.controller.keySwitchBeam();
             }
         }
 
         protected override void init() {
-            abs = PlayerAbilityManager.self().ability_button_groups[Ability.GroupId.BEAM];
-            button_ability_map = new Dictionary<Button, BeamAbility>();
+            abs = PlayerAbilityManager.self().ability_button_groups[Ability.GroupId.BOMB];
+            button_ability_map = new Dictionary<Button, BombAbility>();
+
+            if ( ammo_counter && bomber ) {
+                ammo_counter.connect(bomber.StockStream, bomber.StockMaxStream);
+            }
         }
 
         protected override void setupButtons() {
-            Player player = GameStateManager.getPlayer().manager.getPlayer(Const.CharacterName.UNITYCHAN);
-            player.beam_slot.ForEach(beamname => {
-                MenuAbilityButton b = getBeamAbilityButtonByBeamName(beamname);
-                BeamAbility ability = (b.ability.def as BeamAbility);
+            Player player = GameStateManager.getPlayer().manager.getPlayer(Const.CharacterName.MINI_UNITYCHAN);
+            player.bomb_slot.ForEach(bombname => {
+                MenuAbilityButton b = getBombAbilityButtonByBombName(bombname);
+                BombAbility ability = (b.ability.def as BombAbility);
                 if ( button_ability_map.ContainsValue(ability) ) {
                     // Displayed button
                     if ( selected_button )
@@ -72,9 +83,13 @@ namespace MyUnityChan {
         }
 
         protected override Button getFirstSelected() {
-            Player player = GameStateManager.getPlayer().manager.getPlayer(Const.CharacterName.UNITYCHAN);
-            var ba = button_ability_map.Where(kv => kv.Value.beam_name == player.beam_turret.beam_id).FirstOrDefault();
-            if ( ba.Equals(default(Dictionary<Button, BeamAbility>)) ) {
+            Player player = GameStateManager.getPlayer().manager.getPlayer(Const.CharacterName.MINI_UNITYCHAN);
+            var ba = button_ability_map.Where(kv => {
+                if ( !player.bomber )
+                    return kv.Value.bomb_id == (Const.ID.Bomb)0;
+                return kv.Value.bomb_id == player.bomber.bomb_id;
+            }).FirstOrDefault();
+            if ( ba.Equals(default(Dictionary<Button, BombAbility>)) ) {
                 return null;
             }
             return ba.Key;
@@ -87,13 +102,13 @@ namespace MyUnityChan {
                 return;
             }
             // Switch to the beam on cursor
-            Player player = GameStateManager.getPlayer().manager.getPlayer(Const.CharacterName.UNITYCHAN);
-            player.beam_turret.switchBeam(button_ability_map[selected_button].beam_name);
+            Player player = GameStateManager.getPlayer().manager.getPlayer(Const.CharacterName.MINI_UNITYCHAN);
+            player.bomber.setBomb(button_ability_map[selected_button].bomb_id);
         }
 
-        private MenuAbilityButton getBeamAbilityButtonByBeamName(Const.ID.Projectile.Beam beam_id) {
+        private MenuAbilityButton getBombAbilityButtonByBombName(Const.ID.Bomb bomb_id) {
             MenuAbilityButton b = abs.buttons.Find(_b => {
-                return (_b.ability.def as BeamAbility).beam_name == beam_id;
+                return (_b.ability.def as BombAbility).bomb_id == bomb_id;
             });
             return b;
         }

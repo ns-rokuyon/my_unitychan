@@ -8,7 +8,7 @@ namespace MyUnityChan {
         public BeamConfigTable beam_config_table;
 
         [SerializeField]
-        public DamageObjectConfigTable damage_object_config_table;
+        public BombConfigTable bomb_config_table;
 
         [SerializeField]
         public EffectConfigTable effect_config_table;
@@ -30,8 +30,8 @@ namespace MyUnityChan {
             get { return Instance.beam_config_table; }
         }
 
-        public static DamageObjectConfigTable DamageObject {
-            get { return Instance.damage_object_config_table; }
+        public static BombConfigTable Bomb {
+            get { return Instance.bomb_config_table; }
         }
 
         public static EffectConfigTable Effect {
