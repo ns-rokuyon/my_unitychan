@@ -52,10 +52,20 @@ namespace MyUnityChan {
         public virtual void changeClock(string clock_name) {
         }
 
+        // Return IntervalFrame based on TimeControllable
+        // PausableIntervalFrame does not count a frame when paused == true.
+        public IObservable<long> PausableIntervalFrame(int intervalFrameCount, FrameCountType frameCountType = FrameCountType.Update) {
+            return PausableTimerFrame(intervalFrameCount, intervalFrameCount, frameCountType);
+        }
+
         // Return TimerFrame based on TimeControllable.
         // PausableTimerFrame does not count a frame when paused == true.
         public IObservable<long> PausableTimerFrame(int dueTimeFrameCount, FrameCountType frameCountType = FrameCountType.Update) {
             return Observable.FromMicroCoroutine<long>((observer, cancellation) => PausableTimerFrameCore(observer, dueTimeFrameCount, cancellation), frameCountType);
+        }
+
+        public IObservable<long> PausableTimerFrame(int dueTimeFrameCount, int periodFrameCount, FrameCountType frameCountType = FrameCountType.Update) {
+            return Observable.FromMicroCoroutine<long>((observer, cancellation) => PausableTimerFrameCore(observer, dueTimeFrameCount, periodFrameCount, cancellation), frameCountType);
         }
 
         protected IEnumerator PausableTimerFrameCore(IObserver<long> observer, int dueTimeFrameCount, CancellationToken cancel) {
@@ -70,6 +80,34 @@ namespace MyUnityChan {
                     observer.OnNext(0);
                     observer.OnCompleted();
                     break;
+                }
+                yield return null;
+            }
+        }
+
+        protected IEnumerator PausableTimerFrameCore(IObserver<long> observer, int dueTimeFrameCount, int periodFrameCount, CancellationToken cancel) {
+            // normalize
+            if (dueTimeFrameCount <= 0) dueTimeFrameCount = 0;
+            if (periodFrameCount <= 0) periodFrameCount = 1;
+
+            var sendCount = 0L;
+            var currentFrame = 0;
+
+            // initial phase
+            while ( !cancel.IsCancellationRequested ) {
+                if ( !paused && currentFrame++ == dueTimeFrameCount ) {
+                    observer.OnNext(sendCount++);
+                    currentFrame = -1;
+                    break;
+                }
+                yield return null;
+            }
+
+            // period phase
+            while ( !cancel.IsCancellationRequested ) {
+                if ( !paused && ++currentFrame == periodFrameCount ) {
+                    observer.OnNext(sendCount++);
+                    currentFrame = 0;
                 }
                 yield return null;
             }
