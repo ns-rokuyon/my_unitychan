@@ -9,6 +9,7 @@ namespace MyUnityChan {
     public abstract class MenuPagerStyle : GUIObjectBase {
         public abstract Sequence nextPager(MenuPage new_current_page, IEnumerable<MenuPage> out_pages);
         public abstract Sequence prevPager(MenuPage new_current_page, IEnumerable<MenuPage> out_pages);
+        public abstract Sequence initPager(MenuPage first_page, IEnumerable<MenuPage> out_pages);
     }
 
     public class MenuPager : GUIObjectBase, IGUIOpenable {
@@ -35,6 +36,10 @@ namespace MyUnityChan {
 
         void Awake() {
             pager_style = GetComponent<MenuPagerStyle>();
+        }
+
+        void Start() {
+            initPager();
         }
 
         public bool authorized(object obj) {
@@ -82,7 +87,6 @@ namespace MyUnityChan {
         }
 
         public void goNextPage() {
-            DebugManager.log("GoNextPage!");
             if ( page_index == max_page_index )
                 return;
 
@@ -108,6 +112,15 @@ namespace MyUnityChan {
             page_index--;
             pageOut(out_pages);
             pager = pager_style.prevPager(current_page, out_pages);
+            pager.OnComplete(() => {
+                pager = null;
+                pageIn(current_page);
+            });
+        }
+
+        private void initPager() {
+            pageOut(out_pages);
+            pager = pager_style.initPager(current_page, out_pages);
             pager.OnComplete(() => {
                 pager = null;
                 pageIn(current_page);

@@ -13,10 +13,14 @@ namespace MyUnityChan {
         public bool focused { get; private set; }
         public RectTransform rt { get; private set; }
         public Vector3 inited_scale { get; private set; }
+        public Vector2 inited_size { get; private set; }
+        public CanvasGroup canvas_group { get; private set; }
 
         void Awake() {
             rt = GetComponent<RectTransform>();
+            canvas_group = GetComponent<CanvasGroup>();
             inited_scale = rt.localScale;
+            inited_size = rt.sizeDelta;
             openables = new List<IGUIOpenable>();
             foreach ( IGUIOpenable openable in gameObject.GetComponentsInShallowChildren<IGUIOpenable>() ) {
                 if ( openable.authorized(this) )

@@ -3,6 +3,7 @@ using System.Collections;
 using DG.Tweening;
 using System.Linq;
 using System.Collections.Generic;
+using System;
 
 namespace MyUnityChan {
     public class SlidePagerStyle : MenuPagerStyle {
@@ -34,6 +35,10 @@ namespace MyUnityChan {
                 pager.Join(slider);
             });
             return pager;
+        }
+
+        public override Sequence initPager(MenuPage first_page, IEnumerable<MenuPage> out_pages) {
+            return DOTween.Sequence();
         }
     }
 }

@@ -1,20 +1,21 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MyUnityChan {
     public class MenuPagerHandler : ObjectBase {
-        public MenuPager pager;
+        public List<MenuPager> pagers;
 
         public virtual void goPageTo(int i) {
-            pager.goPageTo(i);
+            pagers.ForEach(pager => pager.goPageTo(i));
         }
 
         public virtual void goNextPage() {
-            pager.goNextPage();
+            pagers.ForEach(pager => pager.goNextPage());
         }
 
         public virtual void goPrevPage() {
-            pager.goPrevPage();
+            pagers.ForEach(pager => pager.goPrevPage());
         }
     }
 }

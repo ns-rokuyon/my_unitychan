@@ -5,25 +5,32 @@ using System.Linq;
 using System;
 
 namespace MyUnityChan {
-    public class ScalePagerStyle : MenuPagerStyle {
+    public class FadePagerStyle : MenuPagerStyle {
         [SerializeField]
         private float duration;
 
         [SerializeField]
-        private Vector3 scale_down_to;
-
-        [SerializeField]
-        private Vector2 size_down_to;
+        private float fadeout_alpha;
 
         public override Sequence nextPager(MenuPage new_current_page, IEnumerable<MenuPage> out_pages) {
             Sequence pager = DOTween.Sequence();
 
-            Tween scaler = new_current_page.rt.DOScale(new_current_page.inited_scale, duration);
-            pager.Join(scaler);
+            if ( new_current_page.canvas_group == null ) {
+                DebugManager.warn("The current page has no CanvasGroup");
+            }
+            else {
+                Tween fader = new_current_page.canvas_group.DOFade(1.0f, duration);
+                pager.Join(fader);
+            }
 
             out_pages.ToList().ForEach(page => {
-                Tween _scaler = page.rt.DOScale(scale_down_to, duration);
-                pager.Join(_scaler);
+                if ( page.canvas_group == null ) {
+                    DebugManager.warn("The page has no CanvasGroup");
+                }
+                else {
+                    Tween _fader = page.canvas_group.DOFade(fadeout_alpha, duration);
+                    pager.Join(_fader);
+                }
             });
             return pager;
         }
