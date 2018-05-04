@@ -51,7 +51,7 @@ namespace MyUnityChan {
                     .AddTo(this);
         }
 
-        public override void OnTriggerEnter(Collider other) {
+        public virtual void OnTriggerEnter(Collider other) {
         }
 
         public virtual void OnTriggerStay(Collider other) {

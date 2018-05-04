@@ -37,10 +37,6 @@ namespace MyUnityChan {
             get { return prefab.spec; }
         }
 
-
-        void Awake() {
-        }
-
         void Start() {
             setBomb();
 
