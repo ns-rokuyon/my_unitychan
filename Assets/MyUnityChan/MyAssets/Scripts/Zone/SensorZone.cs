@@ -25,7 +25,7 @@ namespace MyUnityChan {
         protected override void onPlayerEnter(Player player, Collider colliderInfo) {
             if ( enter_delay_frame > 0 ) {
                 enter_delayer[player] = player.createTimer(enter_delay_frame)
-                                              .Subscribe(_ => { }, _ => {
+                                              .Subscribe(_ => { }, () => {
                                                   if ( onPlayerEnterCallback != null )
                                                       onPlayerEnterCallback(player, colliderInfo);
 
@@ -75,7 +75,7 @@ namespace MyUnityChan {
                 }
 
                 exit_delayer[player] = player.createTimer(exit_delay_frame)
-                                             .Subscribe(_ => { }, _ => {
+                                             .Subscribe(_ => { }, () => {
                                                  if ( onPlayerExitCallback != null )
                                                      onPlayerExitCallback(player, colliderInfo);
 
@@ -95,7 +95,7 @@ namespace MyUnityChan {
         protected override void onEnemyEnter(Enemy enemy, Collider colliderInfo) {
             if ( enter_delay_frame > 0 ) {
                 enter_delayer[enemy] = enemy.createTimer(enter_delay_frame)
-                                            .Subscribe(_ => { }, _ => {
+                                            .Subscribe(_ => { }, () => {
                                                 if ( onEnemyEnterCallback != null )
                                                     onEnemyEnterCallback(enemy, colliderInfo);
 
@@ -145,7 +145,7 @@ namespace MyUnityChan {
                 }
 
                 exit_delayer[enemy] = enemy.createTimer(exit_delay_frame)
-                                           .Subscribe(_ => { }, _ => {
+                                           .Subscribe(_ => { }, () => {
                                                if ( onEnemyExitCallback != null )
                                                    onEnemyExitCallback(enemy, colliderInfo);
 
