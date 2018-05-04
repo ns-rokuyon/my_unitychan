@@ -12,6 +12,9 @@ using UniRx.Triggers;
 namespace MyUnityChan {
     public class QuickSelector : GUIObjectBase {
 
+        [SerializeField]
+        protected Const.ID.UIVerticalDirection append_direction;
+
         // Whether this selector is selectable now or not
         public bool opened { get; protected set; }
 
@@ -148,6 +151,16 @@ namespace MyUnityChan {
                 if ( b != selected_button )
                     Destroy(b.gameObject);
             });
+        }
+
+        protected List<KeyValuePair<T, int>> siblingOrder<T>(List<T> list) {
+            int n = list.Count;
+            return list.Select((x, i) => {
+                if ( append_direction == Const.ID.UIVerticalDirection.UP )
+                    return new KeyValuePair<T, int>(x, i);
+                else
+                    return new KeyValuePair<T, int>(x, n - (i + 1));
+            }).ToList();
         }
     }
 }

@@ -39,6 +39,7 @@ namespace MyUnityChan {
         }
 
         public override void OnTriggerEnter(Collider other) {
+            DebugManager.log("OnTriggerEnter projectile hitbox: " + other.name);
             Projectile proj = projectile.GetComponent<Projectile>();
             if ( triggerPlayer(other) ) proj.countHit();
             if ( triggerEnemy(other) ) proj.countHit();

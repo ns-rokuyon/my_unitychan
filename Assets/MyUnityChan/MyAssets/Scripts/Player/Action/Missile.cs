@@ -4,7 +4,11 @@ using System;
 
 namespace MyUnityChan {
     public class PlayerMissile : PlayerAction {
-        private MissilePod shooter;
+        public MissilePod shooter {
+            get {
+                return player.missile_pod;
+            }
+        }
 
         // bone refs
         private string left_shoulder_path = 
@@ -18,8 +22,6 @@ namespace MyUnityChan {
             left_arm = player.transform.Find(left_shoulder_path + "Character1_LeftArm");
             left_fore_arm = player.transform.Find(left_shoulder_path + "Character1_LeftArm/Character1_LeftForeArm");
             left_hand = player.transform.Find(left_shoulder_path + "Character1_LeftArm/Character1_LeftForeArm/Character1_LeftHand");
-
-            shooter = character.GetComponent<MissilePod>();
         }
 
         public override string name() {

@@ -22,6 +22,8 @@ namespace MyUnityChan {
         protected string area;
         protected string area_name;
         protected Player player;
+
+        [SerializeField, ReadOnly]
         protected int hit_num = 0;
 
         public bool use_physics;

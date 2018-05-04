@@ -9,7 +9,7 @@ namespace MyUnityChan {
             base.perform(player);
 
             MissilePod pod = player.GetComponent<MissilePod>();
-            if ( pod ) pod.addMissile(supply_num);
+            if ( pod ) pod.supplyAmmo(supply_num);
         }
 
         public override void destroy(Player player) {

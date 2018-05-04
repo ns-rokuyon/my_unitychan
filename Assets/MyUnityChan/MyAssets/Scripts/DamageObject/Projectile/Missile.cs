@@ -8,6 +8,7 @@ namespace MyUnityChan {
 
         public float driving_force = 1200f;
         public bool recoil = true;
+        public int cost = 1;
 
         // Use this for initialization
         void Start() {

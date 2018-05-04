@@ -6,10 +6,17 @@ using System.Linq;
 using UnityEngine.EventSystems;
 using TMPro;
 
+
 namespace MyUnityChan {
-    public class QuickBeamSelector : QuickSelector {
+    public class QuickMissileSelector : QuickSelector {
+        [SerializeField]
+        private MissilePod pod;
+
+        [SerializeField]
+        private AmmoCount ammo_counter;
+
         public MenuAbilityButtonGroup abs { get; protected set; }
-        public Dictionary<Button, BeamAbility> button_ability_map { get; protected set; }
+        public Dictionary<Button, MissileAbility> button_ability_map { get; protected set; }
 
         public override string button_prefab_path {
             get {
@@ -24,17 +31,19 @@ namespace MyUnityChan {
         }
 
         protected override void init() {
-            abs = PlayerAbilityManager.self().ability_button_groups[Ability.GroupId.BEAM];
-            button_ability_map = new Dictionary<Button, BeamAbility>();
+            abs = PlayerAbilityManager.self().ability_button_groups[Ability.GroupId.MISSILE];
+            button_ability_map = new Dictionary<Button, MissileAbility>();
+
+            if ( ammo_counter && pod ) {
+                ammo_counter.connect(pod.StockStream, pod.StockMaxStream);
+            }
         }
 
         protected override void setupButtons() {
             Player player = GameStateManager.getPlayer().manager.getPlayer(Const.CharacterName.UNITYCHAN);
-            siblingOrder(player.beam_slot).ForEach(kv => {
-                Const.ID.Projectile.Beam beamname = kv.Key;
-                int i = kv.Value;
-                MenuAbilityButton b = getBeamAbilityButtonByBeamName(beamname);
-                BeamAbility ability = (b.ability.def as BeamAbility);
+            player.missile_slot.ForEach(missile_id => {
+                MenuAbilityButton b = getMissileAbilityButtonByMissileName(missile_id);
+                MissileAbility ability = (b.ability.def as MissileAbility);
                 if ( button_ability_map.ContainsValue(ability) ) {
                     // Displayed button
                     if ( selected_button )
@@ -43,7 +52,6 @@ namespace MyUnityChan {
                 }
                 // Instantiate a button
                 Button button = PrefabInstantiater.createUIAndGetComponent<Button>(button_prefab_path, content);
-                button.transform.SetSiblingIndex(i);
                 EventTrigger trigger = button.GetComponent<EventTrigger>();
                 EventTrigger.Entry entry = new EventTrigger.Entry();
                 entry.eventID = EventTriggerType.Select;
@@ -67,17 +75,16 @@ namespace MyUnityChan {
             button_ability_map.Keys.Where(b => b != selected_button).ToList().ForEach(b => {
                 button_ability_map.Remove(b);
             });
-
-            /*
-            if ( selected_button )
-                selected_button.GetComponentInChildren<TextMeshProUGUI>().text = "";
-            */
         }
 
         protected override Button getFirstSelected() {
             Player player = GameStateManager.getPlayer().manager.getPlayer(Const.CharacterName.UNITYCHAN);
-            var ba = button_ability_map.Where(kv => kv.Value.beam_name == player.beam_turret.beam_id).FirstOrDefault();
-            if ( ba.Equals(default(Dictionary<Button, BeamAbility>)) ) {
+            var ba = button_ability_map.Where(kv => {
+                if ( !player.bomber )
+                    return kv.Value.missile_id == (Const.ID.Projectile.Missile)0;
+                return kv.Value.missile_id == player.missile_pod.missile_id;
+            }).FirstOrDefault();
+            if ( ba.Equals(default(Dictionary<Button, MissileAbility>)) ) {
                 return null;
             }
             return ba.Key;
@@ -91,12 +98,12 @@ namespace MyUnityChan {
             }
             // Switch to the beam on cursor
             Player player = GameStateManager.getPlayer().manager.getPlayer(Const.CharacterName.UNITYCHAN);
-            player.beam_turret.switchBeam(button_ability_map[selected_button].beam_name);
+            player.missile_pod.setMissile(button_ability_map[selected_button].missile_id);
         }
 
-        private MenuAbilityButton getBeamAbilityButtonByBeamName(Const.ID.Projectile.Beam beam_id) {
+        private MenuAbilityButton getMissileAbilityButtonByMissileName(Const.ID.Projectile.Missile missile_id) {
             MenuAbilityButton b = abs.buttons.Find(_b => {
-                return (_b.ability.def as BeamAbility).beam_name == beam_id;
+                return (_b.ability.def as MissileAbility).missile_id == missile_id;
             });
             return b;
         }

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UniRx;
 
 namespace MyUnityChan {
     public interface ICharacterDying {
@@ -19,5 +20,10 @@ namespace MyUnityChan {
         Character target_me {
             get;
         }
+    }
+
+    public interface ICharacterMissileTankOwnable {
+        ReadOnlyReactiveProperty<int> MissileTankNumStream { get; }
+        void addMissileTank();
     }
 }

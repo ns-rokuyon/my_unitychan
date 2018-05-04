@@ -6,47 +6,54 @@ using UniRx.Triggers;
 
 namespace MyUnityChan {
     public class MissilePod : TurretBase {
+
+        [SerializeField]
         public Const.ID.Projectile.Missile missile_id;
-        public int missile_max;
-        public GameObject indicator_ui_object;
 
-        public int missile_num { get; protected set; }
+        private Missile prefab;
+        private ReactiveProperty<int> stock = new ReactiveProperty<int>(0);
+        private ICharacterMissileTankOwnable tank_owner;
 
-        protected Text indicator = null;
-        private Player player = null;
+        public int Stock {
+            get { return stock.Value; }
+        }
+
+        public int StockMax {
+            get { return StockMaxStream.Value; }
+        }
+
+        public ReadOnlyReactiveProperty<int> StockStream {
+            get { return stock.ToReadOnlyReactiveProperty(); }
+        }
+
+        public ReadOnlyReactiveProperty<int> StockMaxStream {
+            get { return tank_owner.MissileTankNumStream.Select(n => Const.Unit.ADDITIONAL_MISSILES * n).ToReadOnlyReactiveProperty(); }
+        }
+
+        public ProjectileSpec spec {
+            get { return prefab.spec; }
+        }
 
         void Awake() {
-            if ( indicator_ui_object )
-                indicator = indicator_ui_object.GetComponent<Text>();
+            tank_owner = GetComponent<ICharacterMissileTankOwnable>();
         }
 
         public override void Start() {
             base.Start();
 
-            setProjectile(missile_id);
-            missile_num = missile_max;
+            setMissile();
+            stock.Value = StockMax;
 
-            player = GetComponent<Player>();
-            if ( player ) {
-                // Auto sync (this.missile_max <-> player.status.missile_tanks * 5)
-                this.ObserveEveryValueChanged(_ => player.manager.status.missile_tanks)
-                    .Where(tanks => tanks > 0)
-                    .Subscribe(_ => {
-                        missile_max += Const.Unit.ADDITIONAL_MISSILES;
-                        addMissile(Const.Unit.ADDITIONAL_MISSILES);
-                    });
-            }
-        }
-
-        void Update() {
-            if ( indicator ) indicator.text = "" + missile_num;
+            this.ObserveEveryValueChanged(_ => missile_id)
+                .Subscribe(id => setMissile())
+                .AddTo(this);
         }
 
         public override void shoot() {
-            if ( missile_num == 0 ) {
+            if ( Stock < prefab.cost )
                 return;
-            }
-            missile_num--;
+
+            stock.Value -= prefab.cost;
 
             Missile missile = ProjectileManager.createMissile<Missile>(missile_id);
             missile.setDir(direction);
@@ -64,10 +71,9 @@ namespace MyUnityChan {
             sound();
         }
 
-        public void setProjectile(Const.ID.Projectile.Missile id) {
-            missile_id = id;
-            Projectile proj = (Resources.Load(Const.Prefab.Projectile.Missile[missile_id]) as GameObject).GetComponent<Projectile>();
-            ProjectileSpec spec = proj.spec;
+        public void setMissile() {
+            var obj = ConfigTableManager.Missile.getPrefabConfig(missile_id).prefab;
+            prefab = obj.GetComponent<Missile>();
 
             n_round_burst = spec.n_round_burst;
             burst_delta_frame = spec.burst_delta_frame;
@@ -76,10 +82,15 @@ namespace MyUnityChan {
             hitbox_id = spec.hitbox_id;
         }
 
-        public void addMissile(int n) {
-            missile_num += n;
-            if ( missile_num > missile_max ) {
-                missile_num = missile_max;
+        public void setMissile(Const.ID.Projectile.Missile id) {
+            missile_id = id;
+            setMissile();
+        }
+
+        public void supplyAmmo(int n) {
+            stock.Value += n;
+            if ( Stock > StockMax ) {
+                stock.Value = StockMax;
             }
         }
 

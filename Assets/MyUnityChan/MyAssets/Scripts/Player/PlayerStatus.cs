@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UniRx;
 
 namespace MyUnityChan {
     public class PlayerStatus : CharacterStatus {
@@ -28,14 +29,23 @@ namespace MyUnityChan {
         }
         public int reserved_hp { get; private set; }
         public int energy_tanks { get; private set; }
-        public int missile_tanks { get; set; }
         public bool gameover { get; set; }
         public Dictionary<Ability.Id, PlayerAbility> abilities { get; set; }
         public PlayerSetting setting { get; private set; }
         public PlayerManager manager { get; set; }
 
+        private ReactiveProperty<int> missile_tank_num = new ReactiveProperty<int>(0);
+
         [SerializeField, ReadOnly]
         private List<Ability.Id> abilitiy_ids = new List<Ability.Id>();
+
+        public int MissileTankNum {
+            get { return missile_tank_num.Value; }
+        }
+
+        public ReadOnlyReactiveProperty<int> MissileTankNumStream {
+            get { return missile_tank_num.ToReadOnlyReactiveProperty(); }
+        }
 
         protected override void awake() {
             base.awake();
@@ -71,6 +81,10 @@ namespace MyUnityChan {
 
             // Heal fully 
             reserved_hp = getReservedHpLimit();
+        }
+
+        public void addMissileTank() {
+            missile_tank_num.Value += 1;
         }
 
         public int getReservedHpLimit() {

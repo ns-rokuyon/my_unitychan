@@ -26,7 +26,7 @@ namespace MyUnityChan {
         // test
         public override void serialize() {
             PlayerStatus status = getPlayerStatus();
-            string text = "hp=" + status.hp + ", energy_tanks=" + status.energy_tanks + ", missile_tanks=" + status.missile_tanks;
+            string text = "hp=" + status.hp + ", energy_tanks=" + status.energy_tanks + ", missile_tanks=" + status.MissileTankNum;
             DebugManager.log(text);
         }
 

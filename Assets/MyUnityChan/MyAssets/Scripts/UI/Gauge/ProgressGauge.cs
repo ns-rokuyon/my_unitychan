@@ -67,7 +67,7 @@ namespace MyUnityChan {
                 case Const.ID.Progress.MISSILE_TANK:
                     {
                         var status = GameStateManager.getPlayer().status as PlayerStatus;
-                        return status.missile_tanks;
+                        return status.MissileTankNum;
                     }
                 case Const.ID.Progress.AREA:
                     {

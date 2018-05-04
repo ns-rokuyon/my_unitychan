@@ -15,7 +15,7 @@ namespace MyUnityChan {
     [RequireComponent(typeof(RoofChecker))]
     [RequireComponent(typeof(WallChecker))]
     [RequireComponent(typeof(PlayerIK))]
-    public class Player : Character, ICharacterWalk, ICharacterFootstep {
+    public class Player : Character, ICharacterWalk, ICharacterFootstep, ICharacterMissileTankOwnable {
 
         [SerializeField]
         public PlayerCameraPosition player_camera_position;
@@ -41,6 +41,7 @@ namespace MyUnityChan {
         public UnityChanBoneManager bone_manager { get; set; }
         public BeamTurret beam_turret { get; protected set; }
         public Bomber bomber { get; protected set; }
+        public MissilePod missile_pod { get; protected set; }
         public PlayerIK ik { get; protected set; }
         public Weapon weapon { get; set; }
         public CapsuleCollider collider { get; protected set; }
@@ -49,6 +50,9 @@ namespace MyUnityChan {
 
         // Available beams
         public List<Const.ID.Projectile.Beam> beam_slot { get; set; }
+
+        // Available missiles
+        public List<Const.ID.Projectile.Missile> missile_slot { get; set; }
 
         // Available bombs
         public List<Const.ID.Bomb> bomb_slot { get; set; }
@@ -65,19 +69,26 @@ namespace MyUnityChan {
             }
         }
 
+        public ReadOnlyReactiveProperty<int> MissileTankNumStream {
+            get { return manager.status.MissileTankNumStream; }
+        }
+
         // Awake
         protected override void awake() {
             // animation
             animator = GetComponent<Animator>();
             bone_manager = GetComponent<UnityChanBoneManager>();
             ik = GetComponent<PlayerIK>();
-            bomber = GetComponent<Bomber>();
             beam_turret = GetComponent<BeamTurret>();
+            missile_pod = GetComponent<MissilePod>();
+            bomber = GetComponent<Bomber>();
             collider = GetComponent<CapsuleCollider>();
             equipment = GetComponent<Equipment>();
 
             if ( beam_slot == null )
                 beam_slot = new List<Const.ID.Projectile.Beam>();
+            if ( missile_slot == null )
+                missile_slot = new List<Const.ID.Projectile.Missile>();
             if ( bomb_slot == null )
                 bomb_slot = new List<Const.ID.Bomb>();
         }
@@ -220,6 +231,10 @@ namespace MyUnityChan {
 
         public void enableAction(Const.PlayerAction id) {
             action_manager.enableAction(id);
+        }
+
+        public void addMissileTank() {
+            manager.status.addMissileTank();
         }
 
         public override void damage(int dam) {
