@@ -55,7 +55,7 @@ namespace MyUnityChan {
         public static GameObject createEffect(Const.ID.Effect effect_name, GameObject track, int frame, bool use_objectpool = true) {
             var effect = createEffect(effect_name, track.transform.position, frame, use_objectpool);
 
-            IObservable<long> o;
+            UniRx.IObservable<long> o;
             if ( frame >= 0 ) {
                 o = Observable.IntervalFrame(1).Take(frame);
             } else {
@@ -72,7 +72,7 @@ namespace MyUnityChan {
             var ch = track.GetComponent<Character>();
             var effect = createEffect(effect_name, ch, frontOffsetX, offsetY, frame, use_objectpool);
 
-            IObservable<long> o;
+            UniRx.IObservable<long> o;
             if ( frame >= 0 ) {
                 o = Observable.IntervalFrame(1).Take(frame);
             } else {

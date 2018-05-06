@@ -68,8 +68,8 @@ namespace MyUnityChan {
             }
         }
 
-        public IObservable<long> createTimer(int frame, FrameCountType frame_count_type = FrameCountType.Update) {
-            System.Func<int, FrameCountType, IObservable<long>> timer;
+        public UniRx.IObservable<long> createTimer(int frame, FrameCountType frame_count_type = FrameCountType.Update) {
+            System.Func<int, FrameCountType, UniRx.IObservable<long>> timer;
             if ( time_control )
                 timer = time_control.PausableTimerFrame;
             else {

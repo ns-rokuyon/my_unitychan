@@ -48,8 +48,8 @@ namespace MyUnityChan {
         protected float vertical_input;
         protected float raw_vertical_input;
 
-        public IObservable<float> keyStreamHorizontal { get; private set; }
-        public IObservable<float> keyStreamVertical { get; private set; }
+        public UniRx.IObservable<float> keyStreamHorizontal { get; private set; }
+        public UniRx.IObservable<float> keyStreamVertical { get; private set; }
 
         public bool show_debug_window;
         public GameObject debug_window { get; private set; }

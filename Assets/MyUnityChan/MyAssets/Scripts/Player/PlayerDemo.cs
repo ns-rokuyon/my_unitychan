@@ -29,7 +29,7 @@ namespace MyUnityChan {
             }
         }
 
-        public void play(Func<IObserver<string>, IEnumerator> co) {
+        public void play(Func<UniRx.IObserver<string>, IEnumerator> co) {
             if ( demo != null )
                 demo.Dispose();
 

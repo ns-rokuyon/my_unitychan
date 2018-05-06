@@ -47,7 +47,7 @@ namespace MyUnityChan {
             get { return getNowPlayerComponent(); }
         }
 
-        public IObservable<Const.CharacterName> signal {
+        public UniRx.IObservable<Const.CharacterName> signal {
             get { return this.ObserveEveryValueChanged(_ => now); }
         }
 
