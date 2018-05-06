@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using UniRx;
+using System.Linq;
 
 namespace MyUnityChan {
     public class PlayerStatus : CharacterStatus {
@@ -35,14 +36,29 @@ namespace MyUnityChan {
         public PlayerManager manager { get; set; }
 
         private ReactiveProperty<int> missile_tank_num = new ReactiveProperty<int>(0);
+        private ReactiveDictionary<Const.ID.Projectile.Beam, bool> beam_slots = new ReactiveDictionary<Const.ID.Projectile.Beam, bool>();
 
         [SerializeField, ReadOnly]
         private List<Ability.Id> abilitiy_ids = new List<Ability.Id>();
 
+        // Current number of missile tank
         public int MissileTankNum {
             get { return missile_tank_num.Value; }
         }
 
+        public List<Const.ID.Projectile.Beam> AvailableBeams {
+            get {
+                AvailableBeamStream.ToList().ForEach(b => DebugManager.log(b));
+                return AvailableBeamStream.ToList();
+            }
+        }
+
+        // Reactive collection of available beam ids
+        public ReactiveCollection<Const.ID.Projectile.Beam> AvailableBeamStream {
+            get { return beam_slots.Select(kv => kv.Key).OrderBy(id => id).ToReactiveCollection(); }
+        }
+
+        // Reactive prop for missile tank num
         public ReadOnlyReactiveProperty<int> MissileTankNumStream {
             get { return missile_tank_num.ToReadOnlyReactiveProperty(); }
         }
@@ -85,6 +101,16 @@ namespace MyUnityChan {
 
         public void addMissileTank() {
             missile_tank_num.Value += 1;
+        }
+
+        public void enableBeam(Const.ID.Projectile.Beam beam_id) {
+            beam_slots[beam_id] = true;
+        }
+
+        public void disableBeam(Const.ID.Projectile.Beam beam_id) {
+            if ( !beam_slots.ContainsKey(beam_id) )
+                return;
+            beam_slots[beam_id] = false;
         }
 
         public int getReservedHpLimit() {

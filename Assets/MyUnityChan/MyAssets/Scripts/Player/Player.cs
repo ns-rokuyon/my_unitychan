@@ -48,9 +48,6 @@ namespace MyUnityChan {
         public Equipment equipment { get; protected set; }
         public float ground_distance { get; private set; }
 
-        // Available beams
-        public List<Const.ID.Projectile.Beam> beam_slot { get; set; }
-
         // Available missiles
         public List<Const.ID.Projectile.Missile> missile_slot { get; set; }
 
@@ -85,8 +82,6 @@ namespace MyUnityChan {
             collider = GetComponent<CapsuleCollider>();
             equipment = GetComponent<Equipment>();
 
-            if ( beam_slot == null )
-                beam_slot = new List<Const.ID.Projectile.Beam>();
             if ( missile_slot == null )
                 missile_slot = new List<Const.ID.Projectile.Missile>();
             if ( bomb_slot == null )

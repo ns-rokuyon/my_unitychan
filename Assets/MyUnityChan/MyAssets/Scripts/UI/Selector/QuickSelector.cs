@@ -12,9 +12,6 @@ using UniRx.Triggers;
 namespace MyUnityChan {
     public class QuickSelector : GUIObjectBase {
 
-        [SerializeField]
-        protected Const.ID.UIVerticalDirection append_direction;
-
         // Whether this selector is selectable now or not
         public bool opened { get; protected set; }
 
@@ -52,15 +49,25 @@ namespace MyUnityChan {
             }
         }
 
+        public Const.ID.UIVerticalDirection append_direction {
+            get {
+                return (int)layout_group.childAlignment <= 2 ? Const.ID.UIVerticalDirection.DOWN : Const.ID.UIVerticalDirection.UP;
+            }
+        }
+
+
         protected ScrollRect scroll_rect;
         protected GameObject content;
+        protected VerticalLayoutGroup layout_group;
         protected IDisposable opener;
         protected IDisposable closer;
 
         void Awake() {
             scroll_rect = GetComponent<ScrollRect>();
-            if ( scroll_rect )
+            if ( scroll_rect ) {
                 content = scroll_rect.content.gameObject;
+                layout_group = content.GetComponent<VerticalLayoutGroup>();
+            }
         }
 
         void Start() {
@@ -141,6 +148,10 @@ namespace MyUnityChan {
             opened = true;
             setupButtons();
             selected_button = getFirstSelected();
+            if ( append_direction == Const.ID.UIVerticalDirection.UP )
+                selected_button.transform.SetAsLastSibling();
+            else
+                selected_button.transform.SetAsFirstSibling();
             setCloser();
         }
 
@@ -153,14 +164,11 @@ namespace MyUnityChan {
             });
         }
 
-        protected List<KeyValuePair<T, int>> siblingOrder<T>(List<T> list) {
-            int n = list.Count;
-            return list.Select((x, i) => {
-                if ( append_direction == Const.ID.UIVerticalDirection.UP )
-                    return new KeyValuePair<T, int>(x, i);
-                else
-                    return new KeyValuePair<T, int>(x, n - (i + 1));
-            }).ToList();
+        protected List<T> siblingOrder<T>(List<T> list) {
+            if ( append_direction == Const.ID.UIVerticalDirection.UP ) {
+                return list.OrderByDescending(t => t).ToList();
+            }
+            return list.OrderBy(t => t).ToList();
         }
     }
 }

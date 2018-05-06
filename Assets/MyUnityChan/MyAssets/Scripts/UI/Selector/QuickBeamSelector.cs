@@ -29,10 +29,8 @@ namespace MyUnityChan {
         }
 
         protected override void setupButtons() {
-            Player player = GameStateManager.getPlayer().manager.getPlayer(Const.CharacterName.UNITYCHAN);
-            siblingOrder(player.beam_slot).ForEach(kv => {
-                Const.ID.Projectile.Beam beamname = kv.Key;
-                int i = kv.Value;
+            PlayerManager pm = GameStateManager.pm;
+            siblingOrder(pm.status.AvailableBeams).ForEach(beamname => {
                 MenuAbilityButton b = getBeamAbilityButtonByBeamName(beamname);
                 BeamAbility ability = (b.ability.def as BeamAbility);
                 if ( button_ability_map.ContainsValue(ability) ) {
@@ -43,7 +41,6 @@ namespace MyUnityChan {
                 }
                 // Instantiate a button
                 Button button = PrefabInstantiater.createUIAndGetComponent<Button>(button_prefab_path, content);
-                button.transform.SetSiblingIndex(i);
                 EventTrigger trigger = button.GetComponent<EventTrigger>();
                 EventTrigger.Entry entry = new EventTrigger.Entry();
                 entry.eventID = EventTriggerType.Select;
@@ -59,6 +56,7 @@ namespace MyUnityChan {
 
                 button_ability_map.Add(button, ability);
             });
+
             UIHelper.makeExplicitNavigation(button_ability_map.Keys.ToList(),
                                             UIHelper.LayoutDirection.VERTICAL);
         }
