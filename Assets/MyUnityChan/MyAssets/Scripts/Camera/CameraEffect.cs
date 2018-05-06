@@ -12,6 +12,15 @@ namespace MyUnityChan {
     public class CameraEffect : ObjectBase {
 
         [Serializable]
+        public class GameStatePostProcessingDef : KV<Const.ID.GameState, PostProcessingProfile> {
+            public GameStatePostProcessingDef(Const.ID.GameState state, PostProcessingProfile prof) : base(state, prof) {
+            }
+
+            public Const.ID.GameState state { get { return key; } }
+            public PostProcessingProfile profile { get { return value; } }
+        }
+
+        [Serializable]
         public class PostProcessingDef : KV<Const.ID.PostProcessingType, PostProcessingProfile> {
             public PostProcessingDef(Const.ID.PostProcessingType type, PostProcessingProfile prof) : base(type, prof) {
             }
@@ -21,9 +30,16 @@ namespace MyUnityChan {
         }
 
         [SerializeField]
-        public List<PostProcessingDef> post_processing_defs;
+        private List<PostProcessingDef> post_processing_defs;
 
-        public Dictionary<Const.ID.PostProcessingType, PostProcessingProfile> _post_processing_defs;
+        [SerializeField]
+        private List<GameStatePostProcessingDef> gamestate_post_processing_defs;
+
+        private Dictionary<Const.ID.PostProcessingType, PostProcessingProfile> _post_processing_defs { get; } =
+            new Dictionary<Const.ID.PostProcessingType, PostProcessingProfile>();
+
+        private Dictionary<Const.ID.GameState, PostProcessingProfile> _gamestate_post_processing_defs { get; } =
+            new Dictionary<Const.ID.GameState, PostProcessingProfile>();
 
         // Post-processing(Unity >= 5.6)
         public PostProcessingBehaviour post_processing { get; protected set; }
@@ -32,15 +48,17 @@ namespace MyUnityChan {
         public FadeImage fade { get; protected set; }
         public IDisposable fader { get; protected set; }
 
-        // Flag
-        public bool _restore { get; set; }
+        private IDisposable gamestate_post_processing_profiler;
+        private System.Action restorer;
 
         void Awake() {
             post_processing = GetComponent<PostProcessingBehaviour>();
 
-            _post_processing_defs = new Dictionary<Const.ID.PostProcessingType, PostProcessingProfile>();
             post_processing_defs.ForEach(def => {
                 _post_processing_defs[def.type] = def.profile;
+            });
+            gamestate_post_processing_defs.ForEach(def => {
+                _gamestate_post_processing_defs[def.state] = def.profile;
             });
 
             fade = GUIObjectBase.getCanvas(Const.Canvas.FADE_CANVAS).GetComponent<FadeImage>();
@@ -48,10 +66,12 @@ namespace MyUnityChan {
         }
 
         void Start() {
-        }
-
-        public void restore() {
-            _restore = true;
+            gamestate_post_processing_profiler = GameStateManager.StateStream.Subscribe(state => {
+                var profile = getGameStatePostProcessingProfileOf(state);
+                if ( profile )
+                    post_processing.profile = profile;
+            })
+            .AddTo(this);
         }
 
         public PostProcessingProfile getPostProcessingProfileOf(Const.ID.PostProcessingType type) {
@@ -61,22 +81,30 @@ namespace MyUnityChan {
             return _post_processing_defs[type];
         }
 
-        public void setPauseMenuEffect() {
-            var profile = getPostProcessingProfileOf(Const.ID.PostProcessingType.PAUSE);
+        public PostProcessingProfile getGameStatePostProcessingProfileOf(Const.ID.GameState state) {
+            if ( !_gamestate_post_processing_defs.ContainsKey(state) ) {
+                return null;
+            }
+            return _gamestate_post_processing_defs[state];
+        }
+
+        public void changePostProcessing(Const.ID.PostProcessingType type) {
+            var profile = getPostProcessingProfileOf(type);
             if ( profile == null )
                 return;
 
-            var current_profile = post_processing.profile;
+            var prev_profile = post_processing.profile;
             post_processing.profile = profile;
 
-            // Restore
-            this.ObserveEveryValueChanged(_ => _restore)
-                .Where(f => f)
-                .First()
-                .Subscribe(_ => {
-                    post_processing.profile = current_profile;
-                    _restore = false;
-                });
+            restorer = () => post_processing.profile = prev_profile;
+        }
+
+        public void restorePostProcessing() {
+            if ( restorer == null ) {
+                return;
+            }
+            restorer();
+            restorer = null;
         }
 
         public void disableFadeCanvas() {

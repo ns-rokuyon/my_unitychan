@@ -149,7 +149,7 @@ namespace MyUnityChan {
 
         public void doQuit() {
             quit();
-            GameStateManager.change(GameStateManager.GameState.MAIN);
+            GameStateManager.change(Const.ID.GameState.MAIN);
             PauseManager.Instance.pause(false);
         }
 

@@ -7,22 +7,21 @@ using UniRx.Triggers;
 
 namespace MyUnityChan {
     public class GameStateManager : SingletonObjectBase<GameStateManager> {
-        public enum GameState {
-            NO_SET,
-            MAIN,
-            MENU
-        };
-
         public PlayerDemo showcase;
 
         public PlayerManager player_manager { get; set; }
-        private GameState state { get; set; }
-        private RandomNumberGenerator rng { get; set; }
+
+        private RandomNumberGenerator rng { get; } = new RandomNumberGenerator();
+        private ReactiveProperty<Const.ID.GameState> state { get; } = new ReactiveProperty<Const.ID.GameState>(Const.ID.GameState.NO_SET);
 
         public Const.Language language {
             get {
                 return SettingManager.isSetupDone() ? SettingManager.get<Const.Language>(Settings.Select.LANG) : Const.Language.JP;
             }
+        }
+
+        public static ReadOnlyReactiveProperty<Const.ID.GameState> StateStream {
+            get { return self().state.ToReadOnlyReactiveProperty(); }
         }
 
         public static bool gameover {
@@ -49,29 +48,16 @@ namespace MyUnityChan {
             get { return Instance.rng; }
         }
 
-        void Awake() {
-            state = GameState.NO_SET;
-            rng = new RandomNumberGenerator();
-        }
-
-        void Start() {
-            state = GameState.MAIN;
-        }
-
-        void Update() {
-            watchStateTransition();
-        }
-
-        public static GameState now() {
-            return self().state;
+        public static Const.ID.GameState now() {
+            return self().state.Value;
         }
 
         public static bool isLoadingInBackground() {
             return AssetBundleManager.isNowLoading();
         }
 
-        public static void change(GameState st) {
-            self().state = st;
+        public static void change(Const.ID.GameState st) {
+            self().state.Value = st;
         }
 
         public static void showCurrentSelected() {
@@ -100,10 +86,19 @@ namespace MyUnityChan {
             GUIObjectBase.getCanvas("Canvas_HUD").GetComponent<Canvas>().enabled = true;
         }
 
+        void Start() {
+            change(Const.ID.GameState.MAIN);
+
+            this.UpdateAsObservable()
+                .Subscribe(_ => watchStateTransition())
+                .AddTo(this);
+        }
+
+
         private void watchStateTransition() {
             Controller controller = getPlayer().getController();
-            switch ( state ) { 
-                case GameState.MAIN: 
+            switch ( state.Value ) { 
+                case Const.ID.GameState.MAIN: 
                     if ( controller.keyPause() ) {
                         /* 
                          * State: MAIN -> MENU 
@@ -111,7 +106,7 @@ namespace MyUnityChan {
                          */
                         if ( PauseManager.isPausing() )
                             return;
-                        state = GameState.MENU;
+                        change(Const.ID.GameState.PAUSE_MENU);
                         PauseManager.Instance.pause(true);
                         MenuManager.Instance.enter();
                     }
@@ -119,13 +114,13 @@ namespace MyUnityChan {
                         EventSystem.current.SetSelectedGameObject(null);
                     }
                     break;
-                case GameState.MENU:
+                case Const.ID.GameState.PAUSE_MENU:
                     if ( controller.keyPause() ) {
                         /*
                          * State: MENU -> MAIN
                          * Trigger: pause key was pressed
-                         */ 
-                        state = GameState.MAIN;
+                         */
+                        change(Const.ID.GameState.MAIN);
                         MenuManager.Instance.quit();
                         PauseManager.Instance.pause(false);
                     }

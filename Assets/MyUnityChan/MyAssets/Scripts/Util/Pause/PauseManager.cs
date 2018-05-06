@@ -35,12 +35,9 @@ namespace MyUnityChan {
 
                 GameStateManager.hideHUD();
                 pm.getNowPlayer().GetComponent<SpringManager>().enabled = false;
-                pm.camera.effect.setPauseMenuEffect();
             }
             else {
                 pm.getNowPlayer().GetComponent<SpringManager>().enabled = true;
-                pm.camera.effect.restore();
-
                 changeTimeScaleOnResume();
 
                 if ( pause_off_callback != null ) {
